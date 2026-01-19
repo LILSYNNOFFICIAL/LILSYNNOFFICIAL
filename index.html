@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIL SYNN 🕶️</title>
+<meta name="description" content="Official LIL SYNN artist website. Dark emotion. No exposure.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'><text y='40' font-size='40'>🕶️</text></svg>">
+
+<style>
+:root {
+  --black: #000000;
+  --pink: #ff2f92;
+  --pink-glow: rgba(255, 47, 146, 0.45);
+  --text: #eaeaea;
+}
+* {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+body {background:var(--black);color:var(--text);overflow-x:hidden;scroll-behavior:smooth;}
+a {color:var(--pink);text-decoration:none;}
+section {padding:90px 8vw;position:relative;}
+input, button {font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+
+/* HERO */
+.hero {
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.95)), url("images/lil-synn-hero.png");
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+.hero h1 {display:none;}
+.hero .cta {
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 38px;
+  border:1px solid var(--pink);
+  letter-spacing:0.12em;
+  transition:0.3s ease;
+  font-weight:bold;
+  text-transform: uppercase;
+}
+.hero .cta:hover {background:var(--pink); color:var(--black); box-shadow:0 0 28px var(--pink-glow);}
+
+/* IDENTITY */
+.about {max-width:900px;margin:auto;text-align:center;line-height:1.9;}
+.about h2 {color:var(--pink);margin-bottom:32px;letter-spacing:0.25em;}
+
+/* BIO */
+.bio {max-width:900px;margin:auto;text-align:center;line-height:1.9;}
+.bio h2 {color:var(--pink);margin-bottom:32px;letter-spacing:0.25em;}
+
+/* MUSIC */
+.music h2{text-align:center;color:var(--pink);letter-spacing:0.25em;margin-bottom:60px;}
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;}
+iframe{width:100%;height:315px;border:none;box-shadow:0 0 35px rgba(0,0,0,0.9);}
+
+/* LINKS */
+.links{text-align:center;}
+.links h2{color:var(--pink);margin-bottom:35px;letter-spacing:0.25em;}
+.link-buttons a{display:inline-block;margin:10px 15px;padding:12px 28px;border:1px solid var(--pink);transition:0.3s ease;}
+.link-buttons a:hover{background:var(--pink);color:var(--black);box-shadow:0 0 22px var(--pink-glow);}
+
+/* CONTACT + NEWSLETTER */
+.contact{text-align:center;}
+.contact h2{color:var(--pink);margin-bottom:18px;letter-spacing:0.25em;}
+.contact p{opacity:0.85;}
+.newsletter {margin-top:20px;text-align:center;}
+.newsletter input {
+  padding:12px 18px;
+  width:250px;
+  max-width:80%;
+  border:1px solid var(--pink);
+  background:var(--black);
+  color:var(--text);
+  outline:none;
+  margin-right:8px;
+}
+.newsletter input::placeholder {color:rgba(255,255,255,0.6);}
+.newsletter button {
+  padding:12px 28px;
+  border:1px solid var(--pink);
+  background:none;
+  color:var(--pink);
+  cursor:pointer;
+  transition:0.3s;
+}
+.newsletter button:hover {background:var(--pink); color:var(--black); box-shadow:0 0 20px var(--pink-glow);}
+
+/* ALBUM SECTION */
+.album {
+  text-align:center;
+  margin:120px auto;
+}
+.album img {
+  max-width:300px;
+  width:90%;
+  border:2px solid var(--pink);
+  box-shadow:0 0 30px var(--pink-glow);
+  transition:0.3s ease;
+}
+.album img:hover {transform:scale(1.05); box-shadow:0 0 50px var(--pink-glow);}
+.album h2 {
+  color:var(--pink);
+  margin-top:24px;
+  letter-spacing:0.2em;
+}
+
+/* FOOTER */
+footer{padding:45px 0;text-align:center;font-size:0.85rem;opacity:0.6;position:relative;z-index:1;}
+
+/* BACK-TO-TOP */
+#backToTop {
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  width:50px;
+  height:50px;
+  background:var(--pink);
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  box-shadow:0 0 18px var(--pink-glow);
+  transition:0.3s;
+  font-size:1.5rem;
+  z-index:100;
+}
+#backToTop:hover {transform:scale(1.1);box-shadow:0 0 28px var(--pink-glow);}
+
+/* FADE-IN */
+.fade{opacity:0;transform:translateY(24px);transition:all 1s ease;}
+.fade.show{opacity:1;transform:translateY(0);}
+
+/* NAVBAR */
+.top-nav {
+  position:absolute;
+  top:0;width:100%;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  padding:20px 0;
+  z-index:10;
+}
+.top-nav a{font-weight:bold;color:var(--pink);transition:0.3s ease;}
+.top-nav a:hover{color:var(--pink-glow);}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="#music">Music</a>
+  <a href="#links">Following</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero fade">
+  <a href="#music" class="cta">LISTEN NOW 🕶️</a>
+</section>
+
+<!-- IDENTITY -->
+<section class="about fade">
+  <h2>IDENTITY</h2>
+  <p><strong>LIL SYNN 🕶️</strong><br>Sound born in shadow.<br>Emotion distorted through frequency.<br>No face. No filter. Just atmosphere.</p>
+</section>
+
+<!-- BIO -->
+<section class="bio fade">
+  <h2>BIO</h2>
+  <p>Producer from California's Central Valley creating dark, emotional music that mixes rap, indie, and electronic shadows with honest storytelling and subjects such as relationships, addiction and mental health.</p>
+</section>
+
+<!-- ALBUM COVER -->
+<section class="album fade">
+  <img src="images/lil-synn-hero.png" alt="Enough Album Cover">
+  <h2>Enough – Album TBA</h2>
+</section>
+
+<!-- MUSIC -->
+<section id="music" class="music fade">
+  <h2>MUSIC</h2>
+  <div class="videos">
+    <iframe src="https://www.youtube.com/embed/5Kg-bZciyYM" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/bX79TXSm-UQ" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/Em6pd-iit8A" allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- LINKS -->
+<section id="links" class="links fade">
+  <h2>FOLLOW THE SIGNAL 🕶️</h2>
+  <div class="link-buttons">
+    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank">Spotify</a>
+    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank">Apple Music</a>
+    <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" target="_blank">YouTube</a>
+    <a href="https://www.instagram.com/lilsynnofficial" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@lil.synn.official" target="_blank">TikTok</a>
+    <a href="https://soundon.global/bio/lilsynn" target="_blank">SoundOn</a>
+    <a href="https://LILSYNNOFFICIAL.threadless.com" target="_blank">Merch</a>
+    <a href="https://lilsynnofficial.wordpress.com" target="_blank">Info</a>
+    <a href="https://www.reddit.com/u/LILSYNNOFFICIAL/s/9d76bKfk2E" target="_blank">Reddit</a>
+  </div>
+</section>
+
+<!-- CONTACT + NEWSLETTER -->
+<section id="contact" class="contact fade">
+  <h2>CONTACT</h2>
+  <p>For inquiries:<br><a href="mailto:synovamedia@gmail.com">synovamedia@gmail.com</a></p>
+
+  <h2>SUBSCRIBE TO NEWSLETTER</h2>
+  <form class="newsletter" onsubmit="subscribeEmail(event)">
+    <input type="email" id="subscriber-email" placeholder="Your email" required>
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  ©℗ 2025-2026 LIL SYNN 🕶️
+</footer>
+
+<!-- BACK-TO-TOP BUTTON -->
+<div id="backToTop">&#8679;</div>
+
+<script>
+const fades = document.querySelectorAll('.fade');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
+}, { threshold: 0.2 });
+fades.forEach(el => observer.observe(el));
+
+function subscribeEmail(event) {
+  event.preventDefault();
+  const email = document.getElementById('subscriber-email').value;
+  if(email) {
+    window.location.href = `mailto:synovamedia@gmail.com?subject=Newsletter Subscription&body=Please add me to your newsletter: ${email}`;
+    alert("Thank you! Check your email client to confirm subscription.");
+  }
+}
+
+// BACK TO TOP
+const backToTop = document.getElementById('backToTop');
+backToTop.addEventListener('click', ()=>{window.scrollTo({top:0,behavior:'smooth'});});
+</script>
+
+</body>
+</html>
