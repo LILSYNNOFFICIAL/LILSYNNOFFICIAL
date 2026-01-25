@@ -3,190 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LIL SYNN 🕶️</title>
-<meta name="description" content="Official LIL SYNN artist website. Dark emotion. No exposure.">
-
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'><text y='40' font-size='40'>🕶️</text></svg>">
+<title>LIL SYNN 🕶️ OFFICIAL SITE</title>
 
 <style>
 :root {
-  --black: #000000;
+  --black: #000;
   --pink: #ff2f92;
-  --pink-glow: rgba(255, 47, 146, 0.45);
+  --pink-glow: rgba(255,47,146,.45);
   --text: #eaeaea;
 }
-* {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
-body {background:var(--black);color:var(--text);overflow-x:hidden;scroll-behavior:smooth;}
-a {color:var(--pink);text-decoration:none;}
-section {padding:90px 8vw;position:relative;}
-input, button {font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+body {
+  background: var(--black);
+  color: var(--text);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+a {
+  text-decoration: none;
+  color: var(--pink);
+}
 
-/* HERO */
 .hero {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  background:linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.95)), url("images/lil-synn-hero.png");
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
+  min-height: 130vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 70px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.95));
 }
-.hero h1 {display:none;}
-.hero .cta {
-  display:inline-block;
-  margin-top:20px;
-  padding:14px 38px;
-  border:1px solid var(--pink);
-  letter-spacing:0.12em;
-  transition:0.3s ease;
-  font-weight:bold;
+
+.hero::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("images/lil-synn-hero2.png") center / 200% auto no-repeat;
+  z-index: -2;
+}
+
+/* NAV */
+.nav {
+  position: absolute;
+  top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  z-index: 10;
+}
+.nav-btn {
+  border: 1px solid var(--pink);
+  padding: 8px 16px;
+  font-size: .75rem;
+  letter-spacing: .08em;
+  cursor: pointer;
+  position: relative;
   text-transform: uppercase;
+  font-weight: bold;
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
 }
-.hero .cta:hover {background:var(--pink); color:var(--black); box-shadow:0 0 28px var(--pink-glow);}
-
-/* IDENTITY */
-.about {max-width:900px;margin:auto;text-align:center;line-height:1.9;}
-.about h2 {color:var(--pink);margin-bottom:32px;letter-spacing:0.25em;}
-
-/* BIO */
-.bio {max-width:900px;margin:auto;text-align:center;line-height:1.9;}
-.bio h2 {color:var(--pink);margin-bottom:32px;letter-spacing:0.25em;}
-
-/* MUSIC */
-.music h2{text-align:center;color:var(--pink);letter-spacing:0.25em;margin-bottom:60px;}
-.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;}
-iframe{width:100%;height:315px;border:none;box-shadow:0 0 35px rgba(0,0,0,0.9);}
-
-/* LINKS */
-.links{text-align:center;}
-.links h2{color:var(--pink);margin-bottom:35px;letter-spacing:0.25em;}
-.link-buttons a{display:inline-block;margin:10px 15px;padding:12px 28px;border:1px solid var(--pink);transition:0.3s ease;}
-.link-buttons a:hover{background:var(--pink);color:var(--black);box-shadow:0 0 22px var(--pink-glow);}
-
-/* CONTACT + NEWSLETTER */
-.contact{text-align:center;}
-.contact h2{color:var(--pink);margin-bottom:18px;letter-spacing:0.25em;}
-.contact p{opacity:0.85;}
-.newsletter {margin-top:20px;text-align:center;}
-.newsletter input {
-  padding:12px 18px;
-  width:250px;
-  max-width:80%;
-  border:1px solid var(--pink);
-  background:var(--black);
-  color:var(--text);
-  outline:none;
-  margin-right:8px;
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--pink);
+  color: #000;
+  box-shadow: 0 0 18px var(--pink-glow);
+  transform: scale(1.05);
 }
-.newsletter input::placeholder {color:rgba(255,255,255,0.6);}
-.newsletter button {
-  padding:12px 28px;
-  border:1px solid var(--pink);
-  background:none;
-  color:var(--pink);
-  cursor:pointer;
-  transition:0.3s;
-}
-.newsletter button:hover {background:var(--pink); color:var(--black); box-shadow:0 0 20px var(--pink-glow);}
 
-/* ALBUM SECTION */
-.album {
-  text-align:center;
-  margin:120px auto;
+/* DROPDOWN */
+.dropdown {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  background: #000;
+  border: 1px solid var(--pink);
+  min-width: 180px;
+  opacity: 0;
+  transform: translateY(-10px) scale(.98);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s cubic-bezier(.4,0,.2,1);
 }
+.dropdown.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.dropdown a {
+  display: block;
+  padding: 10px;
+}
+.dropdown a:hover {
+  background: var(--pink);
+  color: #000;
+}
+
+/* HERO BUTTONS */
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 35px;
+}
+.cta {
+  border: 1px solid var(--pink);
+  padding: 10px 22px;
+  font-size: .8rem;
+  letter-spacing: .1em;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: .2s;
+}
+.cta:hover,
+.cta.active {
+  background: var(--pink);
+  color: #000;
+  box-shadow: 0 0 22px var(--pink-glow);
+}
+
+/* ALBUM */
 .album img {
-  max-width:300px;
-  width:90%;
-  border:2px solid var(--pink);
-  box-shadow:0 0 30px var(--pink-glow);
-  transition:0.3s ease;
+  max-width: 280px;
+  border: 2px solid var(--pink);
+  box-shadow: 0 0 30px var(--pink-glow);
 }
-.album img:hover {transform:scale(1.05); box-shadow:0 0 50px var(--pink-glow);}
 .album h2 {
-  color:var(--pink);
-  margin-top:24px;
-  letter-spacing:0.2em;
+  margin-top: 20px;
+  letter-spacing: .18em;
+}
+video {
+  margin-top: 20px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid var(--pink);
+}
+
+/* SECTIONS */
+section {
+  padding: 90px 8vw;
+  text-align: center;
+}
+h2 {
+  color: var(--pink);
+  letter-spacing: .25em;
+  margin-bottom: 30px;
+}
+
+/* VIDEOS */
+.videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+}
+iframe {
+  width: 100%;
+  height: 315px;
+  border: none;
+  box-shadow: 0 0 35px rgba(0,0,0,.9);
+}
+
+/* 🕶️ TRANSITION — HARD CENTERED */
+#transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity .5s ease;
+}
+#transition-overlay span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  line-height: 1;
+}
+#transition-overlay.show {
+  opacity: 1;
+}
+#transition-overlay.fade-out {
+  opacity: 0;
 }
 
 /* FOOTER */
-footer{padding:45px 0;text-align:center;font-size:0.85rem;opacity:0.6;position:relative;z-index:1;}
-
-/* BACK-TO-TOP */
-#backToTop {
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  width:50px;
-  height:50px;
-  background:var(--pink);
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-  box-shadow:0 0 18px var(--pink-glow);
-  transition:0.3s;
-  font-size:1.5rem;
-  z-index:100;
+footer {
+  padding: 40px;
+  text-align: center;
+  font-size: .85rem;
+  opacity: .7;
 }
-#backToTop:hover {transform:scale(1.1);box-shadow:0 0 28px var(--pink-glow);}
-
-/* FADE-IN */
-.fade{opacity:0;transform:translateY(24px);transition:all 1s ease;}
-.fade.show{opacity:1;transform:translateY(0);}
-
-/* NAVBAR */
-.top-nav {
-  position:absolute;
-  top:0;width:100%;
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  padding:20px 0;
-  z-index:10;
-}
-.top-nav a{font-weight:bold;color:var(--pink);transition:0.3s ease;}
-.top-nav a:hover{color:var(--pink-glow);}
 </style>
 </head>
+
 <body>
 
-<!-- TOP NAV -->
-<div class="top-nav">
-  <a href="#music">Music</a>
-  <a href="#links">Following</a>
-  <a href="#contact">Contact</a>
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-btn" onclick="toggleMenu(this)">Social
+    <div class="dropdown">
+      <a href="https://www.tiktok.com/@lil.synn.official" onclick="delayedNav(event,this.href)">TikTok</a>
+      <a href="https://www.instagram.com/lilsynnofficial" onclick="delayedNav(event,this.href)">Instagram</a>
+      <a href="https://facebook.com" onclick="delayedNav(event,this.href)">Facebook</a>
+      <a href="https://www.reddit.com/u/LILSYNNOFFICIAL" onclick="delayedNav(event,this.href)">Reddit</a>
+    </div>
+  </div>
+
+  <div class="nav-btn" onclick="toggleMenu(this)">Stream
+    <div class="dropdown">
+      <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" onclick="delayedNav(event,this.href)">Spotify</a>
+      <a href="https://music.apple.com/us/artist/lil-synn/1850720041" onclick="delayedNav(event,this.href)">Apple Music</a>
+      <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" onclick="delayedNav(event,this.href)">YouTube</a>
+    </div>
+  </div>
+
+  <div class="nav-btn" onclick="toggleMenu(this)">Merch
+    <div class="dropdown">
+      <a href="https://LILSYNNOFFICIAL.threadless.com" onclick="delayedNav(event,this.href)">Buy Merch</a>
+    </div>
+  </div>
+
+  <div class="nav-btn" onclick="toggleMenu(this)">Info
+    <div class="dropdown">
+      <a href="https://lilsynnofficial.wordpress.com" onclick="delayedNav(event,this.href)">Blog</a>
+      <a href="https://soundon.global/bio/lilsynn" onclick="delayedNav(event,this.href)">SoundOn</a>
+    </div>
+  </div>
 </div>
 
 <!-- HERO -->
-<section class="hero fade">
-  <a href="#music" class="cta">LISTEN NOW 🕶️</a>
-</section>
+<div class="hero">
 
-<!-- IDENTITY -->
-<section class="about fade">
-  <h2>IDENTITY</h2>
-  <p><strong>LIL SYNN 🕶️</strong><br>Sound born in shadow.<br>Emotion distorted through frequency.<br>No face. No filter. Just atmosphere.</p>
-</section>
+  <div class="hero-buttons">
+    <div class="cta" onclick="jumpTo('videos')">VIDEOS</div>
 
-<!-- BIO -->
-<section class="bio fade">
-  <h2>BIO</h2>
-  <p>Producer from California's Central Valley creating dark, emotional music that mixes rap, indie, and electronic shadows with honest storytelling and subjects such as relationships, addiction and mental health.</p>
-</section>
+    <div class="cta nav-btn" onclick="toggleMenu(this)">
+      LISTEN NOW 🕶️
+      <div class="dropdown">
+        <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" onclick="delayedNav(event,this.href)">Spotify</a>
+        <a href="https://music.apple.com/us/artist/lil-synn/1850720041" onclick="delayedNav(event,this.href)">Apple Music</a>
+        <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" onclick="delayedNav(event,this.href)">YouTube</a>
+      </div>
+    </div>
 
-<!-- ALBUM COVER -->
-<section class="album fade">
-  <img src="images/lil-synn-hero.png" alt="Enough Album Cover">
-  <h2>Enough – Album TBA</h2>
-</section>
+    <div class="cta" onclick="jumpTo('newsletter')">NEWSLETTER</div>
+  </div>
 
-<!-- MUSIC -->
-<section id="music" class="music fade">
-  <h2>MUSIC</h2>
+  <div class="album">
+    <img src="images/Enough_Album.png" alt="Enough Album Cover">
+    <h2>Enough Album<br>2/17/2026 | Pre-Save TBA</h2>
+    <video controls playsinline preload="metadata">
+      <source src="media/album.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<!-- VIDEOS -->
+<section id="videos">
+  <h2>VIDEOS</h2>
   <div class="videos">
     <iframe src="https://www.youtube.com/embed/5Kg-bZciyYM" allowfullscreen></iframe>
     <iframe src="https://www.youtube.com/embed/bX79TXSm-UQ" allowfullscreen></iframe>
@@ -194,61 +283,84 @@ footer{padding:45px 0;text-align:center;font-size:0.85rem;opacity:0.6;position:r
   </div>
 </section>
 
-<!-- LINKS -->
-<section id="links" class="links fade">
-  <h2>FOLLOW THE SIGNAL 🕶️</h2>
-  <div class="link-buttons">
-    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank">Spotify</a>
-    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank">Apple Music</a>
-    <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" target="_blank">YouTube</a>
-    <a href="https://www.instagram.com/lilsynnofficial" target="_blank">Instagram</a>
-    <a href="https://www.tiktok.com/@lil.synn.official" target="_blank">TikTok</a>
-    <a href="https://soundon.global/bio/lilsynn" target="_blank">SoundOn</a>
-    <a href="https://LILSYNNOFFICIAL.threadless.com" target="_blank">Merch</a>
-    <a href="https://lilsynnofficial.wordpress.com" target="_blank">Info</a>
-    <a href="https://www.reddit.com/u/LILSYNNOFFICIAL/s/9d76bKfk2E" target="_blank">Reddit</a>
-  </div>
-</section>
-
-<!-- CONTACT + NEWSLETTER -->
-<section id="contact" class="contact fade">
-  <h2>CONTACT</h2>
-  <p>For inquiries:<br><a href="mailto:synovamedia@gmail.com">synovamedia@gmail.com</a></p>
-
+<!-- NEWSLETTER -->
+<section id="newsletter">
   <h2>SUBSCRIBE TO NEWSLETTER</h2>
-  <form class="newsletter" onsubmit="subscribeEmail(event)">
-    <input type="email" id="subscriber-email" placeholder="Your email" required>
-    <button type="submit">Subscribe</button>
-  </form>
+  <iframe
+    src="https://dark-newsletter-hub--lilsynn.replit.app/signup?source=embed"
+    width="100%"
+    height="600"
+    frameborder="0"
+    style="border:none;border-radius:12px;">
+  </iframe>
 </section>
 
-<!-- FOOTER -->
+<!-- 🕶️ OVERLAY -->
+<div id="transition-overlay">
+  <span>🕶️</span>
+</div>
+
 <footer>
-  ©℗ 2025-2026 LIL SYNN 🕶️
+  © 2026 | LIL SYNN | SYNTIENT RECORDS<br>
+  Site Design by Synova Media
 </footer>
 
-<!-- BACK-TO-TOP BUTTON -->
-<div id="backToTop">&#8679;</div>
-
 <script>
-const fades = document.querySelectorAll('.fade');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
-}, { threshold: 0.2 });
-fades.forEach(el => observer.observe(el));
-
-function subscribeEmail(event) {
-  event.preventDefault();
-  const email = document.getElementById('subscriber-email').value;
-  if(email) {
-    window.location.href = `mailto:synovamedia@gmail.com?subject=Newsletter Subscription&body=Please add me to your newsletter: ${email}`;
-    alert("Thank you! Check your email client to confirm subscription.");
-  }
+function toggleMenu(btn) {
+  const menu = btn.querySelector('.dropdown');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b !== btn) {
+      b.classList.remove('active');
+      const m = b.querySelector('.dropdown');
+      if (m) m.classList.remove('open');
+    }
+  });
+  btn.classList.toggle('active');
+  if (menu) menu.classList.toggle('open');
 }
 
-// BACK TO TOP
-const backToTop = document.getElementById('backToTop');
-backToTop.addEventListener('click', ()=>{window.scrollTo({top:0,behavior:'smooth'});});
+function closeAllMenus() {
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const m = btn.querySelector('.dropdown');
+    if (m) m.classList.remove('open');
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.nav-btn')) {
+    closeAllMenus();
+  }
+});
+
+function delayedNav(e, url) {
+  e.preventDefault();
+  closeAllMenus();
+  const overlay = document.getElementById('transition-overlay');
+  overlay.classList.add('show');
+  
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+  }, 500);
+  
+  setTimeout(() => {
+    window.location.href = url;
+  }, 1000);
+}
+
+function jumpTo(id) {
+  const overlay = document.getElementById('transition-overlay');
+  overlay.classList.add('show');
+  
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+  }, 500);
+  
+  setTimeout(() => {
+    overlay.classList.remove('show', 'fade-out');
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }, 1000);
+}
 </script>
 
 </body>
