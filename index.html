@@ -1,367 +1,829 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LIL SYNN 🕶️ OFFICIAL SITE</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIL SYNN 🕶️</title>
+  <link rel="preload" href="images/lil-synn-hero2.png" as="image">
+  <link rel="preload" href="images/Enough_Album.png" as="image">
+  <link rel="preload" href="media/album.mp4" as="video">
+  <!-- Favicon: replace with your pink sunglasses icon -->
+  <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 
-<style>
-:root {
-  --black: #000;
-  --pink: #ff2f92;
-  --pink-glow: rgba(255,47,146,.45);
-  --text: #eaeaea;
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-}
-body {
-  background: var(--black);
-  color: var(--text);
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-a {
-  text-decoration: none;
-  color: var(--pink);
-}
+  <style>
+    :root {
+      --black: #000;
+      --pink: #ff2f92;
+      --pink-glow: rgba(255,47,146,.45);
+      --pink-text: #ff4da6;
+      --text: #eaeaea;
+    }
 
-.hero {
-  min-height: 130vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 70px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.95));
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    }
 
-.hero::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("images/lil-synn-hero2.png") center / 200% auto no-repeat;
-  z-index: -2;
-}
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: clip;
+      scroll-behavior: smooth;
+      background: var(--black);
+      color: var(--text);
+    }
 
-/* NAV */
-.nav {
-  position: absolute;
-  top: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  z-index: 10;
-}
-.nav-btn {
-  border: 1px solid var(--pink);
-  padding: 8px 16px;
-  font-size: .75rem;
-  letter-spacing: .08em;
-  cursor: pointer;
-  position: relative;
-  text-transform: uppercase;
-  font-weight: bold;
-  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
-}
-.nav-btn:hover,
-.nav-btn.active {
-  background: var(--pink);
-  color: #000;
-  box-shadow: 0 0 18px var(--pink-glow);
-  transform: scale(1.05);
-}
+    a { color: var(--pink-text); text-decoration: none; }
 
-/* DROPDOWN */
-.dropdown {
-  position: absolute;
-  top: 42px;
-  left: 0;
-  background: #000;
-  border: 1px solid var(--pink);
-  min-width: 180px;
-  opacity: 0;
-  transform: translateY(-10px) scale(.98);
-  pointer-events: none;
-  transition: opacity .25s ease, transform .25s cubic-bezier(.4,0,.2,1);
-}
-.dropdown.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-.dropdown a {
-  display: block;
-  padding: 10px;
-}
-.dropdown a:hover {
-  background: var(--pink);
-  color: #000;
-}
+    #bg-image {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: -2;
+      pointer-events: none;
+      will-change: transform;
+      transform: translateZ(0);
+    }
 
-/* HERO BUTTONS */
-.hero-buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 35px;
-}
-.cta {
-  border: 1px solid var(--pink);
-  padding: 10px 22px;
-  font-size: .8rem;
-  letter-spacing: .1em;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bold;
-  transition: .2s;
-}
-.cta:hover,
-.cta.active {
-  background: var(--pink);
-  color: #000;
-  box-shadow: 0 0 22px var(--pink-glow);
-}
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 110px 5vw 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to bottom, rgba(0,0,0,.6), rgba(0,0,0,.92));
+    }
 
-/* ALBUM */
-.album img {
-  max-width: 280px;
-  border: 2px solid var(--pink);
-  box-shadow: 0 0 30px var(--pink-glow);
-}
-.album h2 {
-  margin-top: 20px;
-  letter-spacing: .18em;
-}
-video {
-  margin-top: 20px;
-  width: 90%;
-  max-width: 500px;
-  border: 1px solid var(--pink);
-}
+    .hero h1 {
+      font-size: 2.5rem;
+      letter-spacing: 0.15em;
+      color: var(--pink-text);
+      text-shadow: 0 0 30px var(--pink-glow);
+      margin-bottom: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-/* SECTIONS */
-section {
-  padding: 90px 8vw;
-  text-align: center;
-}
-h2 {
-  color: var(--pink);
-  letter-spacing: .25em;
-  margin-bottom: 30px;
-}
+    .hero h1 span { display: inline-block; animation: type 4s steps(12) forwards; }
 
-/* VIDEOS */
-.videos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-}
-iframe {
-  width: 100%;
-  height: 315px;
-  border: none;
-  box-shadow: 0 0 35px rgba(0,0,0,.9);
-}
+    @keyframes type {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
 
-/* 🕶️ TRANSITION — HARD CENTERED */
-#transition-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity .5s ease;
-}
-#transition-overlay span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 8rem;
-  line-height: 1;
-}
-#transition-overlay.show {
-  opacity: 1;
-}
-#transition-overlay.fade-out {
-  opacity: 0;
-}
+    .tagline {
+      font-size: 1.8rem;
+      color: var(--pink-text);
+      text-shadow: 0 0 15px var(--pink-glow), 0 0 30px var(--pink-glow);
+      margin: 0 0 40px;
+      letter-spacing: 0.2em;
+      animation: glitch 3s infinite alternate, glow 4s infinite alternate;
+    }
 
-/* FOOTER */
-footer {
-  padding: 40px;
-  text-align: center;
-  font-size: .85rem;
-  opacity: .7;
-}
-</style>
+    @keyframes glitch {
+      0%   { transform: translate(0); opacity: 1; }
+      10%  { transform: translate(-3px, 2px); opacity: 0.9; }
+      20%  { transform: translate(3px, -2px); opacity: 0.85; }
+      30%  { transform: translate(-2px, 1px); opacity: 0.95; }
+      40%  { transform: translate(2px, -1px); opacity: 1; }
+      100% { transform: translate(0); opacity: 1; }
+    }
+
+    @keyframes glow {
+      0%   { text-shadow: 0 0 10px var(--pink-glow); }
+      50%  { text-shadow: 0 0 25px var(--pink-glow), 0 0 40px var(--pink-glow); }
+      100% { text-shadow: 0 0 10px var(--pink-glow); }
+    }
+
+    .spotify-embed-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 40px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(255,47,146,0.2);
+      position: relative;
+    }
+
+    .spotify-embed-container iframe {
+      pointer-events: none;
+    }
+
+    .spotify-embed-container:hover iframe,
+    .spotify-embed-container iframe:active,
+    .spotify-embed-container iframe:focus {
+      pointer-events: auto;
+    }
+
+    .nav {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      z-index: 100;
+      max-width: 95vw;
+    }
+
+    .nav-btn {
+      border: 1px solid var(--pink);
+      padding: 10px 20px;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: all 0.2s ease;
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      backdrop-filter: blur(4px);
+      border-radius: 4px;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--pink);
+      color: #000;
+      box-shadow: 0 0 20px var(--pink-glow);
+      transform: scale(1.06);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--pink);
+      min-width: 180px;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .dropdown.open {
+      opacity: 1;
+      transform: translateY(4px);
+      pointer-events: auto;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 12px 16px;
+      transition: 0.15s;
+    }
+
+    .dropdown a:hover { background: var(--pink); color: #000; }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0 50px;
+    }
+
+    .cta {
+      color: #ffffff !important;
+      border: 1px solid var(--pink);
+      padding: 14px 32px;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: all 0.25s ease;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+    }
+
+    .cta:hover,
+    .cta.active {
+      background: var(--pink);
+      color: #000000 !important;
+      box-shadow: 0 0 28px var(--pink-glow);
+      transform: translateY(-3px);
+    }
+
+    .album {
+      perspective: 1000px;
+      margin: 0 auto;
+      max-width: 340px;
+      animation: glowPulse 5s infinite alternate ease-in-out;
+    }
+
+    @keyframes glowPulse {
+      from { filter: drop-shadow(0 0 15px var(--pink-glow)); }
+      to   { filter: drop-shadow(0 0 35px var(--pink-glow)); }
+    }
+
+    .album img {
+      width: 100%;
+      border: 3px solid var(--pink);
+      box-shadow: 0 0 40px var(--pink-glow);
+      border-radius: 16px;
+      transition: transform 0.4s ease;
+      transform-style: preserve-3d;
+    }
+
+    .album:hover img {
+      transform: rotateY(10deg) rotateX(8deg) scale(1.05);
+    }
+
+    .album h2 {
+      margin: 30px 0 20px;
+      letter-spacing: 0.2em;
+      font-size: 1.5rem;
+    }
+
+    video {
+      margin-top: 24px;
+      width: 90%;
+      max-width: 560px;
+      border: 1px solid var(--pink);
+      border-radius: 12px;
+    }
+
+    section {
+      padding: 100px 6vw;
+      text-align: center;
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    h2 {
+      color: var(--pink-text);
+      letter-spacing: 0.3em;
+      margin-bottom: 40px;
+      font-size: 2.4rem;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 50px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    iframe:not(.spotify-iframe) {
+      width: 100%;
+      height: 315px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,.9);
+    }
+
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #transition-overlay.show { opacity: 1; }
+
+    #transition-overlay span { font-size: 12rem; }
+
+    #back-to-top {
+      position: fixed;
+      bottom: 80px;
+      right: 30px;
+      background: var(--pink);
+      color: #000;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 100;
+      box-shadow: 0 0 20px var(--pink-glow);
+    }
+
+    #back-to-top.visible { opacity: 1; visibility: visible; }
+
+    #latest-drop-badge {
+      position: fixed;
+      bottom: 140px;
+      right: 30px;
+      background: rgba(255,47,146,0.15);
+      border: 1px solid var(--pink);
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      color: var(--pink-text);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 20px var(--pink-glow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 98;
+      opacity: 0;
+      transform: translateX(120%);
+      transition: all 0.5s ease;
+    }
+
+    #latest-drop-badge.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #latest-drop-badge a {
+      background: var(--pink);
+      color: #000;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .scroll-prompt {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.1rem;
+      color: var(--pink-text);
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+      animation: pulse 2s infinite alternate;
+      pointer-events: none;
+      transition: opacity 1s;
+    }
+
+    .scroll-prompt.hidden {
+      opacity: 0;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.5; transform: translateX(-50%) translateY(0); }
+      to   { opacity: 1;   transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* Floating mini player bar */
+    #mini-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--pink);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      z-index: 99;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+
+    #mini-player.visible { transform: translateY(0); }
+
+    #mini-player a {
+      background: var(--pink);
+      color: #000;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 0 20px var(--pink-glow);
+      transition: all 0.2s;
+    }
+
+    #mini-player a:hover { transform: scale(1.08); }
+
+    footer {
+      padding: 60px 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.75;
+      border-top: 1px solid rgba(255,47,146,0.15);
+    }
+
+    /* Basin Newsletter Form Styles (integrated) */
+    :root {
+      --basin-pink: #ff6fa6;
+      --basin-pink-dark: #ff4f8f;
+      --basin-pink-glow: rgba(255,111,150,0.3);
+    }
+
+    .basin-card {
+      max-width: 520px;
+      margin: 24px auto;
+      padding: 22px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.7);
+      box-shadow: 0 6px 30px rgba(255,111,150,0.12);
+      border: 1px solid rgba(255,111,150,0.3);
+      backdrop-filter: blur(8px);
+      color: #eaeaea;
+    }
+
+    .basin-card .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .basin-card .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--basin-pink), var(--basin-pink-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .basin-card h1 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--pink-text);
+      text-shadow: 0 0 10px var(--pink-glow);
+    }
+
+    .basin-card p.lead {
+      margin: 6px 0 18px;
+      color: #ff4da6;
+      font-size: 13px;
+    }
+
+    .basin-card label {
+      display: block;
+      font-size: 13px;
+      color: #ff4da6;
+      margin-bottom: 6px;
+    }
+
+    .basin-card label.required::after {
+      content: " *";
+      color: #ff2f92;
+    }
+
+    .basin-card input[type="email"],
+    .basin-card input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,47,146,0.3);
+      background: rgba(0,0,0,0.6);
+      box-sizing: border-box;
+      font-size: 14px;
+      color: #eaeaea;
+      transition: all 0.2s ease;
+    }
+
+    .basin-card input:focus {
+      outline: none;
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(255,47,146,0.4);
+    }
+
+    .basin-card button {
+      margin-top: 14px;
+      background: linear-gradient(180deg, var(--pink), #ff4f8f);
+      border: 0;
+      padding: 12px 16px;
+      color: #000;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255,47,146,0.4);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .basin-card button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255,47,146,0.5);
+    }
+
+    .basin-card button.loading {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .basin-card button.loading::after {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #000;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .basin-card .note {
+      font-size: 12px;
+      color: #ff4da6;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .basin-card #success-message {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(255,47,146,0.15);
+      border: 1px solid var(--pink);
+      border-radius: 10px;
+      color: var(--pink-text);
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 0 10px var(--pink-glow);
+    }
+
+    .basin-card .honeypot {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .basin-card { padding: 18px; }
+      .basin-card h1 { font-size: 16px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- NAV -->
-<div class="nav">
-  <div class="nav-btn" onclick="toggleMenu(this)">Social
+  <img id="bg-image" src="images/lil-synn-hero2.png" alt="Background" loading="lazy">
+
+  <noscript>
+    <div style="position: fixed; inset: 0; background: #000; color: var(--pink); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-align: center; padding: 30px; z-index: 99999;">
+      <div>
+        JavaScript is disabled.<br><br>
+        This site requires JavaScript for navigation, transitions, menus, tilt effects, animations, and interactive elements.<br><br>
+        Please enable JavaScript and refresh.
+      </div>
+    </div>
+  </noscript>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Main navigation">
+    <button class="nav-btn" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu(this)">Social</button>
     <div class="dropdown">
       <a href="https://www.tiktok.com/@lil.synn.official" onclick="delayedNav(event,this.href)">TikTok</a>
       <a href="https://www.instagram.com/lilsynnofficial" onclick="delayedNav(event,this.href)">Instagram</a>
       <a href="https://facebook.com" onclick="delayedNav(event,this.href)">Facebook</a>
       <a href="https://www.reddit.com/u/LILSYNNOFFICIAL" onclick="delayedNav(event,this.href)">Reddit</a>
     </div>
-  </div>
 
-  <div class="nav-btn" onclick="toggleMenu(this)">Stream
+    <button class="nav-btn" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu(this)">Stream</button>
     <div class="dropdown">
       <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" onclick="delayedNav(event,this.href)">Spotify</a>
       <a href="https://music.apple.com/us/artist/lil-synn/1850720041" onclick="delayedNav(event,this.href)">Apple Music</a>
       <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" onclick="delayedNav(event,this.href)">YouTube</a>
     </div>
-  </div>
 
-  <div class="nav-btn" onclick="toggleMenu(this)">Merch
+    <button class="nav-btn" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu(this)">Merch</button>
     <div class="dropdown">
       <a href="https://LILSYNNOFFICIAL.threadless.com" onclick="delayedNav(event,this.href)">Buy Merch</a>
     </div>
-  </div>
 
-  <div class="nav-btn" onclick="toggleMenu(this)">Info
+    <button class="nav-btn" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu(this)">Info</button>
     <div class="dropdown">
       <a href="https://lilsynnofficial.wordpress.com" onclick="delayedNav(event,this.href)">Blog</a>
       <a href="https://soundon.global/bio/lilsynn" onclick="delayedNav(event,this.href)">SoundOn</a>
     </div>
-  </div>
-</div>
+  </nav>
 
-<!-- HERO -->
-<div class="hero">
+  <!-- HERO -->
+  <div class="hero">
+    <h1><span>LIL SYNN 🕶️</span></h1>
+    <p class="tagline">I'm light, I'm wave 🐦‍🔥</p>
 
-  <div class="hero-buttons">
-    <div class="cta" onclick="jumpTo('videos')">VIDEOS</div>
-
-    <div class="cta nav-btn" onclick="toggleMenu(this)">
-      LISTEN NOW 🕶️
-      <div class="dropdown">
-        <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" onclick="delayedNav(event,this.href)">Spotify</a>
-        <a href="https://music.apple.com/us/artist/lil-synn/1850720041" onclick="delayedNav(event,this.href)">Apple Music</a>
-        <a href="https://music.youtube.com/channel/UCQYM_CruEcN7jOYGpVajuGw" onclick="delayedNav(event,this.href)">YouTube</a>
-      </div>
+    <div class="spotify-embed-container">
+      <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/artist/6ozcOAnRAUPn3z5c0GR5kU?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="spotify-iframe"></iframe>
     </div>
 
-    <div class="cta" onclick="jumpTo('newsletter')">NEWSLETTER</div>
+    <div class="hero-buttons">
+      <button class="cta" onclick="jumpTo('videos')">VIDEOS</button>
+      <button class="cta" onclick="jumpTo('newsletter')">NEWSLETTER</button>
+    </div>
+
+    <div class="album">
+      <img src="images/Enough_Album.png" alt="Enough Album Cover" loading="lazy">
+      <h2>Enough Album<br>2/17/2026 | Pre-Save TBA</h2>
+      <video controls playsinline preload="metadata" loading="lazy">
+        <source src="media/album.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="scroll-prompt">Scroll for more neon ↓</div>
   </div>
 
-  <div class="album">
-    <img src="images/Enough_Album.png" alt="Enough Album Cover">
-    <h2>Enough Album<br>2/17/2026 | Pre-Save TBA</h2>
-    <video controls playsinline preload="metadata">
-      <source src="media/album.mp4" type="video/mp4">
-    </video>
+  <!-- VIDEOS -->
+  <section id="videos">
+    <h2>VIDEOS</h2>
+    <div class="videos">
+      <iframe src="https://www.youtube.com/embed/5Kg-bZciyYM?enablejsapi=1" title="Video 1" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe src="https://www.youtube.com/embed/bX79TXSm-UQ?enablejsapi=1" title="Video 2" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe src="https://www.youtube.com/embed/Em6pd-iit8A?enablejsapi=1" title="Video 3" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER + Discord -->
+  <section id="newsletter">
+    <h2>JOIN THE SYNN SQUAD</h2>
+    <p style="max-width: 600px; margin: 0 auto 30px; color: #ff4da6; font-size: 1.1rem;">
+      Get exclusive drops, Fresno events, early access, and more. No spam, just neon vibes 🕶️
+    </p>
+
+    <!-- Basin Newsletter Form -->
+    <form id="basin-form" class="basin-card" action="https://usebasin.com/f/1bd9b9512003" method="POST" accept-charset="UTF-8">
+      <!-- Basin hidden fields -->
+      <input type="hidden" name="_to" value="synovamedia@gmail.com">
+      <input type="hidden" name="_subject" value="LIL SYNN Newsletter Submission">
+
+      <div class="brand">
+        <div class="logo">LS</div>
+        <div>
+          <h1>LIL SYNN Newsletter</h1>
+          <p class="lead">Join the squad — enter your email and we'll send updates.</p>
+        </div>
+      </div>
+
+      <label for="name">Your Name (optional)</label>
+      <input id="name" name="name" type="text" placeholder="Lil Synn Fan">
+
+      <label for="email" class="required">Email address</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required aria-required="true">
+
+      <!-- Honeypot anti-spam -->
+      <div class="honeypot">
+        <label for="website">Don't fill this out if you're human:</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button type="submit" id="submit-btn">Sign up now</button>
+
+      <div class="note">By submitting you agree to receive related updates from LIL SYNN.</div>
+
+      <!-- Success message -->
+      <div id="success-message">
+        You're in the squad! 🕶️<br>
+        Check your inbox soon for confirmation. Welcome to the SYNN Squad!
+      </div>
+    </form>
+
+    <h2>DISCORD</h2>
+    <p style="color:#ff4da6; margin:20px auto; max-width:600px;">
+      Jump into the SYNN Squad Discord for behind-the-scenes, live chats, and Fresno meetup plans!
+    </p>
+    <a href="https://discord.gg/yJrKFqbJ" target="_blank" rel="noopener noreferrer" class="cta" style="display:inline-block; margin:20px auto;">
+      Join Discord Now → 🕶️
+    </a>
+  </section>
+
+  <!-- TRANSITION OVERLAY -->
+  <div id="transition-overlay">
+    <span>🕶️</span>
   </div>
-</div>
 
-<!-- VIDEOS -->
-<section id="videos">
-  <h2>VIDEOS</h2>
-  <div class="videos">
-    <iframe src="https://www.youtube.com/embed/5Kg-bZciyYM" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/bX79TXSm-UQ" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/Em6pd-iit8A" allowfullscreen></iframe>
+  <!-- BACK TO TOP -->
+  <div id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+  <!-- LATEST DROP BADGE -->
+  <div id="latest-drop-badge">
+    <span>Latest Drop: Ties Remain</span>
+    <a href="https://open.spotify.com/track/7DxjD914jKX7FxD9kvwOpy?si=ZntrdzNaQJKe1q98P9AjBw" target="_blank" rel="noopener noreferrer">Listen →</a>
   </div>
-</section>
 
-<!-- NEWSLETTER -->
-<section id="newsletter">
-  <h2>SUBSCRIBE TO NEWSLETTER</h2>
-  <iframe
-    src="https://dark-newsletter-hub--lilsynn.replit.app/signup?source=embed"
-    width="100%"
-    height="600"
-    frameborder="0"
-    style="border:none;border-radius:12px;">
-  </iframe>
-</section>
+  <!-- FLOATING MINI PLAYER -->
+  <div id="mini-player">
+    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">LISTEN NOW 🕶️</a>
+  </div>
 
-<!-- 🕶️ OVERLAY -->
-<div id="transition-overlay">
-  <span>🕶️</span>
-</div>
+  <footer>
+    © 2026 | LIL SYNN | SYNTIENT RECORDS<br>
+    Site Design by Synova Media
+  </footer>
 
-<footer>
-  © 2026 | LIL SYNN | SYNTIENT RECORDS<br>
-  Site Design by Synova Media
-</footer>
+  <script>
+    // Toggle dropdowns
+    function toggleMenu(btn) {
+      const menu = btn.nextElementSibling;
+      const isOpen = menu.classList.contains('open');
 
-<script>
-function toggleMenu(btn) {
-  const menu = btn.querySelector('.dropdown');
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    if (b !== btn) {
-      b.classList.remove('active');
-      const m = b.querySelector('.dropdown');
-      if (m) m.classList.remove('open');
+      document.querySelectorAll('.dropdown.open').forEach(m => {
+        m.classList.remove('open');
+        m.previousElementSibling.classList.remove('active');
+        m.previousElementSibling.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        menu.classList.add('open');
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     }
-  });
-  btn.classList.toggle('active');
-  if (menu) menu.classList.toggle('open');
-}
 
-function closeAllMenus() {
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.remove('active');
-    const m = btn.querySelector('.dropdown');
-    if (m) m.classList.remove('open');
-  });
-}
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.nav-btn') && !e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown.open').forEach(m => {
+          m.classList.remove('open');
+          m.previousElementSibling.classList.remove('active');
+          m.previousElementSibling.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
 
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.nav-btn')) {
-    closeAllMenus();
-  }
-});
+    // Delayed nav
+    function delayedNav(e, url) {
+      e.preventDefault();
+      const overlay = document.getElementById('transition-overlay');
+      overlay.classList.add('show');
+      setTimeout(() => overlay.classList.add('fade-out'), 600);
+      setTimeout(() => { window.location.href = url; }, 1200);
+    }
 
-function delayedNav(e, url) {
-  e.preventDefault();
-  closeAllMenus();
-  const overlay = document.getElementById('transition-overlay');
-  overlay.classList.add('show');
-  
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-  }, 500);
-  
-  setTimeout(() => {
-    window.location.href = url;
-  }, 1000);
-}
+    // Jump with overlay
+    function jumpTo(id) {
+      const overlay = document.getElementById('transition-overlay');
+      overlay.classList.add('show');
+      setTimeout(() => overlay.classList.add('fade-out'), 600);
+      setTimeout(() => {
+        overlay.classList.remove('show', 'fade-out');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      }, 1200);
+    }
 
-function jumpTo(id) {
-  const overlay = document.getElementById('transition-overlay');
-  overlay.classList.add('show');
-  
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-  }, 500);
-  
-  setTimeout(() => {
-    overlay.classList.remove('show', 'fade-out');
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-  }, 1000);
-}
-</script>
+    // Scroll handlers
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      lastScrollY = scrollY;
 
+      document.getElementById('back-to-top').classList.toggle('visible', scrollY > 400);
+      document.getElementById('mini-player').classList.toggle('visible', scrollY > 600);
+      document.getElementById('latest-drop-badge').classList.toggle('visible', scrollY > 300);
+
+      const prompt = document.querySelector('.scroll-prompt');
+      if (prompt) prompt.classList.toggle('hidden', scrollY > 100);
+    });
+
+    // Basin form handling
+    const form = document.getElementById('basin-form');
+    const btn = document.getElementById('submit-btn');
+    const successMsg = document.getElementById('success-message');
+
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        btn.classList.add('loading');
+        btn.textContent = 'Signing up...';
+        btn.disabled = true;
+
+        // Show success after short delay (fallback in case Basin reloads page)
+        setTimeout(() => {
+          if (form.checkValidity()) {
+            successMsg.style.display = 'block';
+            form.reset();
+            btn.classList.remove('loading');
+            btn.textContent = 'Sign up now';
+            btn.disabled = false;
+          }
+        }, 1200);
+      });
+    }
+  </script>
 </body>
 </html>
