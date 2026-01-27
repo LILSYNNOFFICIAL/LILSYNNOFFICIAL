@@ -7,8 +7,6 @@
   <link rel="preload" href="images/lil-synn-hero2.png" as="image">
   <link rel="preload" href="images/Enough_Album.png" as="image">
   <link rel="preload" href="media/album.mp4" as="video">
-  <!-- Favicon: replace with your pink sunglasses icon -->
-  <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 
   <style>
     :root {
@@ -36,6 +34,56 @@
     }
 
     a { color: var(--pink-text); text-decoration: none; }
+
+    /* CRT Scanlines Overlay */
+    .crt-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) 49%,
+        rgba(0,0,0,0.18) 50%,
+        rgba(0,0,0,0.18) 51%
+      );
+      background-size: 100% 4px;
+      z-index: 1;
+      mix-blend-mode: multiply;
+      opacity: 0.65;
+      animation: flicker 10s infinite alternate;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 0.65; }
+      50% { opacity: 0.45; }
+    }
+
+    /* Phoenix Click Overlay */
+    #phoenix-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 18rem;
+      z-index: 2000;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(0,0,0,0.7);
+    }
+
+    #phoenix-overlay.active {
+      display: flex;
+      animation: phoenixFlyAndFade 3.5s forwards;
+    }
+
+    @keyframes phoenixFlyAndFade {
+      0%   { opacity: 0; transform: scale(0.5) translateY(-30%); text-shadow: 0 0 40px #ff4500; }
+      20%  { opacity: 1; transform: scale(1.4) translateY(0); text-shadow: 0 0 120px #ffd700, 0 0 180px #ff4500; }
+      40%  { transform: scale(1.8) translateY(15%); text-shadow: 0 0 160px #ff8c00, 0 0 240px #ff4500; }
+      60%  { transform: scale(2.2) translateY(30%); text-shadow: 0 0 200px #ffd700, 0 0 300px #ff4500; }
+      100% { opacity: 0; transform: scale(3) translateY(60%); text-shadow: 0 0 0; }
+    }
 
     #bg-image {
       position: fixed;
@@ -87,6 +135,15 @@
       margin: 0 0 40px;
       letter-spacing: 0.2em;
       animation: glitch 3s infinite alternate, glow 4s infinite alternate;
+    }
+
+    .phoenix-trigger {
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .phoenix-trigger:hover {
+      transform: scale(1.2) rotate(10deg);
     }
 
     @keyframes glitch {
@@ -223,6 +280,8 @@
       margin: 0 auto;
       max-width: 340px;
       animation: glowPulse 5s infinite alternate ease-in-out;
+      position: relative;
+      cursor: pointer;
     }
 
     @keyframes glowPulse {
@@ -235,18 +294,29 @@
       border: 3px solid var(--pink);
       box-shadow: 0 0 40px var(--pink-glow);
       border-radius: 16px;
-      transition: transform 0.4s ease;
+      display: block;
+      transition: transform 0.6s ease-out;
       transform-style: preserve-3d;
     }
 
-    .album:hover img {
-      transform: rotateY(10deg) rotateX(8deg) scale(1.05);
-    }
+    /* Tilt classes */
+    .album.tilt-left-up    img { transform: rotateX(18deg) rotateY(-18deg) scale(1.05); }
+    .album.tilt-right-up   img { transform: rotateX(18deg) rotateY(18deg)  scale(1.05); }
+    .album.tilt-left-down  img { transform: rotateX(-18deg) rotateY(-18deg) scale(1.05); }
+    .album.tilt-right-down img { transform: rotateX(-18deg) rotateY(18deg)  scale(1.05); }
 
     .album h2 {
-      margin: 30px 0 20px;
+      margin: 30px 0 10px;
       letter-spacing: 0.2em;
       font-size: 1.5rem;
+    }
+
+    #countdown {
+      font-size: 1.4rem;
+      color: var(--pink-text);
+      margin: 20px 0 30px;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 15px var(--pink-glow);
     }
 
     video {
@@ -255,6 +325,12 @@
       max-width: 560px;
       border: 1px solid var(--pink);
       border-radius: 12px;
+      transition: all 0.4s ease;
+    }
+
+    video:hover {
+      box-shadow: 0 0 50px var(--pink-glow);
+      transform: scale(1.02);
     }
 
     section {
@@ -285,6 +361,12 @@
       border: none;
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(0,0,0,.9);
+      transition: all 0.4s ease;
+    }
+
+    iframe:not(.spotify-iframe):hover {
+      box-shadow: 0 0 60px var(--pink-glow);
+      transform: scale(1.03);
     }
 
     #transition-overlay {
@@ -373,7 +455,7 @@
       letter-spacing: 0.1em;
       animation: pulse 2s infinite alternate;
       pointer-events: none;
-      transition: opacity 1s;
+      transition: opacity 0.8s;
     }
 
     .scroll-prompt.hidden {
@@ -414,9 +496,15 @@
       font-weight: bold;
       box-shadow: 0 0 20px var(--pink-glow);
       transition: all 0.2s;
+      display: inline-block;
+      animation: pulseScale 2.5s infinite alternate;
     }
 
     #mini-player a:hover { transform: scale(1.08); }
+
+    @keyframes pulseScale {
+      to { transform: scale(1.06); }
+    }
 
     footer {
       padding: 60px 20px;
@@ -579,11 +667,58 @@
     @media (max-width: 768px) {
       .basin-card { padding: 18px; }
       .basin-card h1 { font-size: 16px; }
+      #phoenix-overlay { font-size: 12rem; }
+      .album img { transition: transform 0.8s ease-out; } /* slower on touch */
+    }
+
+    .newsletter-iframe-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto 60px;
+      height: 950px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(255,47,146,0.25);
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,47,146,0.4);
+    }
+
+    .newsletter-iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    #base44-badge,
+    .base44-badge,
+    [id*="base44-badge"],
+    [class*="base44-badge"],
+    div[id="base44-badge"],
+    div[class*="badge"][contains(text(),"Base44") i],
+    div[style*="fixed"][contains(text(),"Base44") i],
+    span:contains("×") + span:contains("Base44"),
+    img[src*="base44.com"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      width: 0 !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      left: -9999px !important;
     }
   </style>
 </head>
 
 <body>
+
+  <div class="crt-overlay"></div>
+
+  <!-- Phoenix Click Overlay -->
+  <div id="phoenix-overlay">🐦‍🔥</div>
 
   <img id="bg-image" src="images/lil-synn-hero2.png" alt="Background" loading="lazy">
 
@@ -591,7 +726,7 @@
     <div style="position: fixed; inset: 0; background: #000; color: var(--pink); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-align: center; padding: 30px; z-index: 99999;">
       <div>
         JavaScript is disabled.<br><br>
-        This site requires JavaScript for navigation, transitions, menus, tilt effects, animations, and interactive elements.<br><br>
+        This site requires JavaScript for navigation, transitions, menus, animations, and interactive elements.<br><br>
         Please enable JavaScript and refresh.
       </div>
     </div>
@@ -629,7 +764,7 @@
   <!-- HERO -->
   <div class="hero">
     <h1><span>LIL SYNN 🕶️</span></h1>
-    <p class="tagline">I'm light, I'm wave 🐦‍🔥</p>
+    <p class="tagline">I'm light, I'm wave <span class="phoenix-trigger" onclick="triggerPhoenix()">🐦‍🔥</span></p>
 
     <div class="spotify-embed-container">
       <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/artist/6ozcOAnRAUPn3z5c0GR5kU?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="spotify-iframe"></iframe>
@@ -640,9 +775,10 @@
       <button class="cta" onclick="jumpTo('newsletter')">NEWSLETTER</button>
     </div>
 
-    <div class="album">
+    <div class="album" id="album">
       <img src="images/Enough_Album.png" alt="Enough Album Cover" loading="lazy">
       <h2>Enough Album<br>2/17/2026 | Pre-Save TBA</h2>
+      <div id="countdown">Enough drops in: <span id="timer"></span></div>
       <video controls playsinline preload="metadata" loading="lazy">
         <source src="media/album.mp4" type="video/mp4">
       </video>
@@ -655,9 +791,9 @@
   <section id="videos">
     <h2>VIDEOS</h2>
     <div class="videos">
-      <iframe src="https://www.youtube.com/embed/5Kg-bZciyYM?enablejsapi=1" title="Video 1" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
-      <iframe src="https://www.youtube.com/embed/bX79TXSm-UQ?enablejsapi=1" title="Video 2" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
-      <iframe src="https://www.youtube.com/embed/Em6pd-iit8A?enablejsapi=1" title="Video 3" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe id="yt1" src="https://www.youtube.com/embed/5Kg-bZciyYM?enablejsapi=1" title="Video 1" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe id="yt2" src="https://www.youtube.com/embed/bX79TXSm-UQ?enablejsapi=1" title="Video 2" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe id="yt3" src="https://www.youtube.com/embed/Em6pd-iit8A?enablejsapi=1" title="Video 3" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
     </div>
   </section>
 
@@ -665,49 +801,26 @@
   <section id="newsletter">
     <h2>JOIN THE SYNN SQUAD</h2>
     <p style="max-width: 600px; margin: 0 auto 30px; color: #ff4da6; font-size: 1.1rem;">
-      Get exclusive drops, events, early access, and more. No spam, just neon vibes 🕶️
+      Get exclusive drops, early access, and more. No spam, just neon vibes 🕶️
     </p>
 
-    <!-- Basin Newsletter Form -->
-    <form id="basin-form" class="basin-card" action="https://usebasin.com/f/1bd9b9512003" method="POST" accept-charset="UTF-8">
-      <!-- Basin hidden fields -->
-      <input type="hidden" name="_to" value="synovamedia@gmail.com">
-      <input type="hidden" name="_subject" value="LIL SYNN Newsletter Submission">
-
-      <div class="brand">
-        <div class="logo">LS</div>
-        <div>
-          <h1>LIL SYNN Newsletter</h1>
-          <p class="lead">Join the squad — enter your email and we'll send updates.</p>
-        </div>
-      </div>
-
-      <label for="name">Your Name (optional)</label>
-      <input id="name" name="name" type="text" placeholder="Lil Synn Fan">
-
-      <label for="email" class="required">Email address</label>
-      <input id="email" name="email" type="email" placeholder="you@example.com" required aria-required="true">
-
-      <!-- Honeypot anti-spam -->
-      <div class="honeypot">
-        <label for="website">Don't fill this out if you're human:</label>
-        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
-      </div>
-
-      <button type="submit" id="submit-btn">Sign up now</button>
-
-      <div class="note">By submitting you agree to receive related updates from LIL SYNN.</div>
-
-      <!-- Success message -->
-      <div id="success-message">
-        You're in the squad! 🕶️<br>
-        Check your inbox soon for confirmation. Welcome to the SYNN Squad!
-      </div>
-    </form>
+    <div class="newsletter-iframe-wrapper">
+      <iframe 
+        id="basin-iframe"
+        src="https://synstatic-newsletter.base44.app/forum" 
+        width="100%" 
+        height="100%" 
+        frameborder="0" 
+        scrolling="no"
+        style="border-radius:12px;"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
 
     <h2>DISCORD</h2>
     <p style="color:#ff4da6; margin:20px auto; max-width:600px;">
-      Jump into the SYNN Squad Discord for behind-the-scenes, live and chats!
+      Jump into the SYNN Squad Discord for behind-the-scenes, live chats, and more!
     </p>
     <a href="https://discord.gg/yJrKFqbJ" target="_blank" rel="noopener noreferrer" class="cta" style="display:inline-block; margin:20px auto;">
       Join Discord Now → 🕶️
@@ -739,6 +852,97 @@
   </footer>
 
   <script>
+    // Phoenix trigger on click
+    function triggerPhoenix() {
+      const overlay = document.getElementById('phoenix-overlay');
+      overlay.classList.add('active');
+      setTimeout(() => {
+        overlay.classList.remove('active');
+      }, 4000);
+    }
+
+    // Quadrant-based click tilt for album
+    document.addEventListener('DOMContentLoaded', () => {
+      const album = document.getElementById('album');
+      if (!album) return;
+
+      album.addEventListener('click', (e) => {
+        const rect = album.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const halfW = rect.width / 2;
+        const halfH = rect.height / 2;
+
+        let tiltClass = '';
+
+        if (x < halfW) {
+          // left side
+          if (y < halfH) tiltClass = 'tilt-left-up';
+          else           tiltClass = 'tilt-left-down';
+        } else {
+          // right side
+          if (y < halfH) tiltClass = 'tilt-right-up';
+          else           tiltClass = 'tilt-right-down';
+        }
+
+        // Remove any previous tilt classes
+        album.classList.remove('tilt-left-up', 'tilt-right-up', 'tilt-left-down', 'tilt-right-down');
+        // Apply new tilt
+        album.classList.add(tiltClass);
+
+        // Auto-reset after 2.2 seconds
+        setTimeout(() => {
+          album.classList.remove('tilt-left-up', 'tilt-right-up', 'tilt-left-down', 'tilt-right-down');
+        }, 2200);
+      });
+    });
+
+    // Auto-reload YouTube embeds (3 attempts)
+    setTimeout(() => {
+      const ytFrames = [
+        document.getElementById('yt1'),
+        document.getElementById('yt2'),
+        document.getElementById('yt3')
+      ];
+      let attempt = 0;
+
+      const reloadRound = () => {
+        ytFrames.forEach(frame => {
+          if (frame) {
+            const src = frame.src;
+            frame.src = '';
+            setTimeout(() => { frame.src = src; }, 300);
+          }
+        });
+        attempt++;
+        if (attempt < 3) {
+          setTimeout(reloadRound, 1200);
+        }
+      };
+
+      reloadRound();
+    }, 2500);
+
+    // Countdown to Enough album
+    const releaseDate = new Date("2026-02-17T00:00:00").getTime();
+    const timer = document.getElementById("timer");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = releaseDate - now;
+      if (distance < 0) {
+        timer.innerHTML = "Out Now! 🕶️";
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      timer.innerHTML = `${days}d ${hours}h ${minutes}m`;
+    }
+    setInterval(updateCountdown, 60000);
+    updateCountdown();
+
     // Toggle dropdowns
     function toggleMenu(btn) {
       const menu = btn.nextElementSibling;
@@ -798,32 +1002,8 @@
       document.getElementById('latest-drop-badge').classList.toggle('visible', scrollY > 300);
 
       const prompt = document.querySelector('.scroll-prompt');
-      if (prompt) prompt.classList.toggle('hidden', scrollY > 100);
+      if (prompt) prompt.classList.toggle('hidden', scrollY > 80);
     });
-
-    // Basin form handling
-    const form = document.getElementById('basin-form');
-    const btn = document.getElementById('submit-btn');
-    const successMsg = document.getElementById('success-message');
-
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        btn.classList.add('loading');
-        btn.textContent = 'Signing up...';
-        btn.disabled = true;
-
-        // Show success after short delay (fallback in case Basin reloads page)
-        setTimeout(() => {
-          if (form.checkValidity()) {
-            successMsg.style.display = 'block';
-            form.reset();
-            btn.classList.remove('loading');
-            btn.textContent = 'Sign up now';
-            btn.disabled = false;
-          }
-        }, 1200);
-      });
-    }
   </script>
 </body>
 </html>
