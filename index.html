@@ -468,9 +468,9 @@
     }
 
     /* Floating mini player bar */
-    #mini-player {
+    #mini-player,
+    #mini-presave {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
       background: rgba(0,0,0,0.85);
@@ -486,9 +486,21 @@
       transition: transform 0.4s ease;
     }
 
-    #mini-player.visible { transform: translateY(0); }
+    #mini-player.visible,
+    #mini-presave.visible {
+      transform: translateY(0);
+    }
 
-    #mini-player a {
+    #mini-player {
+      bottom: 0;
+    }
+
+    #mini-presave {
+      bottom: 70px; /* stacks above the listen bar - adjust if needed */
+    }
+
+    #mini-player a,
+    #mini-presave a {
       background: var(--pink);
       color: #000;
       padding: 10px 24px;
@@ -500,7 +512,10 @@
       animation: pulseScale 2.5s infinite alternate;
     }
 
-    #mini-player a:hover { transform: scale(1.08); }
+    #mini-player a:hover,
+    #mini-presave a:hover {
+      transform: scale(1.08);
+    }
 
     @keyframes pulseScale {
       to { transform: scale(1.06); }
@@ -710,6 +725,12 @@
       position: absolute !important;
       left: -9999px !important;
     }
+
+    /* Extra spacing for the new pre-save button in hero */
+    .pre-save-cta {
+      margin: 20px auto;
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -777,8 +798,14 @@
 
     <div class="album" id="album">
       <img src="images/Enough_Album.png" alt="Enough Album Cover" loading="lazy">
-      <h2>Enough Album<br>2/17/2026 | Pre-Save TBA</h2>
+      <h2>Enough Album<br>2/17/2026 | Pre-Save Now</h2>
       <div id="countdown">Enough drops in: <span id="timer"></span></div>
+
+      <!-- Pre-Save CTA button (in hero section) -->
+      <a href="https://sndo.ffm.to/yxd9jxo" target="_blank" rel="noopener noreferrer" class="cta pre-save-cta">
+        PRE-SAVE NOW 🕶️
+      </a>
+
       <video controls playsinline preload="metadata" loading="lazy">
         <source src="media/album.mp4" type="video/mp4">
       </video>
@@ -791,9 +818,32 @@
   <section id="videos">
     <h2>VIDEOS</h2>
     <div class="videos">
-      <iframe id="yt1" src="https://www.youtube.com/embed/5Kg-bZciyYM?enablejsapi=1" title="Video 1" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
-      <iframe id="yt2" src="https://www.youtube.com/embed/bX79TXSm-UQ?enablejsapi=1" title="Video 2" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
-      <iframe id="yt3" src="https://www.youtube.com/embed/Em6pd-iit8A?enablejsapi=1" title="Video 3" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" scrolling="no"></iframe>
+      <iframe id="yt1" 
+              src="https://www.youtube-nocookie.com/embed/5Kg-bZciyYM?enablejsapi=1" 
+              title="Video 1" 
+              loading="lazy" 
+              allowfullscreen 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              scrolling="no"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+      <iframe id="yt2" 
+              src="https://www.youtube-nocookie.com/embed/bX79TXSm-UQ?enablejsapi=1" 
+              title="Video 2" 
+              loading="lazy" 
+              allowfullscreen 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              scrolling="no"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+      <iframe id="yt3" 
+              src="https://www.youtube-nocookie.com/embed/Em6pd-iit8A?enablejsapi=1" 
+              title="Video 3" 
+              loading="lazy" 
+              allowfullscreen 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              scrolling="no"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </section>
 
@@ -841,9 +891,14 @@
     <a href="https://open.spotify.com/track/7DxjD914jKX7FxD9kvwOpy?si=ZntrdzNaQJKe1q98P9AjBw" target="_blank" rel="noopener noreferrer">Listen →</a>
   </div>
 
-  <!-- FLOATING MINI PLAYER -->
+  <!-- FLOATING MINI PLAYER (Listen Now) -->
   <div id="mini-player">
     <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">LISTEN NOW 🕶️</a>
+  </div>
+
+  <!-- NEW FLOATING MINI PRESAVE (appears on scroll) -->
+  <div id="mini-presave">
+    <a href="https://sndo.ffm.to/yxd9jxo" target="_blank" rel="noopener noreferrer">PRE-SAVE NOW 🕶️</a>
   </div>
 
   <footer>
@@ -877,28 +932,23 @@
         let tiltClass = '';
 
         if (x < halfW) {
-          // left side
           if (y < halfH) tiltClass = 'tilt-left-up';
           else           tiltClass = 'tilt-left-down';
         } else {
-          // right side
           if (y < halfH) tiltClass = 'tilt-right-up';
           else           tiltClass = 'tilt-right-down';
         }
 
-        // Remove any previous tilt classes
         album.classList.remove('tilt-left-up', 'tilt-right-up', 'tilt-left-down', 'tilt-right-down');
-        // Apply new tilt
         album.classList.add(tiltClass);
 
-        // Auto-reset after 2.2 seconds
         setTimeout(() => {
           album.classList.remove('tilt-left-up', 'tilt-right-up', 'tilt-left-down', 'tilt-right-down');
         }, 2200);
       });
     });
 
-    // Auto-reload YouTube embeds (3 attempts)
+    // Auto-reload YouTube embeds (optional - can remove if not needed)
     setTimeout(() => {
       const ytFrames = [
         document.getElementById('yt1'),
@@ -971,7 +1021,7 @@
       }
     });
 
-    // Delayed nav
+    // Delayed nav with transition
     function delayedNav(e, url) {
       e.preventDefault();
       const overlay = document.getElementById('transition-overlay');
@@ -980,7 +1030,7 @@
       setTimeout(() => { window.location.href = url; }, 1200);
     }
 
-    // Jump with overlay
+    // Smooth jump to section with overlay
     function jumpTo(id) {
       const overlay = document.getElementById('transition-overlay');
       overlay.classList.add('show');
@@ -991,14 +1041,13 @@
       }, 1200);
     }
 
-    // Scroll handlers
-    let lastScrollY = window.scrollY;
+    // Scroll handlers for floating elements
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
-      lastScrollY = scrollY;
 
       document.getElementById('back-to-top').classList.toggle('visible', scrollY > 400);
       document.getElementById('mini-player').classList.toggle('visible', scrollY > 600);
+      document.getElementById('mini-presave').classList.toggle('visible', scrollY > 600); // NEW: toggle pre-save bar
       document.getElementById('latest-drop-badge').classList.toggle('visible', scrollY > 300);
 
       const prompt = document.querySelector('.scroll-prompt');
