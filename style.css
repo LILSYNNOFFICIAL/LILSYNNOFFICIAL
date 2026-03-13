@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Inter:wght@400;600&display=swap');
+
+:root {
+    --pink: #ff008f;
+    --glow: #ff4fd8;
+    --purple: #7a00ff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: black;
+}
+
+h1, h2 {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.menu-text {
+    font-family: 'Rajdhani', sans-serif;
+}
+
+/* NEON + GLASS */
+.neon-text {
+    text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple);
+}
+
+.glass {
+    background: rgba(13,13,13,0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,0,143,0.3);
+}
+
+/* SOCIAL ICONS — PERMANENT PINK GLOW (fixes the gray look in your screenshot) */
+.social-icon {
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 15px #ff008f) drop-shadow(0 0 25px #ff4fd8) brightness(1.3);
+}
+.social-icon:hover {
+    filter: drop-shadow(0 0 30px #ff008f) drop-shadow(0 0 50px #ff4fd8) brightness(1.6) saturate(1.8);
+}
+
+/* FLOATING SPOTIFY */
+iframe {
+    box-shadow: 0 0 60px rgba(255, 0, 143, 0.6);
+    background: rgba(0,0,0,0.7);
+    border-radius: 16px;
+}
+
+/* VIDEO & TRANSPARENT SECTIONS */
+video {
+    filter: brightness(0.95) contrast(1.05);
+}
+section {
+    background: transparent !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .neon-text {
+        font-size: 5.5rem;
+    }
+}
