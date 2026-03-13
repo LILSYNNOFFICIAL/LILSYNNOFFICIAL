@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIL SYNN | I'm light. I'm wave.</title>
+    <meta name="description" content="LIL SYNN official cyberpunk artist site • dark trap • neon noir">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&amp;family=Rajdhani:wght@400;600&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white overflow-x-hidden font-['Inter']">
+
+    <!-- NAV -->
+    <nav class="fixed top-0 z-50 w-full bg-black/90 backdrop-blur-lg border-b border-[#ff008f]/30">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="text-4xl font-['Orbitron'] tracking-widest text-[#ff008f]">LIL SYNN</div>
+            <button id="hamburger" class="text-5xl text-[#ff008f]">☰</button>
+        </div>
+    </nav>
+
+    <!-- HAMBURGER MENU with SOCIALS dropdown -->
+    <div id="sideMenu" class="fixed top-0 right-0 h-full w-80 bg-[#0d0d0d]/95 backdrop-blur-2xl translate-x-full transition-all duration-300 z-50 p-8 overflow-y-auto">
+        <button id="closeMenu" class="text-4xl mb-8 text-[#ff008f]">✕</button>
+        
+        <div class="space-y-1 text-base font-['Rajdhani'] tracking-widest text-white/90">
+            <a href="#" class="block py-1.5 hover:text-[#ff008f]">HOME</a>
+            <a href="#music" class="block py-1.5 hover:text-[#ff008f]">MUSIC</a>
+            <a href="#videos" class="block py-1.5 hover:text-[#ff008f]">VIDEOS</a>
+            <a href="#presave" class="block py-1.5 hover:text-[#ff008f]">PRESAVE</a>
+            <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="block py-1.5 hover:text-[#ff008f]">SPOTIFY</a>
+            <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" class="block py-1.5 hover:text-[#ff008f]">APPLE MUSIC</a>
+            <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="block py-1.5 hover:text-[#ff008f]">SOUNDCLOUD</a>
+            <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="block py-1.5 hover:text-[#ff008f]">YOUTUBE</a>
+            <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="block py-1.5 hover:text-[#ff008f]">INSTAGRAM</a>
+            <a href="https://x.com/lilsynnofficial" target="_blank" class="block py-1.5 hover:text-[#ff008f]">TWITTER / X</a>
+            <a href="#contact" class="block py-1.5 hover:text-[#ff008f]">CONTACT</a>
+            
+            <button id="socialsTrigger" class="block w-full text-left py-1.5 hover:text-[#ff008f] flex justify-between items-center">
+                SOCIALS <span class="text-xs">▼</span>
+            </button>
+        </div>
+
+        <div id="socialsDropdown" class="hidden mt-4 grid grid-cols-2 gap-8 text-6xl pt-4 border-t border-[#ff008f]/30"></div>
+    </div>
+
+    <!-- SINGLE ULTRA-TALL VIDEO (even shorter + Spotify bumped WAY higher) -->
+    <section class="relative h-[200vh] w-full overflow-hidden">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+            <source src="assets/mov/bg.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40"></div>
+        
+        <!-- HERO TEXT (kept high) -->
+        <div class="absolute top-[20%] left-0 right-0 text-center z-10 px-6">
+            <h1 class="text-8xl md:text-[12rem] font-black font-['Orbitron'] neon-text">LIL SYNN</h1>
+            <p class="text-4xl md:text-6xl font-['Rajdhani'] tracking-[0.5em] mt-4">"I'M LIGHT. I'M WAVE."</p>
+        </div>
+
+        <!-- SPOTIFY PLAYER — BUMPED EVEN HIGHER -->
+        <div class="absolute top-[52%] left-1/2 -translate-x-1/2 z-20 w-11/12 max-w-2xl px-4">
+            <iframe style="border-radius:16px" width="100%" height="420" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/artist/6ozcOAnRAUPn3z5c0GR5kU?utm_source=generator&amp;theme=0"></iframe>
+        </div>
+    </section>
+
+    <!-- ALL CONTENT BUMPED UP EVEN MORE (tight padding, starts right after Spotify) -->
+    <section id="videos" class="py-8 bg-transparent">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-5xl font-['Orbitron'] text-center mb-8 text-[#ff008f]">LATEST VIDEOS</h2>
+            <div id="youtube-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+        </div>
+    </section>
+
+    <section id="presave" class="py-8 bg-transparent">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-5xl font-['Orbitron'] text-center mb-8 text-[#ff4fd8]">PRESAVE • ENOUGH</h2>
+            <iframe id="soundon-iframe" src="https://www.soundon.global/bio/lilsynn" width="100%" height="1050" style="border-radius:16px;border:1px solid rgba(255,0,143,0.3);" allowfullscreen sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
+        </div>
+    </section>
+
+    <section id="contact" class="py-8 bg-transparent">
+        <div class="max-w-4xl mx-auto text-center px-6">
+            <h2 class="text-5xl font-['Orbitron'] mb-8">CONTACT</h2>
+            <p class="text-2xl font-light">lilsynn@outlook.com<br>synovamedia@gmail.com</p>
+            <p class="mt-8 text-[#ff008f] text-xl tracking-widest">SYNTIENT RECORDS</p>
+        </div>
+    </section>
+
+    <section class="py-8 bg-transparent border-t border-[#ff008f]/20">
+        <div class="max-w-4xl mx-auto px-6">
+            <div id="main-social-grid" class="grid grid-cols-2 gap-8 text-6xl justify-items-center"></div>
+        </div>
+    </section>
+
+    <footer class="py-8 text-center text-xs tracking-widest text-[#ff008f]/70">© 2026 LIL SYNN • SYNTIENT RECORDS | Designed with Grok</footer>
+
+    <script src="script.js"></script>
+</body>
+      </html>
