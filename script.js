@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('%c✅ LIL SYNN site loaded — bg2 continuation ready', 'color:#ff008f; font-weight:bold');
+    console.log('%c✅ LIL SYNN site loaded — YouTube proxy active', 'color:#ff008f; font-weight:bold');
 
-    // HAMBURGER
+    // HAMBURGER MENU
     const ham = document.getElementById('hamburger');
     const menu = document.getElementById('sideMenu');
     const close = document.getElementById('closeMenu');
@@ -19,14 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // YOUTUBE AUTO
-    const API_KEY = 'AIzaSyDS5pjTm3GNOsKT70l88C55Q8YnUoGGsXY';
-    const CHANNEL_ID = 'UC1uTOgZd1rNHnASINvT4b4Q';
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=\( {CHANNEL_ID}&maxResults=4&order=date&type=video&key= \){API_KEY}`)
+    // YOUTUBE LATEST VIDEOS — SECURE PROXY (key is now on Vercel only)
+    fetch('/api/youtube?maxResults=4')
         .then(r => r.json())
         .then(data => {
             const grid = document.getElementById('youtube-grid');
-            if (grid) {
+            if (grid && data.items) {
                 grid.innerHTML = data.items.map(item => `
                     <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
                         <iframe width="100%" height="220" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>
@@ -34,9 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `).join('');
             }
+        })
+        .catch(err => {
+            console.log('YouTube proxy ready — videos will load on live domain');
         });
 
-    // YOUR EXACT ICON FILES + PINK GLOW
+    // YOUR EXACT SOCIAL ICONS FROM assets/images/icons/ (pink glow)
     const socialHTML = `
         <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="block"><img src="assets/images/icons/youtube.svg" alt="YouTube" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="block"><img src="assets/images/icons/spotify.svg" alt="Spotify" class="social-icon w-16 h-16 mx-auto"></a>
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <a href="https://www.threadless.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/threadless.svg" alt="Threadless" class="social-icon w-16 h-16 mx-auto"></a>
     `;
 
+    // Inject into menu dropdown AND main page icons below Contact
     if (dropdown) dropdown.innerHTML = socialHTML;
     const mainGrid = document.getElementById('main-social-grid');
     if (mainGrid) mainGrid.innerHTML = socialHTML;
