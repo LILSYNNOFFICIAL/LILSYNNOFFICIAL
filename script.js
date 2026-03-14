@@ -1,61 +1,81 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('%c✅ LIL SYNN script loaded — using Vercel proxy (key hidden)', 'color:#ff008f; font-weight:bold');
+// ================================
+// MOBILE MENU TOGGLE
+// ================================
+const menuButton = document.getElementById("menu-button");
+const mobileMenu = document.getElementById("mobile-menu");
 
-    // HAMBURGER MENU
-    const ham = document.getElementById('hamburger');
-    const menu = document.getElementById('sideMenu');
-    const close = document.getElementById('closeMenu');
-    ham.addEventListener('click', () => menu.classList.toggle('translate-x-full'));
-    close.addEventListener('click', () => menu.classList.add('translate-x-full'));
+if (menuButton && mobileMenu) {
+  menuButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+}
 
-    // SOCIALS DROPDOWN
-    const trigger = document.getElementById('socialsTrigger');
-    const dropdown = document.getElementById('socialsDropdown');
-    if (trigger && dropdown) {
-        trigger.addEventListener('click', () => {
-            dropdown.classList.toggle('hidden');
-            const arrow = trigger.querySelector('span');
-            if (arrow) arrow.textContent = dropdown.classList.contains('hidden') ? '▼' : '▲';
-        });
+// ================================
+// LOAD YOUTUBE VIDEOS (SECURE)
+// ================================
+async function loadYouTubeVideos() {
+  try {
+
+    const response = await fetch("/api/youtube");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch videos");
     }
 
-    // YOUTUBE — SECURE PROXY (uses your Vercel YOUTUBE_API_KEY)
-    fetch('/api/youtube?maxResults=4')
-        .then(r => {
-            if (!r.ok) throw new Error('Proxy failed: ' + r.status);
-            return r.json();
-        })
-        .then(data => {
-            console.log('✅ Videos loaded from proxy');
-            const grid = document.getElementById('youtube-grid');
-            if (grid && data.items) {
-                grid.innerHTML = data.items.map(item => `
-                    <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
-                        <iframe width="100%" height="220" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>
-                        <div class="p-4 text-sm font-['Rajdhani'] text-center">${item.snippet.title}</div>
-                    </div>
-                `).join('');
-            }
-        })
-        .catch(err => {
-            console.error('Proxy error:', err);
-            const grid = document.getElementById('youtube-grid');
-            if (grid) grid.innerHTML = `<div style="color:#ff4fd8;padding:40px;text-align:center;">Videos will appear here shortly...</div>`;
-        });
+    const data = await response.json();
 
-    // SOCIAL ICONS (only at bottom)
-    const socialHTML = `
-        <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="block"><img src="assets/images/icons/youtube.svg" alt="YouTube" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="block"><img src="assets/images/icons/spotify.svg" alt="Spotify" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" class="block"><img src="assets/images/icons/apple-music.svg" alt="Apple Music" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="block"><img src="assets/images/icons/instagram.svg" alt="Instagram" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://x.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/twitter.svg" alt="Twitter / X" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/soundcloud.svg" alt="SoundCloud" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/tiktok.svg" alt="TikTok" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://www.facebook.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/facebook.svg" alt="Facebook" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://www.threadless.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/threadless.svg" alt="Threadless" class="social-icon w-16 h-16 mx-auto"></a>
-    `;
+    const grid = document.getElementById("youtube-grid");
 
-    const mainGrid = document.getElementById('main-social-grid');
-    if (mainGrid) mainGrid.innerHTML = socialHTML;
+    if (!grid) {
+      console.error("youtube-grid element not found");
+      return;
+    }
+
+    if (!data.items || data.items.length === 0) {
+      grid.innerHTML = "<p>No videos found.</p>";
+      return;
+    }
+
+    grid.innerHTML = data.items.map(video => {
+
+      const videoId = video.id.videoId;
+      const title = video.snippet.title;
+
+      return `
+        <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8] transition">
+          
+          <iframe
+            width="100%"
+            height="220"
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+
+          <div class="p-4 text-sm font-['Rajdhani'] text-center">
+            ${title}
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+  } catch (error) {
+
+    console.error("YouTube load error:", error);
+
+    const grid = document.getElementById("youtube-grid");
+    if (grid) {
+      grid.innerHTML = "<p>Unable to load videos.</p>";
+    }
+
+  }
+}
+
+// ================================
+// INITIALIZE
+// ================================
+document.addEventListener("DOMContentLoaded", () => {
+  loadYouTubeVideos();
 });
