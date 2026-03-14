@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('%c✅ LIL SYNN site loaded — bg2 continuation ready', 'color:#ff008f; font-weight:bold');
+    console.log('%c✅ LIL SYNN script loaded — using Vercel proxy (key hidden)', 'color:#ff008f; font-weight:bold');
 
-    // HAMBURGER
+    // HAMBURGER MENU
     const ham = document.getElementById('hamburger');
     const menu = document.getElementById('sideMenu');
     const close = document.getElementById('closeMenu');
@@ -19,14 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // YOUTUBE AUTO (FIXED LOADING)
-    const API_KEY = process.env.YOUTUBE_API_KEY;  // Use environment variable
-    const CHANNEL_ID = 'UC1uTOgZd1rNHnASINvT4b4Q';  // Your channel ID
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=4&order=date&type=video&key=${API_KEY}`)
-        .then(r => r.json())
+    // YOUTUBE — SECURE PROXY (uses your Vercel environment variable)
+    fetch('/api/youtube?maxResults=4')
+        .then(r => {
+            if (!r.ok) throw new Error('Proxy failed: ' + r.status);
+            return r.json();
+        })
         .then(data => {
+            console.log('✅ Videos loaded from proxy');
             const grid = document.getElementById('youtube-grid');
-            if (grid) {
+            if (grid && data.items) {
                 grid.innerHTML = data.items.map(item => `
                     <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
                         <iframe width="100%" height="220" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>
@@ -35,24 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 `).join('');
             }
         })
-        .catch(error => console.error('YouTube API error:', error));  // Handle errors
+        .catch(err => {
+            console.error('❌ Proxy error:', err);
+            const grid = document.getElementById('youtube-grid');
+            if (grid) grid.innerHTML = `<div style="color:#ff4fd8;padding:40px;text-align:center;">Videos will appear here shortly...</div>`;
+        });
 
-    // SPOTIFY PLAYER (RESPONSIVE SIZING)
-    const spotifyContainer = document.getElementById('spotify-player');
-    if (spotifyContainer) {
-        spotifyContainer.innerHTML = `
-            <iframe 
-                src="https://open.spotify.com/embed/playlist/37i9dQZF1DX2vYju3i0lNX" 
-                width="100%" 
-                height="380" 
-                frameborder="0" 
-                allowtransparency="true" 
-                allow="encrypted-media">
-            </iframe>
-        `;
-    }
-
-    // YOUR EXACT ICON FILES + PINK GLOW
+    // SOCIAL ICONS (your exact files)
     const socialHTML = `
         <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="block"><img src="assets/images/icons/youtube.svg" alt="YouTube" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="block"><img src="assets/images/icons/spotify.svg" alt="Spotify" class="social-icon w-16 h-16 mx-auto"></a>
@@ -60,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="block"><img src="assets/images/icons/instagram.svg" alt="Instagram" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://x.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/twitter.svg" alt="Twitter / X" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/soundcloud.svg" alt="SoundCloud" class="social-icon w-16 h-16 mx-auto"></a>
-        <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/tiktok.svg" alt="Tiktok" class="social-icon w-16 h-16 mx-auto"></a>
+        <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/tiktok.svg" alt="TikTok" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://www.facebook.com/lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/facebook.svg" alt="Facebook" class="social-icon w-16 h-16 mx-auto"></a>
         <a href="https://www.threadless.com/@lilsynnofficial" target="_blank" class="block"><img src="assets/images/icons/threadless.svg" alt="Threadless" class="social-icon w-16 h-16 mx-auto"></a>
     `;
@@ -68,33 +59,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dropdown) dropdown.innerHTML = socialHTML;
     const mainGrid = document.getElementById('main-social-grid');
     if (mainGrid) mainGrid.innerHTML = socialHTML;
-
-    // **ADDED: MOBILE-SPECIFIC STYLING FOR SPOTIFY PLAYER**
-    if (window.innerWidth < 768) {
-        const spotifyIframe = spotifyContainer.querySelector('iframe');
-        if (spotifyIframe) {
-            spotifyIframe.height = '250';  // Smaller height on mobile
-        }
-    }
-
-    // **ADDED: ERROR HANDLING FOR YOUTUBE API**
-    const youtubeGrid = document.getElementById('youtube-grid');
-    if (youtubeGrid) {
-        youtubeGrid.innerHTML = '<p>Loading videos...</p>';
-    }
-
-    // **ADDED: WINDOW RESIZE HANDLER FOR RESPONSIVE SPOTIFY PLAYER**
-    window.addEventListener('resize', () => {
-        if (window.innerWidth < 768) {
-            const spotifyIframe = spotifyContainer.querySelector('iframe');
-            if (spotifyIframe) {
-                spotifyIframe.height = '250';
-            }
-        } else {
-            const spotifyIframe = spotifyContainer.querySelector('iframe');
-            if (spotifyIframe) {
-                spotifyIframe.height = '380';
-            }
-        }
-    });
 });
