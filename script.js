@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('%c✅ LIL SYNN script loaded — using Vercel proxy (key hidden)', 'color:#ff008f; font-weight:bold');
+    console.log('%c✅ Script loaded — direct YouTube fetch', 'color:#ff008f; font-weight:bold');
 
     // HAMBURGER MENU
     const ham = document.getElementById('hamburger');
@@ -19,14 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // YOUTUBE — SECURE PROXY (uses your Vercel environment variable)
-    fetch('/api/youtube?maxResults=4')
-        .then(r => {
-            if (!r.ok) throw new Error('Proxy failed: ' + r.status);
-            return r.json();
-        })
+    // YOUTUBE DIRECT FETCH (working version)
+    const API_KEY = 'PASTE_YOUR_REAL_KEY_HERE';   // ← REPLACE THIS LINE WITH YOUR ACTUAL KEY
+    const CHANNEL_ID = 'UC1uTOgZd1rNHnASINvT4b4Q';
+
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=\( {CHANNEL_ID}&maxResults=4&order=date&type=video&key= \){API_KEY}`)
+        .then(r => r.json())
         .then(data => {
-            console.log('✅ Videos loaded from proxy');
             const grid = document.getElementById('youtube-grid');
             if (grid && data.items) {
                 grid.innerHTML = data.items.map(item => `
@@ -38,9 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(err => {
-            console.error('❌ Proxy error:', err);
-            const grid = document.getElementById('youtube-grid');
-            if (grid) grid.innerHTML = `<div style="color:#ff4fd8;padding:40px;text-align:center;">Videos will appear here shortly...</div>`;
+            console.error('YouTube error:', err);
+            document.getElementById('youtube-grid').innerHTML = `<div style="color:#ff4fd8;padding:40px;text-align:center;">Videos loading...</div>`;
         });
 
     // SOCIAL ICONS (your exact files)
