@@ -1,81 +1,106 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ================================
+  console.log("%cLIL SYNN site loaded", "color:#ff008f;font-weight:bold");
+
+  // =========================
   // HAMBURGER MENU
-  // ================================
-  const menuButton =
-    document.getElementById("menu-button") ||
-    document.getElementById("hamburger");
+  // =========================
+  const ham = document.getElementById("hamburger");
+  const menu = document.getElementById("sideMenu");
+  const close = document.getElementById("closeMenu");
 
-  const mobileMenu =
-    document.getElementById("mobile-menu") ||
-    document.getElementById("menu");
-
-  if (menuButton && mobileMenu) {
-    menuButton.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
+  if (ham && menu) {
+    ham.addEventListener("click", () => {
+      menu.classList.toggle("translate-x-full");
     });
   }
 
-  // ================================
-  // LOAD YOUTUBE VIDEOS
-  // ================================
-  async function loadYouTubeVideos() {
+  if (close && menu) {
+    close.addEventListener("click", () => {
+      menu.classList.add("translate-x-full");
+    });
+  }
+
+  // =========================
+  // SOCIALS DROPDOWN
+  // =========================
+  const trigger = document.getElementById("socialsTrigger");
+  const dropdown = document.getElementById("socialsDropdown");
+
+  if (trigger && dropdown) {
+    trigger.addEventListener("click", () => {
+      dropdown.classList.toggle("hidden");
+
+      const arrow = trigger.querySelector("span");
+      if (arrow) {
+        arrow.textContent = dropdown.classList.contains("hidden") ? "▼" : "▲";
+      }
+    });
+  }
+
+  // =========================
+  // LOAD YOUTUBE VIDEOS (FROM VERCEL API)
+  // =========================
+  async function loadVideos() {
+
     try {
 
-      const response = await fetch("/api/youtube");
+      const res = await fetch("/api/youtube");
+      const data = await res.json();
 
-      if (!response.ok) {
-        throw new Error("API request failed");
-      }
-
-      const data = await response.json();
       const grid = document.getElementById("youtube-grid");
-
       if (!grid) return;
 
-      if (!data.items || data.items.length === 0) {
-        grid.innerHTML = "<p>No videos found.</p>";
+      if (!data.items) {
+        grid.innerHTML = "<p>Unable to load videos.</p>";
         return;
       }
 
-      grid.innerHTML = data.items.map(video => {
-
-        const videoId = video.id.videoId;
-        const title = video.snippet.title;
-
-        return `
-          <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8] transition">
-
-            <iframe
-              width="100%"
-              height="220"
-              src="https://www.youtube.com/embed/${videoId}"
-              frameborder="0"
-              allowfullscreen>
-            </iframe>
-
-            <div class="p-4 text-sm font-['Rajdhani'] text-center">
-              ${title}
-            </div>
-
+      grid.innerHTML = data.items.map(item => `
+        <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
+          <iframe
+            width="100%"
+            height="220"
+            src="https://www.youtube.com/embed/${item.id.videoId}"
+            frameborder="0"
+            allowfullscreen>
+          </iframe>
+          <div class="p-4 text-sm font-['Rajdhani'] text-center">
+            ${item.snippet.title}
           </div>
-        `;
+        </div>
+      `).join("");
 
-      }).join("");
+    } catch (err) {
 
-    } catch (error) {
-
-      console.error("YouTube load error:", error);
+      console.error("Video load failed", err);
 
       const grid = document.getElementById("youtube-grid");
-      if (grid) {
-        grid.innerHTML = "<p>Unable to load videos.</p>";
-      }
+      if (grid) grid.innerHTML = "<p>Unable to load videos.</p>";
 
     }
+
   }
 
-  loadYouTubeVideos();
+  loadVideos();
+
+  // =========================
+  // SOCIAL ICON GRID
+  // =========================
+  const socialHTML = `
+    <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank"><img src="assets/images/icons/youtube.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank"><img src="assets/images/icons/spotify.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank"><img src="assets/images/icons/apple-music.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://www.instagram.com/lilsynnofficial/" target="_blank"><img src="assets/images/icons/instagram.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://x.com/lilsynnofficial" target="_blank"><img src="assets/images/icons/twitter.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://soundcloud.com/lilsynnofficial" target="_blank"><img src="assets/images/icons/soundcloud.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank"><img src="assets/images/icons/tiktok.svg" class="social-icon w-16 h-16 mx-auto"></a>
+    <a href="https://www.facebook.com/lilsynnofficial" target="_blank"><img src="assets/images/icons/facebook.svg" class="social-icon w-16 h-16 mx-auto"></a>
+  `;
+
+  if (dropdown) dropdown.innerHTML = socialHTML;
+
+  const mainGrid = document.getElementById("main-social-grid");
+  if (mainGrid) mainGrid.innerHTML = socialHTML;
 
 });
