@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // YOUTUBE AUTO
-    const API_KEY = 'AIzaSyDS5pjTm3GNOsKT70l88C55Q8YnUoGGsXY';
-    const CHANNEL_ID = 'UC1uTOgZd1rNHnASINvT4b4Q';
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=\( {CHANNEL_ID}&maxResults=4&order=date&type=video&key= \){API_KEY}`)
+    const API_KEY = process.env.YOUTUBE_API_KEY;  // Use environment variable
+    const CHANNEL_ID = 'UC1uTOgZd1rNHnASINvT4b4Q';  // Your channel ID
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=4&order=date&type=video&key=${API_KEY}`)
         .then(r => r.json())
         .then(data => {
             const grid = document.getElementById('youtube-grid');
