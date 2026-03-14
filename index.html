@@ -20,26 +20,56 @@
     </nav>
 
     <!-- HAMBURGER MENU with SOCIALS dropdown -->
-    <div id="sideMenu" class="fixed top-0 right-0 h-full w-80 bg-[#0d0d0d]/95 backdrop-blur-2xl translate-x-full transition-all duration-300 z-50 p-8 overflow-y-auto">
-        <button id="closeMenu" class="text-4xl mb-8 text-[#ff008f]">✕</button>
-        
-        <div class="space-y-1 text-base font-['Rajdhani'] tracking-widest text-white/90">
-            <a href="#" class="block py-1.5 hover:text-[#ff008f]">HOME</a>
-            <a href="#music" class="block py-1.5 hover:text-[#ff008f]">MUSIC</a>
-            <a href="#videos" class="block py-1.5 hover:text-[#ff008f]">VIDEOS</a>
-            <a href="#presave" class="block py-1.5 hover:text-[#ff008f]">PRESAVE</a>
-            <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="block py-1.5 hover:text-[#ff008f]">SPOTIFY</a>
-            <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" class="block py-1.5 hover:text-[#ff008f]">APPLE MUSIC</a>
-            <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="block py-1.5 hover:text-[#ff008f]">SOUNDCLOUD</a>
-            <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="block py-1.5 hover:text-[#ff008f]">YOUTUBE</a>
-            <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="block py-1.5 hover:text-[#ff008f]">INSTAGRAM</a>
-            <a href="https://x.com/lilsynnofficial" target="_blank" class="block py-1.5 hover:text-[#ff008f]">TWITTER / X</a>
-            <a href="#contact" class="block py-1.5 hover:text-[#ff008f]">CONTACT</a>
-            
-            <button id="socialsTrigger" class="block w-full text-left py-1.5 hover:text-[#ff008f] flex justify-between items-center">
-                SOCIALS <span class="text-xs">▼</span>
-            </button>
-        </div>
+<!-- SIDE MENU -->
+<div id="sideMenu" class="fixed top-0 right-0 h-full w-72 bg-black/90 backdrop-blur-xl transform translate-x-full transition-transform duration-300 z-50">
+
+  <!-- CLOSE BUTTON -->
+  <div class="flex justify-end p-6">
+    <button id="closeMenu" class="text-3xl text-white hover:text-pink-500">&times;</button>
+  </div>
+
+  <!-- MENU LINKS -->
+  <nav class="flex flex-col gap-6 px-8 text-lg font-['Orbitron']">
+
+    <a href="#home" class="menu-link">Home</a>
+
+    <a href="#music" class="menu-link">Music</a>
+
+    <a href="#videos" class="menu-link">Videos</a>
+
+    <!-- SOCIALS DROPDOWN -->
+    <div>
+
+      <button id="socialsTrigger" class="menu-link flex justify-between w-full">
+        Socials
+        <span>▼</span>
+      </button>
+
+      <div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
+
+        <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="menu-link">YouTube</a>
+
+        <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="menu-link">Spotify</a>
+
+        <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" class="menu-link">Apple Music</a>
+
+        <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="menu-link">Instagram</a>
+
+        <a href="https://x.com/lilsynnofficial" target="_blank" class="menu-link">X / Twitter</a>
+
+        <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="menu-link">SoundCloud</a>
+
+        <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" class="menu-link">TikTok</a>
+
+        <a href="https://www.facebook.com/lilsynnofficial" target="_blank" class="menu-link">Facebook</a>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+</div>
 
         <div id="socialsDropdown" class="hidden mt-4 grid grid-cols-2 gap-8 text-6xl pt-4 border-t border-[#ff008f]/30"></div>
     </div>
