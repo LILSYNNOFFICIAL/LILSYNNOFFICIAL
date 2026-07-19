@@ -31,66 +31,87 @@ document.addEventListener("DOMContentLoaded", () => {
     trigger.addEventListener("click", () => {
       dropdown.classList.toggle("hidden");
       const arrow = trigger.querySelector("span");
-      if (arrow) {
-        arrow.textContent = dropdown.classList.contains("hidden") ? "▼" : "▲";
-      }
+      if (arrow) arrow.textContent = dropdown.classList.contains("hidden") ? "▼" : "▲";
     });
   }
 
   // =========================
-  // LOAD YOUTUBE VIDEOS (recommended: embed videos, show playlists as links)
+  // LOAD YOUTUBE VIDEOS (click-to-load thumbnails)
   // =========================
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
     if (!grid) return;
 
-    // show placeholder while loading
     grid.innerHTML = '<p class="text-center text-gray-400">Loading videos…</p>';
 
     function renderItems(items) {
       grid.innerHTML = items.map(item => {
         const title = (item.snippet && item.snippet.title) || '';
+        const vid = item.videoId || (item.id && (item.id.videoId || item.id)) || '';
+        const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
 
-        // Video items: embed the video
-        if (item.type === 'video' && item.videoId) {
-          const iframeSrc = `https://www.youtube.com/embed/${item.videoId}`;
-          return `
-            <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
-              <iframe
-                class="youtube-iframe"
-                src="${iframeSrc}"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-              </iframe>
-              <div class="p-4 text-sm font-['Rajdhani'] text-center">
-                ${escapeHtml(title)}
-              </div>
-            </div>
-          `;
-        }
-
-        // Playlist items: show a link card (avoid embedding playlists directly)
-        if (item.type === 'playlist' && item.playlistId) {
-          const playlistUrl = item.url || `https://youtube.com/playlist?list=${item.playlistId}`;
-          return `
-            <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8] p-6 flex flex-col items-center justify-center">
-              <div class="text-lg font-['Rajdhani'] mb-4 text-center">${escapeHtml(title)}</div>
-              <a href="${playlistUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#ff008f] text-black font-bold px-6 py-3 rounded-md hover:bg-[#ff4fd8]">Play playlist</a>
-            </div>
-          `;
-        }
-
-        // Fallback generic card
         return `
-          <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 p-6 text-center">
-            <div class="text-sm font-['Rajdhani']">${escapeHtml(title || 'Unavailable')}</div>
+          <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
+            <div class="relative" style="position:relative;padding-top:56.25%;background:#000;">
+              ${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb">` : ''}
+              <button class="yt-play" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;">►</button>
+            </div>
+            <div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div>
           </div>
         `;
       }).join('');
+
+      // attach click handlers to replace thumbnail with iframe on demand
+      grid.querySelectorAll('.yt-thumb').forEach(img => {
+        const vid = img.getAttribute('data-ytid');
+        const container = img.parentElement;
+        const onClick = () => {
+          const iframe = document.createElement('iframe');
+          iframe.className = 'youtube-iframe';
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.frameBorder = '0';
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          iframe.src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+          container.innerHTML = '';
+          container.appendChild(iframe);
+        };
+        img.addEventListener('click', onClick);
+        const btn = img.parentElement.querySelector('.yt-play');
+        if (btn) btn.addEventListener('click', onClick);
+      });
+
+      // for play buttons where thumbnail element wasn't present (safety)
+      grid.querySelectorAll('.yt-play').forEach(btn => {
+        const img = btn.parentElement.querySelector('.yt-thumb');
+        if (!img) {
+          const container = btn.parentElement;
+          btn.addEventListener('click', () => {
+            const vid = container.querySelector('.yt-thumb') ? container.querySelector('.yt-thumb').getAttribute('data-ytid') : null;
+            if (!vid) return;
+            const iframe = document.createElement('iframe');
+            iframe.className = 'youtube-iframe';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.frameBorder = '0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+            container.innerHTML = '';
+            container.appendChild(iframe);
+          });
+        }
+      });
     }
 
-    // Try server, then fallback file
+    // Try server endpoint, otherwise fallback file
     try {
       const res = await fetch('/api/youtube');
       if (res.ok) {
