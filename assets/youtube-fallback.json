@@ -1,0 +1,8 @@
+{
+  "items": [
+    {
+      "id": { "videoId": "" },
+      "snippet": { "title": "Replace this fallback with real video IDs in assets/youtube-fallback.json" }
+    }
+  ]
+}
