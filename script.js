@@ -38,50 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // LOAD YOUTUBE VIDEOS
+  // LOAD YOUTUBE VIDEOS (silent diagnostics removed)
   // =========================
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
     if (!grid) return;
 
-    // show placeholder / spinner
+    // show placeholder while loading
     grid.innerHTML = '<p class="text-center text-gray-400">Loading videos…</p>';
 
-    try {
-      const res = await fetch("/api/youtube");
-
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        console.error("/api/youtube returned non-JSON:", text.slice(0, 1000));
-        grid.innerHTML = `
-          <div class="text-center text-gray-400">
-            <p>Videos unavailable (bad response).</p>
-            <pre class="text-xs text-left max-w-xl mx-auto break-words bg-black/50 p-2 rounded">${escapeHtml(text.slice(0, 1000))}</pre>
-          </div>
-        `;
-        return;
-      }
-
-      if (!data || !data.items || !data.items.length) {
-        console.warn("/api/youtube returned no items", data);
-        grid.innerHTML = `
-          <div class="text-center text-gray-400">
-            <p>Videos unavailable (no items).</p>
-            <pre class="text-xs text-left max-w-xl mx-auto break-words bg-black/50 p-2 rounded">${escapeHtml(JSON.stringify(data).slice(0, 1000))}</pre>
-          </div>
-        `;
-        return;
-      }
-
-      // populate grid
-      grid.innerHTML = data.items.map(item => `
+    // helper to render items array
+    function renderItems(items) {
+      grid.innerHTML = items.map(item => `
         <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
           <iframe
-            width="100%"
-            height="220"
+            class="youtube-iframe"
             src="https://www.youtube.com/embed/${(item.id && (item.id.videoId || item.id)) || (item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId) || ''}"
             frameborder="0"
             allowfullscreen>
@@ -91,17 +62,46 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       `).join("");
-
-    } catch (err) {
-      console.error("Video load failed", err);
-      grid.innerHTML = `
-        <div class="text-center text-gray-400">
-          <p>Videos unavailable (fetch error).</p>
-          <p class="text-xs mt-2">Check console/network for details.</p>
-        </div>
-      `;
     }
+
+    // try server endpoint, otherwise fallback to bundled JSON, otherwise show generic message
+    try {
+      const res = await fetch("/api/youtube");
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.items && data.items.length) {
+          renderItems(data.items);
+          return;
+        }
+      }
+    } catch (e) {
+      // intentionally silent on-page; log to console for debugging
+      console.warn('YouTube fetch failed (server). Using fallback if available.');
+    }
+
+    // fallback file bundled with site
+    try {
+      const fallbackRes = await fetch('/assets/youtube-fallback.json');
+      if (fallbackRes.ok) {
+        const fallback = await fallbackRes.json();
+        if (fallback && fallback.items && fallback.items.length) {
+          renderItems(fallback.items);
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Fallback fetch failed.');
+    }
+
+    // final fallback: generic UI
+    grid.innerHTML = `
+      <div class="text-center text-gray-400">
+        <p>Videos are temporarily unavailable.</p>
+        <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a>
+      </div>
+    `;
   }
+
   loadVideos();
 
   // =========================
