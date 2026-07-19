@@ -74,9 +74,6 @@
       /* PRESAVE safety */
       #presave .max-w-4xl a { display:inline-block; margin-top: 0.5rem; }
 
-      /* Ensure youtube diag doesn't break the grid layout */
-      #youtube-diag { grid-column: 1 / -1; margin-top: 0.5rem; color: #cbd5e1; font-size: .75rem; }
-
       /* Responsive iframe sizing for youtube embeds */
       .youtube-iframe { width:100%; height:220px; border:0; display:block; }
       @media (max-width:640px) {
@@ -103,7 +100,7 @@
             <span class="text-4xl">LIL SYNN</span>
         </div>
 
-        <button id="hamburger" class="text-5xl text-[#ff008f]">
+        <button id="hamburger" class="text-5xl text-[#ff008f]" style="margin-left:0.5rem;">
             ☰
         </button>
 
@@ -214,7 +211,6 @@
         </h2>
 
         <div id="youtube-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-        <div id="youtube-diag" class="text-xs text-center text-gray-400 mt-2"></div>
 
     </div>
 
