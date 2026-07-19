@@ -11,11 +11,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Overrides: semi-transparent nav, fixed background video under nav, remove neon glow, remove hero title -->
+    <style>
+      :root { --nav-height: 72px; }
+
+      /* Keep nav semi-transparent so video shows through but hides glow behind it */
+      nav { height: var(--nav-height); }
+
+      /* #home sits below the nav and ensures content layers above the fixed video */
+      #home {
+        padding-top: var(--nav-height);
+        min-height: calc(100vh - var(--nav-height));
+        position: relative;
+        z-index: 10; /* ensure site content sits above the background video */
+        overflow: hidden;
+      }
+
+      /* Make background video fixed, full-width and full-height (below the nav) */
+      #bgVideo {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - var(--nav-height));
+        object-fit: cover;
+        transform: none !important;
+        z-index: 0;
+        opacity: 0.95; /* semi-transparent video so site layers show through subtly */
+        pointer-events: none; /* allow clicks through to UI */
+      }
+
+      /* Gradient overlay should be above the video but below primary content */
+      .video-gradient-overlay { z-index: 5; pointer-events: none; }
+
+      /* Remove neon glow and purple color for any hero title if present */
+      .neon-text {
+        text-shadow: none !important;
+        filter: none !important;
+        color: #ffffff !important;
+      }
+
+      /* Ensure other sections sit above the fixed video */
+      section { position: relative; z-index: 10; }
+
+      /* Keep the side menu above everything */
+      #sideMenu { z-index: 60; }
+
+    </style>
+
 </head>
 
 <body class="bg-black text-white overflow-x-hidden font-['Inter']">
 
-<nav class="fixed top-0 z-50 w-full bg-black/90 backdrop-blur-lg border-b border-[#ff008f]/30">
+<nav class="fixed top-0 z-50 w-full bg-black/60 backdrop-blur-lg border-b border-[#ff008f]/30">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
 
         <div class="flex items-center gap-3 text-4xl font-['Orbitron'] tracking-widest text-[#ff008f]">
@@ -79,23 +128,16 @@
 
 </div>
 
-<section id="home" class="relative h-screen min-h-h-screen w-full overflow-hidden">
+<section id="home" class="relative w-full overflow-hidden">
 
-    <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover scale-[0.82] md:scale-[0.78] origin-center">
-
-        <source src="assets/mov/lv_0_20260718234757.mp4"    type="video/mp4">
-
+    <!-- Video is fixed via CSS and sits directly below the nav -->
+    <video id="bgVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src="assets/mov/lv_0_20260718234757.mp4" type="video/mp4">
     </video>
 
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 video-gradient-overlay"></div>
 
-    <div class="absolute top-[6%] left-0 right-0 z-10 text-center px-6">
-
-        <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[12rem] font-black font-['Orbitron'] neon-text">
-            LIL SYNN
-        </h1>
-
-    </div>
+    <!-- Hero title removed as requested -->
 
 </section>
 <!-- =========================
@@ -120,9 +162,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-xl px-12 py-5 rounded-2xl transition-all hover:scale-105">
-
             PRESAVE NOW ON ALL PLATFORMS
-
         </a>
 
     </div>
