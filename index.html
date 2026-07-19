@@ -67,6 +67,8 @@
       @media (max-width:640px) {
         nav .flex.items-center .text-4xl { font-size: 1.25rem; }
         nav .flex.items-center .text-5xl { font-size: 1.4rem; }
+        /* reduce nav horizontal padding on small screens */
+        nav .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
       }
 
       /* PRESAVE safety */
@@ -74,6 +76,18 @@
 
       /* Ensure youtube diag doesn't break the grid layout */
       #youtube-diag { grid-column: 1 / -1; margin-top: 0.5rem; color: #cbd5e1; font-size: .75rem; }
+
+      /* Responsive iframe sizing for youtube embeds */
+      .youtube-iframe { width:100%; height:220px; border:0; display:block; }
+      @media (max-width:640px) {
+        .youtube-iframe { height:160px; }
+      }
+      @media (min-width:1024px) {
+        .youtube-iframe { height:260px; }
+      }
+
+      /* keep footer icons centered and not overflowing */
+      #main-social-grid img.social-icon { max-width:64px; max-height:64px; }
 
     </style>
 
@@ -178,7 +192,7 @@
             href="https://tinyurl.com/LIL-SYNN-HELLO-GOODBYE"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-xl px-12 py-5 rounded-2xl transition-all hover:scale-105">
+            class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-lg md:text-xl px-6 md:px-12 py-3 md:py-5 rounded-2xl transition-transform transform hover:scale-105">
             PRESAVE NOW ON ALL PLATFORMS
         </a>
 
