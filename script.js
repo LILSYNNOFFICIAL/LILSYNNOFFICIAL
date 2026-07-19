@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // LOAD YOUTUBE VIDEOS (silent diagnostics removed)
+  // LOAD YOUTUBE VIDEOS (recommended: embed videos, show playlists as links)
   // =========================
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
@@ -47,26 +47,52 @@ document.addEventListener("DOMContentLoaded", () => {
     // show placeholder while loading
     grid.innerHTML = '<p class="text-center text-gray-400">Loading videos…</p>';
 
-    // helper to render items array
     function renderItems(items) {
-      grid.innerHTML = items.map(item => `
-        <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
-          <iframe
-            class="youtube-iframe"
-            src="https://www.youtube.com/embed/${(item.id && (item.id.videoId || item.id)) || (item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId) || ''}"
-            frameborder="0"
-            allowfullscreen>
-          </iframe>
-          <div class="p-4 text-sm font-['Rajdhani'] text-center">
-            ${escapeHtml((item.snippet && item.snippet.title) || '')}
+      grid.innerHTML = items.map(item => {
+        const title = (item.snippet && item.snippet.title) || '';
+
+        // Video items: embed the video
+        if (item.type === 'video' && item.videoId) {
+          const iframeSrc = `https://www.youtube.com/embed/${item.videoId}`;
+          return `
+            <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]">
+              <iframe
+                class="youtube-iframe"
+                src="${iframeSrc}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+              <div class="p-4 text-sm font-['Rajdhani'] text-center">
+                ${escapeHtml(title)}
+              </div>
+            </div>
+          `;
+        }
+
+        // Playlist items: show a link card (avoid embedding playlists directly)
+        if (item.type === 'playlist' && item.playlistId) {
+          const playlistUrl = item.url || `https://youtube.com/playlist?list=${item.playlistId}`;
+          return `
+            <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8] p-6 flex flex-col items-center justify-center">
+              <div class="text-lg font-['Rajdhani'] mb-4 text-center">${escapeHtml(title)}</div>
+              <a href="${playlistUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#ff008f] text-black font-bold px-6 py-3 rounded-md hover:bg-[#ff4fd8]">Play playlist</a>
+            </div>
+          `;
+        }
+
+        // Fallback generic card
+        return `
+          <div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 p-6 text-center">
+            <div class="text-sm font-['Rajdhani']">${escapeHtml(title || 'Unavailable')}</div>
           </div>
-        </div>
-      `).join("");
+        `;
+      }).join('');
     }
 
-    // try server endpoint, otherwise fallback to bundled JSON, otherwise show generic message
+    // Try server, then fallback file
     try {
-      const res = await fetch("/api/youtube");
+      const res = await fetch('/api/youtube');
       if (res.ok) {
         const data = await res.json();
         if (data && data.items && data.items.length) {
@@ -75,11 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     } catch (e) {
-      // intentionally silent on-page; log to console for debugging
       console.warn('YouTube fetch failed (server). Using fallback if available.');
     }
 
-    // fallback file bundled with site
     try {
       const fallbackRes = await fetch('/assets/youtube-fallback.json');
       if (fallbackRes.ok) {
@@ -93,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn('Fallback fetch failed.');
     }
 
-    // final fallback: generic UI
     grid.innerHTML = `
       <div class="text-center text-gray-400">
         <p>Videos are temporarily unavailable.</p>
