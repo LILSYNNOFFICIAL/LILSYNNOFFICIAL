@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // LOAD YOUTUBE VIDEOS (with diagnostics)
+  // LOAD YOUTUBE VIDEOS
   // =========================
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
@@ -49,10 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const res = await fetch("/api/youtube");
-
-      // DIAGNOSTICS: show HTTP status on the page for debugging
-      const diag = document.getElementById("youtube-diag");
-      if (diag) diag.textContent = `HTTP ${res.status}`;
 
       const text = await res.text();
       let data;
