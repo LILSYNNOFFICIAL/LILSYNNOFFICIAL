@@ -1,84 +1,124 @@
 {
   "items": [
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_lj6amzEXMEWLu-cBgIru80kfHyneN5Btw",
-      "snippet": { "title": "Playlist 1" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_lj6amzEXMEWLu-cBgIru80kfHyneN5Btw",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_lj6amzEXMEWLu-cBgIru80kfHyneN5Btw",
+      "snippet": { "title": "It's In Her Eyes" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_kS6t1xvl0SDStYYYWH6SNYda-b6BycEic",
-      "snippet": { "title": "Playlist 2" }
+      "type": "video",
+      "videoId": "CK0Op7K6JB0",
+      "url": "https://www.youtube.com/watch?v=CK0Op7K6JB0",
+      "snippet": { "title": "IF U STAY DED" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/tyWOrBMv_kE",
-      "snippet": { "title": "Video: tyWOrBMv_kE" }
+      "type": "video",
+      "videoId": "tyWOrBMv_kE",
+      "url": "https://www.youtube.com/watch?v=tyWOrBMv_kE",
+      "snippet": { "title": "Rescue You" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_k48WBAvvpE2lPwrsWB_WULo7nvOoqFfOo",
-      "snippet": { "title": "Playlist 3" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_k48WBAvvpE2lPwrsWB_WULo7nvOoqFfOo",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_k48WBAvvpE2lPwrsWB_WULo7nvOoqFfOo",
+      "snippet": { "title": "Fade Into You" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_krMNv-_35n_xdO49yeePHWnMlCu6voWhQ",
-      "snippet": { "title": "Playlist 4" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_krMNv-_35n_xdO49yeePHWnMlCu6voWhQ",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_krMNv-_35n_xdO49yeePHWnMlCu6voWhQ",
+      "snippet": { "title": "Burn It Down" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_lTUd-dtAbFk8WZ9f9jjBUXJQ7xtocWe0Q",
-      "snippet": { "title": "Playlist 5" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_lTUd-dtAbFk8WZ9f9jjBUXJQ7xtocWe0Q",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_lTUd-dtAbFk8WZ9f9jjBUXJQ7xtocWe0Q",
+      "snippet": { "title": "Manic Side" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/8gQkn--3u-g",
-      "snippet": { "title": "Video: 8gQkn--3u-g" }
+      "type": "video",
+      "videoId": "8gQkn--3u-g",
+      "url": "https://www.youtube.com/watch?v=8gQkn--3u-g",
+      "snippet": { "title": "Every Time" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_kRH09pT8JebVBnU8kNdjOWhhVz3Aj3MXk",
-      "snippet": { "title": "Playlist 6" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_kRH09pT8JebVBnU8kNdjOWhhVz3Aj3MXk",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_kRH09pT8JebVBnU8kNdjOWhhVz3Aj3MXk",
+      "snippet": { "title": "Don't Say It" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_mgK-OzN1_yJo2h3hQfxhOSFNE5GY_Sxfg",
-      "snippet": { "title": "Playlist 7" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_mgK-OzN1_yJo2h3hQfxhOSFNE5GY_Sxfg",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_mgK-OzN1_yJo2h3hQfxhOSFNE5GY_Sxfg",
+      "snippet": { "title": "Signal Light Sermon (Remastered 2026)" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_n_CgNz_9iwn7uTHU3Mx7jfGPRJvBh0mpI",
-      "snippet": { "title": "Playlist 8" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_n_CgNz_9iwn7uTHU3Mx7jfGPRJvBh0mpI",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_n_CgNz_9iwn7uTHU3Mx7jfGPRJvBh0mpI",
+      "snippet": { "title": "In The End" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/4nSgBw1kews",
-      "snippet": { "title": "Video: 4nSgBw1kews" }
+      "type": "video",
+      "videoId": "4nSgBw1kews",
+      "url": "https://www.youtube.com/watch?v=4nSgBw1kews",
+      "snippet": { "title": "Lover" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_lgAz2Z2FXNQab_emwq1JRd4B-QIf5rtI0",
-      "snippet": { "title": "Playlist 9" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_lgAz2Z2FXNQab_emwq1JRd4B-QIf5rtI0",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_lgAz2Z2FXNQab_emwq1JRd4B-QIf5rtI0",
+      "snippet": { "title": "Stay Here" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_npAPMPxDut36N7CODxT7MYGGbmB3EraEk",
-      "snippet": { "title": "Playlist 10" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_npAPMPxDut36N7CODxT7MYGGbmB3EraEk",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_npAPMPxDut36N7CODxT7MYGGbmB3EraEk",
+      "snippet": { "title": "Home" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/D_HSlctwD3k",
-      "snippet": { "title": "Video: D_HSlctwD3k" }
+      "type": "video",
+      "videoId": "D_HSlctwD3k",
+      "url": "https://www.youtube.com/watch?v=D_HSlctwD3k",
+      "snippet": { "title": "Touch Hunger" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_lCQtOqI60-htT4bUCYN0kPbVZK65mwXjc",
-      "snippet": { "title": "Playlist 11" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_lCQtOqI60-htT4bUCYN0kPbVZK65mwXjc",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_lCQtOqI60-htT4bUCYN0kPbVZK65mwXjc",
+      "snippet": { "title": "My Light" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_ljnFcWc5b8TcoupOwepL9EZbLdznoS9eM",
-      "snippet": { "title": "Playlist 12" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_ljnFcWc5b8TcoupOwepL9EZbLdznoS9eM",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_ljnFcWc5b8TcoupOwepL9EZbLdznoS9eM",
+      "snippet": { "title": "Ties Remain" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/yVR4hnFe7U4",
-      "snippet": { "title": "Video: yVR4hnFe7U4" }
+      "type": "video",
+      "videoId": "yVR4hnFe7U4",
+      "url": "https://www.youtube.com/watch?v=yVR4hnFe7U4",
+      "snippet": { "title": "Under My Skin" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_l7qW3rAasxtk-vWyMuTToSyQV89mxlPxs",
-      "snippet": { "title": "Playlist 13" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_l7qW3rAasxtk-vWyMuTToSyQV89mxlPxs",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_l7qW3rAasxtk-vWyMuTToSyQV89mxlPxs",
+      "snippet": { "title": "Gravity and Ghosts" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed/yX7t7Wcaahw",
-      "snippet": { "title": "Video: yX7t7Wcaahw" }
+      "type": "video",
+      "videoId": "yX7t7Wcaahw",
+      "url": "https://www.youtube.com/watch?v=yX7t7Wcaahw",
+      "snippet": { "title": "Seat Still Warm" }
     },
     {
-      "embedUrl": "https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_ljRusvo-oyghRhO1ghWoVgU-x8QjiDKHo",
-      "snippet": { "title": "Playlist 14" }
+      "type": "playlist",
+      "playlistId": "OLAK5uy_ljRusvo-oyghRhO1ghWoVgU-x8QjiDKHo",
+      "url": "https://youtube.com/playlist?list=OLAK5uy_ljRusvo-oyghRhO1ghWoVgU-x8QjiDKHo",
+      "snippet": { "title": "Word to Word" }
     }
   ]
 }
