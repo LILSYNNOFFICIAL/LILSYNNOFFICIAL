@@ -1,8 +1,16 @@
 {
   "items": [
     {
-      "id": { "videoId": "" },
-      "snippet": { "title": "Replace this fallback with real video IDs in assets/youtube-fallback.json" }
+      "id": { "videoId": "dQw4w9WgXcQ" },
+      "snippet": { "title": "Fallback Video 1" }
+    },
+    {
+      "id": { "videoId": "3JZ_D3ELwOQ" },
+      "snippet": { "title": "Fallback Video 2" }
+    },
+    {
+      "id": { "videoId": "kXYiU_JCYtU" },
+      "snippet": { "title": "Fallback Video 3" }
     }
   ]
 }
