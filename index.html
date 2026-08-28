@@ -16,22 +16,17 @@
     <style>
       :root { --nav-height: 72px; --nav-gap: 0.5rem; }
 
-      /* Keep nav semi-transparent so video shows through but hides glow behind it */
       nav { height: var(--nav-height); }
-
-      /* Ensure the nav inner container matches nav height */
       nav > .max-w-7xl { height: 100%; display: flex; align-items: center; }
 
-      /* #home sits below the nav and ensures content layers above the fixed video */
       #home {
         padding-top: calc(var(--nav-height) + var(--nav-gap));
         min-height: calc(100vh - var(--nav-height));
         position: relative;
-        z-index: 10; /* ensure site content sits above the background video */
+        z-index: 10;
         overflow: hidden;
       }
 
-      /* Make background video fixed, full-width and full-height (below the nav) */
       #bgVideo {
         position: fixed;
         top: var(--nav-height);
@@ -41,51 +36,61 @@
         object-fit: cover;
         transform: none !important;
         z-index: 0;
-        opacity: 0.95; /* semi-transparent video so site layers show through subtly */
-        pointer-events: none; /* allow clicks through to UI */
+        opacity: 0.95;
+        pointer-events: none;
       }
 
-      /* Gradient overlay should be above the video but below primary content */
       .video-gradient-overlay { z-index: 5; pointer-events: none; }
 
-      /* Remove neon glow and purple color for any hero title if present */
       .neon-text {
         text-shadow: none !important;
         filter: none !important;
         color: #ffffff !important;
       }
 
-      /* Ensure other sections sit above the fixed video */
       section { position: relative; z-index: 10; }
-
-      /* Keep the side menu above everything */
       #sideMenu { z-index: 60; }
 
-      /* small responsive nav logo adjustments */
       nav .flex.items-center { gap: 0.75rem; }
       nav .flex.items-center span { line-height: 1; display:inline-block; }
+
       @media (max-width:640px) {
         nav .flex.items-center .text-4xl { font-size: 1.25rem; }
         nav .flex.items-center .text-5xl { font-size: 1.4rem; }
-        /* reduce nav horizontal padding on small screens */
         nav .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
       }
 
-      /* PRESAVE safety */
+      /* Keep the Socials list scrollable on desktop without changing mobile behavior. */
+      @media (min-width: 768px) {
+        #sideMenu #socialsDropdown {
+          max-height: calc(100vh - 250px);
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          padding-right: 0.75rem;
+          scrollbar-width: thin;
+        }
+      }
+
       #presave .max-w-4xl a { display:inline-block; margin-top: 0.5rem; }
 
-      /* Responsive iframe sizing for youtube embeds */
       .youtube-iframe { width:100%; height:220px; border:0; display:block; }
-      @media (max-width:640px) {
-        .youtube-iframe { height:160px; }
-      }
-      @media (min-width:1024px) {
-        .youtube-iframe { height:260px; }
+      @media (max-width:640px) { .youtube-iframe { height:160px; } }
+      @media (min-width:1024px) { .youtube-iframe { height:260px; } }
+
+      /* Black backing is applied only to the SVG social buttons, not the surrounding footer. */
+      #main-social-grid a.social-icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        padding: 8px;
+        background: #000000;
+        border-radius: 12px;
       }
 
-      /* keep footer icons centered and not overflowing */
       #main-social-grid img.social-icon { max-width:64px; max-height:64px; }
-
     </style>
 
 </head>
@@ -119,11 +124,11 @@
 
         <a href="#home" class="menu-link">Home</a>
 
-        <a href="https://lilsynnofficial.myshopify.com/" target="_blank" class="menu-link">
+        <a href="https://lilsynnofficial.threadless.com" target="_blank" rel="noopener noreferrer" class="menu-link">
             Merch
         </a>
 
-        <a href="https://genius.com/artists/Lil-synn" target="_blank" class="menu-link">
+        <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link">
             Lyrics
         </a>
 
@@ -139,15 +144,16 @@
 
             <div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
 
-                <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" class="menu-link">YouTube</a>
-                <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" class="menu-link">Spotify</a>
-                <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" class="menu-link">Apple Music</a>
-                <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" class="menu-link">Instagram</a>
-                <a href="https://x.com/lilsynnofficial" target="_blank" class="menu-link">X / Twitter</a>
-                <a href="https://soundcloud.com/lilsynnofficial" target="_blank" class="menu-link">SoundCloud</a>
-                <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" class="menu-link">TikTok</a>
-                <a href="https://www.facebook.com/lilsynnofficial" target="_blank" class="menu-link">Facebook</a>
-                <a href="https://discord.gg/ZUVsHuCAv" target="_blank" class="menu-link">Discord</a>
+                <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a>
+                <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a>
+                <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a>
+                <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="menu-link">Instagram</a>
+                <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a>
+                <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">SoundCloud</a>
+                <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">TikTok</a>
+                <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">Facebook</a>
+                <a href="https://discord.gg/ZUVsHuCAv" target="_blank" rel="noopener noreferrer" class="menu-link">Discord</a>
+                <a href="https://github.com/orgs/Neurosyn-Dev/repositories" target="_blank" rel="noopener noreferrer" class="menu-link">GitHub</a>
 
             </div>
         </div>
@@ -158,18 +164,16 @@
 
 <section id="home" class="relative w-full overflow-hidden">
 
-    <!-- Video is fixed via CSS and sits directly below the nav -->
     <video id="bgVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
         <source src="assets/mov/lv_0_20260718234757.mp4" type="video/mp4">
     </video>
 
     <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 video-gradient-overlay"></div>
 
-    <!-- Hero title removed as requested -->
-
 </section>
+
 <!-- =========================
-     PRESAVE
+     RELEASE
 ========================= -->
 
 <section id="presave" class="py-12 bg-transparent">
@@ -177,7 +181,7 @@
     <div class="max-w-4xl mx-auto px-6 text-center">
 
         <h2 class="text-5xl font-['Orbitron'] text-[#ff4fd8] mb-8">
-            PRESAVE HELLO GOODBYE
+            HELLO GOODBYE OUT NOW
         </h2>
 
         <img
@@ -186,11 +190,11 @@
             class="mx-auto mb-8 rounded-3xl shadow-2xl max-w-[380px] w-full border border-[#ff008f]/30">
 
         <a
-            href="https://tinyurl.com/LIL-SYNN-HELLO-GOODBYE"
+            href="https://hyperfollow.com/lilsynnofficial"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-lg md:text-xl px-6 md:px-12 py-3 md:py-5 rounded-2xl transition-transform transform hover:scale-105">
-            PRESAVE NOW ON ALL PLATFORMS
+            PRESAVES HERE
         </a>
 
     </div>
@@ -236,4 +240,3 @@
 
 </body>
 </html>
-
