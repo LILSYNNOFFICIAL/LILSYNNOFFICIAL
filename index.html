@@ -64,12 +64,52 @@
       @media (max-width:640px) { .youtube-iframe { height:160px; } }
       @media (min-width:1024px) { .youtube-iframe { height:260px; } }
 
+      /* Social buttons are deliberately opaque so the icons cannot fade into the video/background. */
+      #main-social-grid,
       #main-social-grid a.social-icon-button {
-        display: inline-flex; align-items: center; justify-content: center;
-        width: 80px; height: 80px; margin: 0 auto; padding: 8px;
-        background: #000000; border-radius: 12px;
+        opacity: 1 !important;
+        filter: none !important;
+        mix-blend-mode: normal !important;
       }
-      #main-social-grid img.social-icon { max-width:64px; max-height:64px; }
+      #main-social-grid a.social-icon-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        isolation: isolate !important;
+        width: 80px !important;
+        height: 80px !important;
+        margin: 0 auto !important;
+        padding: 8px !important;
+        background: #ffffff !important;
+        background-color: rgb(255,255,255) !important;
+        border: 2px solid #ffffff !important;
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+        box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
+      }
+      #main-social-grid img.social-icon {
+        display: block !important;
+        position: relative !important;
+        z-index: 1 !important;
+        width: 64px !important;
+        height: 64px !important;
+        max-width: 64px !important;
+        max-height: 64px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        filter: brightness(0) saturate(100%) !important;
+        -webkit-filter: brightness(0) saturate(100%) !important;
+        mix-blend-mode: normal !important;
+      }
+      #main-social-grid a.social-icon-button:hover {
+        background: #ffffff !important;
+        background-color: rgb(255,255,255) !important;
+        border-color: #ff008f !important;
+        box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
+      }
 
       /* Smaller release heading so the complete title remains visible with the side menu open. */
       #presave h2 { font-size: clamp(1.5rem, 3.2vw, 2.5rem); line-height: 1.15; overflow-wrap: normal; }
