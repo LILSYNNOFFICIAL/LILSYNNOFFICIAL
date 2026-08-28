@@ -54,51 +54,76 @@ h1, h2 {
     border: 1px solid rgba(255,0,143,0.3);
 }
 
-/* SOCIAL ICONS — SVG FILES ARE WHITE; RENDER THEM BLACK ON WHITE BUTTONS */
+/* SOCIAL ICONS — SVGs ARE WHITE; FORCE BLACK RENDERING FOR CONTRAST */
 .social-icon {
     transition: filter 0.3s ease;
     filter: brightness(0) saturate(100%) !important;
+    -webkit-filter: brightness(0) saturate(100%) !important;
     opacity: 1 !important;
+    visibility: visible !important;
     mix-blend-mode: normal !important;
 }
 
 .social-icon:hover {
     filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255, 0, 143, 0.8)) !important;
+    -webkit-filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255, 0, 143, 0.8)) !important;
     opacity: 1 !important;
 }
 
-/* BOTTOM SOCIAL ICONS — SOLID WHITE RECTANGLES WITH HIGH-CONTRAST SVGs */
+/* BOTTOM SOCIAL ICONS — OPAQUE WHITE BUTTONS, NEVER TRANSLUCENT */
+#main-social-grid {
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    isolation: isolate;
+}
+
 #main-social-grid a.social-icon-button {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-    padding: 8px;
-    background: #ffffff !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    isolation: isolate !important;
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 auto !important;
+    padding: 8px !important;
+    background: rgb(255, 255, 255) !important;
+    background-color: #ffffff !important;
     opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    -webkit-filter: none !important;
     mix-blend-mode: normal !important;
-    border: 1px solid rgba(255, 0, 143, 0.45);
-    border-radius: 12px;
-    box-shadow: 0 0 14px rgba(255, 0, 143, 0.18);
-    box-sizing: border-box;
+    border: 2px solid #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 14px rgba(255, 0, 143, 0.35) !important;
+    box-sizing: border-box !important;
 }
 
 #main-social-grid a.social-icon-button:hover {
-    border-color: var(--pink);
-    box-shadow: 0 0 22px rgba(255, 0, 143, 0.45);
+    background: rgb(255, 255, 255) !important;
+    background-color: #ffffff !important;
+    border-color: var(--pink) !important;
+    box-shadow: 0 0 22px rgba(255, 0, 143, 0.55) !important;
 }
 
 #main-social-grid img.social-icon {
     display: block !important;
+    position: relative !important;
+    z-index: 1 !important;
     width: 64px !important;
     height: 64px !important;
     max-width: 64px !important;
     max-height: 64px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
     opacity: 1 !important;
-    mix-blend-mode: normal !important;
     visibility: visible !important;
+    filter: brightness(0) saturate(100%) !important;
+    -webkit-filter: brightness(0) saturate(100%) !important;
+    mix-blend-mode: normal !important;
 }
 
 /* FLOATING SPOTIFY */
