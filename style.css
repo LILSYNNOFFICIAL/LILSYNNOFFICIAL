@@ -12,34 +12,49 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
 .neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
 .glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-/* Social artwork is supplied as solid pink SVG artwork. Do not recolor it. */
-.social-icon { transition: none; opacity: 1 !important; visibility: visible !important; mix-blend-mode: normal !important; }
-.social-icon:hover { opacity: 1 !important; visibility: visible !important; mix-blend-mode: normal !important; }
-
-/* Solid white tile with solid pink logo. */
-#main-social-grid { opacity: 1 !important; filter: none !important; mix-blend-mode: normal !important; isolation: isolate !important; }
-#main-social-grid a.social-icon-button {
-    display: inline-flex !important; align-items: center !important; justify-content: center !important;
-    position: relative !important; isolation: isolate !important; width: 80px !important; height: 80px !important;
-    margin: 0 auto !important; padding: 8px !important; background: rgb(255,255,255) !important;
-    opacity: 1 !important; visibility: visible !important; filter: none !important; -webkit-filter: none !important;
-    mix-blend-mode: normal !important; border: 2px solid rgb(255,255,255) !important;
-    border-radius: 12px !important; box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
-    box-sizing: border-box !important; overflow: hidden !important;
+/* SOCIAL ICONS — deliberately simple: opaque white tile + inline SVG. */
+#main-social-grid {
+  display: grid;
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
+  isolation: isolate;
 }
-#main-social-grid a.social-icon-button::before {
-    content: "" !important; position: absolute !important; inset: 0 !important; display: block !important;
-    background: rgb(255,255,255) !important; opacity: 1 !important; visibility: visible !important;
-    filter: none !important; mix-blend-mode: normal !important; border-radius: 10px !important;
-    z-index: 0 !important; pointer-events: none !important;
+.social-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(255,0,143,0.35);
+  text-decoration: none;
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
+  isolation: isolate;
+  overflow: hidden;
 }
-#main-social-grid a.social-icon-button:hover { background: rgb(255,255,255) !important; border-color: var(--pink) !important; box-shadow: 0 0 22px rgba(255,0,143,0.55) !important; }
-#main-social-grid a.social-icon-button:hover::before { background: rgb(255,255,255) !important; opacity: 1 !important; }
-#main-social-grid img.social-icon {
-    display: block !important; position: relative !important; z-index: 2 !important; width: 64px !important; height: 64px !important;
-    max-width: 64px !important; max-height: 64px !important; padding: 0 !important; margin: 0 !important;
-    background: transparent !important; opacity: 1 !important; visibility: visible !important;
-    filter: none !important; -webkit-filter: none !important; mix-blend-mode: normal !important;
+.social-icon-button:hover {
+  background: #ffffff;
+  border-color: var(--pink);
+  box-shadow: 0 0 22px rgba(255,0,143,0.55);
+}
+.social-icon-svg {
+  display: block;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  fill: #ff1493;
+  opacity: 1;
+  filter: none;
+  -webkit-filter: none;
+  mix-blend-mode: normal;
 }
 iframe { box-shadow: 0 0 60px rgba(255,0,143,0.6); background: rgba(0,0,0,0.7); border-radius: 16px; }
 video { filter: brightness(0.95) contrast(1.05); }
