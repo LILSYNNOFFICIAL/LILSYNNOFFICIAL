@@ -12,50 +12,59 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
 .neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
 .glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-/* SOCIAL ICONS — deliberately simple: opaque white tile + inline SVG. */
+/* Social links: deliberately simple. White tile + inline SVG artwork. */
 #main-social-grid {
   display: grid;
   opacity: 1;
   filter: none;
   mix-blend-mode: normal;
-  isolation: isolate;
 }
-.social-icon-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  margin: 0 auto;
-  padding: 0;
-  box-sizing: border-box;
-  background: #ffffff;
-  border: 2px solid #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 0 14px rgba(255,0,143,0.35);
-  text-decoration: none;
-  opacity: 1;
-  filter: none;
-  mix-blend-mode: normal;
-  isolation: isolate;
-  overflow: hidden;
+#main-social-grid .social-icon-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto !important;
+  padding: 10px !important;
+  box-sizing: border-box !important;
+  background: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 12px !important;
+  opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  box-shadow: 0 0 14px rgba(255,0,143,0.30) !important;
+  text-decoration: none !important;
 }
-.social-icon-button:hover {
-  background: #ffffff;
-  border-color: var(--pink);
-  box-shadow: 0 0 22px rgba(255,0,143,0.55);
+#main-social-grid .social-icon-button:hover {
+  background: #ffffff !important;
+  border-color: var(--pink) !important;
+  box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
 }
-.social-icon-svg {
-  display: block;
-  width: 60px;
-  height: 60px;
-  flex: 0 0 60px;
-  fill: #ff1493;
-  opacity: 1;
-  filter: none;
-  -webkit-filter: none;
-  mix-blend-mode: normal;
+#main-social-grid .social-icon-svg {
+  display: block !important;
+  width: 60px !important;
+  height: 60px !important;
+  min-width: 60px !important;
+  min-height: 60px !important;
+  max-width: 60px !important;
+  max-height: 60px !important;
+  flex: 0 0 60px !important;
+  opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  visibility: visible !important;
+  overflow: visible !important;
 }
+#main-social-grid .social-icon-svg path,
+#main-social-grid .social-icon-svg circle,
+#main-social-grid .social-icon-svg rect {
+  opacity: 1 !important;
+}
+
 iframe { box-shadow: 0 0 60px rgba(255,0,143,0.6); background: rgba(0,0,0,0.7); border-radius: 16px; }
 video { filter: brightness(0.95) contrast(1.05); }
 section { background: transparent !important; }
