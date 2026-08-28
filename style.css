@@ -54,13 +54,42 @@ h1, h2 {
     border: 1px solid rgba(255,0,143,0.3);
 }
 
-/* SOCIAL ICONS — PERMANENT PINK GLOW (fixes the gray look in your screenshot) */
+/* SOCIAL ICONS — PERMANENT PINK GLOW */
 .social-icon {
     transition: filter 0.3s ease;
     filter: drop-shadow(0 0 15px #ff008f) drop-shadow(0 0 25px #ff4fd8) brightness(1.3);
 }
 .social-icon:hover {
     filter: drop-shadow(0 0 30px #ff008f) drop-shadow(0 0 50px #ff4fd8) brightness(1.6) saturate(1.8);
+}
+
+/* BOTTOM SOCIAL ICONS — SOLID BLACK RECTANGLES BEHIND SVGs */
+#main-social-grid a.social-icon-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    padding: 8px;
+    background: #000000 !important;
+    border: 1px solid rgba(255, 0, 143, 0.45);
+    border-radius: 12px;
+    box-shadow: 0 0 14px rgba(255, 0, 143, 0.18);
+    box-sizing: border-box;
+}
+
+#main-social-grid a.social-icon-button:hover {
+    border-color: var(--pink);
+    box-shadow: 0 0 22px rgba(255, 0, 143, 0.45);
+}
+
+#main-social-grid img.social-icon {
+    display: block;
+    width: 64px;
+    height: 64px;
+    max-width: 64px;
+    max-height: 64px;
 }
 
 /* FLOATING SPOTIFY */
