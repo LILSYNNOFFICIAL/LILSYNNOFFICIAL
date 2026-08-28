@@ -1,11 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Inter:wght@400;600&display=swap');
 
-:root {
-    --pink: #ff008f;
-    --glow: #ff4fd8;
-    --purple: #7a00ff;
-}
-
+:root { --pink: #ff008f; --glow: #ff4fd8; --purple: #7a00ff; }
 body { font-family: 'Inter', sans-serif; background: black; }
 html { scrollbar-width: thin; scrollbar-color: var(--pink) #111111; }
 html::-webkit-scrollbar { width: 10px; }
@@ -17,104 +12,36 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
 .neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
 .glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-.social-icon {
-    transition: filter 0.3s ease;
-    filter: brightness(0) saturate(100%) !important;
-    -webkit-filter: brightness(0) saturate(100%) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    mix-blend-mode: normal !important;
-}
-.social-icon:hover {
-    filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255,0,143,0.8)) !important;
-    -webkit-filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255,0,143,0.8)) !important;
-    opacity: 1 !important;
-}
+/* Social artwork is supplied as solid pink SVG artwork. Do not recolor it. */
+.social-icon { transition: none; opacity: 1 !important; visibility: visible !important; mix-blend-mode: normal !important; }
+.social-icon:hover { opacity: 1 !important; visibility: visible !important; mix-blend-mode: normal !important; }
 
-/* SOCIAL BUTTONS: use a separate opaque paint layer so the white surface cannot visually blend with the page/video. */
-#main-social-grid {
-    opacity: 1 !important;
-    filter: none !important;
-    mix-blend-mode: normal !important;
-    isolation: isolate !important;
-}
-
+/* Solid white tile with solid pink logo. */
+#main-social-grid { opacity: 1 !important; filter: none !important; mix-blend-mode: normal !important; isolation: isolate !important; }
 #main-social-grid a.social-icon-button {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    isolation: isolate !important;
-    width: 80px !important;
-    height: 80px !important;
-    margin: 0 auto !important;
-    padding: 8px !important;
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
-    -webkit-filter: none !important;
-    mix-blend-mode: normal !important;
-    border: 2px solid #ffffff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    position: relative !important; isolation: isolate !important; width: 80px !important; height: 80px !important;
+    margin: 0 auto !important; padding: 8px !important; background: rgb(255,255,255) !important;
+    opacity: 1 !important; visibility: visible !important; filter: none !important; -webkit-filter: none !important;
+    mix-blend-mode: normal !important; border: 2px solid rgb(255,255,255) !important;
+    border-radius: 12px !important; box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
+    box-sizing: border-box !important; overflow: hidden !important;
 }
-
-/* This is an actual opaque white layer, independent of the anchor's background paint. */
 #main-social-grid a.social-icon-button::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 !important;
-    display: block !important;
-    background: #ffffff !important;
-    background-color: rgb(255,255,255) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
-    mix-blend-mode: normal !important;
-    border-radius: 10px !important;
-    z-index: 0 !important;
-    pointer-events: none !important;
+    content: "" !important; position: absolute !important; inset: 0 !important; display: block !important;
+    background: rgb(255,255,255) !important; opacity: 1 !important; visibility: visible !important;
+    filter: none !important; mix-blend-mode: normal !important; border-radius: 10px !important;
+    z-index: 0 !important; pointer-events: none !important;
 }
-
-#main-social-grid a.social-icon-button:hover {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border-color: var(--pink) !important;
-    box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
-}
-
-#main-social-grid a.social-icon-button:hover::before {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    opacity: 1 !important;
-}
-
+#main-social-grid a.social-icon-button:hover { background: rgb(255,255,255) !important; border-color: var(--pink) !important; box-shadow: 0 0 22px rgba(255,0,143,0.55) !important; }
+#main-social-grid a.social-icon-button:hover::before { background: rgb(255,255,255) !important; opacity: 1 !important; }
 #main-social-grid img.social-icon {
-    display: block !important;
-    position: relative !important;
-    z-index: 2 !important;
-    width: 64px !important;
-    height: 64px !important;
-    max-width: 64px !important;
-    max-height: 64px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: brightness(0) saturate(100%) !important;
-    -webkit-filter: brightness(0) saturate(100%) !important;
-    mix-blend-mode: normal !important;
+    display: block !important; position: relative !important; z-index: 2 !important; width: 64px !important; height: 64px !important;
+    max-width: 64px !important; max-height: 64px !important; padding: 0 !important; margin: 0 !important;
+    background: transparent !important; opacity: 1 !important; visibility: visible !important;
+    filter: none !important; -webkit-filter: none !important; mix-blend-mode: normal !important;
 }
-
 iframe { box-shadow: 0 0 60px rgba(255,0,143,0.6); background: rgba(0,0,0,0.7); border-radius: 16px; }
 video { filter: brightness(0.95) contrast(1.05); }
 section { background: transparent !important; }
-
-@media (max-width: 768px) {
-    .neon-text { font-size: 5.5rem; }
-}
+@media (max-width: 768px) { .neon-text { font-size: 5.5rem; } }
