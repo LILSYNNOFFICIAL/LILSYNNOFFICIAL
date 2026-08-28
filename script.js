@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
       }).join('');
 
-      // attach click handlers to replace thumbnail with iframe on demand
       grid.querySelectorAll('.yt-thumb').forEach(img => {
         const vid = img.getAttribute('data-ytid');
         const container = img.parentElement;
@@ -85,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btn) btn.addEventListener('click', onClick);
       });
 
-      // for play buttons where thumbnail element wasn't present (safety)
       grid.querySelectorAll('.yt-play').forEach(btn => {
         const img = btn.parentElement.querySelector('.yt-thumb');
         if (!img) {
@@ -111,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Try server endpoint, otherwise fallback file
     try {
       const res = await fetch('/api/youtube');
       if (res.ok) {
@@ -141,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML = `
       <div class="text-center text-gray-400">
         <p>Videos are temporarily unavailable.</p>
-        <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a>
+        <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a>
       </div>
     `;
   }
@@ -152,28 +149,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // SOCIAL ICON GRID (BOTTOM OF PAGE)
   // =========================
   const socialIcons = `
-    <a href="https://www.youtube.com/channel/UC1uTOgZd1rNHnASINvT4b4Q" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/youtube.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">
+    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/spotify.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">
+    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/apple-music.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/instagram.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">
+    <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/twitter.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">
+    <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/soundcloud.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/tiktok.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
-    <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="social-icon-button">
       <img src="assets/images/icons/facebook.svg" class="social-icon w-16 h-16 mx-auto">
     </a>
   `;
@@ -188,5 +185,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
-
-
