@@ -11,6 +11,30 @@ body {
     background: black;
 }
 
+/* MAIN PAGE SCROLLBAR — PINK */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--pink) #111111;
+}
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background: #111111;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: var(--pink);
+    border-radius: 10px;
+    border: 2px solid #111111;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: var(--glow);
+}
+
 h1, h2 {
     font-family: 'Orbitron', sans-serif;
 }
