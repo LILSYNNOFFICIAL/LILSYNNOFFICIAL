@@ -12,15 +12,27 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
 .neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
 .glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-/* Social links: deliberately simple. White tile + inline SVG artwork. */
+/* Social icons: force the rendered artwork to remain fully opaque. */
+#footer,
+#main-social-grid,
+#main-social-grid > a,
+#main-social-grid > a > img {
+  opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  isolation: isolate !important;
+}
 #main-social-grid {
   display: grid;
-  opacity: 1;
-  filter: none;
-  mix-blend-mode: normal;
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
 }
 #main-social-grid .social-icon-button {
   display: flex !important;
+  position: relative !important;
+  z-index: 21 !important;
   align-items: center !important;
   justify-content: center !important;
   width: 80px !important;
@@ -29,22 +41,30 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
   padding: 10px !important;
   box-sizing: border-box !important;
   background: #ffffff !important;
+  background-image: none !important;
   border: 2px solid #ffffff !important;
   border-radius: 12px !important;
   opacity: 1 !important;
   filter: none !important;
   -webkit-filter: none !important;
   mix-blend-mode: normal !important;
+  isolation: isolate !important;
   box-shadow: 0 0 14px rgba(255,0,143,0.30) !important;
   text-decoration: none !important;
+  visibility: visible !important;
 }
 #main-social-grid .social-icon-button:hover {
   background: #ffffff !important;
   border-color: var(--pink) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
   box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
 }
 #main-social-grid .social-icon-svg {
   display: block !important;
+  position: relative !important;
+  z-index: 22 !important;
   width: 60px !important;
   height: 60px !important;
   min-width: 60px !important;
@@ -52,16 +72,24 @@ h1, h2 { font-family: 'Orbitron', sans-serif; }
   max-width: 60px !important;
   max-height: 60px !important;
   flex: 0 0 60px !important;
+  margin: 0 !important;
+  padding: 0 !important;
   opacity: 1 !important;
   filter: none !important;
   -webkit-filter: none !important;
   mix-blend-mode: normal !important;
+  isolation: isolate !important;
   visibility: visible !important;
   overflow: visible !important;
+  transform: none !important;
 }
 #main-social-grid .social-icon-svg path,
 #main-social-grid .social-icon-svg circle,
-#main-social-grid .social-icon-svg rect {
+#main-social-grid .social-icon-svg rect,
+#main-social-grid .social-icon-svg polygon,
+#main-social-grid .social-icon-svg ellipse,
+#main-social-grid .social-icon-svg line,
+#main-social-grid .social-icon-svg polyline {
   opacity: 1 !important;
 }
 
