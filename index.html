@@ -21,54 +21,32 @@
       #sideMenu { z-index: 60; overflow: hidden; }
       nav .flex.items-center { gap: 0.75rem; }
       nav .flex.items-center span { line-height: 1; display:inline-block; }
-
-      /* Desktop menu: Socials owns the remaining vertical space and scrolls all the way to the bottom. */
       @media (min-width: 768px) {
-        #sideMenu > nav {
-          height: calc(100vh - 88px);
-          min-height: 0;
-          overflow: hidden;
-        }
-        #sideMenu > nav > div:has(#socialsDropdown) {
-          flex: 1 1 auto;
-          min-height: 0;
-          display: flex;
-          flex-direction: column;
-        }
-        #sideMenu #socialsDropdown {
-          flex: 1 1 auto;
-          min-height: 0;
-          max-height: none;
-          overflow-y: scroll;
-          overflow-x: hidden;
-          overscroll-behavior: contain;
-          padding-right: 0.75rem;
-          padding-bottom: 1.5rem;
-          scrollbar-width: auto;
-          scrollbar-color: #ff008f #111111;
-        }
+        #sideMenu > nav { height: calc(100vh - 88px); min-height: 0; overflow: hidden; }
+        #sideMenu > nav > div:has(#socialsDropdown) { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+        #sideMenu #socialsDropdown { flex: 1 1 auto; min-height: 0; max-height: none; overflow-y: scroll; overflow-x: hidden; overscroll-behavior: contain; padding-right: 0.75rem; padding-bottom: 1.5rem; scrollbar-width: auto; scrollbar-color: #ff008f #111111; }
         #sideMenu #socialsDropdown::-webkit-scrollbar { width: 10px; }
         #sideMenu #socialsDropdown::-webkit-scrollbar-track { background: #111111; border-radius: 8px; }
         #sideMenu #socialsDropdown::-webkit-scrollbar-thumb { background: #ff008f; border-radius: 8px; border: 2px solid #111111; }
         #sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover { background: #ff4fd8; }
       }
-
       @media (max-width:640px) {
         nav .flex.items-center .text-4xl { font-size: 1.25rem; }
         nav .flex.items-center .text-5xl { font-size: 1.4rem; }
         nav .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
       }
-
       #presave .max-w-4xl a { display:inline-block; margin-top: 0.5rem; }
       .youtube-iframe { width:100%; height:220px; border:0; display:block; }
       @media (max-width:640px) { .youtube-iframe { height:160px; } }
       @media (min-width:1024px) { .youtube-iframe { height:260px; } }
 
-      /* Social buttons are deliberately opaque so the icons cannot fade into the video/background. */
-      #main-social-grid,
-      #main-social-grid a.social-icon-button {
+      /* Social icons: solid pink artwork on a solid white tile. No filters or opacity are used. */
+      #main-social-grid a.social-icon-button,
+      #main-social-grid a.social-icon-button::before,
+      #main-social-grid img.social-icon {
         opacity: 1 !important;
         filter: none !important;
+        -webkit-filter: none !important;
         mix-blend-mode: normal !important;
       }
       #main-social-grid a.social-icon-button {
@@ -81,9 +59,8 @@
         height: 80px !important;
         margin: 0 auto !important;
         padding: 8px !important;
-        background: #ffffff !important;
-        background-color: rgb(255,255,255) !important;
-        border: 2px solid #ffffff !important;
+        background: rgb(255,255,255) !important;
+        border: 2px solid rgb(255,255,255) !important;
         border-radius: 12px !important;
         box-sizing: border-box !important;
         box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
@@ -98,20 +75,13 @@
         max-height: 64px !important;
         margin: 0 !important;
         padding: 0 !important;
-        opacity: 1 !important;
         visibility: visible !important;
-        filter: brightness(0) saturate(100%) !important;
-        -webkit-filter: brightness(0) saturate(100%) !important;
-        mix-blend-mode: normal !important;
       }
       #main-social-grid a.social-icon-button:hover {
-        background: #ffffff !important;
-        background-color: rgb(255,255,255) !important;
+        background: rgb(255,255,255) !important;
         border-color: #ff008f !important;
         box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
       }
-
-      /* Smaller release heading so the complete title remains visible with the side menu open. */
       #presave h2 { font-size: clamp(1.5rem, 3.2vw, 2.5rem); line-height: 1.15; overflow-wrap: normal; }
       @media (max-width:900px) { #presave h2 { font-size: clamp(1.35rem, 5vw, 2.2rem); } }
     </style>
@@ -119,70 +89,21 @@
 <body class="bg-black text-white overflow-x-hidden font-['Inter']">
 <nav class="fixed top-0 z-50 w-full bg-black/60 backdrop-blur-lg border-b border-[#ff008f]/30">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-        <div class="flex items-center gap-3 text-4xl font-['Orbitron'] tracking-widest text-[#ff008f]">
-            <span class="text-5xl leading-none">🎧</span>
-            <span class="text-4xl">LIL SYNN</span>
-        </div>
+        <div class="flex items-center gap-3 text-4xl font-['Orbitron'] tracking-widest text-[#ff008f]"><span class="text-5xl leading-none">🎧</span><span class="text-4xl">LIL SYNN</span></div>
         <button id="hamburger" class="text-5xl text-[#ff008f]" style="margin-left:0.5rem;">☰</button>
     </div>
 </nav>
-
 <div id="sideMenu" class="fixed top-0 right-0 h-full w-72 bg-black/90 backdrop-blur-xl transform translate-x-full transition-transform duration-300 z-50">
-    <div class="flex justify-end p-6 shrink-0">
-        <button id="closeMenu" class="text-3xl text-white hover:text-pink-500">&times;</button>
-    </div>
+    <div class="flex justify-end p-6 shrink-0"><button id="closeMenu" class="text-3xl text-white hover:text-pink-500">&times;</button></div>
     <nav class="flex flex-col gap-6 px-8 text-lg font-['Orbitron']">
-        <a href="#home" class="menu-link shrink-0">Home</a>
-        <a href="https://lilsynnofficial.threadless.com" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Merch</a>
-        <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Lyrics</a>
-        <a href="#videos" class="menu-link shrink-0">Videos</a>
-        <div>
-            <button id="socialsTrigger" class="menu-link flex justify-between w-full shrink-0">Socials <span>▼</span></button>
-            <div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
-                <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a>
-                <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a>
-                <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a>
-                <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="menu-link">Instagram</a>
-                <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a>
-                <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">SoundCloud</a>
-                <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">TikTok</a>
-                <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">Facebook</a>
-                <a href="https://discord.gg/ZUVsHuCAv" target="_blank" rel="noopener noreferrer" class="menu-link">Discord</a>
-                <a href="https://github.com/orgs/Neurosyn-Dev/repositories" target="_blank" rel="noopener noreferrer" class="menu-link">GitHub</a>
-            </div>
-        </div>
+        <a href="#home" class="menu-link shrink-0">Home</a><a href="https://lilsynnofficial.threadless.com" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Merch</a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Lyrics</a><a href="#videos" class="menu-link shrink-0">Videos</a>
+        <div><button id="socialsTrigger" class="menu-link flex justify-between w-full shrink-0">Socials <span>▼</span></button><div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']"><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="menu-link">Instagram</a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">SoundCloud</a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">TikTok</a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">Facebook</a><a href="https://discord.gg/ZUVsHuCAv" target="_blank" rel="noopener noreferrer" class="menu-link">Discord</a><a href="https://github.com/orgs/Neurosyn-Dev/repositories" target="_blank" rel="noopener noreferrer" class="menu-link">GitHub</a></div></div>
     </nav>
 </div>
-
-<section id="home" class="relative w-full overflow-hidden">
-    <video id="bgVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source src="assets/mov/lv_0_20260718234757.mp4" type="video/mp4">
-    </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 video-gradient-overlay"></div>
-</section>
-
-<section id="presave" class="py-12 bg-transparent">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-5xl font-['Orbitron'] text-[#ff4fd8] mb-8">HELLO GOODBYE OUT NOW</h2>
-        <img src="assets/heal2.png" alt="LIL SYNN - HELLO GOODBYE" class="mx-auto mb-8 rounded-3xl shadow-2xl max-w-[380px] w-full border border-[#ff008f]/30">
-        <a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-lg md:text-xl px-6 md:px-12 py-3 md:py-5 rounded-2xl transition-transform transform hover:scale-105">PRESAVES HERE</a>
-    </div>
-</section>
-
-<section id="videos" class="py-8 bg-transparent">
-    <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-5xl font-['Orbitron'] text-center mb-8 text-[#ff008f]">LATEST VIDEOS</h2>
-        <div id="youtube-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </div>
-</section>
-
-<footer id="footer" class="py-8 bg-transparent">
-  <div class="max-w-6xl mx-auto px-6 text-center">
-    <h3 class="text-2xl font-['Orbitron'] mb-6 text-[#ff008f]">CONNECT</h3>
-    <div id="main-social-grid" class="grid grid-cols-4 md:grid-cols-8 gap-6 items-center mx-auto max-w-xl"></div>
-    <p class="mt-6 text-sm text-gray-400">© 2026 LIL SYNN</p>
-  </div>
-</footer>
+<section id="home" class="relative w-full overflow-hidden"><video id="bgVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover"><source src="assets/mov/lv_0_20260718234757.mp4" type="video/mp4"></video><div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 video-gradient-overlay"></div></section>
+<section id="presave" class="py-12 bg-transparent"><div class="max-w-4xl mx-auto px-6 text-center"><h2 class="text-5xl font-['Orbitron'] text-[#ff4fd8] mb-8">HELLO GOODBYE OUT NOW</h2><img src="assets/heal2.png" alt="LIL SYNN - HELLO GOODBYE" class="mx-auto mb-8 rounded-3xl shadow-2xl max-w-[380px] w-full border border-[#ff008f]/30"><a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="inline-block bg-gradient-to-r from-[#ff008f] to-[#ff4fd8] hover:from-[#ff4fd8] hover:to-[#ff008f] text-black font-bold text-lg md:text-xl px-6 md:px-12 py-3 md:py-5 rounded-2xl transition-transform transform hover:scale-105">PRESAVES HERE</a></div></section>
+<section id="videos" class="py-8 bg-transparent"><div class="max-w-6xl mx-auto px-6"><h2 class="text-5xl font-['Orbitron'] text-center mb-8 text-[#ff008f]">LATEST VIDEOS</h2><div id="youtube-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div></div></section>
+<footer id="footer" class="py-8 bg-transparent"><div class="max-w-6xl mx-auto px-6 text-center"><h3 class="text-2xl font-['Orbitron'] mb-6 text-[#ff008f]">CONNECT</h3><div id="main-social-grid" class="grid grid-cols-4 md:grid-cols-8 gap-6 items-center mx-auto max-w-xl"></div><p class="mt-6 text-sm text-gray-400">© 2026 LIL SYNN</p></div></footer>
 <script src="script.js"></script>
 </body>
 </html>
