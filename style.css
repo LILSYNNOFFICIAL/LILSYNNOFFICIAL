@@ -6,55 +6,17 @@
     --purple: #7a00ff;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: black;
-}
+body { font-family: 'Inter', sans-serif; background: black; }
+html { scrollbar-width: thin; scrollbar-color: var(--pink) #111111; }
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: #111111; }
+html::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 10px; border: 2px solid #111111; }
+html::-webkit-scrollbar-thumb:hover { background: var(--glow); }
+h1, h2 { font-family: 'Orbitron', sans-serif; }
+.menu-text { font-family: 'Rajdhani', sans-serif; }
+.neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
+.glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-/* MAIN PAGE SCROLLBAR — PINK */
-html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--pink) #111111;
-}
-
-html::-webkit-scrollbar {
-    width: 10px;
-}
-
-html::-webkit-scrollbar-track {
-    background: #111111;
-}
-
-html::-webkit-scrollbar-thumb {
-    background: var(--pink);
-    border-radius: 10px;
-    border: 2px solid #111111;
-}
-
-html::-webkit-scrollbar-thumb:hover {
-    background: var(--glow);
-}
-
-h1, h2 {
-    font-family: 'Orbitron', sans-serif;
-}
-
-.menu-text {
-    font-family: 'Rajdhani', sans-serif;
-}
-
-/* NEON + GLASS */
-.neon-text {
-    text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple);
-}
-
-.glass {
-    background: rgba(13,13,13,0.75);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,0,143,0.3);
-}
-
-/* SOCIAL ICONS — SVGs ARE WHITE; FORCE BLACK RENDERING FOR CONTRAST */
 .social-icon {
     transition: filter 0.3s ease;
     filter: brightness(0) saturate(100%) !important;
@@ -63,19 +25,18 @@ h1, h2 {
     visibility: visible !important;
     mix-blend-mode: normal !important;
 }
-
 .social-icon:hover {
-    filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255, 0, 143, 0.8)) !important;
-    -webkit-filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255, 0, 143, 0.8)) !important;
+    filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255,0,143,0.8)) !important;
+    -webkit-filter: brightness(0) saturate(100%) drop-shadow(0 0 8px rgba(255,0,143,0.8)) !important;
     opacity: 1 !important;
 }
 
-/* BOTTOM SOCIAL ICONS — OPAQUE WHITE BUTTONS, NEVER TRANSLUCENT */
+/* SOCIAL BUTTONS: use a separate opaque paint layer so the white surface cannot visually blend with the page/video. */
 #main-social-grid {
     opacity: 1 !important;
     filter: none !important;
     mix-blend-mode: normal !important;
-    isolation: isolate;
+    isolation: isolate !important;
 }
 
 #main-social-grid a.social-icon-button {
@@ -88,7 +49,7 @@ h1, h2 {
     height: 80px !important;
     margin: 0 auto !important;
     padding: 8px !important;
-    background: rgb(255, 255, 255) !important;
+    background: #ffffff !important;
     background-color: #ffffff !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -97,21 +58,45 @@ h1, h2 {
     mix-blend-mode: normal !important;
     border: 2px solid #ffffff !important;
     border-radius: 12px !important;
-    box-shadow: 0 0 14px rgba(255, 0, 143, 0.35) !important;
+    box-shadow: 0 0 14px rgba(255,0,143,0.35) !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+/* This is an actual opaque white layer, independent of the anchor's background paint. */
+#main-social-grid a.social-icon-button::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    background: #ffffff !important;
+    background-color: rgb(255,255,255) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    border-radius: 10px !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
 }
 
 #main-social-grid a.social-icon-button:hover {
-    background: rgb(255, 255, 255) !important;
+    background: #ffffff !important;
     background-color: #ffffff !important;
     border-color: var(--pink) !important;
-    box-shadow: 0 0 22px rgba(255, 0, 143, 0.55) !important;
+    box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
+}
+
+#main-social-grid a.social-icon-button:hover::before {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    opacity: 1 !important;
 }
 
 #main-social-grid img.social-icon {
     display: block !important;
     position: relative !important;
-    z-index: 1 !important;
+    z-index: 2 !important;
     width: 64px !important;
     height: 64px !important;
     max-width: 64px !important;
@@ -126,24 +111,10 @@ h1, h2 {
     mix-blend-mode: normal !important;
 }
 
-/* FLOATING SPOTIFY */
-iframe {
-    box-shadow: 0 0 60px rgba(255, 0, 143, 0.6);
-    background: rgba(0,0,0,0.7);
-    border-radius: 16px;
-}
+iframe { box-shadow: 0 0 60px rgba(255,0,143,0.6); background: rgba(0,0,0,0.7); border-radius: 16px; }
+video { filter: brightness(0.95) contrast(1.05); }
+section { background: transparent !important; }
 
-/* VIDEO & TRANSPARENT SECTIONS */
-video {
-    filter: brightness(0.95) contrast(1.05);
-}
-section {
-    background: transparent !important;
-}
-
-/* RESPONSIVE */
 @media (max-width: 768px) {
-    .neon-text {
-        font-size: 5.5rem;
-    }
+    .neon-text { font-size: 5.5rem; }
 }
