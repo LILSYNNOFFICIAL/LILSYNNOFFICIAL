@@ -48,24 +48,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadVideos();
 
-  // Fresh, standalone site assets. The SVG files themselves are the artwork; no filters or recoloring are applied.
-  const ICON_VERSION = '20260828-v3';
+  // Social icons are rendered INLINE instead of as <img> elements.
+  // This deliberately removes the external-image compositing path that was
+  // causing the artwork to appear faded/translucent in the browser.
   const socials = [
-    ['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL','youtube.svg'],
-    ['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU','spotify.svg'],
-    ['Apple Music','https://music.apple.com/us/artist/lil-synn/1850720041','apple-music.svg'],
-    ['Instagram','https://www.instagram.com/lilsynnofficial/','instagram.svg'],
-    ['X','https://x.com/lilsynnofficial','twitter.svg'],
-    ['SoundCloud','https://soundcloud.com/lilsynnofficial','soundcloud.svg'],
-    ['TikTok','https://www.tiktok.com/@lilsynnofficial','tiktok.svg'],
-    ['Facebook','https://www.facebook.com/lilsynnofficial','facebook.svg']
+    ['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M88 18H12C5.37 18 0 23.37 0 30v40c0 6.63 5.37 12 12 12h76c6.63 0 12-5.37 12-12V30c0-6.63-5.37-12-12-12ZM39 31l34 19-34 19V31Z"/></svg>`],
+    ['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU',`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#FF1493" fill-opacity="1"/><path d="M22 39c18-7 40-6 58 2M26 51c16-6 35-5 50 2M30 63c13-4 27-3 40 2" fill="none" stroke="#fff" stroke-opacity="1" stroke-width="9" stroke-linecap="round"/></svg>`],
+    ['Apple Music','https://music.apple.com/us/artist/lil-synn/1850720041',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M58 20c5-6 6-12 6-16-7 1-13 4-18 9-4 5-6 10-5 16 7 1 13-3 17-9ZM75 50c0-10 7-17 13-20-5-8-14-10-20-10-8 0-15 5-19 5-5 0-11-5-18-5-9 0-17 5-22 13-10 15-3 39 7 52 5 6 11 13 18 12 7 0 10-4 18-4s11 4 18 4c8 0 13-7 18-13 5-7 7-14 7-14-1 0-20-7-20-20Z"/></svg>`],
+    ['Instagram','https://www.instagram.com/lilsynnofficial/',`<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="5" y="5" width="90" height="90" rx="25" fill="#FF1493" fill-opacity="1"/><rect x="25" y="25" width="50" height="50" rx="15" fill="none" stroke="#fff" stroke-opacity="1" stroke-width="9"/><circle cx="50" cy="50" r="11" fill="none" stroke="#fff" stroke-opacity="1" stroke-width="9"/><circle cx="69" cy="31" r="5.5" fill="#fff" fill-opacity="1"/></svg>`],
+    ['X','https://x.com/lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M8 9h25l17 24L71 9h20L61 45l31 46H67L47 62 23 91H4l35-41L8 9Zm24 8h-9l43 65h10L32 17Z"/></svg>`],
+    ['SoundCloud','https://soundcloud.com/lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M7 61h7v22H7V61Zm10-12h7v34h-7V49Zm10-10h7v44h-7V39Zm10-7h7v51h-7V32Zm10-5h7v56h-7V27Zm10 0c4-3 9-5 14-5 17 0 31 14 31 31S85 84 68 84H57V27ZM7 77h7v6H7v-6Zm10-2h7v8h-7v-8Zm10-2h7v10h-7V73Zm10-2h7v12h-7V71Zm10-1h7v14h-7V70Z"/></svg>`],
+    ['TikTok','https://www.tiktok.com/@lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M57 7h18c1 10 7 17 18 20v17c-7 0-13-2-18-5v28c0 19-13 30-30 30-16 0-28-11-28-27 0-17 13-28 29-28 3 0 7 1 10 2v17c-3-2-6-3-10-3-7 0-12 5-12 12s5 12 12 12c7 0 13-5 13-15V7Z"/></svg>`],
+    ['Facebook','https://www.facebook.com/lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#FF1493" fill-opacity="1"/><path fill="#fff" fill-opacity="1" d="M57 87V57h11l2-13H57v-8c0-5 3-7 8-7h6V18c-3-1-7-1-11-1-11 0-18 7-18 19v8H30v13h12v30h15Z"/></svg>`]
   ];
 
   const mainGrid = document.getElementById('main-social-grid');
   if (mainGrid) {
-    mainGrid.innerHTML = socials.map(([name, href, file]) => `
+    mainGrid.innerHTML = socials.map(([name, href, svg]) => `
       <a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}">
-        <img class="social-icon-svg" src="assets/images/icons/${file}?v=${ICON_VERSION}" alt="${name}">
+        <span class="social-icon-svg" aria-hidden="true">${svg}</span>
       </a>`).join('');
   }
 
