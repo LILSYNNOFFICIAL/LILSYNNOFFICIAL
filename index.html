@@ -60,15 +60,21 @@
         nav .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
       }
 
-      /* Keep the Socials list scrollable on desktop without changing mobile behavior. */
+      /* Desktop: Socials gets its own scroll area with enough height to reveal the final link. */
       @media (min-width: 768px) {
         #sideMenu #socialsDropdown {
-          max-height: calc(100vh - 250px);
+          max-height: calc(100vh - 190px);
           overflow-y: auto;
           overscroll-behavior: contain;
           padding-right: 0.75rem;
           scrollbar-width: thin;
+          scrollbar-color: #ff008f #111111;
         }
+
+        #sideMenu #socialsDropdown::-webkit-scrollbar { width: 8px; }
+        #sideMenu #socialsDropdown::-webkit-scrollbar-track { background: #111111; border-radius: 8px; }
+        #sideMenu #socialsDropdown::-webkit-scrollbar-thumb { background: #ff008f; border-radius: 8px; }
+        #sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover { background: #ff4fd8; }
       }
 
       #presave .max-w-4xl a { display:inline-block; margin-top: 0.5rem; }
@@ -91,6 +97,9 @@
       }
 
       #main-social-grid img.social-icon { max-width:64px; max-height:64px; }
+
+      /* Keep the release title fully visible when the navigation is open. */
+      #presave h2 { font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.15; }
     </style>
 
 </head>
@@ -201,7 +210,6 @@
 
 </section>
 
-
 <!-- =========================
      VIDEOS
 ========================= -->
@@ -220,7 +228,6 @@
 
 </section>
 
-
 <!-- =========================
      SOCIAL ICONS / FOOTER
 ========================= -->
@@ -234,7 +241,6 @@
     <p class="mt-6 text-sm text-gray-400">© 2026 LIL SYNN</p>
   </div>
 </footer>
-
 
 <script src="script.js"></script>
 
