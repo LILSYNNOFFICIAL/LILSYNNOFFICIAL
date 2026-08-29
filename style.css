@@ -45,34 +45,62 @@ section[id] { scroll-margin-top: 88px; }
 #main-social-grid .social-icon-svg svg { display:block !important; width:68px !important; height:68px !important; opacity:1 !important; visibility:visible !important; fill-opacity:1 !important; stroke-opacity:1 !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
 #main-social-grid .social-icon-svg svg path,#main-social-grid .social-icon-svg svg circle,#main-social-grid .social-icon-svg svg rect,#main-social-grid .social-icon-svg svg polygon,#main-social-grid .social-icon-svg svg ellipse,#main-social-grid .social-icon-svg svg line,#main-social-grid .social-icon-svg svg polyline { opacity:1 !important; fill-opacity:1 !important; stroke-opacity:1 !important; }
 #main-social-grid .social-icon-button:hover,#main-social-grid .social-icon-button:focus,#main-social-grid .social-icon-button:active { background:transparent !important; opacity:1 !important; filter:none !important; mix-blend-mode:normal !important; }
-#footer h3,#footer p,#footer a { position:relative; z-index:20; opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; text-shadow:none !important; }
-#footer h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
-#footer p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; }
-#footer a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
-#footer a:hover,#footer a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
-/* Text fix modeled directly on the proven opaque SVG approach from bb0d1c5. */
+
+/* FOOTER TEXT — same principle as bb0d1c5: remove every transparency-producing text effect and render the text directly. */
 #contact,
+#contact > div,
+#contact > div > p,
+#contact > div > h3,
+#contact > div > a,
+#contact .section-kicker,
 #contact h3,
 #contact p,
 #contact a,
-#contact span,
-#contact svg,
-#contact svg * {
-  opacity:1 !important;
-  visibility:visible !important;
-  filter:none !important;
-  -webkit-filter:none !important;
-  mix-blend-mode:normal !important;
-  text-shadow:none !important;
+#contact span {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+  background-image: none !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
 }
-#contact { color:#ffffff !important; }
-#contact h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
-#contact p { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
-#contact .section-kicker { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; }
-#contact .text-gray-300 { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
-#contact a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
-#contact a:hover,#contact a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
-#contact #main-social-grid,#contact #main-social-grid a,#contact #main-social-grid img,#contact #main-social-grid svg,#contact #main-social-grid svg * { opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
+#contact .section-kicker,
+#contact h3 {
+  color: #ff008f !important;
+  -webkit-text-fill-color: #ff008f !important;
+  text-decoration: none !important;
+}
+#contact p:not(.section-kicker) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#contact a {
+  color: #ff4fd8 !important;
+  -webkit-text-fill-color: #ff4fd8 !important;
+  text-decoration-color: #ff4fd8 !important;
+}
+#contact a:hover,
+#contact a:focus-visible {
+  color: #ff008f !important;
+  -webkit-text-fill-color: #ff008f !important;
+}
+#contact #main-social-grid,
+#contact #main-social-grid a,
+#contact #main-social-grid img,
+#contact #main-social-grid svg,
+#contact #main-social-grid svg * {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
 iframe { box-shadow:0 0 60px rgba(255,0,143,0.6); background:rgba(0,0,0,0.7); border-radius:16px; }
 video { filter:brightness(0.95) contrast(1.05); }
 @media (max-width:768px) { .neon-text { font-size:5.5rem; } .music-card-links a { font-size:.75rem; } }
