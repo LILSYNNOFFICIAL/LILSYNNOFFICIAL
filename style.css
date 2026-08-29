@@ -96,3 +96,72 @@ video { filter:brightness(0.95) contrast(1.05); }
 @media (max-width:768px) { .neon-text { font-size:5.5rem; } .music-card-links a { font-size:.75rem; } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
 :focus-visible { outline:2px solid #ff4fd8; outline-offset:4px; }
+
+/* NAVIGATION — approved refinement: smaller menu typography + reliable Socials scroll region. */
+#sideMenu > nav {
+  font-size: .95rem !important;
+  line-height: 1.25 !important;
+}
+#sideMenu > nav > a,
+#sideMenu #socialsTrigger {
+  font-size: .95rem !important;
+  line-height: 1.25 !important;
+}
+#sideMenu #socialsDropdown {
+  scrollbar-width: auto !important;
+  scrollbar-color: #ff008f #111 !important;
+}
+#sideMenu #socialsDropdown::-webkit-scrollbar {
+  width: 10px !important;
+}
+#sideMenu #socialsDropdown::-webkit-scrollbar-track {
+  background: #111 !important;
+}
+#sideMenu #socialsDropdown::-webkit-scrollbar-thumb {
+  background: #ff008f !important;
+  border-radius: 8px !important;
+  border: 2px solid #111 !important;
+}
+@media (min-width: 768px) {
+  #sideMenu > nav {
+    gap: 1.15rem !important;
+  }
+  #sideMenu > nav > div:has(#socialsDropdown) {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #sideMenu #socialsDropdown {
+    flex: 0 1 auto !important;
+    min-height: 0 !important;
+    max-height: calc(100vh - 430px) !important;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain !important;
+    padding-right: .75rem !important;
+    padding-bottom: 1rem !important;
+  }
+  #sideMenu #socialsDropdown a {
+    font-size: .9rem !important;
+    line-height: 1.25 !important;
+  }
+}
+@media (max-width: 767px) {
+  #sideMenu > nav {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    gap: 1.1rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  #sideMenu #socialsDropdown {
+    max-height: 34vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-right: .5rem !important;
+  }
+  #sideMenu #socialsDropdown a {
+    font-size: .9rem !important;
+    line-height: 1.25 !important;
+  }
+}
