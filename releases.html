@@ -8,85 +8,73 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--pink:#ff008f;--pink2:#ff4fd8;--bg:#050505;--muted:#aaa}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:Inter,sans-serif;min-height:100vh}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:auto;padding:0 24px}header{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,0,143,.3)}.nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 24px Orbitron,sans-serif;letter-spacing:.12em;color:var(--pink)}.back{font:600 15px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.45);padding:9px 14px;border-radius:10px}.back:hover{border-color:var(--pink);color:var(--pink2)}main{padding:80px 0}.kicker{text-align:center;color:var(--pink2);font:700 14px Rajdhani,sans-serif;letter-spacing:.22em;margin:0 0 12px}.title{text-align:center;font:700 clamp(38px,7vw,72px) Orbitron,sans-serif;letter-spacing:.08em;margin:0}.intro{text-align:center;color:#ccc;max-width:820px;margin:20px auto 55px;line-height:1.7}#releases{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.card{background:linear-gradient(145deg,#111,#080808);border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--pink2)}.art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#111}.body{padding:18px}.type{display:inline-block;color:var(--pink2);font:700 11px Rajdhani,sans-serif;letter-spacing:.15em;text-transform:uppercase;margin:0 0 9px}.name{font:700 18px Orbitron,sans-serif;margin:0 0 7px;line-height:1.25}.meta{color:var(--muted);font:600 15px Rajdhani,sans-serif;margin:0 0 14px}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{font:700 12px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.4);padding:7px 9px;border-radius:8px}.links a:hover{background:var(--pink);color:#000;border-color:var(--pink)}.status{grid-column:1/-1;text-align:center;color:#999;padding:40px}.source-note{font:600 12px Rajdhani,sans-serif;color:#777;margin-top:10px}.source-note strong{color:#aaa}.archive-note{grid-column:1/-1;text-align:center;color:#777;font:600 12px Rajdhani,sans-serif;letter-spacing:.04em;margin-top:6px}.archive-note a{color:#aaa}.archive-note a:hover{color:var(--pink2)}footer{text-align:center;border-top:1px solid rgba(255,0,143,.2);padding:35px 20px;color:#777;font:600 14px Rajdhani,sans-serif;letter-spacing:.08em}footer a{color:#aaa}footer a:hover{color:var(--pink2)}@media(max-width:900px){#releases{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{padding:0 16px}.nav{height:64px}.brand{font-size:18px}.back{font-size:13px}.title{font-size:34px}main{padding:55px 0}.intro{margin-bottom:38px}#releases{grid-template-columns:1fr;gap:18px}.body{padding:16px}}
+:root{--pink:#ff008f;--pink2:#ff4fd8;--bg:#050505;--muted:#aaa}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:Inter,sans-serif;min-height:100vh}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:auto;padding:0 24px}header{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,0,143,.3)}.nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 24px Orbitron,sans-serif;letter-spacing:.12em;color:var(--pink)}.back{font:600 15px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.45);padding:9px 14px;border-radius:10px}.back:hover{border-color:var(--pink);color:var(--pink2)}main{padding:80px 0}.kicker{text-align:center;color:var(--pink2);font:700 14px Rajdhani,sans-serif;letter-spacing:.22em;margin:0 0 12px}.title{text-align:center;font:700 clamp(38px,7vw,72px) Orbitron,sans-serif;letter-spacing:.08em;margin:0}.intro{text-align:center;color:#ccc;max-width:820px;margin:20px auto 55px;line-height:1.7}#releases{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.card{background:linear-gradient(145deg,#111,#080808);border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--pink2)}.art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#111}.body{padding:18px}.type{display:inline-block;color:var(--pink2);font:700 11px Rajdhani,sans-serif;letter-spacing:.15em;text-transform:uppercase;margin:0 0 9px}.name{font:700 18px Orbitron,sans-serif;margin:0 0 7px;line-height:1.25}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{font:700 12px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.4);padding:7px 9px;border-radius:8px}.links a:hover{background:var(--pink);color:#000;border-color:var(--pink)}.status{grid-column:1/-1;text-align:center;color:#999;padding:50px}.note{grid-column:1/-1;text-align:center;color:#777;font:600 12px Rajdhani,sans-serif;letter-spacing:.04em;margin-top:4px}.note a{color:#aaa}.note a:hover{color:var(--pink2)}footer{text-align:center;border-top:1px solid rgba(255,0,143,.2);padding:35px 20px;color:#777;font:600 14px Rajdhani,sans-serif;letter-spacing:.08em}footer a{color:#aaa}footer a:hover{color:var(--pink2)}@media(max-width:900px){#releases{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{padding:0 16px}.nav{height:64px}.brand{font-size:18px}.back{font-size:13px}.title{font-size:34px}main{padding:55px 0}.intro{margin-bottom:38px}#releases{grid-template-columns:1fr;gap:18px}.body{padding:16px}}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"LIL SYNN Releases","url":"https://lilsynn.com/releases","about":{"@type":"MusicGroup","name":"LIL SYNN","url":"https://lilsynn.com/"}}</script>
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="/">LIL SYNN</a><a class="back" href="/">← BACK TO SITE</a></div></header>
-<main><div class="wrap"><p class="kicker">THE COMPLETE CATALOG</p><h1 class="title">RELEASES</h1><p class="intro">Albums, EPs and singles from LIL SYNN — newest releases first. <strong>Enough</strong> and <strong>Hello Goodbye</strong> are albums; <strong>Heal</strong> is an EP; <strong>Touching to the North</strong> is a SoundCloud-only album.</p><div id="releases"><div class="status">Loading releases…</div></div></div></main>
+<main><div class="wrap"><p class="kicker">THE COMPLETE CATALOG</p><h1 class="title">RELEASES</h1><p class="intro">Albums, EPs and singles from LIL SYNN — newest first. <strong>Enough</strong> and <strong>Hello Goodbye</strong> are albums. <strong>Heal</strong> is an EP. <strong>Touching to the North</strong> is a SoundCloud-only album.</p><div id="releases"><div class="status">Loading the complete release archive…</div></div></div></main>
 <footer><a href="/">LIL SYNN</a> · OFFICIAL WEBSITE · © 2026 LIL SYNN</footer>
 <script>
 const grid=document.getElementById('releases');
-const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const fallbackArt=t=>'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect width="800" height="800" fill="#090909"/><rect x="24" y="24" width="752" height="752" rx="18" fill="none" stroke="#ff008f" stroke-width="3"/><text x="400" y="350" fill="#ff008f" font-family="Arial" font-size="34" font-weight="700" text-anchor="middle">LIL SYNN</text><text x="400" y="410" fill="#fff" font-family="Arial" font-size="30" text-anchor="middle">${esc(t).replace(/&/g,'and')}</text></svg>`);
-const slug=t=>String(t).toLowerCase().replace(/&/g,'and').replace(/'/g,'_').replace(/[(),]/g,'_').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
-const localArtMap={
-  "don't say it (acoustic)":"37_lil_synn_don_t_say_it___acoustic.jpg",
-  "signal light sermon (remastered 2026)":"39_lil_synn_signal_light_sermon___remastered_2026.jpg",
-  "it's in her eyes":"26_lil_synn_it_s_in_her_eyes.jpg",
-  "somewhere in between":"57_lil_synn_somewhere_in_between.jpg",
-  "don't say it":"38_lil_synn_don_t_say_it.jpg",
-  "don't let me go":"54_lil_synn_don_t_let_me_go.jpg",
-  "if u stay ded":"55_lil_synn_if_u_stay_ded.jpg",
-  "back from the blackout":"31_lil_synn_back_from_the_blackout.jpg",
-  "when the world gets loud":"34_lil_synn_when_the_world_gets_loud.jpg",
-  "static on my tongue":"25_lil_synn_static_on_my_tongue.jpg",
-  "black glass":"23_lil_synn_black_glass.jpg",
-  "black glass (acoustic version)":"24_lil_synn_black_glass___acoustic_version.jpg",
-  "fade into you":"1_lil_synn_fade_into_you.jpg",
-  "it's you":"2_lil_synn_it_s_you.jpg",
-  "don't say it right":"4_lil_synn_don_t_say_it_right.jpg",
-  "glass heart frequency":"5_lil_synn_glass_heart_frequency.jpg",
-  "dead flowers":"6_lil_synn_dead_flowers.jpg",
-  "give me just a minute":"7_lil_synn_give_me_just_a_minute.jpg",
-  "after you":"8_lil_synn_after_you.jpg",
-  "fly":"9_lil_synn_fly.jpg",
-  "just tonight":"10_lil_synn_just_tonight.jpg",
-  "hello goodbye":"11_lil_synn_hello_goodbye.jpg",
-  "no matter":"12_lil_synn_no_matter.jpg",
-  "under my skin":"13_lil_synn_under_my_skin.jpg",
-  "heavy":"14_lil_synn_heavy.jpg",
-  "enough":"15_lil_synn_enough.jpg",
-  "seat still warm":"16_lil_synn_seat_still_warm.jpg",
-  "every heartbeat":"17_lil_synn_every_heartbeat.jpg",
-  "sin with me":"18_lil_synn_sin_with_me.jpg",
-  "misread":"19_lil_synn_misread.jpg",
-  "after the light":"20_lil_synn_after_the_light.jpg",
-  "touch hunger":"21_lil_synn_touch_hunger.jpg",
-  "until dawn":"22_lil_synn_until_dawn.jpg",
-  "lover":"27_lil_synn_lover.jpg",
-  "every time":"28_lil_synn_every_time.jpg",
-  "rescue you":"29_lil_synn_rescue_you.jpg",
-  "heal":"30_lil_synn_heal.jpg",
-  "burn it down":"32_lil_synn_burn_it_down.jpg",
-  "hindsight":"33_lil_synn_hindsight.jpg",
-  "light":"35_lil_synn_light.jpg",
-  "manic side":"36_lil_synn_manic_side.jpg",
-  "lost in the fog":"40_lil_synn_lost_in_the_fog.jpg",
-  "in the end":"41_lil_synn_in_the_end.jpg",
-  "stay here":"42_lil_synn_stay_here.jpg",
-  "home":"43_lil_synn_home.jpg",
-  "my light":"44_lil_synn_my_light.jpg",
-  "ties remain":"45_lil_synn_ties_remain.jpg",
-  "gravity and ghosts":"46_lil_synn_gravity_and_ghosts.jpg",
-  "word to word":"47_lil_synn_word_to_word.jpg",
-  "shattered":"48_lil_synn_shattered.jpg",
-  "mirrors":"49_lil_synn_mirrors.jpg",
-  "faith":"50_lil_synn_faith.jpg",
-  "through the flames":"51_lil_synn_through_the_flames.jpg",
-  "wounds":"52_lil_synn_wounds.jpg",
-  "discernment":"53_lil_synn_discernment.jpg",
-  "already famous":"56_lil_synn_already_famous.jpg"
+const ART_DIR='https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/';
+const API='https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/images/icons/album_art?ref=main';
+const special={
+ 'enough':'Album','hello_goodbye':'Album','heal':'EP'
 };
-function localArt(title){const f=localArtMap[String(title).toLowerCase()]||`${slug(title).replace(/^/,'')}.jpg`;return `assets/images/icons/album_art/${f}`;}
-const catalog=[
-{title:'Black Glass',type:'Single',date:'2026-08-12'},{title:'Hello Goodbye',type:'Album',date:'2026-07-31'},{title:'Static On My Tongue',type:'Single',date:'2026-07-27'},{title:"It's In Her Eyes",type:'Single',date:'2026-07-20'},{title:'Fade Into You',type:'Single',date:'2026-06-07'},{title:'Heal',type:'EP',date:'2026-05-01'},{title:'Hindsight',type:'Single',date:'2026-04-20'},{title:'Back From The Blackout',type:'Single',date:'2026-04-15'},{title:'Burn It Down',type:'Single',date:'2026-04-14'},{title:'When The World Gets Loud',type:'Single',date:'2026-04-13'},{title:'Manic Side',type:'Single',date:'2026-04-09'},{title:'Light',type:'Single',date:'2026-04-01'},{title:"Don't Say It (Acoustic)",type:'Single',date:'2026-03-31'},{title:"Don't Say It",type:'Single',date:'2026-03-30'},{title:"Don't Let Me Go",type:'Single',date:'2026-03-27'},{title:'Signal Light Sermon (Remastered 2026)',type:'Single',date:'2026-03-25'},{title:'Lost In The Fog',type:'Single',date:'2026-03-22'},{title:'In The End',type:'Single',date:'2026-03-20'},{title:'IF U STAY DED',type:'Single',date:'2026-03-18'},{title:'Home',type:'Single',date:'2026-03-15'},{title:'Enough',type:'Album',date:'2026-02-17'},{title:'My Light',type:'Single',date:'2026-01-01'},{title:'Ties Remain',type:'Single',date:'2026-01-01'},{title:'Gravity and Ghosts',type:'Single',date:'2025-01-01'},{title:'Already Famous',type:'Single',date:'2025-01-01'},{title:'Touching to the North',type:'Album',date:'2024-01-01',art:'https://i1.sndcdn.com/artworks-KCXRktlrcYPqru3g-ftlP8g-t500x500.png',source:'SoundCloud',url:'https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north'}
-];
-function fmt(d){if(!d)return '';if(/-01-01$/.test(d))return d.slice(0,4);return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
-function spotifySearch(title){return 'https://open.spotify.com/search/'+encodeURIComponent('LIL SYNN '+title)}
-function card(x){const title=esc(x.title),art=x.art||localArt(x.title),spotify=x.spotifyUrl||spotifySearch(x.title),primary=x.url||spotify;const streaming=x.source==='SoundCloud'?'<a href="'+x.url+'" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>':'<a href="'+spotify+'" target="_blank" rel="noopener noreferrer">SPOTIFY</a>';return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><p class="meta">${fmt(x.date)}</p><div class="links">${streaming}</div></div></article>`}
-function load(){grid.innerHTML=catalog.map(card).join('')+`<div class="archive-note">Official LIL SYNN artwork is served from the site's GitHub asset library. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div><div class="status source-note"><strong>Archive note:</strong> Local uploaded artwork is used first for reliable rendering. <strong>Touching to the North</strong> uses its supplied SoundCloud artwork and has no Spotify button.</div>`;}
+const specialLinks={
+ 'touching to the north':{type:'Album',art:'https://i1.sndcdn.com/artworks-KCXRktlrcYPqru3g-ftlP8g-t500x500.png',url:'https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north'}
+};
+const titleOverrides={
+ "don_t_say_it___acoustic":"Don't Say It (Acoustic)",
+ "signal_light_sermon___remastered_2026":"Signal Light Sermon (Remastered 2026)",
+ "it_s_in_her_eyes":"It's In Her Eyes",
+ "it_s_you":"It's You",
+ "don_t_say_it":"Don't Say It",
+ "don_t_say_it_right":"Don't Say It Right",
+ "don_t_let_me_go":"Don't Let Me Go",
+ "if_u_stay_ded":"IF U STAY DED",
+ "black_glass___acoustic_version":"Black Glass (Acoustic Version)",
+ "back_from_the_blackout":"Back From The Blackout",
+ "when_the_world_gets_loud":"When The World Gets Loud",
+ "static_on_my_tongue":"Static On My Tongue",
+ "fade_into_you":"Fade Into You",
+ "give_me_just_a_minute":"Give Me Just A Minute",
+ "seat_still_warm":"Seat Still Warm",
+ "every_heartbeat":"Every Heartbeat",
+ "sin_with_me":"Sin With Me",
+ "after_the_light":"After The Light",
+ "touch_hunger":"Touch Hunger",
+ "until_dawn":"Until Dawn",
+ "every_time":"Every Time",
+ "rescue_you":"Rescue You",
+ "burn_it_down":"Burn It Down",
+ "manic_side":"Manic Side",
+ "lost_in_the_fog":"Lost In The Fog",
+ "in_the_end":"In The End",
+ "ties_remain":"Ties Remain",
+ "gravity_and_ghosts":"Gravity and Ghosts",
+ "word_to_word":"Word to Word",
+ "through_the_flames":"Through the Flames",
+ "already_famous":"Already Famous"
+};
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function titleFromFile(name){let key=name.replace(/^\d+_lil_synn_/i,'').replace(/\.jpg$/i,'');if(titleOverrides[key])return titleOverrides[key];return key.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
+function keyFromTitle(title){return title.toLowerCase().replace(/\([^)]*\)/g,'').trim().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
+function fallbackArt(title){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect width="800" height="800" fill="#090909"/><rect x="24" y="24" width="752" height="752" rx="18" fill="none" stroke="#ff008f" stroke-width="3"/><text x="400" y="350" fill="#ff008f" font-family="Arial" font-size="34" font-weight="700" text-anchor="middle">LIL SYNN</text><text x="400" y="410" fill="#fff" font-family="Arial" font-size="30" text-anchor="middle">${esc(title).replace(/&/g,'and')}</text></svg>`);}
+function spotifySearch(title){return 'https://open.spotify.com/search/'+encodeURIComponent('LIL SYNN '+title);}
+function card(x){const title=esc(x.title);const primary=x.url||spotifySearch(x.title);const button=x.source==='SoundCloud'?`<a href="${x.url}" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>`:`<a href="${spotifySearch(x.title)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>`;return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${x.art}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><div class="links">${button}</div></div></article>`;}
+async function load(){
+ try{
+  const res=await fetch(API,{headers:{Accept:'application/vnd.github+json'}});if(!res.ok)throw new Error('GitHub artwork directory unavailable');
+  const files=(await res.json()).filter(x=>x.type==='file'&&/\.jpg$/i.test(x.name)&&/^\d+_lil_synn_/i.test(x.name));
+  files.sort((a,b)=>parseInt(b.name,10)-parseInt(a.name,10));
+  const releases=files.map(f=>{const title=titleFromFile(f.name);const key=f.name.replace(/^\d+_lil_synn_/i,'').replace(/\.jpg$/i,'');return{title,type:special[key]||'Single',art:ART_DIR+encodeURIComponent(f.name).replace(/%2F/g,'/'),number:parseInt(f.name,10)};});
+  releases.push({title:'Touching to the North',type:'Album',art:specialLinks['touching to the north'].art,url:specialLinks['touching to the north'].url,source:'SoundCloud',number:-1});
+  grid.innerHTML=releases.map(card).join('')+`<div class="note">${releases.length} releases shown. Artwork is sourced from the official LIL SYNN GitHub artwork library, with Touching to the North using its supplied SoundCloud artwork. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div>`;
+ }catch(err){grid.innerHTML=`<div class="status">The release archive could not load right now. <a href="https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/tree/main/assets/images/icons/album_art">View the official artwork archive on GitHub.</a></div>`;console.error(err);}
+}
 load();
 </script>
 </body></html>
