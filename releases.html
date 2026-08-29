@@ -22,9 +22,7 @@
 const grid=document.getElementById('releases');
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const fallbackArt=t=>'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect width="800" height="800" fill="#090909"/><rect x="24" y="24" width="752" height="752" rx="18" fill="none" stroke="#ff008f" stroke-width="3"/><text x="400" y="350" fill="#ff008f" font-family="Arial" font-size="34" font-weight="700" text-anchor="middle">LIL SYNN</text><text x="400" y="410" fill="#fff" font-family="Arial" font-size="30" text-anchor="middle">${esc(t).replace(/&/g,'and')}</text></svg>`);
-
-// Master order is newest -> oldest. This is deliberately static so the archive
-// remains available even though Spotify's official Web API requires Premium.
+const proxyArt=url=>url?'/api/art?url='+encodeURIComponent(url):'';
 const catalog=[
  {title:'Black Glass',type:'Single',date:'2026-08-12'},
  {title:'Hello Goodbye',type:'Album',date:'2026-07-31'},
@@ -53,28 +51,11 @@ const catalog=[
  {title:'Already Famous',type:'Single',date:'2025-01-01'},
  {title:'Touching to the North',type:'Album',date:'2024-01-01',art:'https://i1.sndcdn.com/artworks-KCXRktlrcYPqru3g-ftlP8g-t500x500.png',source:'SoundCloud',url:'https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north'}
 ];
-
 function fmt(d){if(!d)return '';if(/-01-01$/.test(d))return d.slice(0,4);return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
 function spotifySearch(title){return 'https://open.spotify.com/search/'+encodeURIComponent('LIL SYNN '+title)}
-function card(x){const title=esc(x.title),art=x.art||x.artwork||fallbackArt(x.title),spotify=x.spotifyUrl||spotifySearch(x.title),primary=x.url||spotify;return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><p class="meta">${fmt(x.date)}</p><div class="links"><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>${x.source==='SoundCloud'?'<a href="'+x.url+'" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>':''}</div></div></article>`}
-
-async function getAppleArt(){
- try{
-  const r=await fetch('https://itunes.apple.com/lookup?id=1850720041&entity=album&limit=200&sort=recent');
-  if(!r.ok)return{};
-  const d=await r.json(); const map={};
-  (d.results||[]).filter(x=>x.wrapperType==='collection'&&x.collectionName&&x.artistName==='LIL SYNN').forEach(x=>{
-   map[x.collectionName.toLowerCase()]={art:(x.artworkUrl100||'').replace('100x100bb','600x600bb'),date:x.releaseDate?x.releaseDate.slice(0,10):null,type:x.collectionType==='Album'?'Album':x.collectionType==='EP'?'EP':'Single'};
-  });
-  return map;
- }catch{return{}}
-}
-
-async function load(){
- const apple=await getAppleArt();
- const merged=catalog.map(x=>{const a=apple[x.title.toLowerCase()];return a?{...x,art:x.art||a.art,date:x.date||a.date,type:x.type||a.type}:x;});
- grid.innerHTML=merged.map(card).join('')+`<div class="spotify-note">Spotify is the primary listening destination. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div><div class="status source-note"><strong>Archive note:</strong> Apple artwork is used automatically when available; releases unavailable there use a safe fallback rather than appearing blank. SoundCloud-only <strong>Touching to the North</strong> uses its supplied artwork.</div>`;
-}
+function card(x){const title=esc(x.title),art=x.art||x.artwork||fallbackArt(x.title),spotify=x.spotifyUrl||spotifySearch(x.title),primary=x.url||spotify;return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><p class="meta">${fmt(x.date)}</p><div class="links"><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>${x.source==='SoundCloud'?'<a href="'+x.url+'" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>':''}</div></div></article>`}
+async function getAppleArt(){try{const r=await fetch('/api/apple-art',{cache:'no-store'});if(!r.ok)return{};const rows=await r.json();const map={};rows.forEach(x=>{if(x.title&&x.art)map[x.title.toLowerCase()]={art:proxyArt(x.art),date:x.date,type:x.type};});return map}catch{return{}}}
+async function load(){const apple=await getAppleArt();const merged=catalog.map(x=>{const a=apple[x.title.toLowerCase()];return a?{...x,art:x.art||a.art,date:x.date||a.date,type:x.type||a.type}:x;});grid.innerHTML=merged.map(card).join('')+`<div class="spotify-note">Spotify is the primary listening destination. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div><div class="status source-note"><strong>Archive note:</strong> Artwork is loaded through the site's image proxy so external cover art cannot silently fail because of browser cross-origin or hotlink restrictions. Apple artwork is used when available; SoundCloud-only <strong>Touching to the North</strong> uses its supplied artwork.</div>`;}
 load();
 </script>
 </body>
