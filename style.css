@@ -62,6 +62,15 @@ section[id] { scroll-margin-top: 88px; }
 #footer p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; }
 #footer a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
 #footer a:hover, #footer a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
+
+/* Footer in the current markup uses #contact, not #footer. Keep every footer text fully opaque. */
+#contact, #contact * { opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
+#contact h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; text-shadow:none !important; }
+#contact p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; }
+#contact .section-kicker { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; }
+#contact a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
+#contact a:hover, #contact a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
+
 iframe { box-shadow:0 0 60px rgba(255,0,143,0.6); background:rgba(0,0,0,0.7); border-radius:16px; }
 video { filter:brightness(0.95) contrast(1.05); }
 @media (max-width:768px) { .neon-text { font-size:5.5rem; } .music-card-links a { font-size:.75rem; } }
