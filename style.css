@@ -40,7 +40,6 @@ section[id] { scroll-margin-top: 88px; }
 .about-card { max-width:1000px; margin:0 auto; padding:clamp(1.5rem,4vw,3.5rem); background:linear-gradient(135deg,rgba(10,10,10,.9),rgba(24,0,18,.78)); border:1px solid rgba(255,0,143,.28); border-radius:2rem; box-shadow:0 20px 80px rgba(0,0,0,.3); }
 .contact-box { display:inline-flex; flex-direction:column; align-items:center; padding:1.2rem 1.8rem; border:1px solid rgba(255,0,143,.3); border-radius:1rem; background:rgba(0,0,0,.55); }
 
-/* SOCIAL ICONS: plain inline SVG on the page. No translucent tile or visual effect. */
 #main-social-grid { display:grid; position:relative; z-index:20; opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
 #main-social-grid .social-icon-button { display:flex !important; align-items:center !important; justify-content:center !important; width:80px !important; height:80px !important; margin:0 auto !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; transform:none !important; text-decoration:none !important; }
 #main-social-grid .social-icon-svg { display:block !important; width:68px !important; height:68px !important; flex:0 0 68px !important; margin:0 !important; padding:0 !important; opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
@@ -56,12 +55,10 @@ section[id] { scroll-margin-top: 88px; }
 #main-social-grid .social-icon-button:focus,
 #main-social-grid .social-icon-button:active { background:transparent !important; opacity:1 !important; filter:none !important; mix-blend-mode:normal !important; }
 
-/* FOOTER TEXT: direct opaque rendering. No translucency, fade, filter, or blending. */
 #footer h3,
 #footer p { position:relative; z-index:20; opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; text-shadow:none !important; }
 #footer h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
 #footer p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; }
-
 iframe { box-shadow:0 0 60px rgba(255,0,143,0.6); background:rgba(0,0,0,0.7); border-radius:16px; }
 video { filter:brightness(0.95) contrast(1.05); }
 @media (max-width:768px) { .neon-text { font-size:5.5rem; } .music-card-links a { font-size:.75rem; } }
