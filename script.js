@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const latestTitle = document.getElementById("latest-release-title");
     const latestApple = document.getElementById("latest-apple");
     if (!grid) return;
-
     grid.innerHTML = '<div class="col-span-full text-center text-gray-400">Loading releases…</div>';
     try {
       const res = await fetch("https://itunes.apple.com/lookup?id=1850720041&entity=album&limit=20&sort=recent");
@@ -42,15 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .filter((item, index, arr) => arr.findIndex(x => x.collectionId === item.collectionId) === index)
         .slice(0, 8);
       if (!releases.length) throw new Error("No releases found");
-
       const latest = releases[0];
       const latestArtwork = (latest.artworkUrl100 || "").replace("100x100bb", "600x600bb");
       if (latestTitle) latestTitle.textContent = latest.collectionName.toUpperCase();
       if (latestApple) latestApple.href = latest.collectionViewUrl || "https://music.apple.com/us/artist/lil-synn/1850720041";
-      if (latestArt && latestArtwork) {
-        latestArt.innerHTML = `<img src="${latestArtwork}" alt="LIL SYNN — ${escapeHtml(latest.collectionName)} artwork" loading="eager" decoding="async">`;
-      }
-
+      if (latestArt && latestArtwork) latestArt.innerHTML = `<img src="${latestArtwork}" alt="LIL SYNN — ${escapeHtml(latest.collectionName)} artwork" loading="eager" decoding="async">`;
       grid.innerHTML = releases.map(release => {
         const title = escapeHtml(release.collectionName);
         const artwork = (release.artworkUrl100 || "").replace("100x100bb", "600x600bb");
@@ -96,9 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML='<div class="text-center text-gray-400"><p>Videos are temporarily unavailable.</p><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a></div>';
   }
 
-  // Social icons are rendered INLINE instead of as <img> elements.
-  // This deliberately removes the external-image compositing path that was
-  // causing the artwork to appear faded/translucent in the browser.
   const socials = [
     ['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M88 18H12C5.37 18 0 23.37 0 30v40c0 6.63 5.37 12 12 12h76c6.63 0 12-5.37 12-12V30c0-6.63-5.37-12-12-12ZM39 31l34 19-34 19V31Z"/></svg>`],
     ['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU',`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#FF1493" fill-opacity="1"/><path d="M22 39c18-7 40-6 58 2M26 51c16-6 35-5 50 2M30 63c13-4 27-3 40 2" fill="none" stroke="#fff" stroke-opacity="1" stroke-width="9" stroke-linecap="round"/></svg>`],
@@ -109,17 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ['TikTok','https://www.tiktok.com/@lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#FF1493" fill-opacity="1" d="M57 7h18c1 10 7 17 18 20v17c-7 0-13-2-18-5v28c0 19-13 30-30 30-16 0-28-11-28-27 0-17 13-28 29-28 3 0 7 1 10 2v17c-3-2-6-3-10-3-7 0-12 5-12 12s5 12 12 12c7 0 13-5 13-15V7Z"/></svg>`],
     ['Facebook','https://www.facebook.com/lilsynnofficial',`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#FF1493" fill-opacity="1"/><path fill="#fff" fill-opacity="1" d="M57 87V57h11l2-13H57v-8c0-5 3-7 8-7h6V18c-3-1-7-1-11-1-11 0-18 7-18 19v8H30v13h12v30h15Z"/></svg>`]
   ];
-
   const mainGrid = document.getElementById('main-social-grid');
-  if (mainGrid) {
-    mainGrid.innerHTML = socials.map(([name, href, svg]) => `
-      <a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}">
-        <span class="social-icon-svg" aria-hidden="true">${svg}</span>
-      </a>`).join('');
-  }
+  if (mainGrid) mainGrid.innerHTML = socials.map(([name, href, svg]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}"><span class="social-icon-svg" aria-hidden="true">${svg}</span></a>`).join('');
 
   function escapeHtml(str){return String(str).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]);}
-
   loadMusic();
   loadVideos();
 });
