@@ -66,20 +66,28 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = (item.snippet && item.snippet.title) || '';
         const vid = item.videoId || (item.id && (item.id.videoId || item.id)) || '';
         const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
-        return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;">${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb" loading="lazy">` : ''}<button class="yt-play" aria-label="Play ${escapeHtml(title)}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div></article>`;
+        return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;">${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb" loading="lazy">` : ''}<button type="button" class="yt-play" aria-label="Play ${escapeHtml(title)}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;z-index:2;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div></article>`;
       }).join('');
       grid.querySelectorAll('.yt-thumb').forEach(img => {
         const vid = img.getAttribute('data-ytid');
-        const onClick = () => {
+        const onClick = (event) => {
+          if (event) event.preventDefault();
+          const frameHost = img.parentElement;
+          if (!frameHost || !vid) return;
           const iframe = document.createElement('iframe');
-          iframe.className = 'youtube-iframe'; iframe.title = 'LIL SYNN YouTube video';
-          iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
-          iframe.frameBorder='0'; iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-          iframe.allowFullscreen=true; iframe.loading='lazy'; iframe.src=`https://www.youtube.com/embed/${encodeURIComponent(vid)}?autoplay=1`;
-          img.parentElement.innerHTML=''; img.parentElement.appendChild(iframe);
+          iframe.className = 'youtube-iframe';
+          iframe.title = `LIL SYNN — ${img.alt}`;
+          iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+          iframe.setAttribute('allowfullscreen', '');
+          iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+          iframe.loading = 'eager';
+          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid)}?autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=https%3A%2F%2Flilsynn.com`;
+          frameHost.innerHTML = '';
+          frameHost.appendChild(iframe);
         };
         img.addEventListener('click', onClick);
-        const btn=img.parentElement.querySelector('.yt-play'); if(btn) btn.addEventListener('click',onClick);
+        const btn = img.parentElement.querySelector('.yt-play');
+        if (btn) btn.addEventListener('click', onClick);
       });
     }
     try { const res=await fetch('/api/youtube'); if(res.ok){const data=await res.json(); if(data?.items?.length){renderItems(data.items);return;}} } catch(e){console.warn('YouTube fetch failed.');}
