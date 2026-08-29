@@ -1,22 +1,27 @@
 document.addEventListener('DOMContentLoaded',()=>{
  const grid=document.getElementById('music-grid');
+ if(!grid)return;
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
- const titleKey=s=>String(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim();
- const render=items=>{grid.innerHTML=items.map(s=>{const title=esc(s.trackName),release=esc(s.collectionName||'LIL SYNN'),art=s.art||'',apple=s.apple||'',spotify=s.spotify||'',year=s.year||'';if(!apple||!spotify)return '';return `<article class="music-card"><a href="${spotify}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}">${art?`<img src="${art}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">`:'<div class="music-placeholder">LIL SYNN</div>'}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${release}${year?' · '+year:''}</p><div class="music-card-links"><a href="${spotify}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Spotify">SPOTIFY</a><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">APPLE</a></div></div></article>`}).join('')};
- (async()=>{if(!grid)return;try{
-   const [appleResponse,catalogResponse,artResponse]=await Promise.all([fetch('https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200',{cache:'no-store'}),fetch('/release-catalog.json?refresh='+Date.now(),{cache:'no-store'}),fetch('https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/images/icons/album_art?ref=main&refresh='+Date.now(),{cache:'no-store'})]);
+ const shuffle=a=>{const out=[...a];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}return out};
+ const key=s=>String(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
+ const render=items=>{grid.innerHTML=items.map(s=>`<article class="music-card"><a href="${s.spotify}" target="_blank" rel="noopener noreferrer"><img src="${s.art}" alt="${esc(s.trackName)} — LIL SYNN artwork" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${s.fallbackArt}'"></a><div class="music-card-body"><h3 class="music-card-title">${esc(s.trackName)}</h3><p class="music-card-meta">${esc(s.collectionName)}${s.year?' · '+s.year:''}</p><div class="music-card-links"><a href="${s.spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a><a href="${s.apple}" target="_blank" rel="noopener noreferrer">APPLE</a></div></div></article>`).join('')};
+ (async()=>{try{
+   const stamp=Date.now();
+   const [appleResponse,catalogResponse,artResponse]=await Promise.all([
+     fetch(`https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200&_=${stamp}`,{cache:'no-store'}),
+     fetch(`/release-catalog.json?music_refresh=${stamp}`,{cache:'no-store'}),
+     fetch(`https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/images/icons/album_art?ref=main&_=${stamp}`,{cache:'no-store'})
+   ]);
    if(!appleResponse.ok||!catalogResponse.ok)throw Error('Catalog unavailable');
    const appleData=await appleResponse.json(),catalog=await catalogResponse.json();
-   const appleSongs=(appleData.results||[]).filter(x=>x.wrapperType==='track'&&x.kind==='song'&&x.artistName==='LIL SYNN'&&x.trackName);
+   const appleSongs=(appleData.results||[]).filter(x=>x.wrapperType==='track'&&x.kind==='song'&&String(x.artistName||'').toLowerCase()==='lil synn'&&x.trackName&&x.trackViewUrl);
+   const appleByTitle=new Map(appleSongs.map(x=>[key(x.trackName),x])),spotifyMap=catalog.trackSpotify||{};
    let artFiles=[];if(artResponse.ok){const j=await artResponse.json();artFiles=(Array.isArray(j)?j:[]).filter(x=>x.type==='file'&&/\.jpg$/i.test(x.name));}
-   const spotifyMap=catalog.trackSpotify||{};
-   const artworkFor=release=>{const k=titleKey(release);let f=artFiles.find(x=>titleKey(x.name.replace(/^\d+_lil_synn_/i,'').replace(/\.jpg$/i,''))===k);if(!f){const parts=k.split(' ');f=artFiles.find(x=>parts.length&&parts.every(p=>titleKey(x.name).includes(p)))}return f?'https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/'+encodeURIComponent(f.name):''};
-   const entries=[];for(const release of catalog.order||[]){const group=catalog.groups?.[release];if(group?.tracks){for(const track of group.tracks)entries.push({track,release})}else if(release!=='Touching to the North')entries.push({track:release,release})}
-   const appleByTitle=new Map(appleSongs.map(x=>[titleKey(x.trackName),x]));const pool=[];
-   for(const e of entries){const a=appleByTitle.get(titleKey(e.track));const spotify=spotifyMap[e.track];if(!a||!spotify||!a.trackViewUrl)continue;pool.push({trackName:a.trackName,collectionName:e.release,apple:a.trackViewUrl,spotify,art:artworkFor(e.release)||a.artworkUrl100?.replace('100x100bb','600x600bb')||'',year:a.releaseDate?new Date(a.releaseDate).getFullYear():''})}
-   const unique=[],seen=new Set();for(const s of pool){const k=titleKey(s.trackName);if(!seen.has(k)){seen.add(k);unique.push(s)}}if(unique.length<8)throw Error('Not enough fully linked songs');
-   // Randomize at render time with no persisted selection, so every full refresh gets a new feed.
-   render(shuffle(unique).slice(0,8));
+   const artFor=release=>{const k=key(release);let f=artFiles.find(x=>key(x.name.replace(/^\d+_lil_synn_/i,'').replace(/\.jpg$/i,''))===k);if(!f)f=artFiles.find(x=>{const n=key(x.name.replace(/\.jpg$/i,''));return n.includes(k)||k.includes(n)});return f?`https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/${encodeURIComponent(f.name)}`:''};
+   const entries=[];for(const release of catalog.order||[]){const group=catalog.groups?.[release];if(group?.tracks){for(const track of group.tracks)entries.push({track,release})}else if(key(release)!=='touchingtothenorth')entries.push({track:release,release})}
+   const pool=[],seen=new Set();for(const e of entries){const a=appleByTitle.get(key(e.track)),spotify=spotifyMap[e.track];if(!a||!spotify||seen.has(key(a.trackName)))continue;seen.add(key(a.trackName));const art=artFor(e.release)||a.artworkUrl100?.replace('100x100bb','600x600bb')||'';pool.push({trackName:a.trackName,collectionName:e.release,apple:a.trackViewUrl,spotify,art,fallbackArt:a.artworkUrl100?.replace('100x100bb','600x600bb')||art,year:a.releaseDate?new Date(a.releaseDate).getFullYear():''})}
+   if(pool.length<8)throw Error(`Only ${pool.length} fully linked songs available`);
+   // Fresh, non-persistent random selection: this is the ONLY homepage section using randomness.
+   render(shuffle(pool).slice(0,8));
  }catch(e){console.warn('Release-derived random music unavailable',e)}})();
 });
