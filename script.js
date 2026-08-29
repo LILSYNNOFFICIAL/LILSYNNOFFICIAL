@@ -4,17 +4,65 @@ document.addEventListener("DOMContentLoaded", () => {
   const ham = document.getElementById("hamburger");
   const menu = document.getElementById("sideMenu");
   const close = document.getElementById("closeMenu");
-  if (ham && menu) ham.addEventListener("click", () => menu.classList.toggle("translate-x-full"));
-  if (close && menu) close.addEventListener("click", () => menu.classList.add("translate-x-full"));
+  const setMenuState = (open) => {
+    if (!menu || !ham) return;
+    menu.classList.toggle("translate-x-full", !open);
+    ham.setAttribute("aria-expanded", String(open));
+    ham.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  };
+  if (ham && menu) ham.addEventListener("click", () => setMenuState(menu.classList.contains("translate-x-full")));
+  if (close && menu) close.addEventListener("click", () => setMenuState(false));
+  document.querySelectorAll('#sideMenu a[href^="#"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
 
   const trigger = document.getElementById("socialsTrigger");
   const dropdown = document.getElementById("socialsDropdown");
   if (trigger && dropdown) {
     trigger.addEventListener("click", () => {
-      dropdown.classList.toggle("hidden");
+      const open = dropdown.classList.toggle("hidden") === false;
+      trigger.setAttribute("aria-expanded", String(open));
       const arrow = trigger.querySelector("span");
-      if (arrow) arrow.textContent = dropdown.classList.contains("hidden") ? "▼" : "▲";
+      if (arrow) arrow.textContent = open ? "▲" : "▼";
     });
+  }
+
+  async function loadMusic() {
+    const grid = document.getElementById("music-grid");
+    const latestArt = document.getElementById("latest-release-art");
+    const latestTitle = document.getElementById("latest-release-title");
+    const latestApple = document.getElementById("latest-apple");
+    if (!grid) return;
+
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-400">Loading releases…</div>';
+    try {
+      const res = await fetch("https://itunes.apple.com/lookup?id=1850720041&entity=album&limit=20&sort=recent");
+      if (!res.ok) throw new Error("Apple Music catalog request failed");
+      const data = await res.json();
+      const releases = (data.results || [])
+        .filter(item => item.wrapperType === "collection" && item.collectionName && item.artistName === "LIL SYNN")
+        .filter((item, index, arr) => arr.findIndex(x => x.collectionId === item.collectionId) === index)
+        .slice(0, 8);
+      if (!releases.length) throw new Error("No releases found");
+
+      const latest = releases[0];
+      const latestArtwork = (latest.artworkUrl100 || "").replace("100x100bb", "600x600bb");
+      if (latestTitle) latestTitle.textContent = latest.collectionName.toUpperCase();
+      if (latestApple) latestApple.href = latest.collectionViewUrl || "https://music.apple.com/us/artist/lil-synn/1850720041";
+      if (latestArt && latestArtwork) {
+        latestArt.innerHTML = `<img src="${latestArtwork}" alt="LIL SYNN — ${escapeHtml(latest.collectionName)} artwork" loading="eager" decoding="async">`;
+      }
+
+      grid.innerHTML = releases.map(release => {
+        const title = escapeHtml(release.collectionName);
+        const artwork = (release.artworkUrl100 || "").replace("100x100bb", "600x600bb");
+        const date = release.releaseDate ? new Date(release.releaseDate).getFullYear() : "2026";
+        const apple = release.collectionViewUrl || "https://music.apple.com/us/artist/lil-synn/1850720041";
+        const spotify = `https://open.spotify.com/search/${encodeURIComponent(`LIL SYNN ${release.collectionName}`)}`;
+        return `<article class="music-card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">${artwork ? `<img src="${artwork}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">` : `<div class="music-placeholder">LIL SYNN</div>`}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${date}</p><div class="music-card-links"><a href="${apple}" target="_blank" rel="noopener noreferrer">APPLE</a><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a></div></div></article>`;
+      }).join("");
+    } catch (e) {
+      console.warn("Music catalog fetch failed.", e);
+      grid.innerHTML = `<div class="col-span-full text-center text-gray-400"><p>Music catalog temporarily unavailable.</p><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Open LIL SYNN on Apple Music</a></div>`;
+    }
   }
 
   async function loadVideos() {
@@ -26,16 +74,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = (item.snippet && item.snippet.title) || '';
         const vid = item.videoId || (item.id && (item.id.videoId || item.id)) || '';
         const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
-        return `<div class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;">${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb">` : ''}<button class="yt-play" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div></div>`;
+        return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;">${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb" loading="lazy">` : ''}<button class="yt-play" aria-label="Play ${escapeHtml(title)}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div></article>`;
       }).join('');
       grid.querySelectorAll('.yt-thumb').forEach(img => {
         const vid = img.getAttribute('data-ytid');
         const onClick = () => {
           const iframe = document.createElement('iframe');
           iframe.className = 'youtube-iframe';
+          iframe.title = 'LIL SYNN YouTube video';
           iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
           iframe.frameBorder='0'; iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-          iframe.allowFullscreen=true; iframe.src=`https://www.youtube.com/embed/${vid}?autoplay=1`;
+          iframe.allowFullscreen=true; iframe.loading='lazy'; iframe.src=`https://www.youtube.com/embed/${encodeURIComponent(vid)}?autoplay=1`;
           img.parentElement.innerHTML=''; img.parentElement.appendChild(iframe);
         };
         img.addEventListener('click', onClick);
@@ -46,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try { const res=await fetch('/assets/youtube-fallback.json'); if(res.ok){const data=await res.json(); if(data?.items?.length){renderItems(data.items);return;}} } catch(e){console.warn('Fallback fetch failed.');}
     grid.innerHTML='<div class="text-center text-gray-400"><p>Videos are temporarily unavailable.</p><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a></div>';
   }
-  loadVideos();
 
   // Social icons are rendered INLINE instead of as <img> elements.
   // This deliberately removes the external-image compositing path that was
@@ -71,4 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function escapeHtml(str){return String(str).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]);}
+
+  loadMusic();
+  loadVideos();
 });
