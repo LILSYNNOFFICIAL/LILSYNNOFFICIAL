@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>LIL SYNN | Releases</title>
-<meta name="description" content="Explore the LIL SYNN release archive — albums, EPs, and singles, ordered newest first, with streaming links and release artwork.">
+<meta name="description" content="Explore the LIL SYNN release archive — albums and singles, newest first, with Spotify artwork and streaming links.">
 <link rel="canonical" href="https://lilsynn.com/releases">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--pink:#ff008f;--pink2:#ff4fd8;--bg:#050505;--muted:#aaa}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:Inter,sans-serif;min-height:100vh}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:auto;padding:0 24px}header{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,0,143,.3)}.nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 24px Orbitron,sans-serif;letter-spacing:.12em;color:var(--pink)}.back{font:600 15px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.45);padding:9px 14px;border-radius:10px}.back:hover{border-color:var(--pink);color:var(--pink2)}main{padding:80px 0}.kicker{text-align:center;color:var(--pink2);font:700 14px Rajdhani,sans-serif;letter-spacing:.22em;margin:0 0 12px}.title{text-align:center;font:700 clamp(38px,7vw,72px) Orbitron,sans-serif;letter-spacing:.08em;margin:0}.intro{text-align:center;color:#ccc;max-width:780px;margin:20px auto 55px;line-height:1.7}#releases{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.card{background:linear-gradient(145deg,#111,#080808);border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--pink2)}.art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#111}.body{padding:18px}.type{display:inline-block;color:var(--pink2);font:700 11px Rajdhani,sans-serif;letter-spacing:.15em;text-transform:uppercase;margin:0 0 9px}.name{font:700 18px Orbitron,sans-serif;margin:0 0 7px;line-height:1.25}.meta{color:var(--muted);font:600 15px Rajdhani,sans-serif;margin:0 0 14px}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{font:700 12px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.4);padding:7px 9px;border-radius:8px}.links a:hover{background:var(--pink);color:#000;border-color:var(--pink)}.status{grid-column:1/-1;text-align:center;color:#999;padding:40px}.source-note{font:600 12px Rajdhani,sans-serif;color:#777;margin-top:10px}.source-note strong{color:#aaa}.spotify-note{grid-column:1/-1;text-align:center;color:#777;font:600 12px Rajdhani,sans-serif;letter-spacing:.04em;margin-top:6px}.spotify-note a{color:#aaa}.spotify-note a:hover{color:var(--pink2)}footer{text-align:center;border-top:1px solid rgba(255,0,143,.2);padding:35px 20px;color:#777;font:600 14px Rajdhani,sans-serif;letter-spacing:.08em}footer a{color:#aaa}footer a:hover{color:var(--pink2)}@media(max-width:900px){#releases{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{padding:0 16px}.nav{height:64px}.brand{font-size:18px}.back{font-size:13px}.title{font-size:34px}main{padding:55px 0}.intro{margin-bottom:38px}#releases{grid-template-columns:1fr;gap:18px}.body{padding:16px}}
@@ -16,7 +14,7 @@
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="/">LIL SYNN</a><a class="back" href="/">← BACK TO SITE</a></div></header>
-<main><div class="wrap"><p class="kicker">THE COMPLETE CATALOG</p><h1 class="title">RELEASES</h1><p class="intro">Albums, EPs, and singles from LIL SYNN — newest releases first. The archive is maintained from the LIL SYNN catalog rather than depending on Spotify's restricted developer API. <strong>Enough</strong> and <strong>Hello Goodbye</strong> are albums; <strong>Touching to the North</strong> is the SoundCloud-only album.</p><div id="releases"><div class="status">Loading releases…</div></div></div></main>
+<main><div class="wrap"><p class="kicker">THE COMPLETE CATALOG</p><h1 class="title">RELEASES</h1><p class="intro">Albums and singles from LIL SYNN — newest releases first. <strong>Enough</strong> and <strong>Hello Goodbye</strong> are albums; <strong>Touching to the North</strong> is the SoundCloud-only album.</p><div id="releases"><div class="status">Loading releases…</div></div></div></main>
 <footer><a href="/">LIL SYNN</a> · OFFICIAL WEBSITE · © 2026 LIL SYNN</footer>
 <script>
 const grid=document.getElementById('releases');
@@ -24,39 +22,14 @@ const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const fallbackArt=t=>'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect width="800" height="800" fill="#090909"/><rect x="24" y="24" width="752" height="752" rx="18" fill="none" stroke="#ff008f" stroke-width="3"/><text x="400" y="350" fill="#ff008f" font-family="Arial" font-size="34" font-weight="700" text-anchor="middle">LIL SYNN</text><text x="400" y="410" fill="#fff" font-family="Arial" font-size="30" text-anchor="middle">${esc(t).replace(/&/g,'and')}</text></svg>`);
 const proxyArt=url=>url?'/api/art?url='+encodeURIComponent(url):'';
 const catalog=[
- {title:'Black Glass',type:'Single',date:'2026-08-12'},
- {title:'Hello Goodbye',type:'Album',date:'2026-07-31'},
- {title:'Static On My Tongue',type:'Single',date:'2026-07-27'},
- {title:"It's In Her Eyes",type:'Single',date:'2026-07-20'},
- {title:'Fade Into You',type:'Single',date:'2026-06-07'},
- {title:'Heal',type:'EP',date:'2026-05-01'},
- {title:'Hindsight',type:'Single',date:'2026-04-20'},
- {title:'Back From The Blackout',type:'Single',date:'2026-04-15'},
- {title:'Burn It Down',type:'Single',date:'2026-04-14'},
- {title:'When The World Gets Loud',type:'Single',date:'2026-04-13'},
- {title:'Manic Side',type:'Single',date:'2026-04-09'},
- {title:'Light',type:'Single',date:'2026-04-01'},
- {title:"Don't Say It (Acoustic)",type:'Single',date:'2026-03-31'},
- {title:"Don't Say It",type:'Single',date:'2026-03-30'},
- {title:"Don't Let Me Go",type:'Single',date:'2026-03-27'},
- {title:'Signal Light Sermon (Remastered 2026)',type:'Single',date:'2026-03-25'},
- {title:'Lost In The Fog',type:'Single',date:'2026-03-22'},
- {title:'In The End',type:'Single',date:'2026-03-20'},
- {title:'IF U STAY DED',type:'Single',date:'2026-03-18'},
- {title:'Home',type:'Single',date:'2026-03-15'},
- {title:'Enough',type:'Album',date:'2026-02-17'},
- {title:'My Light',type:'Single',date:'2026-01-01'},
- {title:'Ties Remain',type:'Single',date:'2026-01-01'},
- {title:'Gravity and Ghosts',type:'Single',date:'2025-01-01'},
- {title:'Already Famous',type:'Single',date:'2025-01-01'},
- {title:'Touching to the North',type:'Album',date:'2024-01-01',art:'https://i1.sndcdn.com/artworks-KCXRktlrcYPqru3g-ftlP8g-t500x500.png',source:'SoundCloud',url:'https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north'}
+{title:'Black Glass',type:'Single',date:'2026-08-12'},{title:'Hello Goodbye',type:'Album',date:'2026-07-31'},{title:'Static On My Tongue',type:'Single',date:'2026-07-27'},{title:"It's In Her Eyes",type:'Single',date:'2026-07-20'},{title:'Fade Into You',type:'Single',date:'2026-06-07'},{title:'Heal',type:'Single',date:'2026-05-01'},{title:'Hindsight',type:'Single',date:'2026-04-20'},{title:'Back From The Blackout',type:'Single',date:'2026-04-15'},{title:'Burn It Down',type:'Single',date:'2026-04-14'},{title:'When The World Gets Loud',type:'Single',date:'2026-04-13'},{title:'Manic Side',type:'Single',date:'2026-04-09'},{title:'Light',type:'Single',date:'2026-04-01'},{title:"Don't Say It (Acoustic)",type:'Single',date:'2026-03-31'},{title:"Don't Say It",type:'Single',date:'2026-03-30'},{title:"Don't Let Me Go",type:'Single',date:'2026-03-27'},{title:'Signal Light Sermon (Remastered 2026)',type:'Single',date:'2026-03-25'},{title:'Lost In The Fog',type:'Single',date:'2026-03-22'},{title:'In The End',type:'Single',date:'2026-03-20'},{title:'IF U STAY DED',type:'Single',date:'2026-03-18'},{title:'Home',type:'Single',date:'2026-03-15'},{title:'Enough',type:'Album',date:'2026-02-17'},{title:'My Light',type:'Single',date:'2026-01-01'},{title:'Ties Remain',type:'Single',date:'2026-01-01'},{title:'Gravity and Ghosts',type:'Single',date:'2025-01-01'},{title:'Already Famous',type:'Single',date:'2025-01-01'},{title:'Touching to the North',type:'Album',date:'2024-01-01',art:'https://i1.sndcdn.com/artworks-KCXRktlrcYPqru3g-ftlP8g-t500x500.png',source:'SoundCloud',url:'https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north'}
 ];
 function fmt(d){if(!d)return '';if(/-01-01$/.test(d))return d.slice(0,4);return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
 function spotifySearch(title){return 'https://open.spotify.com/search/'+encodeURIComponent('LIL SYNN '+title)}
-function card(x){const title=esc(x.title),art=x.art||x.artwork||fallbackArt(x.title),spotify=x.spotifyUrl||spotifySearch(x.title),primary=x.url||spotify;return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><p class="meta">${fmt(x.date)}</p><div class="links"><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>${x.source==='SoundCloud'?'<a href="'+x.url+'" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>':''}</div></div></article>`}
-async function getAppleArt(){try{const r=await fetch('/api/apple-art',{cache:'no-store'});if(!r.ok)return{};const rows=await r.json();const map={};rows.forEach(x=>{if(x.title&&x.art)map[x.title.toLowerCase()]={art:proxyArt(x.art),date:x.date,type:x.type};});return map}catch{return{}}}
-async function load(){const apple=await getAppleArt();const merged=catalog.map(x=>{const a=apple[x.title.toLowerCase()];return a?{...x,art:x.art||a.art,date:x.date||a.date,type:x.type||a.type}:x;});grid.innerHTML=merged.map(card).join('')+`<div class="spotify-note">Spotify is the primary listening destination. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div><div class="status source-note"><strong>Archive note:</strong> Artwork is loaded through the site's image proxy so external cover art cannot silently fail because of browser cross-origin or hotlink restrictions. Apple artwork is used when available; SoundCloud-only <strong>Touching to the North</strong> uses its supplied artwork.</div>`;}
+function card(x){const title=esc(x.title),art=x.art||fallbackArt(x.title),spotify=x.spotifyUrl||spotifySearch(x.title),primary=x.url||spotify;return `<article class="card"><a href="${primary}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title}"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackArt(x.title)}'"></a><div class="body"><p class="type">${esc(x.type)}</p><h2 class="name">${title}</h2><p class="meta">${fmt(x.date)}</p><div class="links"><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>${x.source==='SoundCloud'?'<a href="'+x.url+'" target="_blank" rel="noopener noreferrer">SOUNDCLOUD</a>':''}</div></div></article>`}
+async function getSpotifyArt(){try{const titles=catalog.filter(x=>!x.art).map(x=>x.title).join('|');const r=await fetch('/api/spotify-art?titles='+encodeURIComponent(titles),{cache:'no-store'});if(!r.ok)return{};const rows=await r.json();const map={};rows.forEach(x=>{if(x.title&&x.art)map[x.title.toLowerCase()]={art:proxyArt(x.art)};});return map}catch{return{}}}
+async function getAppleArt(){try{const r=await fetch('/api/apple-art',{cache:'no-store'});if(!r.ok)return{};const rows=await r.json();const map={};rows.forEach(x=>{if(x.title&&x.art)map[x.title.toLowerCase()]={art:proxyArt(x.art)};});return map}catch{return{}}}
+async function load(){const [spotify,apple]=await Promise.all([getSpotifyArt(),getAppleArt()]);const merged=catalog.map(x=>{const s=spotify[x.title.toLowerCase()],a=apple[x.title.toLowerCase()];return {...x,art:x.art||s?.art||a?.art||fallbackArt(x.title)};});grid.innerHTML=merged.map(card).join('')+`<div class="spotify-note">Spotify artwork is the primary artwork source. <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Spotify</a>.</div><div class="status source-note"><strong>Archive note:</strong> Spotify artwork is resolved from Spotify's public catalog and served through the site's image proxy; Apple artwork is a secondary fallback. <strong>Touching to the North</strong> uses its supplied SoundCloud artwork.</div>`;}
 load();
 </script>
-</body>
-</html>
+</body></html>
