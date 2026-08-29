@@ -50,11 +50,26 @@ section[id] { scroll-margin-top: 88px; }
 #footer p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; }
 #footer a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
 #footer a:hover,#footer a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
-/* FINAL OPAQUE FOOTER OVERRIDE: current markup uses #contact. */
-#contact,#contact * { opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
-#contact h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; text-shadow:none !important; }
-#contact p { color:#9ca3af !important; -webkit-text-fill-color:#9ca3af !important; text-shadow:none !important; }
+/* Text fix modeled directly on the proven opaque SVG approach from bb0d1c5. */
+#contact,
+#contact h3,
+#contact p,
+#contact a,
+#contact span,
+#contact svg,
+#contact svg * {
+  opacity:1 !important;
+  visibility:visible !important;
+  filter:none !important;
+  -webkit-filter:none !important;
+  mix-blend-mode:normal !important;
+  text-shadow:none !important;
+}
+#contact { color:#ffffff !important; }
+#contact h3 { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
+#contact p { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
 #contact .section-kicker { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; }
+#contact .text-gray-300 { color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; }
 #contact a { color:#ff4fd8 !important; -webkit-text-fill-color:#ff4fd8 !important; text-decoration-color:#ff4fd8 !important; }
 #contact a:hover,#contact a:focus-visible { color:#ff008f !important; -webkit-text-fill-color:#ff008f !important; }
 #contact #main-social-grid,#contact #main-social-grid a,#contact #main-social-grid img,#contact #main-social-grid svg,#contact #main-social-grid svg * { opacity:1 !important; visibility:visible !important; filter:none !important; -webkit-filter:none !important; mix-blend-mode:normal !important; }
