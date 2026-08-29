@@ -1,6 +1,5 @@
-document.addEventListener('DOMContentLoaded',()=>{
- const grid=document.getElementById('music-grid');
- if(!grid)return;
+const initLilSynnMusicRandom=()=>{
+ const grid=document.getElementById('music-grid');if(!grid)return;
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const shuffle=a=>{const out=[...a];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}return out};
  const key=s=>String(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
@@ -8,20 +7,16 @@ document.addEventListener('DOMContentLoaded',()=>{
  (async()=>{try{
    const stamp=Date.now();
    const [appleResponse,catalogResponse,artResponse]=await Promise.all([
-     fetch(`https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200&_=${stamp}`,{cache:'no-store'}),
-     fetch(`/release-catalog.json?music_refresh=${stamp}`,{cache:'no-store'}),
-     fetch(`https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/images/icons/album_art?ref=main&_=${stamp}`,{cache:'no-store'})
-   ]);
+     fetch(`https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200&_=${stamp}`,{cache:'no-store'}),fetch(`/release-catalog.json?music_refresh=${stamp}`,{cache:'no-store'}),fetch(`https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/images/icons/album_art?ref=main&_=${stamp}`,{cache:'no-store'})]);
    if(!appleResponse.ok||!catalogResponse.ok)throw Error('Catalog unavailable');
    const appleData=await appleResponse.json(),catalog=await catalogResponse.json();
-   const appleSongs=(appleData.results||[]).filter(x=>x.wrapperType==='track'&&x.kind==='song'&&String(x.artistName||'').toLowerCase()==='lil synn'&&x.trackName&&x.trackViewUrl);
-   const appleByTitle=new Map(appleSongs.map(x=>[key(x.trackName),x])),spotifyMap=catalog.trackSpotify||{};
+   const appleSongs=(appleData.results||[]).filter(x=>x.wrapperType==='track'&&x.kind==='song'&&String(x.artistName||'').toLowerCase()==='lil synn'&&x.trackName&&x.trackViewUrl),appleByTitle=new Map(appleSongs.map(x=>[key(x.trackName),x])),spotifyMap=catalog.trackSpotify||{};
    let artFiles=[];if(artResponse.ok){const j=await artResponse.json();artFiles=(Array.isArray(j)?j:[]).filter(x=>x.type==='file'&&/\.jpg$/i.test(x.name));}
    const artFor=release=>{const k=key(release);let f=artFiles.find(x=>key(x.name.replace(/^\d+_lil_synn_/i,'').replace(/\.jpg$/i,''))===k);if(!f)f=artFiles.find(x=>{const n=key(x.name.replace(/\.jpg$/i,''));return n.includes(k)||k.includes(n)});return f?`https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/${encodeURIComponent(f.name)}`:''};
    const entries=[];for(const release of catalog.order||[]){const group=catalog.groups?.[release];if(group?.tracks){for(const track of group.tracks)entries.push({track,release})}else if(key(release)!=='touchingtothenorth')entries.push({track:release,release})}
    const pool=[],seen=new Set();for(const e of entries){const a=appleByTitle.get(key(e.track)),spotify=spotifyMap[e.track];if(!a||!spotify||seen.has(key(a.trackName)))continue;seen.add(key(a.trackName));const art=artFor(e.release)||a.artworkUrl100?.replace('100x100bb','600x600bb')||'';pool.push({trackName:a.trackName,collectionName:e.release,apple:a.trackViewUrl,spotify,art,fallbackArt:a.artworkUrl100?.replace('100x100bb','600x600bb')||art,year:a.releaseDate?new Date(a.releaseDate).getFullYear():''})}
    if(pool.length<8)throw Error(`Only ${pool.length} fully linked songs available`);
-   // Fresh, non-persistent random selection: this is the ONLY homepage section using randomness.
    render(shuffle(pool).slice(0,8));
  }catch(e){console.warn('Release-derived random music unavailable',e)}})();
-});
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initLilSynnMusicRandom,{once:true});else initLilSynnMusicRandom();
