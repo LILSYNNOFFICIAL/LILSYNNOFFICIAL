@@ -27,13 +27,14 @@ section[id] { scroll-margin-top: 88px; }
 .cta-secondary:hover, .cta-secondary:focus-visible { color:#000; background:var(--glow); border-color:var(--glow); transform:translateY(-2px); }
 .music-card { background:rgba(8,8,8,.82); border:1px solid rgba(255,0,143,.25); border-radius:1.25rem; overflow:hidden; transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
 .music-card:hover { transform:translateY(-5px); border-color:rgba(255,79,216,.85); box-shadow:0 15px 45px rgba(255,0,143,.15); }
-.music-card img { width:100%; aspect-ratio:1 / 1; object-fit:cover; display:block; background:#111; }
+.music-card img { width:100%; aspect-ratio:1 / 1; object-fit:cover; display:block; background:#111; transition:transform .35s ease, filter .35s ease; }
+.music-card:hover img { transform:scale(1.025); }
 .music-card-body { padding:1rem; }
 .music-card-title { font-family:'Orbitron',sans-serif; font-size:1rem; line-height:1.3; color:#fff; }
 .music-card-meta { margin-top:.35rem; color:#999; font-family:'Rajdhani',sans-serif; }
-.music-card-links { display:flex; gap:.5rem; margin-top:.9rem; }
-.music-card-links a { flex:1; text-align:center; border:1px solid rgba(255,0,143,.4); border-radius:.55rem; padding:.45rem .35rem; font-size:.82rem; font-weight:600; color:#fff; }
-.music-card-links a:hover, .music-card-links a:focus-visible { background:var(--pink); color:#000; }
+.music-card-links { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; margin-top:.9rem; }
+.music-card-links a { min-width:0; text-align:center; border:1px solid rgba(255,0,143,.4); border-radius:.55rem; padding:.45rem .25rem; font-size:.78rem; font-weight:600; color:#fff; font-family:'Rajdhani',sans-serif; letter-spacing:.04em; transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease; }
+.music-card-links a:hover, .music-card-links a:focus-visible { background:var(--pink); color:#000; border-color:var(--pink); transform:translateY(-1px); }
 .music-placeholder { display:flex; aspect-ratio:1 / 1; align-items:center; justify-content:center; padding:1rem; text-align:center; background:radial-gradient(circle at center, rgba(255,0,143,.2), #090909 65%); font-family:'Orbitron',sans-serif; color:#fff; letter-spacing:.08em; }
 .spotify-player { max-width:920px; margin-left:auto; margin-right:auto; }
 .spotify-player iframe { display:block; border-radius:18px; box-shadow:0 0 45px rgba(255,0,143,.18); background:#111; }
@@ -94,6 +95,7 @@ section[id] { scroll-margin-top: 88px; }
 iframe { box-shadow:0 0 60px rgba(255,0,143,0.6); background:rgba(0,0,0,0.7); border-radius:16px; }
 video { filter:brightness(0.95) contrast(1.05); }
 @media (max-width:768px) { .neon-text { font-size:5.5rem; } .music-card-links a { font-size:.75rem; } }
+@media (max-width:520px) { .music-card-links { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
 :focus-visible { outline:2px solid #ff4fd8; outline-offset:4px; }
 
@@ -164,4 +166,21 @@ video { filter:brightness(0.95) contrast(1.05); }
     font-size: .9rem !important;
     line-height: 1.25 !important;
   }
+}
+
+/* MUSIC — Phase 1 polish: keep release artwork dominant, make streaming actions easy to scan, and prevent cards from becoming cramped. */
+#music { scroll-margin-top: 88px; }
+#music-grid { align-items: stretch; }
+#music-grid .music-card { display:flex; flex-direction:column; height:100%; }
+#music-grid .music-card-body { display:flex; flex-direction:column; flex:1; }
+#music-grid .music-card-links { margin-top:auto; padding-top:.9rem; }
+#music-grid .music-card > a:first-child { display:block; overflow:hidden; background:#090909; }
+#music-grid .music-card:focus-within { border-color:rgba(255,79,216,.85); box-shadow:0 15px 45px rgba(255,0,143,.15); }
+#music-grid .music-card-title { overflow-wrap:anywhere; }
+#music-grid .music-card-meta { font-size:.95rem; }
+#music .spotify-player { margin-top:4rem; }
+@media (max-width:767px) {
+  #music-grid { gap:1.25rem; }
+  #music .section-subtitle { padding:0 .75rem; }
+  #music .spotify-player iframe { min-height:352px; }
 }
