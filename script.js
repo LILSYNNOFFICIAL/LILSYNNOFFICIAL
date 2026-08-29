@@ -36,10 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch("https://itunes.apple.com/lookup?id=1850720041&entity=album&limit=20&sort=recent");
       if (!res.ok) throw new Error("Apple Music catalog request failed");
       const data = await res.json();
-      const releases = (data.results || [])
-        .filter(item => item.wrapperType === "collection" && item.collectionName && item.artistName === "LIL SYNN")
-        .filter((item, index, arr) => arr.findIndex(x => x.collectionId === item.collectionId) === index)
-        .slice(0, 8);
+      const releases = (data.results || []).filter(item => item.wrapperType === "collection" && item.collectionName && item.artistName === "LIL SYNN").filter((item, index, arr) => arr.findIndex(x => x.collectionId === item.collectionId) === index).slice(0, 8);
       if (!releases.length) throw new Error("No releases found");
       const latest = releases[0];
       const latestArtwork = (latest.artworkUrl100 || "").replace("100x100bb", "600x600bb");
@@ -75,8 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const vid = img.getAttribute('data-ytid');
         const onClick = () => {
           const iframe = document.createElement('iframe');
-          iframe.className = 'youtube-iframe';
-          iframe.title = 'LIL SYNN YouTube video';
+          iframe.className = 'youtube-iframe'; iframe.title = 'LIL SYNN YouTube video';
           iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
           iframe.frameBorder='0'; iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
           iframe.allowFullscreen=true; iframe.loading='lazy'; iframe.src=`https://www.youtube.com/embed/${encodeURIComponent(vid)}?autoplay=1`;
