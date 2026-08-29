@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIL SYNN | Releases</title>
+  <meta name="description" content="Explore the LIL SYNN release archive, including the latest releases and catalog.">
+  <link rel="canonical" href="https://lilsynn.com/releases.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--pink:#ff008f;--pink2:#ff4fd8;--bg:#050505;--panel:#0d0d0d;--muted:#aaa}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:Inter,sans-serif;min-height:100vh}
+    a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:auto;padding:0 24px}
+    header{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,0,143,.3)}
+    .nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 24px Orbitron,sans-serif;letter-spacing:.12em;color:var(--pink)}
+    .back{font:600 15px Rajdhani,sans-serif;letter-spacing:.08em;color:#fff;border:1px solid rgba(255,0,143,.45);padding:9px 14px;border-radius:10px}.back:hover{border-color:var(--pink);color:var(--pink2)}
+    main{padding:80px 0}.kicker{text-align:center;color:var(--pink2);font:600 14px Rajdhani,sans-serif;letter-spacing:.22em;margin:0 0 12px}.title{text-align:center;font:700 clamp(38px,7vw,72px) Orbitron,sans-serif;letter-spacing:.08em;margin:0}.intro{text-align:center;color:#ccc;max-width:700px;margin:20px auto 55px;line-height:1.7}
+    #releases{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.card{background:linear-gradient(145deg,#111,#080808);border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--pink2)}.art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#111}.body{padding:18px}.name{font:700 18px Orbitron,sans-serif;margin:0 0 7px;line-height:1.25}.meta{color:var(--muted);font:600 15px Rajdhani,sans-serif;margin:0 0 14px}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{font:600 12px Rajdhani,sans-serif;letter-spacing:.08em;border:1px solid rgba(255,0,143,.4);padding:7px 9px;border-radius:8px}.links a:hover{background:var(--pink);color:#000;border-color:var(--pink)}.status{grid-column:1/-1;text-align:center;color:#999;padding:40px}.error{color:#bbb}.error a{color:var(--pink2);text-decoration:underline}
+    footer{text-align:center;border-top:1px solid rgba(255,0,143,.2);padding:35px 20px;color:#777;font:600 14px Rajdhani,sans-serif;letter-spacing:.08em}footer a{color:#aaa}footer a:hover{color:var(--pink2)}
+    @media(max-width:900px){#releases{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{padding:0 16px}.nav{height:64px}.brand{font-size:18px}.back{font-size:13px}.title{font-size:34px}main{padding:55px 0}.intro{margin-bottom:38px}#releases{grid-template-columns:1fr;gap:18px}.body{padding:16px}}
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"LIL SYNN Releases","url":"https://lilsynn.com/releases.html","about":{"@type":"MusicGroup","name":"LIL SYNN","url":"https://lilsynn.com/"}}</script>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="/">LIL SYNN</a><a class="back" href="/">← BACK TO SITE</a></div></header>
+<main><div class="wrap"><p class="kicker">THE CATALOG</p><h1 class="title">RELEASES</h1><p class="intro">Explore the LIL SYNN catalog. Open any release on Apple Music or search for it on Spotify.</p><div id="releases"><div class="status">Loading releases…</div></div></div></main>
+<footer><a href="/">LIL SYNN</a> · OFFICIAL WEBSITE · © 2026 LIL SYNN</footer>
+<script>
+const grid=document.getElementById('releases');
+const esc=s=>String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+async function load(){
+  try{
+    const r=await fetch('https://itunes.apple.com/lookup?id=1850720041&entity=album&limit=200&sort=recent');
+    if(!r.ok)throw new Error('request failed');
+    const d=await r.json();
+    const releases=(d.results||[]).filter(x=>x.wrapperType==='collection'&&x.collectionName&&x.artistName==='LIL SYNN').filter((x,i,a)=>a.findIndex(y=>y.collectionId===x.collectionId)===i);
+    if(!releases.length)throw new Error('no releases');
+    grid.innerHTML=releases.map(x=>{
+      const title=esc(x.collectionName), art=(x.artworkUrl100||'').replace('100x100bb','600x600bb'), year=x.releaseDate?new Date(x.releaseDate).getFullYear():'';
+      const apple=x.collectionViewUrl||'https://music.apple.com/us/artist/lil-synn/1850720041';
+      const spotify='https://open.spotify.com/search/'+encodeURIComponent('LIL SYNN '+x.collectionName);
+      return `<article class="card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music"><img class="art" src="${art}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async"></a><div class="body"><h2 class="name">${title}</h2><p class="meta">${year}</p><div class="links"><a href="${apple}" target="_blank" rel="noopener noreferrer">APPLE MUSIC</a><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a></div></div></article>`;
+    }).join('');
+  }catch(e){grid.innerHTML='<div class="status error">The release archive is temporarily unavailable.<br><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">Open LIL SYNN on Apple Music →</a></div>'}
+}
+load();
+</script>
+</body>
+</html>
