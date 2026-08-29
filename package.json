@@ -1,0 +1,16 @@
+{
+  "name": "lilsynn-official",
+  "version": "1.0.0",
+  "description": "LIL SYNN Official Website",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": ["lilsynn", "music", "artist"],
+  "author": "LIL SYNN",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
