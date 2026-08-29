@@ -39,19 +39,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function ensurePresavesButton() {
+  function ensureListenButton() {
     const section = document.getElementById("presave");
-    if (!section || section.querySelector("[data-presaves-cta]")) return;
+    if (!section || section.querySelector("[data-listen-cta]")) return;
     const links = section.querySelector(".mt-7");
     if (!links) return;
     const button = document.createElement("a");
-    button.href = "https://hyperfollow.com/lilsynnofficial";
+    button.href = "https://music.apple.com/us/artist/lil-synn/1850720041";
     button.target = "_blank";
     button.rel = "noopener noreferrer";
     button.className = "cta-primary";
-    button.setAttribute("data-presaves-cta", "true");
-    button.textContent = "PRESAVES HERE";
-    button.setAttribute("aria-label", "Open LIL SYNN presaves on HyperFollow");
+    button.setAttribute("data-listen-cta", "true");
+    button.textContent = "LISTEN NOW";
+    button.setAttribute("aria-label", "Listen to LIL SYNN on Apple Music");
     links.appendChild(button);
   }
 
@@ -81,11 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const spotify = `https://open.spotify.com/search/${encodeURIComponent(`LIL SYNN ${release.collectionName}`)}`;
         return `<article class="music-card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">${artwork ? `<img src="${artwork}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">` : `<div class="music-placeholder">LIL SYNN</div>`}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${date}</p><div class="music-card-links"><a href="${apple}" target="_blank" rel="noopener noreferrer">APPLE</a><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a></div></div></article>`;
       }).join("");
-      ensurePresavesButton();
+      ensureListenButton();
     } catch (e) {
       console.warn("Music catalog fetch failed.", e);
       grid.innerHTML = `<div class="col-span-full text-center text-gray-400"><p>Music catalog temporarily unavailable.</p><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Open LIL SYNN on Apple Music</a></div>`;
-      ensurePresavesButton();
+      ensureListenButton();
     }
   }
 
@@ -142,16 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainGrid = document.getElementById('main-social-grid');
   if (mainGrid) mainGrid.innerHTML = socials.map(([name, href, svg]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}"><span class="social-icon-svg" aria-hidden="true">${svg}</span></a>`).join('');
 
-  /*
-   * FOOTER TEXT: do this at runtime, directly on the rendered elements.
-   * The proven SVG fix in bb0d1c5 removed inherited tile styling; the footer
-   * text needs the same treatment, plus explicit opaque text colors. Inline
-   * !important rules prevent Tailwind utility classes from fading the text.
-   */
   function forceContactTextOpaque() {
     const contact = document.getElementById('contact');
     if (!contact) return;
-
     const solid = (el, color) => {
       if (!el) return;
       el.style.setProperty('opacity', '1', 'important');
@@ -163,8 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
       el.style.setProperty('color', color, 'important');
       el.style.setProperty('-webkit-text-fill-color', color, 'important');
     };
-
-    /* Remove any fading from the footer itself and any wrapper immediately above it. */
     let node = contact;
     while (node && node !== document.body) {
       node.style.setProperty('opacity', '1', 'important');
@@ -173,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
       node.style.setProperty('mix-blend-mode', 'normal', 'important');
       node = node.parentElement;
     }
-
     contact.querySelectorAll('*').forEach(el => {
       el.style.setProperty('opacity', '1', 'important');
       el.style.setProperty('visibility', 'visible', 'important');
@@ -181,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
       el.style.setProperty('-webkit-filter', 'none', 'important');
       el.style.setProperty('mix-blend-mode', 'normal', 'important');
     });
-
     contact.querySelectorAll('p').forEach(p => {
       const text = p.textContent.trim();
       if (text === 'STAY CONNECTED') solid(p, '#ff4fd8');
@@ -189,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (text === '© 2026 LIL SYNN') solid(p, '#ffffff');
       else solid(p, '#ffffff');
     });
-
     contact.querySelectorAll('h3').forEach(h => solid(h, '#ff008f'));
     contact.querySelectorAll('a').forEach(a => {
       const text = a.textContent.trim();
@@ -206,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function escapeHtml(str){return String(str).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]);}
-  ensurePresavesButton();
+  ensureListenButton();
   loadMusic();
   loadVideos();
 });
