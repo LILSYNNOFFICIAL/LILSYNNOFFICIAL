@@ -142,6 +142,69 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainGrid = document.getElementById('main-social-grid');
   if (mainGrid) mainGrid.innerHTML = socials.map(([name, href, svg]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}"><span class="social-icon-svg" aria-hidden="true">${svg}</span></a>`).join('');
 
+  /*
+   * FOOTER TEXT: do this at runtime, directly on the rendered elements.
+   * The proven SVG fix in bb0d1c5 removed inherited tile styling; the footer
+   * text needs the same treatment, plus explicit opaque text colors. Inline
+   * !important rules prevent Tailwind utility classes from fading the text.
+   */
+  function forceContactTextOpaque() {
+    const contact = document.getElementById('contact');
+    if (!contact) return;
+
+    const solid = (el, color) => {
+      if (!el) return;
+      el.style.setProperty('opacity', '1', 'important');
+      el.style.setProperty('visibility', 'visible', 'important');
+      el.style.setProperty('filter', 'none', 'important');
+      el.style.setProperty('-webkit-filter', 'none', 'important');
+      el.style.setProperty('mix-blend-mode', 'normal', 'important');
+      el.style.setProperty('text-shadow', 'none', 'important');
+      el.style.setProperty('color', color, 'important');
+      el.style.setProperty('-webkit-text-fill-color', color, 'important');
+    };
+
+    /* Remove any fading from the footer itself and any wrapper immediately above it. */
+    let node = contact;
+    while (node && node !== document.body) {
+      node.style.setProperty('opacity', '1', 'important');
+      node.style.setProperty('filter', 'none', 'important');
+      node.style.setProperty('-webkit-filter', 'none', 'important');
+      node.style.setProperty('mix-blend-mode', 'normal', 'important');
+      node = node.parentElement;
+    }
+
+    contact.querySelectorAll('*').forEach(el => {
+      el.style.setProperty('opacity', '1', 'important');
+      el.style.setProperty('visibility', 'visible', 'important');
+      el.style.setProperty('filter', 'none', 'important');
+      el.style.setProperty('-webkit-filter', 'none', 'important');
+      el.style.setProperty('mix-blend-mode', 'normal', 'important');
+    });
+
+    contact.querySelectorAll('p').forEach(p => {
+      const text = p.textContent.trim();
+      if (text === 'STAY CONNECTED') solid(p, '#ff4fd8');
+      else if (text === 'BOOKING / BUSINESS / PRESS') solid(p, '#ffffff');
+      else if (text === '© 2026 LIL SYNN') solid(p, '#ffffff');
+      else solid(p, '#ffffff');
+    });
+
+    contact.querySelectorAll('h3').forEach(h => solid(h, '#ff008f'));
+    contact.querySelectorAll('a').forEach(a => {
+      const text = a.textContent.trim();
+      if (text === 'SYNOVAMEDIA@GMAIL.COM') solid(a, '#ff4fd8');
+      else if (!a.closest('#main-social-grid')) solid(a, '#ff4fd8');
+    });
+  }
+
+  forceContactTextOpaque();
+  const contact = document.getElementById('contact');
+  if (contact) {
+    const observer = new MutationObserver(() => forceContactTextOpaque());
+    observer.observe(contact, { childList: true, subtree: true });
+  }
+
   function escapeHtml(str){return String(str).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]);}
   ensurePresavesButton();
   loadMusic();
