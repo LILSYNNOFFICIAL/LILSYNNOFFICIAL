@@ -25,6 +25,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function ensurePresavesButton() {
+    const section = document.getElementById("presave");
+    if (!section || section.querySelector("[data-presaves-cta]")) return;
+    const links = section.querySelector(".mt-7");
+    if (!links) return;
+    const button = document.createElement("a");
+    button.href = "https://hyperfollow.com/lilsynnofficial";
+    button.target = "_blank";
+    button.rel = "noopener noreferrer";
+    button.className = "cta-primary";
+    button.setAttribute("data-presaves-cta", "true");
+    button.textContent = "PRESAVES HERE";
+    button.setAttribute("aria-label", "Open LIL SYNN presaves on HyperFollow");
+    links.appendChild(button);
+  }
+
   async function loadMusic() {
     const grid = document.getElementById("music-grid");
     const latestArt = document.getElementById("latest-release-art");
@@ -51,9 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const spotify = `https://open.spotify.com/search/${encodeURIComponent(`LIL SYNN ${release.collectionName}`)}`;
         return `<article class="music-card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">${artwork ? `<img src="${artwork}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">` : `<div class="music-placeholder">LIL SYNN</div>`}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${date}</p><div class="music-card-links"><a href="${apple}" target="_blank" rel="noopener noreferrer">APPLE</a><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a></div></div></article>`;
       }).join("");
+      ensurePresavesButton();
     } catch (e) {
       console.warn("Music catalog fetch failed.", e);
       grid.innerHTML = `<div class="col-span-full text-center text-gray-400"><p>Music catalog temporarily unavailable.</p><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Open LIL SYNN on Apple Music</a></div>`;
+      ensurePresavesButton();
     }
   }
 
@@ -109,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (mainGrid) mainGrid.innerHTML = socials.map(([name, href, svg]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" class="social-icon-button" aria-label="${name}"><span class="social-icon-svg" aria-hidden="true">${svg}</span></a>`).join('');
 
   function escapeHtml(str){return String(str).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]);}
+  ensurePresavesButton();
   loadMusic();
   loadVideos();
 });
