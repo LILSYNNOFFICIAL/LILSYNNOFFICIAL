@@ -1,96 +1,89 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Inter:wght@400;600&display=swap');
 
 :root { --pink: #ff008f; --glow: #ff4fd8; --purple: #7a00ff; }
-body { font-family: 'Inter', sans-serif; background: black; }
-html { scrollbar-width: thin; scrollbar-color: var(--pink) #111111; }
+body { font-family: 'Inter', sans-serif; background: #000; }
+html { scrollbar-width: thin; scrollbar-color: var(--pink) #111; }
 html::-webkit-scrollbar { width: 10px; }
-html::-webkit-scrollbar-track { background: #111111; }
-html::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 10px; border: 2px solid #111111; }
-html::-webkit-scrollbar-thumb:hover { background: var(--glow); }
+html::-webkit-scrollbar-track { background: #111; }
+html::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 10px; border: 2px solid #111; }
 h1, h2 { font-family: 'Orbitron', sans-serif; }
 .menu-text { font-family: 'Rajdhani', sans-serif; }
 .neon-text { text-shadow: 0 0 30px var(--pink), 0 0 60px var(--glow), 0 0 90px var(--purple); }
 .glass { background: rgba(13,13,13,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,0,143,0.3); }
 
-/* Social icons: force the rendered artwork to remain fully opaque. */
-#footer,
-#main-social-grid,
-#main-social-grid > a,
-#main-social-grid > a > img {
-  opacity: 1 !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  mix-blend-mode: normal !important;
-  isolation: isolate !important;
-}
+/* SOCIAL ICONS: plain inline SVG on the page. No translucent tile or visual effect. */
 #main-social-grid {
   display: grid;
   position: relative;
   z-index: 20;
-  isolation: isolate;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
 }
 #main-social-grid .social-icon-button {
   display: flex !important;
-  position: relative !important;
-  z-index: 21 !important;
   align-items: center !important;
   justify-content: center !important;
   width: 80px !important;
   height: 80px !important;
   margin: 0 auto !important;
-  padding: 10px !important;
-  box-sizing: border-box !important;
-  background: #ffffff !important;
-  background-image: none !important;
-  border: 2px solid #ffffff !important;
-  border-radius: 12px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
   opacity: 1 !important;
+  visibility: visible !important;
   filter: none !important;
   -webkit-filter: none !important;
   mix-blend-mode: normal !important;
-  isolation: isolate !important;
-  box-shadow: 0 0 14px rgba(255,0,143,0.30) !important;
+  transform: none !important;
   text-decoration: none !important;
-  visibility: visible !important;
-}
-#main-social-grid .social-icon-button:hover {
-  background: #ffffff !important;
-  border-color: var(--pink) !important;
-  opacity: 1 !important;
-  filter: none !important;
-  mix-blend-mode: normal !important;
-  box-shadow: 0 0 22px rgba(255,0,143,0.55) !important;
 }
 #main-social-grid .social-icon-svg {
   display: block !important;
-  position: relative !important;
-  z-index: 22 !important;
-  width: 60px !important;
-  height: 60px !important;
-  min-width: 60px !important;
-  min-height: 60px !important;
-  max-width: 60px !important;
-  max-height: 60px !important;
-  flex: 0 0 60px !important;
+  width: 68px !important;
+  height: 68px !important;
+  flex: 0 0 68px !important;
   margin: 0 !important;
   padding: 0 !important;
   opacity: 1 !important;
+  visibility: visible !important;
   filter: none !important;
   -webkit-filter: none !important;
   mix-blend-mode: normal !important;
-  isolation: isolate !important;
-  visibility: visible !important;
-  overflow: visible !important;
-  transform: none !important;
 }
-#main-social-grid .social-icon-svg path,
-#main-social-grid .social-icon-svg circle,
-#main-social-grid .social-icon-svg rect,
-#main-social-grid .social-icon-svg polygon,
-#main-social-grid .social-icon-svg ellipse,
-#main-social-grid .social-icon-svg line,
-#main-social-grid .social-icon-svg polyline {
+#main-social-grid .social-icon-svg svg {
+  display: block !important;
+  width: 68px !important;
+  height: 68px !important;
   opacity: 1 !important;
+  visibility: visible !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+}
+#main-social-grid .social-icon-svg svg path,
+#main-social-grid .social-icon-svg svg circle,
+#main-social-grid .social-icon-svg svg rect,
+#main-social-grid .social-icon-svg svg polygon,
+#main-social-grid .social-icon-svg svg ellipse,
+#main-social-grid .social-icon-svg svg line,
+#main-social-grid .social-icon-svg svg polyline {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
+}
+#main-social-grid .social-icon-button:hover,
+#main-social-grid .social-icon-button:focus,
+#main-social-grid .social-icon-button:active {
+  background: transparent !important;
+  opacity: 1 !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
 }
 
 iframe { box-shadow: 0 0 60px rgba(255,0,143,0.6); background: rgba(0,0,0,0.7); border-radius: 16px; }
