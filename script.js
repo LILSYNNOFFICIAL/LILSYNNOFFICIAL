@@ -12,21 +12,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const ham = document.getElementById("hamburger");
   const menu = document.getElementById("sideMenu");
   const close = document.getElementById("closeMenu");
+  let menuWasOpen = false;
   const setMenuState = (open) => {
     if (!menu || !ham) return;
     menu.classList.toggle("translate-x-full", !open);
     ham.setAttribute("aria-expanded", String(open));
     ham.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    menu.setAttribute("aria-hidden", String(!open));
     if (open) {
+      menuWasOpen = true;
       const first = menu.querySelector("a, button");
       if (first) setTimeout(() => first.focus(), 0);
-    } else {
+    } else if (menuWasOpen) {
+      menuWasOpen = false;
       ham.focus();
     }
   };
   if (ham && menu) ham.addEventListener("click", () => setMenuState(menu.classList.contains("translate-x-full")));
   if (close && menu) close.addEventListener("click", () => setMenuState(false));
   document.querySelectorAll('#sideMenu a[href^="#"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && menu && !menu.classList.contains("translate-x-full")) {
+      event.preventDefault();
+      setMenuState(false);
+    }
+  });
 
   const trigger = document.getElementById("socialsTrigger");
   const dropdown = document.getElementById("socialsDropdown");
@@ -38,6 +48,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (arrow) arrow.textContent = open ? "▲" : "▼";
     });
   }
+
+  // Keep keyboard focus clearly visible without changing the existing visual system.
+  document.querySelectorAll("a, button, iframe").forEach(el => {
+    el.addEventListener("focus", () => {
+      if (el instanceof HTMLIFrameElement) {
+        el.style.outline = "2px solid #ff4fd8";
+        el.style.outlineOffset = "4px";
+      } else {
+        el.style.outline = "2px solid #ff4fd8";
+        el.style.outlineOffset = "3px";
+      }
+    });
+    el.addEventListener("blur", () => {
+      el.style.removeProperty("outline");
+      el.style.removeProperty("outline-offset");
+    });
+  });
 
   function ensureListenButton() {
     const section = document.getElementById("presave");
@@ -79,12 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const date = release.releaseDate ? new Date(release.releaseDate).getFullYear() : "2026";
         const apple = release.collectionViewUrl || "https://music.apple.com/us/artist/lil-synn/1850720041";
         const spotify = `https://open.spotify.com/search/${encodeURIComponent(`LIL SYNN ${release.collectionName}`)}`;
-        return `<article class="music-card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">${artwork ? `<img src="${artwork}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">` : `<div class="music-placeholder">LIL SYNN</div>`}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${date}</p><div class="music-card-links"><a href="${apple}" target="_blank" rel="noopener noreferrer">APPLE</a><a href="${spotify}" target="_blank" rel="noopener noreferrer">SPOTIFY</a></div></div></article>`;
+        return `<article class="music-card"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">${artwork ? `<img src="${artwork}" alt="${title} — LIL SYNN artwork" loading="lazy" decoding="async">` : `<div class="music-placeholder">LIL SYNN</div>`}</a><div class="music-card-body"><h3 class="music-card-title">${title}</h3><p class="music-card-meta">${date}</p><div class="music-card-links"><a href="${apple}" target="_blank" rel="noopener noreferrer" aria-label="Open ${title} on Apple Music">APPLE</a><a href="${spotify}" target="_blank" rel="noopener noreferrer" aria-label="Search ${title} by LIL SYNN on Spotify">SPOTIFY</a></div></div></article>`;
       }).join("");
       ensureListenButton();
     } catch (e) {
       console.warn("Music catalog fetch failed.", e);
-      grid.innerHTML = `<div class="col-span-full text-center text-gray-400"><p>Music catalog temporarily unavailable.</p><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Open LIL SYNN on Apple Music</a></div>`;
+      grid.innerHTML = `<div class="col-span-full text-center text-gray-400"><p>Music catalog temporarily unavailable.</p><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]" aria-label="Open LIL SYNN on Apple Music">Open LIL SYNN on Apple Music</a></div>`;
       ensureListenButton();
     }
   }
@@ -133,8 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const fallback = document.createElement("div");
           fallback.style.cssText = "position:absolute;left:0;right:0;bottom:0;z-index:3;text-align:center;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.9));pointer-events:none;";
-          fallback.innerHTML = `<a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer" style="pointer-events:auto;color:#fff;text-decoration:underline;font:600 14px Rajdhani,sans-serif;">OPEN ON YOUTUBE</a>`;
+          fallback.innerHTML = `<a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer" style="pointer-events:auto;color:#fff;text-decoration:underline;font:600 14px Rajdhani,sans-serif;" aria-label="Open ${safeTitle} directly on YouTube">OPEN ON YOUTUBE</a>`;
           frameHost.appendChild(fallback);
+          iframe.focus({ preventScroll: true });
         };
 
         img.addEventListener("click", playVideo);
@@ -169,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("YouTube fallback fetch failed.");
     }
 
-    grid.innerHTML = '<div class="text-center text-gray-400"><p>Videos are temporarily unavailable.</p><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]">Visit the YouTube channel</a></div>';
+    grid.innerHTML = '<div class="text-center text-gray-400"><p>Videos are temporarily unavailable.</p><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="underline text-[#ff008f]" aria-label="Visit the LIL SYNN YouTube channel">Visit the YouTube channel</a></div>';
   }
 
   const socials = [
