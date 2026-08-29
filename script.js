@@ -1,6 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("%cLIL SYNN site loaded", "color:#ff008f;font-weight:bold");
 
+  const bgVideo = document.getElementById("bgVideo");
+  if (bgVideo) {
+    bgVideo.preload = "metadata";
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      bgVideo.pause();
+    }
+  }
+
   const ham = document.getElementById("hamburger");
   const menu = document.getElementById("sideMenu");
   const close = document.getElementById("closeMenu");
@@ -9,6 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.classList.toggle("translate-x-full", !open);
     ham.setAttribute("aria-expanded", String(open));
     ham.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    if (open) {
+      const first = menu.querySelector("a, button");
+      if (first) setTimeout(() => first.focus(), 0);
+    } else {
+      ham.focus();
+    }
   };
   if (ham && menu) ham.addEventListener("click", () => setMenuState(menu.classList.contains("translate-x-full")));
   if (close && menu) close.addEventListener("click", () => setMenuState(false));
@@ -80,17 +94,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!grid) return;
     grid.innerHTML = '<p class="text-center text-gray-400">Loading videos…</p>';
     function renderItems(items) {
-      grid.innerHTML = items.map(item => {
+      grid.innerHTML = items.slice(0, 6).map(item => {
         const title = (item.snippet && item.snippet.title) || '';
         const vid = item.videoId || (item.id && (item.id.videoId || item.id)) || '';
         const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
-        return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;">${thumb ? `<img src="${thumb}" alt="${escapeHtml(title)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${vid}" class="yt-thumb" loading="lazy">` : ''}<button type="button" class="yt-play" aria-label="Play ${escapeHtml(title)}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;z-index:2;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${escapeHtml(title)}</div></article>`;
+        const safeTitle = escapeHtml(title);
+        return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative" style="position:relative;padding-top:56.25%;background:#000;"><a href="https://www.youtube.com/watch?v=${encodeURIComponent(vid)}" target="_blank" rel="noopener noreferrer" class="yt-direct-link" aria-label="Watch ${safeTitle} on YouTube"><img src="${thumb}" alt="${safeTitle}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;cursor:pointer;" data-ytid="${escapeHtml(vid)}" class="yt-thumb" loading="lazy"></a><button type="button" class="yt-play" aria-label="Play ${safeTitle}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.72);border-radius:999px;border:2px solid #fff;padding:14px 18px;cursor:pointer;font-size:18px;color:#fff;z-index:2;">►</button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${safeTitle}</div></article>`;
       }).join('');
       grid.querySelectorAll('.yt-thumb').forEach(img => {
         const vid = img.getAttribute('data-ytid');
         const onClick = (event) => {
           if (event) event.preventDefault();
-          const frameHost = img.parentElement;
+          const frameHost = img.closest('div.relative');
           if (!frameHost || !vid) return;
           const iframe = document.createElement('iframe');
           iframe.className = 'youtube-iframe';
@@ -99,12 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
           iframe.setAttribute('allowfullscreen', '');
           iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
           iframe.loading = 'eager';
-          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid)}?autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=https%3A%2F%2Flilsynn.com`;
+          iframe.src = `https://www.youtube.com/embed/${encodeURIComponent(vid)}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+          frameHost.style.paddingTop = '0';
           frameHost.innerHTML = '';
           frameHost.appendChild(iframe);
         };
         img.addEventListener('click', onClick);
-        const btn = img.parentElement.querySelector('.yt-play');
+        const btn = img.closest('div.relative')?.querySelector('.yt-play');
         if (btn) btn.addEventListener('click', onClick);
       });
     }
