@@ -1,24 +1,15 @@
 {
   "items": [
+    { "type": "video", "videoId": "q_EENWIxiUA", "url": "https://www.youtube.com/watch?v=q_EENWIxiUA", "snippet": { "title": "Somewhere In-Between" } },
+    { "type": "video", "videoId": "vebiWy-RL4Y", "url": "https://www.youtube.com/watch?v=vebiWy-RL4Y", "snippet": { "title": "Black Glass" } },
+    { "type": "video", "videoId": "JRJswRmhbmA", "url": "https://www.youtube.com/watch?v=JRJswRmhbmA", "snippet": { "title": "Static On My Tongue" } },
     { "type": "video", "videoId": "NMFONDfJoi8", "url": "https://youtu.be/NMFONDfJoi8", "snippet": { "title": "It's In Her Eyes" } },
     { "type": "video", "videoId": "tfVl30iEMkg", "url": "https://youtu.be/tfVl30iEMkg", "snippet": { "title": "Fade Into You" } },
+    { "type": "video", "videoId": "_1w0aG-lj8U", "url": "https://www.youtube.com/watch?v=_1w0aG-lj8U", "snippet": { "title": "Heal" } },
     { "type": "video", "videoId": "mDrXuAnmc-0", "url": "https://youtu.be/mDrXuAnmc-0", "snippet": { "title": "Burn It Down" } },
     { "type": "video", "videoId": "vAHz-AZVdDg", "url": "https://youtu.be/vAHz-AZVdDg", "snippet": { "title": "Manic Side" } },
     { "type": "video", "videoId": "fJf2Pvxb8aY", "url": "https://youtu.be/fJf2Pvxb8aY", "snippet": { "title": "Don't Say It" } },
     { "type": "video", "videoId": "zoOwns8FM-4", "url": "https://youtu.be/zoOwns8FM-4", "snippet": { "title": "Signal Light Sermon (Remastered 2026)" } },
-    { "type": "video", "videoId": "lNt2qHyY-V0", "url": "https://youtu.be/lNt2qHyY-V0", "snippet": { "title": "In The End" } },
-    { "type": "video", "videoId": "L8W0oCeWExY", "url": "https://youtu.be/L8W0oCeWExY", "snippet": { "title": "Stay Here" } },
-    { "type": "video", "videoId": "IDZNOAS5wsA", "url": "https://youtu.be/IDZNOAS5wsA", "snippet": { "title": "Home" } },
-    { "type": "video", "videoId": "T4y_vqT7Sxk", "url": "https://youtu.be/T4y_vqT7Sxk", "snippet": { "title": "My Light" } },
-    { "type": "video", "videoId": "5Kg-bZciyYM", "url": "https://youtu.be/5Kg-bZciyYM", "snippet": { "title": "Ties Remain" } },
-    { "type": "video", "videoId": "bX79TXSm-UQ", "url": "https://youtu.be/bX79TXSm-UQ", "snippet": { "title": "Gravity and Ghosts" } },
-    { "type": "video", "videoId": "Em6pd-iit8A", "url": "https://youtu.be/Em6pd-iit8A", "snippet": { "title": "Word to Word" } },
-    { "type": "video", "videoId": "CK0Op7K6JB0", "url": "https://www.youtube.com/watch?v=CK0Op7K6JB0", "snippet": { "title": "IF U STAY DED" } },
-    { "type": "video", "videoId": "tyWOrBMv_kE", "url": "https://www.youtube.com/watch?v=tyWOrBMv_kE", "snippet": { "title": "Rescue You" } },
-    { "type": "video", "videoId": "8gQkn--3u-g", "url": "https://www.youtube.com/watch?v=8gQkn--3u-g", "snippet": { "title": "Every Time" } },
-    { "type": "video", "videoId": "4nSgBw1kews", "url": "https://www.youtube.com/watch?v=4nSgBw1kews", "snippet": { "title": "Lover" } },
-    { "type": "video", "videoId": "D_HSlctwD3k", "url": "https://www.youtube.com/watch?v=D_HSlctwD3k", "snippet": { "title": "Touch Hunger" } },
-    { "type": "video", "videoId": "yVR4hnFe7U4", "url": "https://www.youtube.com/watch?v=yVR4hnFe7U4", "snippet": { "title": "Under My Skin" } },
-    { "type": "video", "videoId": "yX7t7Wcaahw", "url": "https://www.youtube.com/watch?v=yX7t7Wcaahw", "snippet": { "title": "Seat Still Warm" } }
+    { "type": "video", "videoId": "lNt2qHyY-V0", "url": "https://youtu.be/lNt2qHyY-V0", "snippet": { "title": "In The End" } }
   ]
 }
