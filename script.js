@@ -60,20 +60,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function ensureListenButton() {
-    const section = document.getElementById("presave");
-    if (!section || section.querySelector("[data-listen-cta]")) return;
-    const links = section.querySelector(".mt-7");
-    if (!links) return;
-    const button = document.createElement("a");
-    button.href = "https://music.apple.com/us/artist/lil-synn/1850720041";
-    button.target = "_blank";
-    button.rel = "noopener noreferrer";
-    button.className = "cta-primary";
-    button.setAttribute("data-listen-cta", "true");
-    button.textContent = "LISTEN NOW";
-    button.setAttribute("aria-label", "Listen to LIL SYNN on Apple Music");
-    links.appendChild(button);
+  function applyApprovedHomepageAdjustments() {
+    const heroTagline = document.querySelector('#home p.font-\[\'Rajdhani\'\]');
+    if (heroTagline) heroTagline.textContent = "Dark sound. Raw emotion. No limits";
+
+    const homeBrand = document.querySelector('nav > .max-w-7xl > a[aria-label="LIL SYNN home"]');
+    const icon = homeBrand?.querySelector('span[aria-hidden="true"]');
+    if (homeBrand && icon && icon.textContent.trim() === '🎧' && !homeBrand.dataset.iconSplit) {
+      const iconLink = document.createElement('a');
+      iconLink.href = 'special_access.html';
+      iconLink.className = icon.className;
+      iconLink.setAttribute('aria-label', 'Special Access');
+      iconLink.textContent = '🎧';
+      iconLink.style.textDecoration = 'none';
+      homeBrand.parentNode.insertBefore(iconLink, homeBrand);
+      icon.remove();
+      homeBrand.classList.remove('gap-3');
+      homeBrand.dataset.iconSplit = 'true';
+      iconLink.style.marginRight = '0.25rem';
+    }
+
+    const spotifyFrame = document.querySelector('.spotify-player iframe');
+    if (spotifyFrame) spotifyFrame.height = '440';
+
+    const releaseLinks = document.querySelector('#presave .mt-7');
+    const presave = document.getElementById('presave-link');
+    const listenNow = releaseLinks?.querySelector('[data-listen-cta], a.cta-primary');
+    if (releaseLinks && presave && listenNow && presave !== listenNow) {
+      releaseLinks.insertBefore(presave, listenNow);
+    }
   }
 
   function escapeHtml(str) {
@@ -84,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // MUSIC is intentionally NOT rendered here. music-random.js is the sole owner of #music-grid.
   // This prevents a legacy Apple Music renderer from overwriting the randomized Music tiles.
-  ensureListenButton();
+  applyApprovedHomepageAdjustments();
 
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
