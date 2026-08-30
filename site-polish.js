@@ -1,21 +1,30 @@
 document.addEventListener('DOMContentLoaded',()=>{
  const releaseSection=document.getElementById('presave');
  const latestTitle=document.getElementById('latest-release-title');
- const keepOneListenButton=()=>{if(!releaseSection)return;const buttons=[...releaseSection.querySelectorAll('[data-listen-cta], .cta-primary')];buttons.slice(1).forEach(b=>b.remove());if(buttons[0])buttons[0].setAttribute('data-listen-cta','true')};
- keepOneListenButton();
- if(releaseSection)new MutationObserver(keepOneListenButton).observe(releaseSection,{childList:true,subtree:true});
- if(latestTitle){const lock=()=>{if(latestTitle.textContent.trim()!=='HELLO GOODBYE')latestTitle.textContent='HELLO GOODBYE'};lock();new MutationObserver(lock).observe(latestTitle,{childList:true,characterData:true,subtree:true})}
- // MUSIC randomization belongs exclusively to music-random.js, loaded once from index.html.
- // Do not inject it repeatedly. LATEST VIDEOS is completely independent and never randomized here.
+ const fixLatestRelease=async()=>{
+   if(!releaseSection)return;
+   if(latestTitle)latestTitle.textContent='SOMEWHERE IN-BETWEEN';
+   const img=releaseSection.querySelector('#latest-release-art img');
+   const spotify=releaseSection.querySelector('a[href*="open.spotify.com"]');
+   if(spotify)spotify.href='https://open.spotify.com/track/4ieueqXTRCds3dOlKER5uM';
+   releaseSection.querySelectorAll('a').forEach(a=>{if(a.textContent.trim().toUpperCase()==='LISTEN NOW')a.remove()});
+   const links=releaseSection.querySelector('.mt-7');
+   if(links)links.style.cssText='display:flex;flex-wrap:nowrap;justify-content:center;align-items:center;gap:.75rem;overflow-x:auto;overflow-y:hidden;';
+   try{
+     const r=await fetch('https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200&_='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('Apple lookup failed');
+     const d=await r.json();const wanted=(d.results||[]).find(x=>x.wrapperType==='track'&&String(x.trackName||'').toLowerCase()==='somewhere in-between');
+     if(wanted){const apple=releaseSection.querySelector('#latest-apple');if(apple)apple.href=wanted.trackViewUrl||'https://music.apple.com/us/artist/lil-synn/1850720041';if(img&&wanted.artworkUrl100)img.src=wanted.artworkUrl100.replace('100x100bb','600x600bb');}
+   }catch(e){console.warn('Newest release artwork lookup failed',e)}
+ };
+ fixLatestRelease();
+ if(latestTitle)new MutationObserver(()=>{if(latestTitle.textContent.trim()!=='SOMEWHERE IN-BETWEEN')latestTitle.textContent='SOMEWHERE IN-BETWEEN'}).observe(latestTitle,{childList:true,characterData:true,subtree:true});
+ const menu=document.getElementById('sideMenu');
+ if(menu){menu.style.overflowY='auto';menu.style.overflowX='hidden';const sideNav=menu.querySelector(':scope > nav');if(sideNav){sideNav.style.height='calc(100vh - 88px)';sideNav.style.minHeight='0';sideNav.style.overflowY='auto';sideNav.style.overflowX='hidden';sideNav.style.flex='1 1 auto';}const close=menu.querySelector('#closeMenu');if(close)close.addEventListener('click',()=>{});}
  const about=document.getElementById('about');
- if(about&&!about.querySelector('[data-tidal-profile]')){
-   const profileLinks=about.querySelector('.mt-7.flex.flex-wrap.gap-3');
-   if(profileLinks){const a=document.createElement('a');a.href='https://tidal.com/artist/69300200';a.target='_blank';a.rel='noopener noreferrer';a.className='cta-secondary';a.dataset.tidalProfile='true';a.textContent='TIDAL PROFILE';profileLinks.appendChild(a)}
- }
+ if(about&&!about.querySelector('[data-tidal-profile]')){const profileLinks=about.querySelector('.mt-7.flex.flex-wrap.gap-3');if(profileLinks){const a=document.createElement('a');a.href='https://tidal.com/artist/69300200';a.target='_blank';a.rel='noopener noreferrer';a.className='cta-secondary';a.dataset.tidalProfile='true';a.textContent='TIDAL PROFILE';profileLinks.appendChild(a)}}
  const footer=document.querySelector('footer');
  if(footer&&!footer.querySelector('[data-footer-social-icons]')){
-   const legal=footer.querySelector('nav[aria-label="Legal navigation"]');
-   const wrap=document.createElement('div');wrap.dataset.footerSocialIcons='true';wrap.className='mt-7 flex flex-wrap justify-center items-center gap-4';
+   const legal=footer.querySelector('nav[aria-label="Legal navigation"]');const wrap=document.createElement('div');wrap.dataset.footerSocialIcons='true';wrap.className='mt-7 flex flex-wrap justify-center items-center gap-4';
    const icons=[
     ['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL','<path fill="currentColor" d="M88 18H12C5.37 18 0 23.37 0 30v40c0 6.63 5.37 12 12 12h76c6.63 0 12-5.37 12-12V30c0-6.63-5.37-12-12-12ZM39 31l34 19-34 19V31Z"/>'],
     ['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU','<circle cx="50" cy="50" r="47" fill="currentColor"/><path d="M22 39c18-7 40-6 58 2M26 51c16-6 35-5 50 2M30 63c13-4 27-3 40 2" fill="none" stroke="#000" stroke-width="9" stroke-linecap="round"/>'],
