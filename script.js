@@ -34,6 +34,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropdown = document.getElementById("socialsDropdown");
   if (trigger && dropdown) trigger.addEventListener("click", () => { const open = !dropdown.classList.toggle("hidden"); trigger.setAttribute("aria-expanded", String(open)); const arrow = trigger.querySelector("span"); if (arrow) arrow.textContent = open ? "▲" : "▼"; });
 
+  function ensureReleaseButtons() {
+    const releaseLinks = document.querySelector('#presave .mt-7');
+    if (!releaseLinks) return;
+    let listenNow = releaseLinks.querySelector('[data-listen-cta], a.cta-primary');
+    if (!listenNow) {
+      listenNow = document.createElement('a');
+      listenNow.href = 'https://music.apple.com/us/artist/lil-synn/1850720041';
+      listenNow.target = '_blank';
+      listenNow.rel = 'noopener noreferrer';
+      listenNow.className = 'cta-primary';
+      listenNow.setAttribute('data-listen-cta', 'true');
+      listenNow.setAttribute('aria-label', 'Listen to LIL SYNN on Apple Music');
+      listenNow.textContent = 'LISTEN NOW';
+      releaseLinks.appendChild(listenNow);
+    }
+    const presave = document.getElementById('presave-link');
+    if (presave && presave !== listenNow) releaseLinks.insertBefore(presave, listenNow);
+  }
+
   function applyApprovedHomepageAdjustments() {
     const heroTagline = document.querySelector('#home p.font-\\[\\'Rajdhani\\'\\]');
     if (heroTagline) heroTagline.textContent = "Dark sound. Raw emotion. No limits";
@@ -54,13 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const spotifyFrame = document.querySelector('.spotify-player iframe');
     if (spotifyFrame) { spotifyFrame.height = '440'; spotifyFrame.style.height = '440px'; }
-    const releaseLinks = document.querySelector('#presave .mt-7');
-    const presave = document.getElementById('presave-link');
-    const listenNow = releaseLinks?.querySelector('[data-listen-cta], a.cta-primary');
-    if (releaseLinks && presave && listenNow && presave !== listenNow) releaseLinks.insertBefore(presave, listenNow);
+    ensureReleaseButtons();
   }
   function escapeHtml(str) { return String(str).replace(/[&<>\"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;' })[m]); }
   applyApprovedHomepageAdjustments();
+  const releaseLinksObserver = document.querySelector('#presave .mt-7');
+  if (releaseLinksObserver) new MutationObserver(ensureReleaseButtons).observe(releaseLinksObserver, { childList: true });
 
   async function loadVideos() {
     const grid = document.getElementById("youtube-grid");
