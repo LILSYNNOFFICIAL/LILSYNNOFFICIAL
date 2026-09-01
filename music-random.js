@@ -16,6 +16,5 @@ document.addEventListener('DOMContentLoaded',()=>{
    const spotify=section.querySelector('.mt-7 a[href*="open.spotify.com"]');if(spotify)spotify.href=spotifyUrl;
  };
  apply();
- const interval=setInterval(apply,250);
- setTimeout(()=>clearInterval(interval),10000);
+ setInterval(apply,1000);
 });
