@@ -184,3 +184,29 @@ video { filter:brightness(0.95) contrast(1.05); }
   #music .section-subtitle { padding:0 .75rem; }
   #music .spotify-player iframe { min-height:352px; }
 }
+
+/* LATEST RELEASE CTA LAYOUT — Listen Now and Pre-Save share the middle row; Vote sits centered directly beneath them. */
+#presave .release-feature > .mt-7 {
+  display: grid !important;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  align-items: center;
+  gap: .75rem;
+}
+#presave .release-feature > .mt-7 > #latest-apple { order: 1; }
+#presave .release-feature > .mt-7 > a[href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"] { order: 2; }
+#presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"] { order: 3; }
+#presave .release-feature > .mt-7 > #presave-link { order: 4; }
+#presave .release-feature > .mt-7 > a[href="https://tinyurl.com/VOTE-LIL-SYNN"] {
+  order: 5;
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+@media (max-width: 640px) {
+  #presave .release-feature > .mt-7 {
+    grid-template-columns: 1fr;
+  }
+  #presave .release-feature > .mt-7 > a[href="https://tinyurl.com/VOTE-LIL-SYNN"] {
+    grid-column: auto;
+  }
+}
