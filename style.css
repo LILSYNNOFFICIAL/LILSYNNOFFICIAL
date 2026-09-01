@@ -47,7 +47,7 @@ section[id] { scroll-margin-top: 88px; }
 #main-social-grid .social-icon-svg svg path,#main-social-grid .social-icon-svg svg circle,#main-social-grid .social-icon-svg svg rect,#main-social-grid .social-icon-svg svg polygon,#main-social-grid .social-icon-svg svg ellipse,#main-social-grid .social-icon-svg svg line,#main-social-grid .social-icon-svg svg polyline { opacity:1 !important; fill-opacity:1 !important; stroke-opacity:1 !important; }
 #main-social-grid .social-icon-button:hover,#main-social-grid .social-icon-button:focus,#main-social-grid .social-icon-button:active { background:transparent !important; opacity:1 !important; filter:none !important; mix-blend-mode:normal !important; }
 
-/* FOOTER TEXT — isolate the footer into its own opaque rendering layer. This is the text equivalent of the proven bb0d1c5 SVG fix. */
+/* FOOTER TEXT — isolate the footer into its own opaque rendering layer. */
 #contact,
 #contact > div,
 #contact .section-kicker,
@@ -100,72 +100,23 @@ video { filter:brightness(0.95) contrast(1.05); }
 :focus-visible { outline:2px solid #ff4fd8; outline-offset:4px; }
 
 /* NAVIGATION — approved refinement: smaller menu typography + reliable Socials scroll region. */
-#sideMenu > nav {
-  font-size: .95rem !important;
-  line-height: 1.25 !important;
-}
+#sideMenu > nav { font-size: .95rem !important; line-height: 1.25 !important; }
 #sideMenu > nav > a,
-#sideMenu #socialsTrigger {
-  font-size: .95rem !important;
-  line-height: 1.25 !important;
-}
-#sideMenu #socialsDropdown {
-  scrollbar-width: auto !important;
-  scrollbar-color: #ff008f #111 !important;
-}
-#sideMenu #socialsDropdown::-webkit-scrollbar {
-  width: 10px !important;
-}
-#sideMenu #socialsDropdown::-webkit-scrollbar-track {
-  background: #111 !important;
-}
-#sideMenu #socialsDropdown::-webkit-scrollbar-thumb {
-  background: #ff008f !important;
-  border-radius: 8px !important;
-  border: 2px solid #111 !important;
-}
+#sideMenu #socialsTrigger { font-size: .95rem !important; line-height: 1.25 !important; }
+#sideMenu #socialsDropdown { scrollbar-width: auto !important; scrollbar-color: #ff008f #111 !important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar { width: 10px !important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar-track { background: #111 !important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar-thumb { background: #ff008f !important; border-radius: 8px !important; border: 2px solid #111 !important; }
 @media (min-width: 768px) {
-  #sideMenu > nav {
-    gap: 1.15rem !important;
-  }
-  #sideMenu > nav > div:has(#socialsDropdown) {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  #sideMenu #socialsDropdown {
-    flex: 0 1 auto !important;
-    min-height: 0 !important;
-    max-height: calc(100vh - 430px) !important;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-    overscroll-behavior: contain !important;
-    padding-right: .75rem !important;
-    padding-bottom: 1rem !important;
-  }
-  #sideMenu #socialsDropdown a {
-    font-size: .9rem !important;
-    line-height: 1.25 !important;
-  }
+  #sideMenu > nav { gap: 1.15rem !important; }
+  #sideMenu > nav > div:has(#socialsDropdown) { flex: 1 1 auto !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; }
+  #sideMenu #socialsDropdown { flex: 0 1 auto !important; min-height: 0 !important; max-height: calc(100vh - 430px) !important; overflow-y: scroll !important; overflow-x: hidden !important; overscroll-behavior: contain !important; padding-right: .75rem !important; padding-bottom: 1rem !important; }
+  #sideMenu #socialsDropdown a { font-size: .9rem !important; line-height: 1.25 !important; }
 }
 @media (max-width: 767px) {
-  #sideMenu > nav {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    gap: 1.1rem !important;
-    padding-bottom: 1.5rem !important;
-  }
-  #sideMenu #socialsDropdown {
-    max-height: 34vh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    padding-right: .5rem !important;
-  }
-  #sideMenu #socialsDropdown a {
-    font-size: .9rem !important;
-    line-height: 1.25 !important;
-  }
+  #sideMenu > nav { overflow-y: auto !important; overflow-x: hidden !important; gap: 1.1rem !important; padding-bottom: 1.5rem !important; }
+  #sideMenu #socialsDropdown { max-height: 34vh !important; overflow-y: auto !important; overflow-x: hidden !important; padding-right: .5rem !important; }
+  #sideMenu #socialsDropdown a { font-size: .9rem !important; line-height: 1.25 !important; }
 }
 
 /* MUSIC — Phase 1 polish: keep release artwork dominant, make streaming actions easy to scan, and prevent cards from becoming cramped. */
@@ -185,28 +136,20 @@ video { filter:brightness(0.95) contrast(1.05); }
   #music .spotify-player iframe { min-height:352px; }
 }
 
-/* LATEST RELEASE CTA LAYOUT — Listen Now and Pre-Save share the middle row; Vote sits centered directly beneath them. */
+/* LATEST RELEASE CTA LAYOUT — Spotify + Apple Music on top; Listen Now centered beneath; Pre-Save remains below. */
 #presave .release-feature > .mt-7 {
-  display: grid !important;
-  grid-template-columns: repeat(2, max-content);
-  justify-content: center;
-  align-items: center;
-  gap: .75rem;
+  display:grid !important;
+  grid-template-columns:repeat(2,max-content);
+  justify-content:center;
+  align-items:center;
+  gap:.75rem;
 }
-#presave .release-feature > .mt-7 > #latest-apple { order: 1; }
-#presave .release-feature > .mt-7 > a[href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"] { order: 2; }
-#presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"] { order: 3; }
-#presave .release-feature > .mt-7 > #presave-link { order: 4; }
-#presave .release-feature > .mt-7 > a[href="https://tinyurl.com/VOTE-LIL-SYNN"] {
-  order: 5;
-  grid-column: 1 / -1;
-  justify-self: center;
-}
-@media (max-width: 640px) {
-  #presave .release-feature > .mt-7 {
-    grid-template-columns: 1fr;
-  }
-  #presave .release-feature > .mt-7 > a[href="https://tinyurl.com/VOTE-LIL-SYNN"] {
-    grid-column: auto;
-  }
+#presave .release-feature > .mt-7 > #latest-apple { order:1; }
+#presave .release-feature > .mt-7 > a[href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"] { order:2; }
+#presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"] { order:3; grid-column:1 / -1; justify-self:center; }
+#presave .release-feature > .mt-7 > #presave-link { order:4; grid-column:1 / -1; justify-self:center; }
+@media (max-width:640px) {
+  #presave .release-feature > .mt-7 { grid-template-columns:1fr; }
+  #presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"],
+  #presave .release-feature > .mt-7 > #presave-link { grid-column:auto; justify-self:center; }
 }
