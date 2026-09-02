@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,15 +17,15 @@ jobs:
           python-version: '3.x'
       - name: Install yt-dlp
         run: python -m pip install --upgrade yt-dlp
-      - name: Build newest 9 from YouTube Releases by upload date
+      - name: Discover newest channel uploads by actual upload timestamp
         shell: bash
         run: |
           set -euo pipefail
-          yt-dlp --skip-download --ignore-errors --no-warnings --flat-playlist=false --playlist-end 100 --dump-single-json 'https://www.youtube.com/@LILSYNNOFFICIAL/releases' > /tmp/releases.json
+          yt-dlp --skip-download --ignore-errors --no-warnings --flat-playlist=false --playlist-end 60 --dump-single-json 'https://www.youtube.com/@LILSYNNOFFICIAL/videos' > /tmp/videos.json
           python - <<'PY'
           import json, pathlib
           from datetime import datetime, timezone
-          data=json.load(open('/tmp/releases.json',encoding='utf-8'))
+          data=json.load(open('/tmp/videos.json',encoding='utf-8'))
           entries=data.get('entries') or []
           videos=[]
           for e in entries:
@@ -42,8 +42,9 @@ jobs:
               videos.append({'id':e['id'],'title':e.get('title') or e['id'],'publishedAt':published})
           unique={v['id']:v for v in videos}
           latest=sorted(unique.values(),key=lambda x:x['publishedAt'],reverse=True)[:9]
-          if len(latest)<9: raise SystemExit(f'Only found {len(latest)} dated videos')
-          out={'generatedAt':datetime.now(timezone.utc).isoformat(),'source':'https://www.youtube.com/@LILSYNNOFFICIAL/releases','videos':latest}
+          if len(latest)<9:
+              raise SystemExit(f'Only found {len(latest)} dated uploads from the LIL SYNN channel')
+          out={'generatedAt':datetime.now(timezone.utc).isoformat(),'source':'https://www.youtube.com/@LILSYNNOFFICIAL/videos','selection':'newest 9 channel uploads by actual upload timestamp','videos':latest}
           pathlib.Path('latest-videos.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
           print(json.dumps(latest,indent=2,ensure_ascii=False))
           PY
@@ -59,11 +60,11 @@ jobs:
               s=s.replace(marker,marker+'\n'+tag,1)
               p.write_text(s,encoding='utf-8')
           PY
-      - name: Commit manifest and renderer
+      - name: Commit refreshed manifest
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add latest-videos.json index.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh latest 9 YouTube Releases by upload date [skip ci]'
+          git commit -m 'Refresh latest 9 YouTube videos by upload date [skip ci]'
           git push
