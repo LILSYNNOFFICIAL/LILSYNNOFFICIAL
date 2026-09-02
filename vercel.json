@@ -1,5 +1,11 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/assets/mov/lv_0_20260718234757.mp4",
+      "destination": "/assets/mov/HERO_BG_WEBM.webm"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
