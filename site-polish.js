@@ -22,13 +22,26 @@ const run=async()=>{
  const releaseSpotify=title=>{const group=catalog?.groups?.[title],tracks=group?.tracks||[];return spotifyMap[title]||tracks.map(t=>spotifyMap[t]).find(Boolean)||''};
  const releaseApple=title=>{const group=catalog?.groups?.[title],tracks=group?.tracks||[];return appleSong(title)||tracks.map(appleSong).find(Boolean)||''};
 
- // Latest Releases: always render the three newest release entries from the catalog.
+ // Latest Releases: three newest catalog entries, presented as compact cards under one header.
  if(release&&catalog?.order?.length){
    const latestThree=catalog.order.slice(0,3);
-   const heading=release.querySelector(':scope > .latest-release-heading');
-   release.innerHTML=`<div class="latest-release-list" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;width:100%">${latestThree.map((title,i)=>{const spotify=releaseSpotify(title),apple=releaseApple(title),art=artFor(title);return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30" style="min-width:0"><div style="aspect-ratio:1/1;background:#090909;overflow:hidden">${art?`<img src="${art}" alt="LIL SYNN — ${esc(title)} artwork" style="width:100%;height:100%;object-fit:cover;display:block" loading="${i===0?'eager':'lazy'}" decoding="async">`:'<div style="width:100%;height:100%;display:grid;place-items:center;color:#555;font-weight:800;letter-spacing:.1em">LIL SYNN</div>'}</div><div style="padding:18px 18px 20px"><div style="font-size:9px;font-weight:800;letter-spacing:.22em;color:#ff008f;text-transform:uppercase;margin-bottom:7px">${i===0?'LATEST RELEASE':'RECENT RELEASE'}</div><h3 style="margin:0 0 14px;font-size:clamp(17px,2vw,23px);letter-spacing:.04em;line-height:1.15">${esc(title).toUpperCase()}</h3><div style="display:flex;gap:10px;flex-wrap:wrap">${spotify?`<a href="${spotify}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#1ed760;color:#000;text-decoration:none;font-weight:800;font-size:10px;letter-spacing:.1em;padding:10px 14px;border-radius:9px">SPOTIFY</a>`:''}${apple?`<a href="${apple}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#ff008f;color:#050505;text-decoration:none;font-weight:800;font-size:10px;letter-spacing:.1em;padding:10px 14px;border-radius:9px">APPLE</a>`:''}</div></div></article>`}).join('')}</div>`;
-   if(heading)release.prepend(heading);
-   const responsive=document.createElement('style');responsive.textContent='@media(max-width:760px){.latest-release-list{grid-template-columns:1fr!important}}@media(min-width:761px) and (max-width:980px){.latest-release-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}';document.head.appendChild(responsive);
+   const heading=document.createElement('div');
+   heading.className='latest-release-heading';
+   heading.innerHTML='<h2 style="margin:0;text-align:center;font-size:clamp(1.6rem,3vw,2.35rem);font-weight:900;letter-spacing:.14em;color:#fff">LATEST RELEASES</h2><div style="width:72px;height:2px;background:#ff008f;margin:10px auto 24px;box-shadow:0 0 14px rgba(255,0,143,.7)"></div>';
+   release.innerHTML='';
+   release.appendChild(heading);
+   const list=document.createElement('div');
+   list.className='latest-release-list';
+   list.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;width:min(100%,900px);margin:0 auto;align-items:start;';
+   latestThree.forEach((title,i)=>{
+     const spotify=releaseSpotify(title),apple=releaseApple(title),art=artFor(title);
+     const card=document.createElement('article');
+     card.style.cssText='min-width:0;width:100%;max-width:270px;margin:0 auto;text-align:center;';
+     card.innerHTML=`<div style="aspect-ratio:1/1;background:#090909;overflow:hidden;border-radius:16px;border:1px solid rgba(255,0,143,.28);box-shadow:0 10px 28px rgba(0,0,0,.35)">${art?`<img src="${art}" alt="LIL SYNN — ${esc(title)} artwork" style="width:100%;height:100%;object-fit:cover;display:block" loading="${i===0?'eager':'lazy'}" decoding="async">`:'<div style="width:100%;height:100%;display:grid;place-items:center;color:#555;font-weight:800;letter-spacing:.1em">LIL SYNN</div>'}</div><div style="padding:13px 4px 4px"><div style="font-size:8px;font-weight:800;letter-spacing:.2em;color:#ff008f;text-transform:uppercase;margin-bottom:6px">${i===0?'LATEST RELEASE':'RECENT RELEASE'}</div><h3 style="margin:0 0 11px;font-size:clamp(13px,1.45vw,18px);font-weight:900;letter-spacing:.035em;line-height:1.2;color:#fff">${esc(title).toUpperCase()}</h3><div style="display:flex;justify-content:center;gap:7px;flex-wrap:wrap">${spotify?`<a href="${spotify}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#1ed760;color:#000;text-decoration:none;font-weight:800;font-size:9px;letter-spacing:.09em;padding:8px 11px;border-radius:8px">SPOTIFY</a>`:''}${apple?`<a href="${apple}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#ff008f;color:#050505;text-decoration:none;font-weight:800;font-size:9px;letter-spacing:.09em;padding:8px 11px;border-radius:8px">APPLE</a>`:''}</div></div>`;
+     list.appendChild(card);
+   });
+   release.appendChild(list);
+   const responsive=document.createElement('style');responsive.textContent='@media(max-width:760px){.latest-release-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}.latest-release-list article{max-width:220px!important}}@media(max-width:480px){.latest-release-list{grid-template-columns:1fr!important;max-width:270px!important}.latest-release-list article{max-width:270px!important}}';document.head.appendChild(responsive);
  }
 
  const videoGrid=document.getElementById('youtube-grid');
