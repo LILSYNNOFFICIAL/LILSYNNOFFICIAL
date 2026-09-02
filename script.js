@@ -21,8 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (trigger && dropdown) {
     trigger.setAttribute("aria-expanded", "false");
     trigger.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
+      event.preventDefault(); event.stopPropagation();
       const open = dropdown.classList.contains("hidden");
       dropdown.classList.toggle("hidden", !open);
       trigger.setAttribute("aria-expanded", String(open));
@@ -31,10 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Do not alter the hero video's native loading policy. The HTML video element
+  // is responsible for immediate muted autoplay; with the optimized WebM
+  // source this avoids a large JavaScript-controlled startup delay.
   const bgVideo = document.getElementById("bgVideo");
-  if (bgVideo) {
-    bgVideo.preload = "metadata"; bgVideo.setAttribute("playsinline", ""); bgVideo.muted = true;
-    const startVideo = () => { const p = bgVideo.play(); if (p?.catch) p.catch(() => {}); };
-    if (bgVideo.readyState >= 2) startVideo(); else bgVideo.addEventListener("loadeddata", startVideo, { once: true });
-  }
+  if (bgVideo) { bgVideo.muted = true; bgVideo.setAttribute("playsinline", ""); const p = bgVideo.play(); if (p?.catch) p.catch(() => {}); }
 });
