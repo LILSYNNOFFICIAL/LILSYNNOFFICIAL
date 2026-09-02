@@ -1,18 +1,25 @@
 document.addEventListener('DOMContentLoaded',()=>{
  const releaseSection=document.getElementById('presave');
  const latestTitle=document.getElementById('latest-release-title');
- const fixLatestRelease=async()=>{
+ const RESCUE_YOU_ACOUSTIC_SPOTIFY='https://open.spotify.com/track/4btTfkMu5yHTsB6CTq1AcF?si=1eeb2961302c471e';
+ const RESCUE_YOU_ACOUSTIC_APPLE='https://music.apple.com/us/song/rescue-you-acoustic-version/6807294984';
+ const RESCUE_YOU_ACOUSTIC_ART='https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/RESCUE_YOU_A.png';
+ const fixLatestRelease=()=>{
    if(!releaseSection)return;
-   if(latestTitle)latestTitle.textContent='SOMEWHERE IN-BETWEEN';
+   if(latestTitle)latestTitle.textContent='RESCUE YOU (ACOUSTIC VERSION)';
    const img=releaseSection.querySelector('#latest-release-art img');
+   if(img){img.src=RESCUE_YOU_ACOUSTIC_ART;img.alt='LIL SYNN — Rescue You (Acoustic Version) artwork';}
    const spotify=releaseSection.querySelector('a[href*="open.spotify.com"]');
-   if(spotify)spotify.href='https://open.spotify.com/track/4ieueqXTRCds3dOlKER5uM';
+   if(spotify)spotify.href=RESCUE_YOU_ACOUSTIC_SPOTIFY;
+   const apple=releaseSection.querySelector('#latest-apple');
+   if(apple){apple.href=RESCUE_YOU_ACOUSTIC_APPLE;apple.textContent='APPLE MUSIC';}
+   const listenNow=releaseSection.querySelector('a.cta-primary');
+   if(listenNow){listenNow.href=RESCUE_YOU_ACOUSTIC_APPLE;listenNow.textContent='LISTEN NOW';listenNow.setAttribute('aria-label','Listen to Rescue You (Acoustic Version) on Apple Music');}
    const links=releaseSection.querySelector('.mt-7');
    if(links)links.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.75rem;';
-   try{const r=await fetch('https://itunes.apple.com/lookup?id=1850720041&entity=song&limit=200&_='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('Apple lookup failed');const d=await r.json();const wanted=(d.results||[]).find(x=>x.wrapperType==='track'&&String(x.trackName||'').toLowerCase()==='somewhere in-between');if(wanted){const apple=releaseSection.querySelector('#latest-apple');if(apple)apple.href=wanted.trackViewUrl||'https://music.apple.com/us/artist/lil-synn/1850720041';if(img&&wanted.artworkUrl100)img.src=wanted.artworkUrl100.replace('100x100bb','600x600bb');}}catch(e){console.warn('Newest release artwork lookup failed',e)}
  };
  fixLatestRelease();
- if(latestTitle)new MutationObserver(()=>{if(latestTitle.textContent.trim()!=='SOMEWHERE IN-BETWEEN')latestTitle.textContent='SOMEWHERE IN-BETWEEN'}).observe(latestTitle,{childList:true,characterData:true,subtree:true});
+ if(latestTitle)new MutationObserver(()=>{if(latestTitle.textContent.trim()!=='RESCUE YOU (ACOUSTIC VERSION)')latestTitle.textContent='RESCUE YOU (ACOUSTIC VERSION)'}).observe(latestTitle,{childList:true,characterData:true,subtree:true});
 
  const home=document.getElementById('home');
  const tagline=home?.querySelector('p');if(tagline)tagline.textContent='Dark sound. Raw emotion. No limits';
@@ -40,7 +47,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  // Exactly 9 homepage videos. YouTube is embedded in-place after pressing the play overlay.
  const videos=document.getElementById('youtube-grid');
  const fallbackVideos=[
-   ['Somewhere In-Between','q_EENWIxiUA'],['Black Glass','vebiWy-RL4Y'],['Static On My Tongue','JRJswRmhbmA'],["It's In Her Eyes",'NMFONDfJoi8'],['Fade Into You','tfVl30iEMkg'],['Heal','_1w0aG-lj8U'],['Hindsight','HX5EZCPsAxI'],['Back From The Blackout','WejkZ945Jt8'],['Burn It Down','mDrXuAnmc-0']
+   ['Rescue You (Acoustic Version)','Glh5acZNiFM'],['Somewhere In-Between','q_EENWIxiUA'],['Black Glass','vebiWy-RL4Y'],['Static On My Tongue','JRJswRmhbmA'],["It's In Her Eyes",'NMFONDfJoi8'],['Fade Into You','tfVl30iEMkg'],['Heal','_1w0aG-lj8U'],['Hindsight','HX5EZCPsAxI'],['Back From The Blackout','WejkZ945Jt8']
  ];
  if(videos){
    videos.innerHTML=fallbackVideos.map(([title,id])=>`<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative youtube-card" data-video-id="${id}" data-video-title="${title}" style="aspect-ratio:16/9;background:#000;overflow:hidden"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="${title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" loading="lazy" decoding="async"><button type="button" class="youtube-play-overlay" aria-label="Play ${title}" style="position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:transparent;border:0;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:999px;background:rgba(255,0,143,.94);box-shadow:0 0 28px rgba(255,0,143,.55);color:#fff;font-size:30px;padding-left:5px">▶</span></button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${title}</div></article>`).join('');
