@@ -1,32 +1,69 @@
-name: Refresh Latest Videos logic
+name: Refresh Latest Videos
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
-  patch:
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+  refresh:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace Latest Videos renderer
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install yt-dlp
+        run: python -m pip install --upgrade yt-dlp
+      - name: Build newest 9 from YouTube Releases by upload date
+        shell: bash
         run: |
-          node <<'NODE'
-          const fs=require('fs');
-          const path='site-polish.js';
-          let s=fs.readFileSync(path,'utf8');
-          const start=s.indexOf(' const videoGrid=document.getElementById(\'youtube-grid\');');
-          const end=s.indexOf(' const hero=document.getElementById(\'home\');',start);
-          if(start<0||end<0) throw new Error('Latest Videos block markers not found');
-          const block=` const videoGrid=document.getElementById('youtube-grid');\n if(videoGrid){\n   try{\n     const r=await fetch('/api/latest-youtube-releases?refresh='+Date.now(),{cache:'no-store'});\n     if(!r.ok) throw new Error('YouTube release feed unavailable');\n     const data=await r.json();\n     const videos=(data.videos||[]).slice(0,9);\n     videoGrid.innerHTML=videos.map(v=>\`<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative youtube-card" data-video-id="\${v.id}" data-video-title="\${esc(v.title)}" style="aspect-ratio:16/9;background:#000;overflow:hidden"><img src="https://i.ytimg.com/vi/\${v.id}/hqdefault.jpg" alt="\${esc(v.title)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" loading="lazy" decoding="async"><button type="button" class="youtube-play-overlay" aria-label="Play \${esc(v.title)}" style="position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:transparent;border:0;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:999px;background:rgba(255,0,143,.94);box-shadow:0 0 28px rgba(255,0,143,.55);color:#fff;font-size:30px;padding-left:5px">▶</span></button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">\${esc(v.title)}</div></article>\`).join('');\n     $$('.youtube-card').forEach(card=>card.querySelector('.youtube-play-overlay')?.addEventListener('click',()=>{const id=card.dataset.videoId,title=card.dataset.videoTitle,iframe=document.createElement('iframe');iframe.title=\`LIL SYNN — \${title}\`;iframe.src=\`https://www.youtube-nocookie.com/embed/\${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1\`;iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000';card.innerHTML='';card.appendChild(iframe)}));\n   }catch(e){console.warn('Dynamic YouTube releases unavailable',e)}\n }\n\n`;
-          s=s.slice(0,start)+block+s.slice(end);
-          fs.writeFileSync(path,s);
-          NODE
-      - name: Commit patched renderer
+          set -euo pipefail
+          yt-dlp --skip-download --ignore-errors --no-warnings --flat-playlist=false --playlist-end 100 --dump-single-json 'https://www.youtube.com/@LILSYNNOFFICIAL/releases' > /tmp/releases.json
+          python - <<'PY'
+          import json, pathlib
+          from datetime import datetime, timezone
+          data=json.load(open('/tmp/releases.json',encoding='utf-8'))
+          entries=data.get('entries') or []
+          videos=[]
+          for e in entries:
+              if not e or not e.get('id'): continue
+              ts=e.get('timestamp') or e.get('release_timestamp')
+              upload=e.get('upload_date') or ''
+              if not ts and len(upload)==8:
+                  ts=datetime.strptime(upload,'%Y%m%d').replace(tzinfo=timezone.utc).timestamp()
+              if not ts: continue
+              if isinstance(ts,(int,float)):
+                  published=datetime.fromtimestamp(ts,timezone.utc).isoformat()
+              else:
+                  published=str(ts)
+              videos.append({'id':e['id'],'title':e.get('title') or e['id'],'publishedAt':published})
+          unique={v['id']:v for v in videos}
+          latest=sorted(unique.values(),key=lambda x:x['publishedAt'],reverse=True)[:9]
+          if len(latest)<9: raise SystemExit(f'Only found {len(latest)} dated videos')
+          out={'generatedAt':datetime.now(timezone.utc).isoformat(),'source':'https://www.youtube.com/@LILSYNNOFFICIAL/releases','videos':latest}
+          pathlib.Path('latest-videos.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print(json.dumps(latest,indent=2,ensure_ascii=False))
+          PY
+      - name: Ensure manifest renderer is loaded after site scripts
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site-polish.js
-          git diff --cached --quiet || git commit -m "Auto-update Latest Videos from YouTube release dates [skip ci]"
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          tag='<script src="latest-videos.js"></script>'
+          if tag not in s:
+              marker='<script src="music-random.js"></script>'
+              if marker not in s: raise SystemExit('music-random script marker not found')
+              s=s.replace(marker,marker+'\n'+tag,1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit manifest and renderer
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest-videos.json index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh latest 9 YouTube Releases by upload date [skip ci]'
           git push
