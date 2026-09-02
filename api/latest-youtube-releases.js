@@ -16,27 +16,34 @@ export default async function handler(req,res){
   const api=async(path,params={})=>{const q=new URLSearchParams({...params,key:API_KEY});const r=await fetch(`https://www.googleapis.com/youtube/v3/${path}?${q}`);const body=await r.json();if(!r.ok||body.error)throw new Error(body.error?.message||`YouTube API ${r.status}`);return body};
   try{
     if(!API_KEY)throw new Error('YOUTUBE_DATA_API_KEY is not configured in Vercel');
-    // Use the channel's official uploads playlist. This is the reliable source for
-    // all uploads; the public /releases page is not treated as chronological data.
     const channel=await api('channels',{part:'contentDetails,snippet',forHandle:CHANNEL_HANDLE});
     const channelItem=channel.items?.[0];
     if(!channelItem)throw new Error('LIL SYNN YouTube channel was not found');
-    const uploadsId=channelItem.contentDetails.relatedPlaylists.uploads;
-    const items=[];let token='';
-    // Walk enough pages to cover the recent catalog while avoiding an unbounded request.
-    for(let pageNo=0;pageNo<5;pageNo++){
-      const data=await api('playlistItems',{part:'snippet,contentDetails',playlistId:uploadsId,maxResults:'50',...(token?{pageToken:token}:{})});
-      for(const item of data.items||[]){const id=item.contentDetails?.videoId;if(id)items.push({id,title:item.snippet?.title||id,publishedAt:item.contentDetails?.videoPublishedAt||item.snippet?.publishedAt||''})}
-      token=data.nextPageToken||'';if(!token||items.length>=200)break;
+    const releasesPlaylistId=channelItem.contentDetails?.relatedPlaylists?.uploads;
+    if(!releasesPlaylistId)throw new Error('LIL SYNN uploads playlist was not found');
+
+    // IMPORTANT: the Releases page is the membership source. YouTube does not expose
+    // a separate Data API playlist for the /releases tab, so discover the IDs from that
+    // public page, then use the Data API to obtain authoritative publication dates.
+    const html=await (await fetch(page,{headers:{'user-agent':'Mozilla/5.0'}})).text();
+    const ids=[...new Set([...html.matchAll(/(?:watch\\?v=|videoId\\?\\s*[:=]\\s*["'])([A-Za-z0-9_-]{11})/g)].map(m=>m[1]))];
+    if(!ids.length)throw new Error('No video IDs were discoverable from the YouTube Releases page');
+
+    const dated=[];
+    for(let i=0;i<ids.length;i+=50){
+      const data=await api('videos',{part:'snippet',id:ids.slice(i,i+50).join(',')});
+      for(const item of data.items||[]){
+        const publishedAt=item.snippet?.publishedAt;
+        if(publishedAt)dated.push({id:item.id,title:item.snippet?.title||item.id,publishedAt});
+      }
     }
-    const unique=[...new Map(items.map(x=>[x.id,x])).values()];
-    // The API's publishedAt is authoritative. Newest first, independent of YouTube UI order.
+    const unique=[...new Map(dated.map(x=>[x.id,x])).values()];
     unique.sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt));
-    const latest=unique.filter(x=>x.publishedAt).slice(0,9);
-    if(latest.length<9)throw new Error(`YouTube uploads playlist returned only ${latest.length} dated videos`);
+    const latest=unique.slice(0,9);
+    if(latest.length<9)throw new Error(`Releases page returned only ${latest.length} dated videos`);
     res.setHeader('Cache-Control','public, s-maxage=60, stale-while-revalidate=300');
     res.setHeader('Content-Type','application/json; charset=utf-8');
-    return res.status(200).json({source:page,channelId:channelItem.id,uploadsPlaylistId:uploadsId,updatedAt:new Date().toISOString(),videos:latest,live:true});
+    return res.status(200).json({source:page,channelId:channelItem.id,updatedAt:new Date().toISOString(),videos:latest,live:true,selection:'YouTube Releases page membership sorted by YouTube publishedAt'});
   }catch(error){
     res.setHeader('Cache-Control','public, s-maxage=60, stale-while-revalidate=180');
     res.setHeader('Content-Type','application/json; charset=utf-8');
