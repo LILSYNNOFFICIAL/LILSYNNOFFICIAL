@@ -19,19 +19,16 @@ const run=async()=>{
  const spotifyMap=catalog?.trackSpotify||{};
  const appleSong=title=>key(title)==='rescueyouacousticversion'?'https://music.apple.com/us/song/rescue-you-acoustic-version/6807294984':appleByTitle.get(key(title))||'';
  const artFor=title=>{const exact=key(title);let f=artFiles.find(x=>key(x.name.replace(/^\d+_lil_synn_/i,'').replace(/\.(jpg|jpeg|png)$/i,''))===exact);if(!f)f=artFiles.find(x=>{const n=key(x.name.replace(/\.(jpg|jpeg|png)$/i,''));return n.includes(exact)||exact.includes(n)});return f?`https://raw.githubusercontent.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/main/assets/images/icons/album_art/${encodeURIComponent(f.name)}`:''};
+ const releaseSpotify=title=>{const group=catalog?.groups?.[title],tracks=group?.tracks||[];return spotifyMap[title]||tracks.map(t=>spotifyMap[t]).find(Boolean)||''};
+ const releaseApple=title=>{const group=catalog?.groups?.[title],tracks=group?.tracks||[];return appleSong(title)||tracks.map(appleSong).find(Boolean)||''};
 
+ // Latest Releases: always render the three newest release entries from the catalog.
  if(release&&catalog?.order?.length){
-   const latest=catalog.order[0],latestGroup=catalog.groups?.[latest],latestTrack=latestGroup?.tracks?.length?latestGroup.tracks[latestGroup.tracks.length-1]:latest;
-   const spotify=spotifyMap[latest]||spotifyMap[latestTrack]||'',apple=appleSong(latest)||appleSong(latestTrack);
-   const title=$('#latest-release-title');if(title)title.textContent=latest.toUpperCase();
-   const image=release.querySelector('#latest-release-art img'),art=artFor(latest)||artFor(latestTrack);if(image&&art){image.src=art;image.alt=`LIL SYNN — ${latest} artwork`;}
-   const buttons=[...release.querySelectorAll('.mt-7 a')];
-   const spotifyButton=buttons.find(a=>a.textContent.trim().toUpperCase()==='SPOTIFY')||buttons.find(a=>a.href.includes('open.spotify.com'));
-   const legacyApple=release.querySelector('#latest-apple');if(legacyApple)legacyApple.remove();
-   const listenButton=buttons.find(a=>a.classList.contains('cta-primary'));
-   if(spotifyButton&&spotify)spotifyButton.href=spotify;
-   if(listenButton){listenButton.textContent='APPLE';listenButton.href=apple||listenButton.href;listenButton.setAttribute('aria-label',`Listen to ${latest} on Apple Music`);}
-   const presave=release.querySelector('#presave-link');if(presave)presave.remove();
+   const latestThree=catalog.order.slice(0,3);
+   const heading=release.querySelector(':scope > .latest-release-heading');
+   release.innerHTML=`<div class="latest-release-list" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;width:100%">${latestThree.map((title,i)=>{const spotify=releaseSpotify(title),apple=releaseApple(title),art=artFor(title);return `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30" style="min-width:0"><div style="aspect-ratio:1/1;background:#090909;overflow:hidden">${art?`<img src="${art}" alt="LIL SYNN — ${esc(title)} artwork" style="width:100%;height:100%;object-fit:cover;display:block" loading="${i===0?'eager':'lazy'}" decoding="async">`:'<div style="width:100%;height:100%;display:grid;place-items:center;color:#555;font-weight:800;letter-spacing:.1em">LIL SYNN</div>'}</div><div style="padding:18px 18px 20px"><div style="font-size:9px;font-weight:800;letter-spacing:.22em;color:#ff008f;text-transform:uppercase;margin-bottom:7px">${i===0?'LATEST RELEASE':'RECENT RELEASE'}</div><h3 style="margin:0 0 14px;font-size:clamp(17px,2vw,23px);letter-spacing:.04em;line-height:1.15">${esc(title).toUpperCase()}</h3><div style="display:flex;gap:10px;flex-wrap:wrap">${spotify?`<a href="${spotify}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#1ed760;color:#000;text-decoration:none;font-weight:800;font-size:10px;letter-spacing:.1em;padding:10px 14px;border-radius:9px">SPOTIFY</a>`:''}${apple?`<a href="${apple}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#ff008f;color:#050505;text-decoration:none;font-weight:800;font-size:10px;letter-spacing:.1em;padding:10px 14px;border-radius:9px">APPLE</a>`:''}</div></div></article>`}).join('')}</div>`;
+   if(heading)release.prepend(heading);
+   const responsive=document.createElement('style');responsive.textContent='@media(max-width:760px){.latest-release-list{grid-template-columns:1fr!important}}@media(min-width:761px) and (max-width:980px){.latest-release-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}';document.head.appendChild(responsive);
  }
 
  const videoGrid=document.getElementById('youtube-grid');
@@ -47,10 +44,8 @@ const run=async()=>{
    const tagline=hero.querySelector('p');if(tagline)tagline.textContent='Dark sound. Raw emotion. No limits';
    const stack=hero.querySelector('.hero-cta-stack'),row=hero.querySelector('.hero-cta-row');
    if(stack&&row){
-     const actions=[...row.querySelectorAll('a')];
-     actions.filter(a=>a.textContent.trim().toUpperCase()==='PRE-SAVE').forEach(a=>a.remove());
-     const listen=row.querySelector('a[href="#music"]');
-     const vote=hero.querySelector('.hero-vote');if(vote)vote.remove();
+     const actions=[...row.querySelectorAll('a')];actions.filter(a=>a.textContent.trim().toUpperCase()==='PRE-SAVE').forEach(a=>a.remove());
+     const listen=row.querySelector('a[href="#music"]');const vote=hero.querySelector('.hero-vote');if(vote)vote.remove();
      const presave=document.createElement('a');presave.id='hero-presave-link';presave.href='https://hyperfollow.com/lilsynnofficial';presave.target='_blank';presave.rel='noopener noreferrer';presave.className='inline-block bg-[#ff008f] hover:bg-[#ff4fd8] text-black font-bold px-8 py-3 rounded-xl transition-transform hover:scale-105';presave.textContent='PRE-SAVE';presave.setAttribute('aria-label','Pre-save LIL SYNN');
      const voteLink=document.createElement('a');voteLink.href='https://tinyurl.com/VOTE-LIL-SYNN';voteLink.target='_blank';voteLink.rel='noopener noreferrer';voteLink.className='inline-block bg-[#ff008f] hover:bg-[#ff4fd8] text-black font-bold px-8 py-3 rounded-xl transition-transform hover:scale-105';voteLink.textContent='VOTE 4 LIL SYNN';voteLink.setAttribute('aria-label','Vote for LIL SYNN');
      row.innerHTML='';if(listen)row.appendChild(listen);row.appendChild(presave);row.appendChild(voteLink);stack.style.display='block';row.style.display='flex';row.style.flexWrap='nowrap';row.style.justifyContent='center';row.style.alignItems='center';row.style.gap='.75rem';
