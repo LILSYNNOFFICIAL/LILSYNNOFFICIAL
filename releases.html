@@ -38,3 +38,4 @@ function applySort(){const mode=sorter.value;const items=[...grid.querySelectorA
 sorter.addEventListener('change',applySort);
 (async()=>{try{const [catalog,artResponse]=await Promise.all([fetch('/release-catalog.json?release_refresh='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('catalog');return r.json()}),fetch(ART_API+'&_='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():[])]);await loadAppleSongs();const files=artResponse.filter(x=>x.type==='file'&&/\.(jpg|png)$/i.test(x.name));await render(catalog,files)}catch(e){console.error('Release archive failed',e);grid.innerHTML='<div class="status">The release archive is temporarily unavailable. Please refresh the page.</div>'}})();
 </script></body></html>
+
