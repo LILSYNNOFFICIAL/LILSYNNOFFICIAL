@@ -1,15 +1,52 @@
 {
-  "generatedAt": "2026-09-01T00:00:00.000Z",
+  "generatedAt": "2026-09-03T22:35:44.805136+00:00",
   "source": "https://www.youtube.com/@LILSYNNOFFICIAL/releases",
+  "selection": "newest 9 channel uploads by publishedAt",
   "videos": [
-    {"id":"Glh5acZNiFM","title":"Rescue You (Acoustic Version)"},
-    {"id":"q_EENWIxiUA","title":"Somewhere In-Between"},
-    {"id":"vebiWy-RL4Y","title":"Black Glass"},
-    {"id":"JRJswRmhbmA","title":"Static On My Tongue"},
-    {"id":"NMFONDfJoi8","title":"It's In Her Eyes"},
-    {"id":"tfVl30iEMkg","title":"Fade Into You"},
-    {"id":"_1w0aG-lj8U","title":"Heal"},
-    {"id":"WejkZ945Jt8","title":"Back From The Blackout"},
-    {"id":"HX5EZCPsAxI","title":"Hindsight"}
+    {
+      "id": "GWP21LjBW3U",
+      "title": "HELLO GOODBYE by LIL SYNN is OUT NOW 🖤 Stream the new album today and experience every story!",
+      "publishedAt": "2026-07-31T15:50:27Z"
+    },
+    {
+      "id": "36l_PsGy4-I",
+      "title": "LIL SYNN - \"I Did It Again\" 💔 Dark Pop anthem about anger, regret & heartbreak. Coming soon.",
+      "publishedAt": "2026-07-28T20:49:36Z"
+    },
+    {
+      "id": "lOubV3ynquo",
+      "title": "LIL SYNN - BLACK GLASS (Official Visualizer) | Dark Pop with Hammered Dulcimer | Coming Soon",
+      "publishedAt": "2026-07-25T01:30:04Z"
+    },
+    {
+      "id": "3aAHFdGVgpI",
+      "title": "LIL SYNN - Somewhere Inbetween (Official Song #ComingSoon) | #Emotional #Electropop Anthem #NewMusic",
+      "publishedAt": "2026-07-23T13:54:33Z"
+    },
+    {
+      "id": "1g_4Yu5s1jk",
+      "title": "FEVER by LIL SYNN 🔥 A Christian anthem of faith, redemption & God's grace. Coming soon.",
+      "publishedAt": "2026-07-22T19:50:10Z"
+    },
+    {
+      "id": "fNMxFzp0K80",
+      "title": "HELLO GOODBYE ALBUM 04. GLASS HEART FREQUENCY #indiemusic #popmusic #newsong #undergroundartist",
+      "publishedAt": "2026-07-20T03:00:02Z"
+    },
+    {
+      "id": "75F2V8dUwEg",
+      "title": "👑 LIL SYNN — Hello Goodbye drops July 31st. Pre-save now: tinyurl.com/LIL-SYNN-HELLO-GOODBYE",
+      "publishedAt": "2026-07-19T04:07:01Z"
+    },
+    {
+      "id": "qzxtwEE9tXo",
+      "title": "👑 LIL SYNN — Hello Goodbye drops July 31st. Pre-save now: tinyurl.com/LIL-SYNN-HELLO-GOODBYE",
+      "publishedAt": "2026-07-19T04:06:20Z"
+    },
+    {
+      "id": "6jIZ2RdxvZ8",
+      "title": "👑 LIL SYNN — Hello Goodbye drops July 31st. Pre-save now: tinyurl.com/LIL-SYNN-HELLO-GOODBYE",
+      "publishedAt": "2026-07-19T04:04:54Z"
+    }
   ]
 }
