@@ -7,8 +7,7 @@
 [![Live Website](https://img.shields.io/badge/LIVE%20SITE-lilsynn.com-ff008f?style=for-the-badge&logo=vercel&logoColor=white)](https://lilsynn.com)
 [![GitHub](https://img.shields.io/badge/GITHUB-LILSYNNOFFICIAL-111111?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 [![YouTube](https://img.shields.io/badge/YOUTUBE-LIL%20SYNN-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@LILSYNNOFFICIAL)
-[![Spotify](https://img.shields.io/badge/SPOTIFY-LIL%20SYNN-1DB954?style=for-the-badge&logo=spotify&logoColor=white)](https://open.spotify.com/artist/0r7mQyqXv7QJ0jK5lQm3pF)
-[![Apple Music](https://img.shields.io/badge/APPLE%20MUSIC-LIL%20SYNN-FA243C?style=for-the-badge&logo=applemusic&logoColor=white)](https://music.apple.com/us/artist/lil-synn/1800000000)
+[![Vercel](https://img.shields.io/badge/DEPLOYED%20WITH-VERCEL-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 
 **The production repository for the official LIL SYNN digital experience.**
 
@@ -46,30 +45,35 @@ The project is **AI-assisted, but creatively directed by a human**. Lyrics, conc
 
 > **Production source of truth:** `main`
 
-The repository uses the `main` branch as the production source of truth. The site is deployed through Vercel.
-
 ---
 
-## ✦ The Website
+## ✦ Website Architecture
 
-**Live:** [lilsynn.com](https://lilsynn.com)
-
-The site is a custom static/serverless web experience rather than a generic artist template. Its systems are intentionally separated so that content can be updated without repeatedly rebuilding unrelated sections by hand.
+The site is a custom static/serverless web experience deployed through Vercel. It is intentionally organized around shared data sources and small, focused systems rather than duplicated content.
 
 ### Core pages
 
-- **`index.html`** — primary artist homepage.
-- **`releases.html`** — complete release archive.
-- **`special_access.html`** — restricted archive containing rare video material and unreleased/demo audio.
-- **`privacy.html`** — privacy/legal page.
+- `index.html` — primary artist homepage.
+- `releases.html` — complete release archive.
+- `special_access.html` — restricted archive and unreleased/demo media.
+- `privacy.html` — privacy/legal content.
 
-The homepage brings together the artist presentation, latest releases, randomized music discovery, automatically refreshed YouTube videos, calls to action, social links, navigation, footer/legal content, and supporting metadata.
+### Core supporting systems
+
+- `release-catalog.json` — canonical music/release database.
+- `music-random.js` — homepage randomized music discovery.
+- `latest-videos.json` — generated newest-nine video manifest.
+- `api/youtube.js` — serverless YouTube endpoint.
+- `.github/workflows/update-latest-videos.yml` — automated YouTube refresh.
+- `style.css` — global visual/responsive system.
+- `script.js` — core site interactions.
+- `site-polish.js` — supporting presentation/responsive behavior.
 
 ---
 
 ## ✦ Music Architecture
 
-One of the project's most important design decisions is keeping the **release catalog as the authoritative music database**.
+The **release catalog is the authoritative music database**.
 
 ```text
                     release-catalog.json
@@ -87,300 +91,238 @@ One of the project's most important design decisions is keeping the **release ca
 
 ### `release-catalog.json`
 
-The canonical structured database for releases and songs.
-
-It maintains relationships including:
-
-- Release ordering.
-- Albums, EPs, and singles.
-- Grouped tracklists.
-- Release-level Spotify destinations.
-- Individual `trackSpotify` destinations.
-- Parent-release relationships for individual tracks.
-- Artwork relationships used by both the archive and homepage Music section.
+The catalog maintains release ordering, release types, tracklists, artwork relationships, Spotify destinations, Apple Music destinations, individual track destinations, and parent-release relationships.
 
 ### `releases.html`
 
-The public release archive consumes the catalog and presents the music as a browsable library rather than a collection of disconnected cards.
-
-The intended workflow is simple: **update the catalog once, and the relevant music systems consume that data.**
+The public release archive consumes the catalog and presents releases, artwork, tracklists, and platform destinations.
 
 ### `music-random.js`
 
-Owns the homepage Music discovery system.
+The homepage Music system expands grouped releases into individual songs, preserves each song's parent artwork, builds the eligible pool, and randomizes the displayed selection. Music randomization is independent from Latest Videos.
 
-It expands grouped releases into individual songs, preserves each song's parent artwork, builds the eligible pool, and randomizes the displayed selection. The system provides direct song-level Spotify and Apple Music destinations where available.
+---
 
-**Important:** Music randomization applies to the Music section only. It does **not** randomize Latest Videos.
+## ✦ Release Management Convention
+
+For a new release, use this workflow:
+
+```text
+Upload artwork
+      ↓
+Add/update release-catalog.json
+      ↓
+Add Spotify + Apple Music destinations
+      ↓
+Verify artwork path/title
+      ↓
+Releases + homepage consume the catalog
+```
+
+### Release data should include, when applicable
+
+- Title.
+- Release type: single, EP, or album.
+- Release date/order.
+- Artwork path.
+- Spotify URL.
+- Apple Music URL.
+- Tracklist.
+- Individual track destinations.
+- Parent-release relationship.
+
+### Artwork convention
+
+Use unique, descriptive filenames under:
+
+```text
+assets/images/icons/album_art/
+```
+
+Examples of corrected/intentional artwork assets include:
+
+```text
+home_acoustic_version.png
+39_lil_synn_signal_light_sermon___remastered_2026.jpg
+```
+
+Do not reuse an ambiguous filename for multiple releases. If artwork changes, verify the catalog reference and all consumers before deleting or renaming the old asset.
 
 ---
 
 ## ✦ Latest Releases
 
-The homepage's **Latest Releases** presentation is driven from the site's release data rather than maintaining a separate manual homepage-only database.
+The homepage Latest Releases section is intended to be driven from the release catalog rather than a second manually maintained database.
 
-This is designed so that release updates can remain centralized and the homepage can reflect the current release catalog without unnecessary duplication.
+The current homepage design displays the **three latest releases**.
 
-Recent catalog work has included releases such as:
+Recent release work has included:
 
 - **HOME (ACOUSTIC VERSION)**
 - **I DID IT AGAIN**
 - **Signal Light Sermon**
 - **Rescue You (Acoustic Version)**
 
-Artwork is maintained under:
-
-```text
-assets/images/icons/album_art/
-```
-
-A corrected, explicitly named artwork asset for **HOME (ACOUSTIC VERSION)** is:
-
-```text
-assets/images/icons/album_art/home_acoustic_version.png
-```
-
-The project also maintains a dedicated remastered artwork asset for **Signal Light Sermon**:
-
-```text
-assets/images/icons/album_art/39_lil_synn_signal_light_sermon___remastered_2026.jpg
-```
+Release-specific Spotify and Apple Music buttons should retain the exact supplied destinations.
 
 ---
 
-## ✦ Latest Videos — Fully Automated
+## ✦ Latest Videos — Automated Newest 9
 
-The Latest Videos system evolved from an initial `yt-dlp` approach to a **YouTube Data API** architecture after GitHub Actions runners began receiving YouTube bot-detection responses.
+Latest Videos is deliberately chronological. It does **not** use the visual order of YouTube's Releases page.
 
-The current system avoids scraping YouTube pages and instead uses the official API.
-
-### Current flow
+The production system uses the YouTube Data API and `publishedAt` timestamps.
 
 ```text
 YouTube channel
-      │
-      ▼
+      ↓
 YouTube Data API
-      │
-      ▼
+      ↓
 Uploads playlist
-      │
-      ▼
-Published timestamps
-      │
-      ▼
+      ↓
+Video publication timestamps
+      ↓
 Sort newest → oldest
-      │
-      ▼
+      ↓
 Select newest 9
-      │
-      ▼
+      ↓
 latest-videos.json
-      │
-      ▼
+      ↓
 index.html
-      │
-      ▼
-Vercel production
+      ↓
+Vercel
 ```
 
-### GitHub Actions automation
+### Why the architecture changed
 
-The workflow is:
+The first implementation used `yt-dlp`. GitHub Actions eventually encountered YouTube bot protection (`Sign in to confirm you're not a bot`), so scraping was retired in favor of the official YouTube Data API.
+
+The API approach is the intended production architecture and should **not** be replaced with page scraping merely to solve a future indexing issue.
+
+### GitHub Actions workflow
 
 ```text
 .github/workflows/update-latest-videos.yml
 ```
 
-It runs:
+It is designed to:
 
-- On pushes to `main`.
-- On a schedule every 10 minutes.
-- Manually through GitHub Actions.
+1. Check out `main`.
+2. Read `YOUTUBE_API_KEY` from GitHub Actions secrets.
+3. Resolve the LIL SYNN YouTube channel.
+4. Resolve its uploads playlist.
+5. Retrieve video metadata.
+6. Sort by `publishedAt`.
+7. Keep the newest nine.
+8. Write `latest-videos.json`.
+9. Commit only when generated data changes.
+10. Push the update to `main` for the normal Vercel deployment pipeline.
 
-The workflow:
-
-1. Checks out `main`.
-2. Reads `YOUTUBE_API_KEY` from a GitHub Actions secret.
-3. Resolves the `@LILSYNNOFFICIAL` channel.
-4. Resolves its uploads playlist.
-5. Retrieves recent uploads through the YouTube Data API.
-6. Uses `publishedAt` for chronological ordering.
-7. Sorts newest → oldest.
-8. Selects the newest **9** videos.
-9. Writes `latest-videos.json`.
-10. Commits the refreshed manifest when content has changed.
-11. Pushes the update to `main`, allowing the normal production deployment pipeline to consume it.
-
-### Why this matters
-
-The video section no longer requires manually telling the site which videos are new. When a new LIL SYNN video appears on the channel, the scheduled workflow can discover it, compare publication timestamps, and roll the older entries out of the nine-video window automatically.
-
-This specifically addresses the situation where videos on YouTube's Releases page are not visually ordered perfectly by date: **the system uses the API's publication timestamp rather than trusting page order.**
+The workflow can run on schedule, on relevant pushes, and manually through GitHub Actions.
 
 ### Secret handling
 
-The YouTube API key is **not stored in source control**.
-
-The workflow expects:
+The key is stored as:
 
 ```text
 YOUTUBE_API_KEY
 ```
 
-as a GitHub Actions secret. The production/serverless environment can separately maintain its own `YOUTUBE_API_KEY` value for the website's API endpoint.
+in GitHub Actions secrets. Vercel may maintain its own `YOUTUBE_API_KEY` environment variable for serverless functionality.
+
+**Secret values must never be committed to this repository.**
 
 ---
 
 ## ✦ YouTube Serverless API
 
-The repository also contains:
+`api/youtube.js` provides the production site's serverless YouTube functionality using the deployment environment rather than a browser-exposed secret.
 
-```text
-api/youtube.js
-```
+`assets/youtube-fallback.json` provides deterministic fallback data when the live API cannot provide a usable response.
 
-This is the serverless YouTube endpoint used by the production site. It reads the API key from the deployment environment and provides the frontend with video data.
-
-The repository also maintains:
-
-```text
-assets/youtube-fallback.json
-```
-
-as a deterministic fallback source when the live YouTube API cannot provide a usable response.
-
-The fallback is intentionally **not randomized**.
+The systems have intentionally different responsibilities:
 
 ```text
 MUSIC              → randomized song discovery
-LATEST VIDEOS      → newest videos by publication date
-YOUTUBE FALLBACK   → deterministic backup list
+LATEST VIDEOS      → newest videos by published date
+YOUTUBE FALLBACK   → deterministic backup
 ```
-
-That separation is an important part of the site's architecture.
 
 ---
 
-## ✦ Special Access Archive
+## ✦ Special Access
 
-`special_access.html` contains a dedicated **UNRELEASED & DEMO** archive player.
+`special_access.html` contains the restricted **UNRELEASED & DEMO** library and **BLOOPERS & ALT SCENES** video section.
 
-The design evolved from an embedded Jumpshare player to a custom HTML5 audio library so the site controls the presentation rather than relying on third-party iframe embedding behavior.
+### Single-library audio player
 
-### Current archive library
+The unreleased/demo area uses **one compact library player**, not separate players for individual tracks.
 
-The player is a **single compact library player** containing:
+Current tracks:
 
-1. **BEFORE**
-2. **F 67**
-3. **OBLIVION**
-4. **RESET THE PIN**
-5. **TIES REMAIN ALT VERSION**
+1. BEFORE
+2. F 67
+3. OBLIVION
+4. RESET THE PIN
+5. TIES REMAIN ALT VERSION
 
-Current archive audio assets live in:
-
-```text
-assets/other/
-```
-
-including:
+Current source assets:
 
 ```text
-Before(1).mp3
-F 67.flac
-Oblivion_out.mp3
-Reset The Pin.flac
-Ties Remain2.mp3
+assets/other/Before(1).mp3
+assets/other/F 67.flac
+assets/other/Oblivion_out.mp3
+assets/other/Reset The Pin.flac
+assets/other/Ties Remain2.mp3
 ```
 
-The player supports:
+The player supports track selection, play/pause, seeking, volume, current-track display, queue advancement, and a compact professional presentation without exposing raw filenames as the primary UI.
 
-- One unified archive library.
-- Track selection.
-- Play/pause.
-- Progress seeking.
-- Volume control.
-- Current-track display.
-- Automatic advancement through the queue.
-- Compact presentation without exposing raw filenames in the UI.
-- Pink LIL SYNN visual treatment.
+### Media compatibility
 
-The same Special Access page also contains the **BLOOPERS & ALT SCENES** section, with the video centered within the page layout.
+For broad browser compatibility, **MP3 is preferred** for future web-playable archive tracks. FLAC browser support can vary. If a FLAC track fails in a target browser, provide a browser-friendly MP3/Opus derivative rather than redesigning the player.
+
+The Blooper/Alt Scenes video is centered under its heading.
 
 ---
 
 ## ✦ Navigation & Responsive UX
 
-The site has a custom responsive navigation system covering desktop and mobile layouts.
+The responsive system covers navigation, music tiles, release cards, video cards, CTAs, social controls, footer behavior, background video, reduced motion, and constrained mobile layouts.
 
-The primary navigation includes:
+The mobile hamburger menu has been intentionally given enough vertical space so its menu items remain fully visible and usable.
 
-- Home
-- Music
-- Releases
-- Videos
-- About
-- Merch
-- Lyrics
-- Contact
-- Socials
-
-On mobile, the hamburger menu is designed to provide enough vertical space for the menu items and to remain usable when the available viewport is smaller than the complete navigation content.
-
-The broader responsive system covers:
-
-- Music tiles.
-- Release cards.
-- Video cards.
-- Buttons and CTAs.
-- Social navigation.
-- Footer controls.
-- Background video behavior.
-- Artist/profile links.
-- Reduced-motion behavior.
-
----
-
-## ✦ Homepage CTAs
-
-The homepage has been intentionally simplified so the primary top-level calls to action remain clear:
+Homepage primary CTAs are:
 
 **LISTEN NOW · PRE-SAVE · VOTE 4 LIL SYNN**
 
-The duplicated Pre-Save CTA was removed so the top action row contains one of each primary action.
-
-Release-specific platform buttons use direct destinations where available. For example, release cards can expose both Spotify and Apple Music destinations rather than sending visitors through generic search pages.
+There should be only one Pre-Save CTA in that top action group.
 
 ---
 
-## ✦ Visual & Brand System
+## ✦ Visual System
 
-The site's visual language is built around a dark, cinematic interface with LIL SYNN's pink accent treatment.
+The brand uses a dark, cinematic interface with strong contrast and pink LIL SYNN accents.
 
-The design emphasizes:
+Design priorities include:
 
 - Dark backgrounds.
 - High-contrast typography.
-- Pink brand accents.
+- Pink accent treatment.
 - Cinematic media presentation.
 - Glass/dark card treatments.
-- Minimal but deliberate motion.
-- Strong section hierarchy.
-- Responsive presentation across desktop and mobile.
-
-The Special Access audio player follows the same visual language while remaining intentionally more compact and functional than the broader media cards.
+- Deliberate motion.
+- Strong hierarchy.
+- Responsive desktop/mobile presentation.
 
 ---
 
 ## ✦ SEO, Accessibility & Performance
 
-Production work includes:
-
 ### SEO
 
 - Canonical URLs.
-- Search-engine metadata.
+- Search metadata.
 - Open Graph/social sharing metadata.
 - JSON-LD structured data.
 - `robots.txt`.
@@ -389,21 +331,19 @@ Production work includes:
 ### Accessibility
 
 - Keyboard focus states.
-- Accessible control labels.
+- Accessible controls.
 - Navigation state handling.
 - Reduced-motion support.
-- Appropriate artwork/video alt text.
+- Appropriate media alt text.
 - Mobile-friendly navigation.
-- Reachable controls on constrained viewports.
 
 ### Performance
 
 - Lazy loading where appropriate.
-- Connection-aware background-video behavior.
+- Connection-aware video behavior.
 - Reduced-motion media handling.
-- `playsinline` handling for mobile video.
-- Lightweight media presentation.
-- API caching/controlled data retrieval where appropriate.
+- `playsinline` handling.
+- Controlled API retrieval/caching.
 
 ---
 
@@ -411,25 +351,18 @@ Production work includes:
 
 ```text
 LILSYNNOFFICIAL/
-├── .github/
-│   └── workflows/
-│       └── update-latest-videos.yml
-│
+├── .github/workflows/
+│   └── update-latest-videos.yml
 ├── api/
+│   ├── apple-art.js
+│   ├── art.js
+│   ├── latest-youtube-releases.js
+│   ├── spotify-art.js
 │   └── youtube.js
-│
 ├── assets/
-│   ├── images/
-│   │   └── icons/
-│   │       └── album_art/
+│   ├── images/icons/album_art/
 │   ├── other/
-│   │   ├── Before(1).mp3
-│   │   ├── F 67.flac
-│   │   ├── Oblivion_out.mp3
-│   │   ├── Reset The Pin.flac
-│   │   └── Ties Remain2.mp3
 │   └── youtube-fallback.json
-│
 ├── index.html
 ├── latest-videos.json
 ├── music-random.js
@@ -447,72 +380,180 @@ LILSYNNOFFICIAL/
 
 ---
 
-## ✦ Core Files at a Glance
+## ✦ Maintainer / Operations Guide
 
-| File | Responsibility |
-|---|---|
-| `index.html` | Homepage and primary artist experience |
-| `releases.html` | Public release archive |
-| `release-catalog.json` | Canonical music/release database |
-| `music-random.js` | Randomized homepage Music discovery |
-| `latest-videos.json` | Generated newest-video manifest |
-| `api/youtube.js` | Serverless YouTube endpoint |
-| `.github/workflows/update-latest-videos.yml` | Automated newest-9 YouTube refresh |
-| `special_access.html` | Restricted archive + unreleased/demo player |
-| `script.js` | Core homepage interactions |
-| `site-polish.js` | Supporting responsive/presentation behavior |
-| `style.css` | Global styling and responsive layout |
-| `assets/youtube-fallback.json` | Deterministic YouTube fallback |
-| `assets/images/icons/album_art/` | Release artwork |
+### Adding a new release
 
----
+1. Upload artwork.
+2. Add the release to `release-catalog.json`.
+3. Add Spotify and Apple Music destinations.
+4. Add tracks and track-level links where applicable.
+5. Verify the artwork filename and catalog reference.
+6. Check `releases.html` and the homepage after deployment.
 
-## ✦ Engineering Principles
+### Adding a new Special Access track
 
-Future changes should preserve these rules unless the architecture is intentionally being redesigned:
+1. Upload the file to `assets/other/`.
+2. Prefer MP3/Opus for browser compatibility.
+3. Register it in the existing single library player.
+4. Give it a clean display title.
+5. Test selection and playback.
 
-1. **One authoritative music database.** Keep release/song data in `release-catalog.json` rather than creating competing copies.
-2. **Music and video discovery are different systems.** Music can randomize; Latest Videos must remain chronological.
-3. **Latest Videos uses publication date.** Never rely on the visual order of YouTube's Releases page.
-4. **Keep the newest-video window at nine.** Older entries naturally fall away as newer uploads arrive.
-5. **Keep automation separate from presentation.** The GitHub workflow updates data; the homepage renders it.
-6. **Keep secrets out of source control.** API credentials belong in environment variables/secrets.
-7. **Preserve direct platform links.** Use the supplied Spotify/Apple destinations rather than silently replacing them with searches.
-8. **Keep artwork tied to the correct release.** Artwork is part of the release data relationship.
-9. **Avoid competing renderers.** A page section should have one authoritative rendering path.
-10. **Preserve responsive behavior.** Desktop fixes must not break mobile, and mobile fixes must not degrade desktop.
-11. **Prefer minimal, targeted production changes.** Existing working systems should remain intact when a change can be isolated.
-12. **Keep `main` as the production source of truth.** Avoid unnecessary parallel production branches.
+### Adding a YouTube release video
+
+Normally **do nothing** to the website. Publish the video to the LIL SYNN YouTube channel and allow the scheduled API workflow to discover it.
+
+The workflow should determine ordering from `publishedAt`, not from page position.
+
+### Artwork troubleshooting
+
+If artwork is wrong:
+
+1. Confirm the exact file in `assets/images/icons/album_art/`.
+2. Confirm the catalog reference.
+3. Search for duplicate/stale artwork references.
+4. Check browser/CDN caching.
+5. Do not delete a working asset until all references have been audited.
 
 ---
 
-## ✦ Deployment
+## ✦ Automation Failure & Recovery
 
-The production site is deployed through **Vercel** from the repository's `main` branch.
+### YouTube workflow fails
 
-The GitHub → Vercel flow is intentionally straightforward:
+Check the GitHub Actions run first.
+
+**Bot-detection error:** do not reintroduce `yt-dlp`; the intended solution is the YouTube Data API.
+
+**Missing/invalid API key:** verify the secret is named exactly:
+
+```text
+YOUTUBE_API_KEY
+```
+
+**API succeeds but site does not update:** check:
+
+```text
+GitHub Action passed
+        ↓
+latest-videos.json changed
+        ↓
+Commit pushed to main
+        ↓
+Vercel deployment triggered
+        ↓
+Production deployment READY
+        ↓
+Browser shows current data
+```
+
+Use **Actions → update latest videos → Run workflow** for manual recovery.
+
+---
+
+## ✦ Vercel & Deployment Notes
+
+Production is deployed from `main` through Vercel.
 
 ```text
 GitHub main
-    │
-    ├── normal site changes
-    │
-    └── automated latest-video manifest updates
-             │
-             ▼
-          Vercel
-             │
-             ▼
-      lilsynn.com production
+     ↓
+Vercel build
+     ↓
+Production
+     ↓
+lilsynn.com
 ```
 
-Vercel has produced successful production deployments for the current system.
+### Known non-blocking warning
 
-A known non-blocking Vercel warning may appear during builds:
+Vercel may report:
 
-> Node.js functions are compiled from ESM to CommonJS.
+> Node.js functions are compiled from ESM to CommonJS. If this is not intended, add "type": "module" to your package.json file.
 
-This is currently treated as a warning rather than a production failure. No project-wide `"type": "module"` change is intentionally introduced solely to silence it, because doing so without auditing every Node.js file could change module behavior.
+This is currently a **warning, not a build failure**.
+
+Do not blindly add `"type": "module"` solely to silence it. A project-wide module-format change can alter how JavaScript files are interpreted and could break existing functionality. The current passing production build is preferred over an unnecessary global module change.
+
+### GitHub Actions vs. Vercel
+
+These are separate layers:
+
+- GitHub Actions discovers and generates video data.
+- Vercel builds and deploys the website.
+
+A failed Actions run does not automatically mean the website is broken, and a Vercel build problem does not automatically mean the YouTube updater is broken.
+
+---
+
+## ✦ Environment & Secrets Inventory
+
+| Variable | Location | Purpose |
+|---|---|---|
+| `YOUTUBE_API_KEY` | GitHub Actions secret | Automated newest-nine updater |
+| `YOUTUBE_API_KEY` | Vercel environment | Serverless YouTube functionality |
+
+Secret values are intentionally absent from documentation and source control.
+
+---
+
+## ✦ Known Limitations & Technical Debt
+
+1. **Vercel ESM → CommonJS warning** — currently non-blocking.
+2. **YouTube API quota/availability** — automated discovery depends on API availability and authorization.
+3. **FLAC browser support** — varies; MP3/Opus is safer for web playback.
+4. **`latest-videos.json` is generated data** — normally do not edit it manually.
+5. **Fallback data can become stale** — it exists as a deterministic backup, not the primary source.
+
+Known limitations should be solved deliberately and locally, not through broad rewrites.
+
+---
+
+## ✦ Change-Control Rules
+
+This project contains interconnected production systems. Before changing anything:
+
+1. Identify the authoritative source.
+2. Identify every consumer.
+3. Make the smallest targeted change possible.
+4. Preserve existing records and functionality.
+5. Verify generated data.
+6. Verify the deployment.
+
+### Critical rules
+
+- **Never delete or reconstruct `release-catalog.json` from a partial list.** Add records while preserving the existing catalog.
+- Do not duplicate release data across multiple homepage-only databases.
+- Do not hard-code new YouTube videos into `index.html` when automation is working.
+- Do not put API credentials into source files.
+- Do not globally change module semantics to silence a warning without auditing the entire codebase.
+- Do not replace a major production file with a partial reconstruction.
+- Do not rename artwork without checking all references.
+- Do not create multiple Special Access players when the single-library architecture is intended.
+- Do not make desktop fixes that compromise mobile behavior.
+
+---
+
+## ✦ Changelog / Project Evolution
+
+### 2026
+
+- Established the LIL SYNN production website architecture.
+- Centralized music data in `release-catalog.json`.
+- Built the public release archive.
+- Built homepage Music randomization from catalog data.
+- Established Latest Releases as a catalog-driven presentation.
+- Added direct Spotify and Apple Music destinations.
+- Modernized Special Access into a custom library-style HTML5 audio player.
+- Added the current unreleased/demo library.
+- Improved mobile hamburger-menu sizing.
+- Centered the Special Access Blooper/Alt Scenes video.
+- Built Latest Videos automation for the newest nine videos.
+- Migrated Latest Videos from `yt-dlp` to the YouTube Data API after bot-detection failures.
+- Added `publishedAt`-based chronological sorting.
+- Added GitHub Actions secret-based API authentication.
+- Integrated generated video updates into the GitHub → Vercel deployment path.
+- Documented the non-blocking Vercel ESM/CommonJS warning.
 
 ---
 
@@ -522,74 +563,37 @@ LIL SYNN exists within a broader independent creative and technology ecosystem a
 
 Related projects and identities include:
 
-- **SYNTIENT RECORDS**
-- **SYNSTATIC**
-- **Ziggy and Chickenman**
-- **Chasing Quiet**
-- **The Lions Roar**
-- **SYNSOUND**
-- **BlueNote**
-- **Neurodivergent Helper**
-- **MARMalade**
-- **Neurosyn-Aeon**
-- **NR-PROMPT-ENGINEERING**
+- SYNTIENT RECORDS
+- SYNSTATIC
+- Ziggy and Chickenman
+- Chasing Quiet
+- The Lions Roar
+- SYNSOUND
+- BlueNote
+- Neurodivergent Helper
+- MARMalade
+- Neurosyn-Aeon
+- NR-PROMPT-ENGINEERING
 
 These projects span music, visual storytelling, AI-assisted creative work, software, prompt engineering, and experimental human-computer interaction.
 
 ---
 
-## ✦ Content Maintenance Workflow
+## ✦ Maintenance Philosophy
 
-For future releases, the intended maintenance model is:
+The guiding principle for this repository is:
 
-### Music
+> **Update the source once. Let the systems do the repetitive work.**
 
-```text
-Add/update release data
-        ↓
-release-catalog.json
-        ↓
-Releases + homepage Music consume it
-```
-
-### YouTube
-
-```text
-Publish video on LIL SYNN YouTube
-        ↓
-YouTube Data API discovers upload
-        ↓
-publishedAt determines order
-        ↓
-newest 9 selected automatically
-        ↓
-latest-videos.json updated
-        ↓
-Vercel deploys
-```
-
-### Artwork
-
-```text
-Upload artwork
-        ↓
-assets/images/icons/album_art/
-        ↓
-Associate artwork with correct catalog entry
-        ↓
-Releases + Music tiles use the same artwork relationship
-```
-
-The goal is simple: **update the source data once and let the site do the repetitive work.**
+Music belongs in the release catalog. YouTube discovery belongs in the API automation. Generated manifests should remain generated. Presentation should consume authoritative data. Production changes should be targeted, reversible, and verified.
 
 ---
 
 ## ✦ Live Resources
 
-- 🌐 **Website:** [lilsynn.com](https://lilsynn.com)
-- 🎵 **Releases:** [lilsynn.com/releases](https://lilsynn.com/releases)
-- ▶️ **YouTube:** [@LILSYNNOFFICIAL](https://www.youtube.com/@LILSYNNOFFICIAL)
-- 💻 **Repository:** [LILSYNNOFFICIAL/LILSYNNOFFICIAL](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
+- 🌐 [lilsynn.com](https://lilsynn.com)
+- ▶️ [LIL SYNN on YouTube](https://www.youtube.com/@LILSYNNOFFICIAL)
+- 💻 [LILSYNNOFFICIAL on GitHub](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 
 ---
 
