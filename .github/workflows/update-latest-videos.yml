@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          yt-dlp --skip-download --ignore-errors --no-warnings --flat-playlist=false --playlist-end 60 --dump-single-json 'https://www.youtube.com/@LILSYNNOFFICIAL/videos' > /tmp/videos.json
+          yt-dlp --skip-download --ignore-errors --no-warnings --playlist-end 60 --dump-single-json 'https://www.youtube.com/@LILSYNNOFFICIAL/videos' > /tmp/videos.json
           python - <<'PY'
           import json, pathlib
           from datetime import datetime, timezone
