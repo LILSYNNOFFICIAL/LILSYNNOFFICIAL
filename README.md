@@ -1,223 +1,318 @@
-# LIL SYNN — Official Website
+<div align="center">
 
-[![Website](https://img.shields.io/badge/Website-lilsynn.com-ff008f?style=for-the-badge)](https://lilsynn.com)
-[![Release Archive](https://img.shields.io/badge/Release%20Archive-lilsynn.com%2Freleases-111111?style=for-the-badge)](https://lilsynn.com/releases)
+# LIL SYNN
 
-The official website for **LIL SYNN**, an AI artist and AI persona from California's Central Valley. This repository contains the production website, release archive, music data, YouTube integration, artwork, responsive styling, accessibility behavior, and supporting site logic for **[lilsynn.com](https://lilsynn.com)**.
+### Official Website · Music · Visuals · Archive
 
-## Live Site
+[![Live Website](https://img.shields.io/badge/LIVE%20SITE-lilsynn.com-ff008f?style=for-the-badge&logo=vercel&logoColor=white)](https://lilsynn.com)
+[![GitHub](https://img.shields.io/badge/GITHUB-LILSYNNOFFICIAL-111111?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
+[![YouTube](https://img.shields.io/badge/YOUTUBE-LIL%20SYNN-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@LILSYNNOFFICIAL)
+[![Spotify](https://img.shields.io/badge/SPOTIFY-LIL%20SYNN-1DB954?style=for-the-badge&logo=spotify&logoColor=white)](https://open.spotify.com/artist/0r7mQyqXv7QJ0jK5lQm3pF)
+[![Apple Music](https://img.shields.io/badge/APPLE%20MUSIC-LIL%20SYNN-FA243C?style=for-the-badge&logo=applemusic&logoColor=white)](https://music.apple.com/us/artist/lil-synn/1800000000)
 
-- **Official website:** https://lilsynn.com
-- **Release archive:** https://lilsynn.com/releases
-- **Source repository:** https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL
+**The production repository for the official LIL SYNN digital experience.**
 
-The production website is maintained from the **`main` branch**. The repository no longer uses a separate backup branch as the production source of truth.
+Music • Visual storytelling • AI-assisted creativity • Interactive web design • Release automation
 
-## About LIL SYNN
+</div>
 
-LIL SYNN is an AI artist and AI persona built at the intersection of music, artificial intelligence, visual art, storytelling, and technology.
+---
 
-The persona is intentionally faceless and is designed to exist beyond the conventional boundaries of a traditional artist. LIL SYNN's identity carries across music, artwork, animation, video, storytelling, and an evolving creative mythology.
+## ✦ About
 
-The sound draws from dark pop, electropop, melodic trap, ambient R&B, emo rap, and electronic music. The project combines atmospheric production, melodic songwriting, and raw emotional expression while exploring themes such as love, heartbreak, identity, isolation, ambition, and darker aspects of the human experience.
+**LIL SYNN** is an AI artist and AI persona from California's Central Valley, built at the intersection of music, artificial intelligence, visual art, storytelling, and technology.
 
-The project is AI-assisted, but the creative direction is human. The creator writes and directs the lyrics, concepts, visual prompts, structure, emotional direction, production decisions, and broader creative identity behind LIL SYNN.
+The project is intentionally faceless and designed to exist beyond the conventional boundaries of a traditional artist. LIL SYNN's identity carries across music, artwork, animation, video, storytelling, and an evolving creative mythology.
 
-## What This Repository Does
+The sound draws from dark pop, electropop, melodic trap, ambient R&B, emo rap, and electronic music, combining atmospheric production, melodic songwriting, and raw emotional expression. Recurring themes include love, heartbreak, identity, isolation, ambition, and darker aspects of the human experience.
 
-This repository is the working production site for LIL SYNN. It is not a generic profile-page template: the files work together as a small static/serverless web application with a shared music database and a dedicated YouTube API endpoint.
+The project is **AI-assisted, but creatively directed by a human**. Lyrics, concepts, visual direction, prompts, structure, emotional direction, production decisions, and the broader creative identity are intentionally directed rather than delegated to an automated system.
 
-The site combines:
+---
 
-- Artist branding and biography content.
-- A responsive homepage and navigation system.
-- A structured release archive.
-- A shared music catalog used by both Releases and the homepage Music section.
-- Randomized individual-song discovery on the homepage.
-- A chronological Latest Videos section powered by YouTube.
-- A six-video fallback when the YouTube API is unavailable or rate-limited.
-- Direct Spotify and Apple Music destinations.
-- Release artwork and social-platform artwork.
-- Responsive desktop/mobile layouts.
-- SEO, Open Graph, structured data, accessibility, and performance enhancements.
-- Privacy and Terms pages.
-- Footer/legal/social navigation.
+## ✦ Production Status
 
-## Site Architecture
+| System | Status |
+|---|---|
+| Official website | 🟢 Production |
+| Vercel deployment | 🟢 Passing |
+| YouTube latest-video automation | 🟢 Operational |
+| YouTube Data API | 🟢 Operational |
+| Homepage music randomizer | 🟢 Operational |
+| Release catalog | 🟢 Operational |
+| Special Access archive | 🟢 Operational |
+| Responsive/mobile layout | 🟢 Active |
+| SEO / sharing metadata | 🟢 Active |
 
-### `index.html`
+> **Production source of truth:** `main`
 
-The primary LIL SYNN homepage and artist landing page.
+The repository uses the `main` branch as the production source of truth. The site is deployed through Vercel.
 
-The homepage contains the main hero, artist presentation, newest release area, Music discovery section, Latest Videos section, artist/platform links, navigation, footer, legal links, and supporting metadata.
+---
 
-### `releases.html`
+## ✦ The Website
 
-The complete public release archive.
+**Live:** [lilsynn.com](https://lilsynn.com)
 
-This page reads the site's release catalog and presents albums, EPs, and singles with their artwork, tracklists, platform links, and sorting controls.
+The site is a custom static/serverless web experience rather than a generic artist template. Its systems are intentionally separated so that content can be updated without repeatedly rebuilding unrelated sections by hand.
 
-The release archive is intentionally also the **music data source** used by the homepage Music section. The homepage should not maintain a separate duplicate song database.
+### Core pages
+
+- **`index.html`** — primary artist homepage.
+- **`releases.html`** — complete release archive.
+- **`special_access.html`** — restricted archive containing rare video material and unreleased/demo audio.
+- **`privacy.html`** — privacy/legal page.
+
+The homepage brings together the artist presentation, latest releases, randomized music discovery, automatically refreshed YouTube videos, calls to action, social links, navigation, footer/legal content, and supporting metadata.
+
+---
+
+## ✦ Music Architecture
+
+One of the project's most important design decisions is keeping the **release catalog as the authoritative music database**.
+
+```text
+                    release-catalog.json
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+        releases.html              music-random.js
+        Release Archive             Homepage Music
+              │                         │
+       Albums / EPs / Singles     Individual songs
+       Tracklists / artwork       Randomized selection
+       Platform links             Spotify + Apple
+                                    Parent artwork
+```
 
 ### `release-catalog.json`
 
-The canonical structured release database.
+The canonical structured database for releases and songs.
 
-It contains:
+It maintains relationships including:
 
-- The canonical release order.
-- Release groups and their types.
-- Album/EP tracklists.
+- Release ordering.
+- Albums, EPs, and singles.
+- Grouped tracklists.
 - Release-level Spotify destinations.
 - Individual `trackSpotify` destinations.
-- Relationships between individual songs and parent releases.
+- Parent-release relationships for individual tracks.
+- Artwork relationships used by both the archive and homepage Music section.
 
-Current grouped releases include:
+### `releases.html`
 
-- **Hello Goodbye** — Album
-- **Heal** — EP
-- **Black Glass** — EP
-- **Don't Say It** — EP
-- **Enough** — Album
+The public release archive consumes the catalog and presents the music as a browsable library rather than a collection of disconnected cards.
 
-Standalone releases are represented in the same catalog order.
-
-The catalog currently uses the newest-to-oldest sequence beginning with **Somewhere In-Between**, followed by **Black Glass**, **Hello Goodbye**, **Static On My Tongue**, **It's In Her Eyes**, **Fade Into You**, and the remaining releases in their established order.
+The intended workflow is simple: **update the catalog once, and the relevant music systems consume that data.**
 
 ### `music-random.js`
 
-Owns the homepage **Music** discovery system.
+Owns the homepage Music discovery system.
 
-Its job is to load the release catalog, expand grouped releases into individual songs, preserve the parent release artwork, shuffle the eligible song pool, and render the randomized Music tiles.
+It expands grouped releases into individual songs, preserves each song's parent artwork, builds the eligible pool, and randomizes the displayed selection. The system provides direct song-level Spotify and Apple Music destinations where available.
 
-The homepage Music system is deliberately separate from Latest Videos. The randomizer operates on the Music grid only and must never shuffle the YouTube grid.
+**Important:** Music randomization applies to the Music section only. It does **not** randomize Latest Videos.
 
-Each Music tile is designed to provide:
+---
 
-- Song title.
-- Associated release artwork.
-- Direct Spotify link to the individual song.
-- Direct Apple Music link to the individual song.
+## ✦ Latest Releases
 
-The Music feed is intended to change on refresh so visitors see different songs rather than the same fixed set on every page load.
+The homepage's **Latest Releases** presentation is driven from the site's release data rather than maintaining a separate manual homepage-only database.
 
-### `script.js`
+This is designed so that release updates can remain centralized and the homepage can reflect the current release catalog without unnecessary duplication.
 
-Core homepage behavior, including:
+Recent catalog work has included releases such as:
 
-- Background-video initialization and playback handling.
-- Reduced-motion handling.
-- Connection-aware background-video behavior.
-- Hamburger navigation behavior.
-- Social dropdown behavior.
-- Pre-save/listen call-to-action handling.
-- Latest YouTube video loading and rendering.
+- **HOME (ACOUSTIC VERSION)**
+- **I DID IT AGAIN**
+- **Signal Light Sermon**
+- **Rescue You (Acoustic Version)**
 
-The current architecture keeps the legacy Music renderer out of this file so the dedicated randomized Music system can remain the sole owner of the homepage Music grid.
-
-### `site-polish.js`
-
-Supporting site polish and production behavior, including responsive/accessibility improvements, footer/social restoration, layout enhancements, and related interaction behavior.
-
-The production baseline also uses this supporting layer for approved responsive and presentation improvements without making the core release catalog duplicate itself.
-
-### `style.css`
-
-Global styling and responsive behavior for the site, including typography, navigation, cards, buttons, release tiles, video tiles, footer layout, mobile breakpoints, focus states, and visual presentation.
-
-## Music Data Flow
-
-The intended data flow is:
-
-```text
-release-catalog.json
-        │
-        ├──► releases.html
-        │      └── release archive / album + EP tracklists
-        │
-        └──► music-random.js
-               └── randomized individual songs
-                      ├── Spotify track link
-                      ├── Apple Music track link
-                      └── parent release artwork
-```
-
-This design means the release archive is the authoritative music database. When releases or tracks are added or corrected, the catalog is the place where those data relationships belong.
-
-Album and EP tracks remain grouped together on the Releases page, but are split into individual song entries when the homepage Music section is rendered.
-
-## Spotify and Apple Music Links
-
-Direct platform destinations are preferred over search URLs.
-
-The catalog maintains direct Spotify destinations at both the release and individual-track levels. The `trackSpotify` map is the source used when a specific song needs its own Spotify button.
-
-Apple Music destinations are associated with the corresponding LIL SYNN artist catalog and are used for song-specific Music and Releases buttons.
-
-The repository also contains the current direct Spotify track URLs supplied for the LIL SYNN catalog, including the songs within the grouped releases and the standalone releases.
-
-## Latest Videos
-
-The **Watch Latest Videos / Music videos and visual stories from LIL SYNN** section is intentionally **not randomized**.
-
-It is a chronological YouTube feed representing LIL SYNN's recent videos.
-
-The serverless endpoint in `api/youtube.js`:
-
-- Reads the YouTube API key from `YOUTUBE_API_KEY`.
-- Targets the LIL SYNN YouTube channel.
-- Requests only videos.
-- Uses `order=date` so recent uploads arrive newest-first.
-- Requests a larger recent result set so the current top videos can be selected reliably.
-- Returns six videos to the homepage.
-
-The frontend displays those six entries in the order supplied by the endpoint. There is no Music-style shuffle applied to this section.
-
-### YouTube Fallback
-
-`assets/youtube-fallback.json` provides a repository-backed fallback catalog for when the live Google/YouTube API cannot provide a usable response, including rate-limit/API failure situations.
-
-The fallback is also deterministic: the homepage uses the first six entries rather than randomizing the fallback list.
-
-This preserves the intended distinction:
-
-```text
-MUSIC              → randomized songs
-LATEST VIDEOS      → newest YouTube videos
-```
-
-## Homepage Newest Release
-
-The homepage newest-release presentation follows the canonical release database order.
-
-The current newest release is **Somewhere In-Between**.
-
-The release presentation provides the appropriate artwork and direct platform actions, including Spotify and Apple Music, with a separate pre-save destination for upcoming releases where applicable.
-
-## Release Archive
-
-The Releases page is intended to be a complete, browsable archive rather than a collection of unrelated cards.
-
-It supports:
-
-- Albums.
-- EPs.
-- Singles.
-- Grouped tracklists.
-- Individual song entries.
-- Direct release and track platform links.
-- Release artwork.
-- Sorting/display controls.
-
-Artwork is maintained in:
+Artwork is maintained under:
 
 ```text
 assets/images/icons/album_art/
 ```
 
-Release artwork must stay associated with the correct catalog entry so the same database can drive both the release archive and homepage Music tiles.
+A corrected, explicitly named artwork asset for **HOME (ACOUSTIC VERSION)** is:
 
-## Navigation and Socials
+```text
+assets/images/icons/album_art/home_acoustic_version.png
+```
+
+The project also maintains a dedicated remastered artwork asset for **Signal Light Sermon**:
+
+```text
+assets/images/icons/album_art/39_lil_synn_signal_light_sermon___remastered_2026.jpg
+```
+
+---
+
+## ✦ Latest Videos — Fully Automated
+
+The Latest Videos system evolved from an initial `yt-dlp` approach to a **YouTube Data API** architecture after GitHub Actions runners began receiving YouTube bot-detection responses.
+
+The current system avoids scraping YouTube pages and instead uses the official API.
+
+### Current flow
+
+```text
+YouTube channel
+      │
+      ▼
+YouTube Data API
+      │
+      ▼
+Uploads playlist
+      │
+      ▼
+Published timestamps
+      │
+      ▼
+Sort newest → oldest
+      │
+      ▼
+Select newest 9
+      │
+      ▼
+latest-videos.json
+      │
+      ▼
+index.html
+      │
+      ▼
+Vercel production
+```
+
+### GitHub Actions automation
+
+The workflow is:
+
+```text
+.github/workflows/update-latest-videos.yml
+```
+
+It runs:
+
+- On pushes to `main`.
+- On a schedule every 10 minutes.
+- Manually through GitHub Actions.
+
+The workflow:
+
+1. Checks out `main`.
+2. Reads `YOUTUBE_API_KEY` from a GitHub Actions secret.
+3. Resolves the `@LILSYNNOFFICIAL` channel.
+4. Resolves its uploads playlist.
+5. Retrieves recent uploads through the YouTube Data API.
+6. Uses `publishedAt` for chronological ordering.
+7. Sorts newest → oldest.
+8. Selects the newest **9** videos.
+9. Writes `latest-videos.json`.
+10. Commits the refreshed manifest when content has changed.
+11. Pushes the update to `main`, allowing the normal production deployment pipeline to consume it.
+
+### Why this matters
+
+The video section no longer requires manually telling the site which videos are new. When a new LIL SYNN video appears on the channel, the scheduled workflow can discover it, compare publication timestamps, and roll the older entries out of the nine-video window automatically.
+
+This specifically addresses the situation where videos on YouTube's Releases page are not visually ordered perfectly by date: **the system uses the API's publication timestamp rather than trusting page order.**
+
+### Secret handling
+
+The YouTube API key is **not stored in source control**.
+
+The workflow expects:
+
+```text
+YOUTUBE_API_KEY
+```
+
+as a GitHub Actions secret. The production/serverless environment can separately maintain its own `YOUTUBE_API_KEY` value for the website's API endpoint.
+
+---
+
+## ✦ YouTube Serverless API
+
+The repository also contains:
+
+```text
+api/youtube.js
+```
+
+This is the serverless YouTube endpoint used by the production site. It reads the API key from the deployment environment and provides the frontend with video data.
+
+The repository also maintains:
+
+```text
+assets/youtube-fallback.json
+```
+
+as a deterministic fallback source when the live YouTube API cannot provide a usable response.
+
+The fallback is intentionally **not randomized**.
+
+```text
+MUSIC              → randomized song discovery
+LATEST VIDEOS      → newest videos by publication date
+YOUTUBE FALLBACK   → deterministic backup list
+```
+
+That separation is an important part of the site's architecture.
+
+---
+
+## ✦ Special Access Archive
+
+`special_access.html` contains a dedicated **UNRELEASED & DEMO** archive player.
+
+The design evolved from an embedded Jumpshare player to a custom HTML5 audio library so the site controls the presentation rather than relying on third-party iframe embedding behavior.
+
+### Current archive library
+
+The player is a **single compact library player** containing:
+
+1. **BEFORE**
+2. **F 67**
+3. **OBLIVION**
+4. **RESET THE PIN**
+5. **TIES REMAIN ALT VERSION**
+
+Current archive audio assets live in:
+
+```text
+assets/other/
+```
+
+including:
+
+```text
+Before(1).mp3
+F 67.flac
+Oblivion_out.mp3
+Reset The Pin.flac
+Ties Remain2.mp3
+```
+
+The player supports:
+
+- One unified archive library.
+- Track selection.
+- Play/pause.
+- Progress seeking.
+- Volume control.
+- Current-track display.
+- Automatic advancement through the queue.
+- Compact presentation without exposing raw filenames in the UI.
+- Pink LIL SYNN visual treatment.
+
+The same Special Access page also contains the **BLOOPERS & ALT SCENES** section, with the video centered within the page layout.
+
+---
+
+## ✦ Navigation & Responsive UX
+
+The site has a custom responsive navigation system covering desktop and mobile layouts.
 
 The primary navigation includes:
 
@@ -231,149 +326,199 @@ The primary navigation includes:
 - Contact
 - Socials
 
-The Socials section includes the site's established social/community destinations, including YouTube, Spotify, Apple Music, Instagram, X, SoundCloud, TikTok, Facebook, Discord, and GitHub.
+On mobile, the hamburger menu is designed to provide enough vertical space for the menu items and to remain usable when the available viewport is smaller than the complete navigation content.
 
-The artist profile area also includes the LIL SYNN Tidal profile.
+The broader responsive system covers:
 
-The navigation uses the hamburger pattern on mobile and includes a dedicated scrollable social area so the complete navigation remains accessible on smaller screens.
-
-## Footer and Legal Navigation
-
-The site footer includes the approved social SVG buttons and legal navigation.
-
-Current legal pages include:
-
-- `privacy.html`
-- Terms page
-
-The footer/social artwork is intended to remain visible and usable on both desktop and mobile layouts.
-
-## Responsive Design
-
-Desktop and mobile are both supported as production layouts.
-
-Responsive behavior covers:
-
-- Homepage content sections.
 - Music tiles.
-- Release tiles.
-- Video tiles.
-- Navigation and hamburger menu.
-- Social/follow buttons.
-- Footer SVG buttons.
-- Artist/profile links.
+- Release cards.
+- Video cards.
+- Buttons and CTAs.
+- Social navigation.
+- Footer controls.
 - Background video behavior.
+- Artist/profile links.
+- Reduced-motion behavior.
 
-The mobile navigation is designed to use the available viewport height rather than being constrained by the desktop navigation height, and its content area can scroll when necessary.
+---
 
-## Accessibility
+## ✦ Homepage CTAs
 
-The site includes production accessibility work such as:
+The homepage has been intentionally simplified so the primary top-level calls to action remain clear:
 
-- Keyboard focus states.
-- Accessible button labels.
-- Accessible navigation state changes.
-- Reduced-motion support.
-- Alt text for artwork/video images where applicable.
-- Usable controls across desktop and mobile layouts.
-- Navigation and social areas that remain reachable when content exceeds the mobile viewport.
+**LISTEN NOW · PRE-SAVE · VOTE 4 LIL SYNN**
 
-## Performance and Media Handling
+The duplicated Pre-Save CTA was removed so the top action row contains one of each primary action.
 
-The site includes performance-conscious media handling, including:
+Release-specific platform buttons use direct destinations where available. For example, release cards can expose both Spotify and Apple Music destinations rather than sending visitors through generic search pages.
 
-- Lazy loading for appropriate images/video thumbnails.
-- Lightweight video placeholders before playback.
-- `playsinline` handling for mobile video.
-- Reduced-motion handling for the background video.
-- Connection-aware background-video behavior.
-- API caching controls where appropriate.
+---
 
-The intention is to preserve LIL SYNN's visual identity without forcing unnecessary heavy media work on constrained mobile connections.
+## ✦ Visual & Brand System
 
-## SEO and Sharing
+The site's visual language is built around a dark, cinematic interface with LIL SYNN's pink accent treatment.
 
-The production site includes work for:
+The design emphasizes:
 
+- Dark backgrounds.
+- High-contrast typography.
+- Pink brand accents.
+- Cinematic media presentation.
+- Glass/dark card treatments.
+- Minimal but deliberate motion.
+- Strong section hierarchy.
+- Responsive presentation across desktop and mobile.
+
+The Special Access audio player follows the same visual language while remaining intentionally more compact and functional than the broader media cards.
+
+---
+
+## ✦ SEO, Accessibility & Performance
+
+Production work includes:
+
+### SEO
+
+- Canonical URLs.
 - Search-engine metadata.
 - Open Graph/social sharing metadata.
 - JSON-LD structured data.
 - `robots.txt`.
 - `sitemap.xml`.
-- Canonical production URLs.
 
-These elements are maintained as part of the website rather than treated as separate documentation-only assets.
+### Accessibility
 
-## Serverless API
+- Keyboard focus states.
+- Accessible control labels.
+- Navigation state handling.
+- Reduced-motion support.
+- Appropriate artwork/video alt text.
+- Mobile-friendly navigation.
+- Reachable controls on constrained viewports.
 
-The `api/` directory contains the YouTube serverless endpoint.
+### Performance
 
-```text
-api/
-└── youtube.js
-```
+- Lazy loading where appropriate.
+- Connection-aware background-video behavior.
+- Reduced-motion media handling.
+- `playsinline` handling for mobile video.
+- Lightweight media presentation.
+- API caching/controlled data retrieval where appropriate.
 
-The endpoint is designed for Vercel-style serverless deployment and requires the `YOUTUBE_API_KEY` environment variable in production.
+---
 
-No YouTube API key is stored in the repository.
-
-## Repository Layout
+## ✦ Repository Structure
 
 ```text
 LILSYNNOFFICIAL/
-└── LILSYNNOFFICIAL/
-    ├── api/
-    │   └── youtube.js
-    ├── assets/
-    │   ├── images/
-    │   │   └── icons/
-    │   │       └── album_art/
-    │   └── youtube-fallback.json
-    ├── DEPLOYMENT-REVISION.md
-    ├── index.html
-    ├── music-random.js
-    ├── privacy.html
-    ├── release-catalog.json
-    ├── releases.html
-    ├── robots.txt
-    ├── script.js
-    ├── site-polish.js
-    ├── sitemap.xml
-    └── style.css
+├── .github/
+│   └── workflows/
+│       └── update-latest-videos.yml
+│
+├── api/
+│   └── youtube.js
+│
+├── assets/
+│   ├── images/
+│   │   └── icons/
+│   │       └── album_art/
+│   ├── other/
+│   │   ├── Before(1).mp3
+│   │   ├── F 67.flac
+│   │   ├── Oblivion_out.mp3
+│   │   ├── Reset The Pin.flac
+│   │   └── Ties Remain2.mp3
+│   └── youtube-fallback.json
+│
+├── index.html
+├── latest-videos.json
+├── music-random.js
+├── privacy.html
+├── release-catalog.json
+├── releases.html
+├── robots.txt
+├── script.js
+├── site-polish.js
+├── sitemap.xml
+├── special_access.html
+├── style.css
+└── DEPLOYMENT-REVISION.md
 ```
 
-## Production Deployment
+---
 
-The website is deployed for production from **`main`**.
+## ✦ Core Files at a Glance
 
-The repository's production source of truth is:
+| File | Responsibility |
+|---|---|
+| `index.html` | Homepage and primary artist experience |
+| `releases.html` | Public release archive |
+| `release-catalog.json` | Canonical music/release database |
+| `music-random.js` | Randomized homepage Music discovery |
+| `latest-videos.json` | Generated newest-video manifest |
+| `api/youtube.js` | Serverless YouTube endpoint |
+| `.github/workflows/update-latest-videos.yml` | Automated newest-9 YouTube refresh |
+| `special_access.html` | Restricted archive + unreleased/demo player |
+| `script.js` | Core homepage interactions |
+| `site-polish.js` | Supporting responsive/presentation behavior |
+| `style.css` | Global styling and responsive layout |
+| `assets/youtube-fallback.json` | Deterministic YouTube fallback |
+| `assets/images/icons/album_art/` | Release artwork |
+
+---
+
+## ✦ Engineering Principles
+
+Future changes should preserve these rules unless the architecture is intentionally being redesigned:
+
+1. **One authoritative music database.** Keep release/song data in `release-catalog.json` rather than creating competing copies.
+2. **Music and video discovery are different systems.** Music can randomize; Latest Videos must remain chronological.
+3. **Latest Videos uses publication date.** Never rely on the visual order of YouTube's Releases page.
+4. **Keep the newest-video window at nine.** Older entries naturally fall away as newer uploads arrive.
+5. **Keep automation separate from presentation.** The GitHub workflow updates data; the homepage renders it.
+6. **Keep secrets out of source control.** API credentials belong in environment variables/secrets.
+7. **Preserve direct platform links.** Use the supplied Spotify/Apple destinations rather than silently replacing them with searches.
+8. **Keep artwork tied to the correct release.** Artwork is part of the release data relationship.
+9. **Avoid competing renderers.** A page section should have one authoritative rendering path.
+10. **Preserve responsive behavior.** Desktop fixes must not break mobile, and mobile fixes must not degrade desktop.
+11. **Prefer minimal, targeted production changes.** Existing working systems should remain intact when a change can be isolated.
+12. **Keep `main` as the production source of truth.** Avoid unnecessary parallel production branches.
+
+---
+
+## ✦ Deployment
+
+The production site is deployed through **Vercel** from the repository's `main` branch.
+
+The GitHub → Vercel flow is intentionally straightforward:
 
 ```text
-main
+GitHub main
+    │
+    ├── normal site changes
+    │
+    └── automated latest-video manifest updates
+             │
+             ▼
+          Vercel
+             │
+             ▼
+      lilsynn.com production
 ```
 
-The prior backup branch has been removed. Do not create parallel production branches unless there is a specific documented reason to do so.
+Vercel has produced successful production deployments for the current system.
 
-`DEPLOYMENT-REVISION.md` records the approved production baseline and the single-branch production model.
+A known non-blocking Vercel warning may appear during builds:
 
-## Content and Engineering Rules
+> Node.js functions are compiled from ESM to CommonJS.
 
-The website depends on a few architectural rules that should be preserved during future maintenance:
+This is currently treated as a warning rather than a production failure. No project-wide `"type": "module"` change is intentionally introduced solely to silence it, because doing so without auditing every Node.js file could change module behavior.
 
-1. **Do not create a second music database.** `release-catalog.json` is the authoritative release/song source.
-2. **Randomization belongs only to homepage Music.** Do not apply the Music shuffle to Latest Videos.
-3. **Latest Videos stays newest-first.** It is a recent YouTube feed, not a discovery shuffle.
-4. **Keep the six-video YouTube fallback deterministic.** Its purpose is availability during API failure/rate limiting.
-5. **Use direct platform destinations.** Do not silently replace a direct song/release URL with a search page.
-6. **Keep album/EP structure intact on Releases.** Split tracks only when rendering the homepage Music discovery cards.
-7. **Keep artwork tied to the correct release.** Artwork is part of the music data relationship, not a decorative afterthought.
-8. **Preserve desktop and mobile behavior together.** Responsive changes should work at both sizes.
-9. **Avoid competing renderers.** A single section should have one authoritative renderer so separate scripts cannot overwrite each other's output.
-10. **Keep secrets out of source control.** The YouTube API key belongs in the deployment environment.
+---
 
-## Related Creative and Technology Projects
+## ✦ Related Creative / Technology Ecosystem
 
-The LIL SYNN site is part of a larger independent creative and technology ecosystem associated with Neurosyn-Dev.
+LIL SYNN exists within a broader independent creative and technology ecosystem associated with **Neurosyn-Dev**.
 
 Related projects and identities include:
 
@@ -391,16 +536,75 @@ Related projects and identities include:
 
 These projects span music, visual storytelling, AI-assisted creative work, software, prompt engineering, and experimental human-computer interaction.
 
-## Contact
+---
 
-Website/project contact:
+## ✦ Content Maintenance Workflow
+
+For future releases, the intended maintenance model is:
+
+### Music
+
+```text
+Add/update release data
+        ↓
+release-catalog.json
+        ↓
+Releases + homepage Music consume it
+```
+
+### YouTube
+
+```text
+Publish video on LIL SYNN YouTube
+        ↓
+YouTube Data API discovers upload
+        ↓
+publishedAt determines order
+        ↓
+newest 9 selected automatically
+        ↓
+latest-videos.json updated
+        ↓
+Vercel deploys
+```
+
+### Artwork
+
+```text
+Upload artwork
+        ↓
+assets/images/icons/album_art/
+        ↓
+Associate artwork with correct catalog entry
+        ↓
+Releases + Music tiles use the same artwork relationship
+```
+
+The goal is simple: **update the source data once and let the site do the repetitive work.**
+
+---
+
+## ✦ Live Resources
+
+- 🌐 **Website:** [lilsynn.com](https://lilsynn.com)
+- 🎵 **Releases:** [lilsynn.com/releases](https://lilsynn.com/releases)
+- ▶️ **YouTube:** [@LILSYNNOFFICIAL](https://www.youtube.com/@LILSYNNOFFICIAL)
+- 💻 **Repository:** [LILSYNNOFFICIAL/LILSYNNOFFICIAL](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
+
+---
+
+## ✦ Contact
 
 **synovamedia@gmail.com**
 
-## Project Status
+---
 
-This repository represents the working production baseline for the official LIL SYNN website.
+<div align="center">
 
-The repository currently contains the production homepage, responsive navigation, music/release data architecture, direct platform linking, randomized homepage Music discovery, chronological YouTube Latest Videos, six-video API fallback, artwork system, footer/social navigation, legal pages, and supporting SEO/accessibility/performance work.
+### LIL SYNN
 
-For the live experience, visit **https://lilsynn.com**.
+**The signal is alive.**
+
+© 2026 LIL SYNN
+
+</div>
