@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["Discord", "https://discord.gg/ZUVsHuCAv"],
       ["GitHub", "https://github.com/orgs/Neurosyn-Dev/repositories"]
     ];
-    const makeGroup = (id, label, links, scrollable = false, showArrow = false) => {
+    const makeGroup = (id, label, links, scrollable = false) => {
       const group = document.createElement("div");
       group.className = "nav-library-group";
       const button = document.createElement("button");
@@ -68,12 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("aria-expanded", "false");
       button.setAttribute("aria-controls", id);
       button.textContent = label;
-      if (showArrow) {
-        const arrow = document.createElement("span");
-        arrow.setAttribute("aria-hidden", "true");
-        arrow.textContent = "▼";
-        button.appendChild(arrow);
-      }
       const list = document.createElement("div");
       list.id = id;
       list.className = `hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']${scrollable ? " nav-scroll-library" : ""}`;
@@ -92,16 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const open = list.classList.contains("hidden");
         list.classList.toggle("hidden", !open);
         button.setAttribute("aria-expanded", String(open));
-        if (showArrow) {
-          const arrow = button.querySelector("span");
-          if (arrow) arrow.textContent = open ? "▲" : "▼";
-        }
       });
       group.append(button, list);
       return group;
     };
-    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true, false);
-    const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false, false);
+    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true);
+    const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false);
     legacyGroup.replaceChildren(streamGroup);
     const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
     if (videosLink) videosLink.after(socialsGroup, streamGroup);
@@ -126,66 +116,155 @@ document.addEventListener("DOMContentLoaded", () => {
     videoGrid.querySelectorAll('.youtube-card').forEach(card => card.querySelector('.youtube-play-overlay')?.addEventListener('click', () => { const id=card.dataset.videoId,title=card.dataset.videoTitle,iframe=document.createElement('iframe'); iframe.title=`LIL SYNN — ${title}`; iframe.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1`; iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share'; iframe.allowFullscreen=true; iframe.referrerPolicy='strict-origin-when-cross-origin'; iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000'; card.innerHTML=''; card.appendChild(iframe); }));
   }
 
-  // HOMEPAGE SECTION RHYTHM — top and bottom are light; every section between is darker.
-  // Inject after the old inline alternating rule so this final rule wins the cascade.
   const rhythmStyle = document.createElement("style");
   rhythmStyle.id = "homepage-rhythm-final";
   rhythmStyle.textContent = `
-    #home,
-    #contact {
-      background: rgba(128, 128, 128, 0.18) !important;
-    }
-    #presave,
-    #music,
-    #videos,
-    #about,
-    #merch,
-    #signal {
-      background: rgba(8, 8, 8, 0.62) !important;
-    }
+    #home, #contact { background: rgba(128,128,128,.18) !important; }
+    #presave, #music, #videos, #about, #merch, #signal { background: rgba(8,8,8,.62) !important; border-top:0 !important; border-bottom:0 !important; box-shadow:none !important; outline:0 !important; }
+    #presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after { border:0 !important; box-shadow:none !important; background:transparent !important; }
+    #presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal { border-top:0 !important; }
   `;
   document.head.appendChild(rhythmStyle);
 
-  // DARK CONTENT BAND — all middle homepage sections share the same dark surface.
-  // Remove seams/borders between those sections while preserving the light hero and contact/footer treatment.
   const darkBandStyle = document.createElement("style");
   darkBandStyle.id = "homepage-dark-band-final";
   darkBandStyle.textContent = `
-    #presave,
-    #music,
-    #videos,
-    #about,
-    #merch,
-    #signal {
-      background: rgba(8, 8, 8, 0.62) !important;
-      border-top: 0 !important;
-      border-bottom: 0 !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-    }
-    #presave::before,
-    #presave::after,
-    #music::before,
-    #music::after,
-    #videos::before,
-    #videos::after,
-    #about::before,
-    #about::after,
-    #merch::before,
-    #merch::after,
-    #signal::before,
-    #signal::after {
-      border: 0 !important;
-      box-shadow: none !important;
-      background: transparent !important;
-    }
-    #presave + #music,
-    #music + #videos,
-    #videos + #about,
-    #about + #merch,
-    #merch + #signal {
-      border-top: 0 !important;
-    }
+    #presave,#music,#videos,#about,#merch,#signal { background:rgba(8,8,8,.62) !important; border-top:0 !important; border-bottom:0 !important; box-shadow:none !important; outline:0 !important; }
   `;
   document.head.appendChild(darkBandStyle);
+});
+
+/* Approved homepage visual system: translucent HUD-style headers + local random-song refresh. */
+document.addEventListener("DOMContentLoaded", () => {
+  const style = document.createElement("style");
+  style.id = "lil-synn-hud-headers";
+  style.textContent = `
+    .hud-section-heading {
+      position:relative;
+      margin:0 auto 2.25rem;
+      width:min(100%, 860px);
+      padding:1.15rem 1.35rem 1.25rem;
+      border:1px solid rgba(255,0,143,.22);
+      border-radius:1.35rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,0,143,.035) 48%,rgba(0,0,0,.34));
+      box-shadow:0 14px 45px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.035);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      overflow:hidden;
+    }
+    .hud-section-heading::before {
+      content:"";position:absolute;left:18%;right:18%;top:0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,0,143,.6),transparent);
+      opacity:.65;
+    }
+    .hud-section-heading .section-kicker { margin-bottom:.35rem; }
+    .hud-section-heading h2,.hud-section-heading h3 { margin-top:0; }
+    .hud-section-heading .section-subtitle { margin-top:.55rem; }
+    .hud-release-heading {
+      width:min(100%,900px);margin:0 auto 1.5rem;padding:1rem 1.25rem;border-radius:1.35rem;
+      border:1px solid rgba(255,0,143,.22);background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(0,0,0,.3));
+      box-shadow:0 14px 45px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.03);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    }
+    .hud-release-heading .section-kicker { margin-bottom:.35rem; }
+    .discover-panel {
+      position:relative;margin:0 auto 2rem;width:min(100%,860px);padding:1.25rem 1.35rem 1.35rem;text-align:center;
+      border:1px solid rgba(255,0,143,.25);border-radius:1.45rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,0,143,.045),rgba(0,0,0,.38));
+      box-shadow:0 18px 55px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow:hidden;
+    }
+    .discover-panel::before { content:"";position:absolute;top:0;left:25%;right:25%;height:1px;background:rgba(255,0,143,.7);box-shadow:0 0 18px rgba(255,0,143,.35); }
+    .discover-panel-kicker { font:700 .72rem Orbitron,sans-serif;letter-spacing:.25em;color:#ff008f;text-transform:uppercase; }
+    .discover-panel h3 { margin:.45rem 0 .35rem;font:700 clamp(1.25rem,3vw,2rem) Orbitron,sans-serif;letter-spacing:.08em;color:#fff; }
+    .discover-panel p { margin:0;color:#aaa;font:400 1.08rem Rajdhani,sans-serif;letter-spacing:.025em; }
+    .random-song-refresh { display:inline-flex;align-items:center;justify-content:center;margin-top:1rem;padding:.78rem 1.3rem;border:1px solid rgba(255,0,143,.5);border-radius:.8rem;background:#ff008f;color:#050505;font:700 .82rem Orbitron,sans-serif;letter-spacing:.07em;cursor:pointer;transition:transform .2s ease,background-color .2s ease,box-shadow .2s ease; }
+    .random-song-refresh:hover,.random-song-refresh:focus-visible { background:#ff4fd8;transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,0,143,.2); }
+    .random-song-refresh[aria-busy="true"] { opacity:.7;cursor:wait;transform:none; }
+    @media(max-width:640px){
+      .hud-section-heading,.hud-release-heading,.discover-panel{padding:1rem .9rem;border-radius:1.1rem;}
+      .discover-panel p{font-size:1rem;}
+      .random-song-refresh{width:100%;max-width:320px;}
+    }
+  `;
+  document.head.appendChild(style);
+
+  const wrapHeading = (selector, target = null, className = "hud-section-heading") => {
+    const heading = document.querySelector(selector);
+    if (!heading || heading.closest(`.${className}`)) return null;
+    const wrapper = document.createElement("div");
+    wrapper.className = className;
+    heading.parentNode.insertBefore(wrapper, heading);
+    wrapper.appendChild(heading);
+    if (target) {
+      const extra = document.querySelector(target);
+      if (extra && extra !== heading && !wrapper.contains(extra)) wrapper.appendChild(extra);
+    }
+    return wrapper;
+  };
+
+  const presave = document.getElementById("presave");
+  if (presave) {
+    const inner = presave.querySelector(":scope > div");
+    const kicker = inner?.querySelector(":scope > .section-kicker");
+    const h2 = inner?.querySelector(":scope > h2");
+    const sub = inner?.querySelector(":scope > p.font-\\['Rajdhani'\\]");
+    if (kicker && h2 && !inner.querySelector(".hud-release-heading")) {
+      const panel = document.createElement("div");
+      panel.className = "hud-release-heading";
+      panel.append(kicker, h2);
+      if (sub) panel.append(sub);
+      inner.insertBefore(panel, inner.firstChild);
+    }
+  }
+
+  wrapHeading("#music .section-heading");
+  wrapHeading("#videos .section-heading");
+
+  ["#about", "#merch", "#signal", "#contact"].forEach(sectionSelector => {
+    const section = document.querySelector(sectionSelector);
+    if (!section) return;
+    const container = section.querySelector(":scope > div");
+    if (!container || container.querySelector(":scope > .hud-section-heading")) return;
+    const kicker = container.querySelector(":scope > .section-kicker");
+    const heading = container.querySelector(":scope > h2");
+    if (!kicker || !heading) return;
+    const panel = document.createElement("div");
+    panel.className = "hud-section-heading";
+    panel.append(kicker, heading);
+    const subtitle = Array.from(container.children).find(el => el.classList?.contains("section-subtitle"));
+    if (subtitle) panel.append(subtitle);
+    container.insertBefore(panel, container.firstChild);
+  });
+
+  const music = document.getElementById("music");
+  const grid = document.getElementById("music-grid");
+  if (music && grid && !document.getElementById("discover-lil-synn")) {
+    const panel = document.createElement("div");
+    panel.id = "discover-lil-synn";
+    panel.className = "discover-panel";
+    panel.innerHTML = `<div class="discover-panel-kicker">THE SIGNAL</div><h3>DISCOVER LIL SYNN</h3><p>Let the signal choose. Explore the catalog and discover a track at random.</p><button type="button" class="random-song-refresh" id="random-song-refresh" aria-label="Refresh random songs">RANDOM SONG REFRESH</button>`;
+    grid.parentNode.insertBefore(panel, grid);
+    const button = panel.querySelector("#random-song-refresh");
+    button.addEventListener("click", () => {
+      if (typeof window.lilSynnRefreshMusic !== "function") return;
+      button.setAttribute("aria-busy", "true");
+      button.disabled = true;
+      window.lilSynnRefreshMusic();
+      setTimeout(() => { button.removeAttribute("aria-busy"); button.disabled = false; }, 350);
+    });
+  }
+
+  const spotify = document.querySelector("#music .spotify-player");
+  if (spotify && !spotify.querySelector(".hud-section-heading")) {
+    const header = spotify.querySelector(":scope > div.text-center");
+    if (header) {
+      const panel = document.createElement("div");
+      panel.className = "hud-section-heading";
+      while (header.firstChild) panel.appendChild(header.firstChild);
+      header.replaceWith(panel);
+    }
+  }
+
+  const latestKicker = document.querySelector("#presave .hud-release-heading .section-kicker");
+  if (latestKicker) latestKicker.textContent = "LATEST RELEASES";
 });
