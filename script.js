@@ -125,4 +125,24 @@ document.addEventListener("DOMContentLoaded", () => {
     videoGrid.innerHTML = videos.map(([title,id]) => `<article class="glass rounded-3xl overflow-hidden border border-[#ff008f]/30 hover:border-[#ff4fd8]"><div class="relative youtube-card" data-video-id="${id}" data-video-title="${title}" style="aspect-ratio:16/9;background:#000;overflow:hidden"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="${title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" loading="lazy" decoding="async"><button type="button" class="youtube-play-overlay" aria-label="Play ${title}" style="position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:transparent;border:0;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:999px;background:rgba(255,0,143,.94);box-shadow:0 0 28px rgba(255,0,143,.55);color:#fff;font-size:30px;padding-left:5px">▶</span></button></div><div class="p-4 text-sm font-['Rajdhani'] text-center">${title}</div></article>`).join('');
     videoGrid.querySelectorAll('.youtube-card').forEach(card => card.querySelector('.youtube-play-overlay')?.addEventListener('click', () => { const id=card.dataset.videoId,title=card.dataset.videoTitle,iframe=document.createElement('iframe'); iframe.title=`LIL SYNN — ${title}`; iframe.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1`; iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share'; iframe.allowFullscreen=true; iframe.referrerPolicy='strict-origin-when-cross-origin'; iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000'; card.innerHTML=''; card.appendChild(iframe); }));
   }
+
+  // HOMEPAGE SECTION RHYTHM — top and bottom are light; every section between is darker.
+  // Inject after the old inline alternating rule so this final rule wins the cascade.
+  const rhythmStyle = document.createElement("style");
+  rhythmStyle.id = "homepage-rhythm-final";
+  rhythmStyle.textContent = `
+    #home,
+    #contact {
+      background: rgba(128, 128, 128, 0.18) !important;
+    }
+    #presave,
+    #music,
+    #videos,
+    #about,
+    #merch,
+    #signal {
+      background: rgba(8, 8, 8, 0.62) !important;
+    }
+  `;
+  document.head.appendChild(rhythmStyle);
 });
