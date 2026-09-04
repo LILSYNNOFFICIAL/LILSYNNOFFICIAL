@@ -156,3 +156,17 @@ video { filter:brightness(0.95) contrast(1.05); }
 
 /* MERCH — remove the generated dark LIL SYNN MERCH square from the homepage. */
 .merch-entrance { display:none !important; }
+
+/* HOMEPAGE SECTION RHYTHM — light at the top and bottom; darker translucent treatment everywhere between. */
+#home,
+#contact {
+  background: rgba(128, 128, 128, 0.18) !important;
+}
+#presave,
+#music,
+#videos,
+#about,
+#merch,
+#signal {
+  background: rgba(8, 8, 8, 0.62) !important;
+}
