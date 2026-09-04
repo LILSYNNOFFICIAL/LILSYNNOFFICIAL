@@ -15,8 +15,80 @@ document.addEventListener("DOMContentLoaded", () => {
   if (close && menu) close.addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); setMenuState(false); });
   document.querySelectorAll('#sideMenu a[href^="#"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
   document.addEventListener("keydown", event => { if (event.key === "Escape" && menu && !menu.classList.contains("translate-x-full")) setMenuState(false); });
-  const trigger = document.getElementById("socialsTrigger"), dropdown = document.getElementById("socialsDropdown");
-  if (trigger && dropdown) { trigger.setAttribute("aria-expanded", "false"); trigger.addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); const open = dropdown.classList.contains("hidden"); dropdown.classList.toggle("hidden", !open); trigger.setAttribute("aria-expanded", String(open)); const arrow = trigger.querySelector("span"); if (arrow) arrow.textContent = open ? "▲" : "▼"; }); }
+
+  // Rebuild the existing menu's former Socials area into two focused libraries:
+  // STREAM THE SIGNAL for listening destinations and SOCIALS for community platforms.
+  const legacyGroup = document.getElementById("socialsTrigger")?.parentElement;
+  if (legacyGroup) {
+    const streamLinks = [
+      ["Spotify", "https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"],
+      ["Apple Music", "https://music.apple.com/us/artist/lil-synn/1850720041"],
+      ["iTunes", "https://music.apple.com/us/artist/lil-synn/1850720041"],
+      ["Amazon Music", "https://music.amazon.com/artists/B0FZB8RWV8/lil-synn"],
+      ["TIDAL", "https://tidal.com/search?q=LIL%20SYNN"],
+      ["SoundCloud", "https://soundcloud.com/lilsynnofficial"],
+      ["Deezer", "https://www.deezer.com/search/LIL%20SYNN"],
+      ["YouTube Music", "https://music.youtube.com/search?q=LIL%20SYNN"],
+      ["Pandora", "https://www.pandora.com/search/lil%20synn"],
+      ["iHeartRadio", "https://www.iheart.com/search/?q=LIL%20SYNN"],
+      ["Qobuz", "https://www.qobuz.com/us-en/search?q=LIL%20SYNN"],
+      ["JioSaavn", "https://www.jiosaavn.com/search/LIL%20SYNN"],
+      ["Boomplay", "https://www.boomplay.com/search/default-artist?searchTerm=LIL%20SYNN"],
+      ["Anghami", "https://play.anghami.com/search?query=LIL%20SYNN"],
+      ["NetEase Cloud Music", "https://music.163.com/#/search/m/?s=LIL%20SYNN&type=100"],
+      ["Tencent Music", "https://y.qq.com/n/ryqq/search?w=LIL%20SYNN&remoteplace=search"],
+      ["Claro Música", "https://www.claromusica.com/search/LIL%20SYNN"],
+      ["JOOX", "https://www.joox.com/search?q=LIL%20SYNN"],
+      ["FLO", "https://www.music-flo.com/search?keyword=LIL%20SYNN"]
+    ];
+    const socialLinks = [
+      ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
+      ["Instagram", "https://www.instagram.com/lilsynnofficial/"],
+      ["TikTok / ByteDance", "https://www.tiktok.com/@lilsynnofficial"],
+      ["Facebook", "https://www.facebook.com/lilsynnofficial"],
+      ["X / Twitter", "https://x.com/lilsynnofficial"],
+      ["Discord", "https://discord.gg/ZUVsHuCAv"],
+      ["GitHub", "https://github.com/orgs/Neurosyn-Dev/repositories"]
+    ];
+    const makeGroup = (id, label, links, scrollable = false) => {
+      const group = document.createElement("div");
+      group.className = "nav-library-group";
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "menu-link flex justify-between w-full shrink-0";
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-controls", id);
+      button.innerHTML = `${label} <span aria-hidden="true">▼</span>`;
+      const list = document.createElement("div");
+      list.id = id;
+      list.className = `hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']${scrollable ? " nav-scroll-library" : ""}`;
+      links.forEach(([name, href]) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.className = "menu-link";
+        a.textContent = name;
+        list.appendChild(a);
+      });
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const open = list.classList.contains("hidden");
+        list.classList.toggle("hidden", !open);
+        button.setAttribute("aria-expanded", String(open));
+        const arrow = button.querySelector("span");
+        if (arrow) arrow.textContent = open ? "▲" : "▼";
+      });
+      group.append(button, list);
+      return group;
+    };
+    legacyGroup.replaceChildren(
+      makeGroup("streamDropdown", "Stream the Signal", streamLinks, true),
+      makeGroup("socialsDropdown", "Socials", socialLinks, false)
+    );
+  }
+
   const bgVideo = document.getElementById("bgVideo");
   if (bgVideo) { bgVideo.muted = true; bgVideo.setAttribute("playsinline", ""); const p = bgVideo.play(); if (p?.catch) p.catch(() => {}); }
   const release = document.getElementById('presave');
