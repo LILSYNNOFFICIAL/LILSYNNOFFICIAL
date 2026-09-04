@@ -102,9 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true);
     const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false);
-    legacyGroup.replaceChildren(streamGroup, socialsGroup);
+    legacyGroup.replaceChildren(streamGroup);
     const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
-    if (videosLink) videosLink.after(legacyGroup);
+    if (videosLink) videosLink.after(socialsGroup);
+    else legacyGroup.after(socialsGroup);
   }
 
   const bgVideo = document.getElementById("bgVideo");
