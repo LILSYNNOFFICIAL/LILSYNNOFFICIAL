@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const legacyGroup = document.getElementById("socialsTrigger")?.parentElement;
   if (legacyGroup) {
     const streamLinks = [
+      ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
       ["Spotify", "https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"],
       ["Apple Music", "https://music.apple.com/us/artist/lil-synn/1850720041"],
       ["iTunes", "https://music.apple.com/us/artist/lil-synn/1850720041"],
@@ -61,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ["FLO", "https://www.music-flo.com/search?keyword=LIL%20SYNN"]
     ];
     const socialLinks = [
-      ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
       ["Instagram", "https://www.instagram.com/lilsynnofficial/"],
       ["TikTok", "https://www.tiktok.com/@lilsynnofficial"],
       ["Facebook", "https://www.facebook.com/lilsynnofficial"],
