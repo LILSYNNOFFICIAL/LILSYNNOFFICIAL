@@ -43,14 +43,16 @@
 <script src="music-random.js"></script>
 <script src="latest-videos.js"></script>
 <script>
-/* Music-only refresh: replaces the random selection without reloading, scrolling, or touching the rest of the page. */
+/* Music-only refresh: replace the generated button so the older scroll/highlight handler cannot run. */
 window.addEventListener('load',()=>{
   const wire=()=>{
     const button=document.querySelector('.discover-button');
     if(!button||button.dataset.randomRefreshWired==='true')return;
-    button.dataset.randomRefreshWired='true';
-    button.textContent='RANDOM SONG REFRESH';
-    button.addEventListener('click',event=>{
+    const replacement=button.cloneNode(true);
+    replacement.dataset.randomRefreshWired='true';
+    replacement.textContent='RANDOM SONG REFRESH';
+    button.replaceWith(replacement);
+    replacement.addEventListener('click',event=>{
       event.preventDefault();
       if(typeof window.lilSynnRefreshMusic==='function'){
         window.lilSynnRefreshMusic();
