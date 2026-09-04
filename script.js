@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["Discord", "https://discord.gg/ZUVsHuCAv"],
       ["GitHub", "https://github.com/orgs/Neurosyn-Dev/repositories"]
     ];
-    const makeGroup = (id, label, links, scrollable = false) => {
+    const makeGroup = (id, label, links, scrollable = false, showArrow = true) => {
       const group = document.createElement("div");
       group.className = "nav-library-group";
       const button = document.createElement("button");
@@ -77,7 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
       button.className = "menu-link flex justify-between w-full shrink-0";
       button.setAttribute("aria-expanded", "false");
       button.setAttribute("aria-controls", id);
-      button.innerHTML = `${label} <span aria-hidden="true">▼</span>`;
+      button.textContent = label;
+      if (showArrow) {
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "▼";
+        button.appendChild(arrow);
+      }
       const list = document.createElement("div");
       list.id = id;
       list.className = `hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']${scrollable ? " nav-scroll-library" : ""}`;
@@ -96,18 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const open = list.classList.contains("hidden");
         list.classList.toggle("hidden", !open);
         button.setAttribute("aria-expanded", String(open));
-        const arrow = button.querySelector("span");
-        if (arrow) arrow.textContent = open ? "▲" : "▼";
+        if (showArrow) {
+          const arrow = button.querySelector("span");
+          if (arrow) arrow.textContent = open ? "▲" : "▼";
+        }
       });
       group.append(button, list);
       return group;
     };
-    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true);
-    const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false);
+    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true, true);
+    const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false, false);
     legacyGroup.replaceChildren(streamGroup);
     const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
-    if (videosLink) videosLink.after(socialsGroup);
-    else legacyGroup.after(socialsGroup);
+    if (videosLink) videosLink.after(socialsGroup, streamGroup);
+    else legacyGroup.after(socialsGroup, streamGroup);
   }
 
   const bgVideo = document.getElementById("bgVideo");
