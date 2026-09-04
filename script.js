@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const socialLinks = [
       ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
       ["Instagram", "https://www.instagram.com/lilsynnofficial/"],
-      ["TikTok / ByteDance", "https://www.tiktok.com/@lilsynnofficial"],
+      ["TikTok", "https://www.tiktok.com/@lilsynnofficial"],
       ["Facebook", "https://www.facebook.com/lilsynnofficial"],
       ["X / Twitter", "https://x.com/lilsynnofficial"],
       ["Discord", "https://discord.gg/ZUVsHuCAv"],
