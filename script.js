@@ -19,9 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const navStyle = document.createElement("style");
   navStyle.textContent = `
     #sideMenu > nav { max-height: calc(100vh - 88px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
-    .nav-library-group { width: 100%; min-width: 0; }
+    .nav-library-group { width: 100%; min-width: 0; flex: 0 0 auto !important; min-height: 0 !important; display: block !important; }
     .nav-library-group > button { padding: 0; text-align: left; }
     .nav-library-group > div { min-width: 0; }
+    #sideMenu > nav > .nav-library-group:has(#socialsDropdown) { flex: 0 0 auto !important; min-height: 0 !important; display: block !important; }
+    #sideMenu #socialsDropdown { flex: none !important; max-height: none !important; overflow: visible; padding-bottom: 0; }
     .nav-scroll-library { max-height: min(48vh, 390px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding-right: .65rem; scrollbar-width: auto; scrollbar-color: #ff008f #111; }
     .nav-scroll-library::-webkit-scrollbar { width: 9px; }
     .nav-scroll-library::-webkit-scrollbar-track { background: #111; border-radius: 8px; }
