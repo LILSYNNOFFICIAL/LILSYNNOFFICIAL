@@ -40,26 +40,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const legacyGroup = document.getElementById("socialsTrigger")?.parentElement;
   if (legacyGroup) {
     const streamLinks = [
-      ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
       ["Spotify", "https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"],
       ["Apple Music", "https://music.apple.com/us/artist/lil-synn/1850720041"],
+      ["YouTube", "https://www.youtube.com/@LILSYNNOFFICIAL"],
       ["iTunes", "https://music.apple.com/us/artist/lil-synn/1850720041"],
+      ["YouTube Music", "https://music.youtube.com/@LILSYNNOFFICIAL"],
+      ["TIDAL", "https://tidal.com/artist/69300200"],
       ["Amazon Music", "https://music.amazon.com/artists/B0FZB8RWV8/lil-synn"],
-      ["TIDAL", "https://tidal.com/search?q=LIL%20SYNN"],
-      ["SoundCloud", "https://soundcloud.com/lilsynnofficial"],
-      ["Deezer", "https://www.deezer.com/search/LIL%20SYNN"],
-      ["YouTube Music", "https://music.youtube.com/search?q=LIL%20SYNN"],
-      ["Pandora", "https://www.pandora.com/search/lil%20synn"],
-      ["iHeartRadio", "https://www.iheart.com/search/?q=LIL%20SYNN"],
-      ["Qobuz", "https://www.qobuz.com/us-en/search?q=LIL%20SYNN"],
-      ["JioSaavn", "https://www.jiosaavn.com/search/LIL%20SYNN"],
-      ["Boomplay", "https://www.boomplay.com/search/default-artist?searchTerm=LIL%20SYNN"],
-      ["Anghami", "https://play.anghami.com/search?query=LIL%20SYNN"],
-      ["NetEase Cloud Music", "https://music.163.com/#/search/m/?s=LIL%20SYNN&type=100"],
-      ["Tencent Music", "https://y.qq.com/n/ryqq/search?w=LIL%20SYNN&remoteplace=search"],
-      ["Claro Música", "https://www.claromusica.com/search/LIL%20SYNN"],
-      ["JOOX", "https://www.joox.com/search?q=LIL%20SYNN"],
-      ["FLO", "https://www.music-flo.com/search?keyword=LIL%20SYNN"]
+      ["iHeart", "https://www.iheart.com/artist/lil-synn-48522401"],
+      ["Pandora", "https://www.pandora.com/artist/lil-synn/ARZwprX4ZVXjVKc"],
+      ["Qobuz", "https://www.qobuz.com/us-en/interpreter/lil-synn/29242938"]
     ];
     const socialLinks = [
       ["Instagram", "https://www.instagram.com/lilsynnofficial/"],
