@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false);
     legacyGroup.replaceChildren(streamGroup);
     const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
-    if (videosLink) videosLink.parentElement.after(socialsGroup);
+    if (videosLink) videosLink.after(socialsGroup);
     else legacyGroup.after(socialsGroup);
   }
 
