@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('#sideMenu a[href^="#"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
   document.addEventListener("keydown", event => { if (event.key === "Escape" && menu && !menu.classList.contains("translate-x-full")) setMenuState(false); });
 
-  // Keep the side menu usable on short mobile screens while giving the streaming
-  // library its own scroll area. This avoids making the whole menu unnecessarily tall.
   const navStyle = document.createElement("style");
   navStyle.textContent = `
     #sideMenu > nav { max-height: calc(100vh - 88px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
@@ -37,8 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(navStyle);
 
-  // Rebuild the existing menu's former Socials area into two focused libraries:
-  // STREAM THE SIGNAL for listening destinations and SOCIALS for community platforms.
   const legacyGroup = document.getElementById("socialsTrigger")?.parentElement;
   if (legacyGroup) {
     const streamLinks = [
@@ -104,10 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
       group.append(button, list);
       return group;
     };
-    legacyGroup.replaceChildren(
-      makeGroup("streamDropdown", "Stream the Signal", streamLinks, true),
-      makeGroup("socialsDropdown", "Socials", socialLinks, false)
-    );
+    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true);
+    const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false);
+    legacyGroup.replaceChildren(streamGroup);
+    const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
+    if (videosLink) videosLink.parentElement.after(socialsGroup);
+    else legacyGroup.after(socialsGroup);
   }
 
   const bgVideo = document.getElementById("bgVideo");
