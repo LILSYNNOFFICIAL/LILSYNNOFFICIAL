@@ -60,8 +60,10 @@ const run=async()=>{
  .merch-panel{padding:1.5rem;border-radius:1.5rem;border:1px solid rgba(255,0,143,.24);background:linear-gradient(145deg,rgba(255,0,143,.11),rgba(0,0,0,.55));display:flex;flex-direction:column;justify-content:center}
  .merch-panel h3{margin:0 0 .5rem;font:700 1.3rem Orbitron,sans-serif;letter-spacing:.08em;color:#fff}
  .merch-panel p{margin:0;color:#bdbdbd;font:400 1.05rem Rajdhani,sans-serif}
- .merch-signal-art{min-height:220px;border-radius:1.5rem;border:1px solid rgba(255,0,143,.25);background:radial-gradient(circle at 30% 30%,rgba(255,0,143,.32),transparent 45%),radial-gradient(circle at 70% 70%,rgba(255,79,216,.16),transparent 45%),#050505;display:grid;place-items:center;overflow:hidden}
- .merch-signal-art span{font:700 clamp(1.4rem,4vw,2.5rem) Orbitron,sans-serif;letter-spacing:.18em;color:#fff;text-align:center;text-shadow:0 0 20px rgba(255,0,143,.55)}
+ .merch-signal-art{display:flex;align-items:center;justify-content:center;min-height:0;border:0;background:transparent;overflow:hidden;text-decoration:none}
+ .merch-signal-art img{display:block;width:min(100%,520px);height:auto;max-height:280px;object-fit:contain;filter:drop-shadow(0 10px 28px rgba(0,0,0,.35));transition:transform .2s ease,filter .2s ease}
+ .merch-signal-art:hover img,.merch-signal-art:focus-visible img{transform:scale(1.02);filter:drop-shadow(0 12px 32px rgba(255,0,143,.18))}
+ .merch-signal-art span{display:none}
  .signal-highlight{padding-top:5.25rem!important;padding-bottom:5.25rem!important}
  .footer-sitemap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem;max-width:760px;margin:2.2rem auto 0;text-align:left}
  .footer-sitemap h3{margin:0 0 .7rem;color:#ff4fd8;font:700 .78rem Orbitron,sans-serif;letter-spacing:.16em}
@@ -116,7 +118,7 @@ const run=async()=>{
    if(inner){
      const existingLink=inner.querySelector('a[href*="threadless"]');
      const entrance=document.createElement('div');entrance.className='merch-entrance';
-     entrance.innerHTML='<div class="merch-panel"><h3>WEAR THE SIGNAL</h3><p>Official LIL SYNN merchandise — built for the people inside the signal.</p></div><div class="merch-signal-art" aria-hidden="true"><span>LIL SYNN<br>MERCH</span></div>';
+     entrance.innerHTML='<div class="merch-panel"><h3>WEAR THE SIGNAL</h3><p>Official LIL SYNN merchandise — built for the people inside the signal.</p></div><a class="merch-signal-art" href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" aria-label="Shop official LIL SYNN merchandise"><img src="assets/img/MERCH_SHOP.png" alt="LIL SYNN official merchandise" loading="lazy" decoding="async"></a>';
      const panel=entrance.querySelector('.merch-panel');if(existingLink)panel.appendChild(existingLink);inner.appendChild(entrance);
    }
  }
