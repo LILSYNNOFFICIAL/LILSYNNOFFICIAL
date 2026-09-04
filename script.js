@@ -16,6 +16,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('#sideMenu a[href^="#"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
   document.addEventListener("keydown", event => { if (event.key === "Escape" && menu && !menu.classList.contains("translate-x-full")) setMenuState(false); });
 
+  // Keep the side menu usable on short mobile screens while giving the streaming
+  // library its own scroll area. This avoids making the whole menu unnecessarily tall.
+  const navStyle = document.createElement("style");
+  navStyle.textContent = `
+    #sideMenu > nav { max-height: calc(100vh - 88px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+    .nav-library-group { width: 100%; min-width: 0; }
+    .nav-library-group > button { padding: 0; text-align: left; }
+    .nav-library-group > div { min-width: 0; }
+    .nav-scroll-library { max-height: min(48vh, 390px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding-right: .65rem; scrollbar-width: auto; scrollbar-color: #ff008f #111; }
+    .nav-scroll-library::-webkit-scrollbar { width: 9px; }
+    .nav-scroll-library::-webkit-scrollbar-track { background: #111; border-radius: 8px; }
+    .nav-scroll-library::-webkit-scrollbar-thumb { background: #ff008f; border-radius: 8px; border: 2px solid #111; }
+    .nav-scroll-library::-webkit-scrollbar-thumb:hover { background: #ff4fd8; }
+    @media (max-width: 640px) {
+      #sideMenu { width: min(86vw, 360px); }
+      #sideMenu > nav { max-height: calc(100vh - 82px); padding-bottom: 1.5rem; }
+      .nav-scroll-library { max-height: 42vh; }
+    }
+  `;
+  document.head.appendChild(navStyle);
+
   // Rebuild the existing menu's former Socials area into two focused libraries:
   // STREAM THE SIGNAL for listening destinations and SOCIALS for community platforms.
   const legacyGroup = document.getElementById("socialsTrigger")?.parentElement;
