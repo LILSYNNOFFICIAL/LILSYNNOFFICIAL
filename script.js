@@ -146,8 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(rhythmStyle);
 
-  // DARK CONTENT BAND — make the entire middle homepage read as one continuous surface.
-  // Remove section seams/borders while preserving the light hero and contact sections.
+  // DARK CONTENT BAND — all middle homepage sections share the same dark surface.
+  // Remove seams/borders between those sections while preserving the light hero and contact/footer treatment.
   const darkBandStyle = document.createElement("style");
   darkBandStyle.id = "homepage-dark-band-final";
   darkBandStyle.textContent = `
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     #about,
     #merch,
     #signal {
-      background: transparent !important;
+      background: rgba(8, 8, 8, 0.62) !important;
       border-top: 0 !important;
       border-bottom: 0 !important;
       box-shadow: none !important;
@@ -177,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     #signal::after {
       border: 0 !important;
       box-shadow: none !important;
+      background: transparent !important;
     }
     #presave + #music,
     #music + #videos,
