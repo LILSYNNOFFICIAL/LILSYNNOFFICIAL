@@ -35,11 +35,96 @@ const run=async()=>{
      $$('.youtube-card').forEach(card=>card.querySelector('.youtube-play-overlay')?.addEventListener('click',()=>{const id=card.dataset.videoId,title=card.dataset.videoTitle,iframe=document.createElement('iframe');iframe.title=`LIL SYNN — ${title}`;iframe.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000';card.innerHTML='';card.appendChild(iframe)}));
    }catch(e){console.warn('Dynamic YouTube releases unavailable',e)}
  }
-
  const hero=document.getElementById('home');if(hero){const tagline=hero.querySelector('p');if(tagline)tagline.textContent='Dark sound. Raw emotion. No limits';const stack=hero.querySelector('.hero-cta-stack'),row=hero.querySelector('.hero-cta-row');if(stack&&row){const actions=[...row.querySelectorAll('a')];actions.filter(a=>a.textContent.trim().toUpperCase()==='PRE-SAVE').forEach(a=>a.remove());const listen=row.querySelector('a[href="#music"]');const vote=hero.querySelector('.hero-vote');if(vote)vote.remove();const presave=document.createElement('a');presave.id='hero-presave-link';presave.href='https://hyperfollow.com/lilsynnofficial';presave.target='_blank';presave.rel='noopener noreferrer';presave.className='inline-block bg-[#ff008f] hover:bg-[#ff4fd8] text-black font-bold px-8 py-3 rounded-xl transition-transform hover:scale-105';presave.textContent='PRE-SAVE';const voteLink=document.createElement('a');voteLink.href='https://tinyurl.com/VOTE-LIL-SYNN';voteLink.target='_blank';voteLink.rel='noopener noreferrer';voteLink.className='inline-block bg-[#ff008f] hover:bg-[#ff4fd8] text-black font-bold px-8 py-3 rounded-xl transition-transform hover:scale-105';voteLink.textContent='VOTE 4 LIL SYNN';row.innerHTML='';if(listen)row.appendChild(listen);row.appendChild(presave);row.appendChild(voteLink);stack.style.display='block';row.style.display='flex';row.style.flexWrap='nowrap';row.style.justifyContent='center';row.style.alignItems='center';row.style.gap='.75rem';const mobile=document.createElement('style');mobile.textContent='@media(max-width:600px){.hero-cta-row{flex-wrap:wrap!important}.hero-cta-row a{padding-left:1rem!important;padding-right:1rem!important;font-size:.8rem!important}}';document.head.appendChild(mobile)}}
  const menu=document.getElementById('sideMenu');if(menu){menu.style.height='100dvh';menu.style.maxHeight='100dvh';menu.style.overflowY='auto';menu.style.overflowX='hidden';menu.style.paddingBottom='2rem';const nav=menu.querySelector('nav');if(nav){nav.style.minHeight='calc(100dvh - 92px)';nav.style.paddingBottom='2rem'}}
  if(location.pathname.endsWith('special_access.html'))for(const h of $$('h2'))if(h.textContent.trim().toUpperCase()==='BLOOPERS & ALT SCENES'){const section=h.closest('.archive'),grid=section?.querySelector('.videos');if(grid){grid.style.display='flex';grid.style.justifyContent='center';grid.style.width='100%';const card=grid.querySelector('.card');if(card)card.style.width='min(100%,760px)'}}
  const spotifyFrame=$('.spotify-player iframe');if(spotifyFrame){spotifyFrame.height=520;spotifyFrame.style.height='520px'}
  const brand=$('nav > .max-w-7xl > a[aria-label="LIL SYNN home"]');if(brand&&!document.querySelector('nav a[data-special-access-icon]')){const icon=brand.querySelector('span[aria-hidden="true"]');if(icon){const a=document.createElement('a');a.href='special_access.html';a.dataset.specialAccessIcon='true';a.className=icon.className;a.style.textDecoration='none';a.textContent='🎧';a.setAttribute('aria-label','Special Access');brand.insertBefore(a,brand.firstChild);icon.remove()}}
+ const style=document.createElement('style');style.textContent=`
+ .homepage-refinement{position:relative;margin-top:2.5rem;padding:1.35rem 1.5rem;border:1px solid rgba(255,0,143,.24);border-radius:1.5rem;background:linear-gradient(135deg,rgba(255,0,143,.08),rgba(0,0,0,.42));box-shadow:0 16px 50px rgba(0,0,0,.24)}
+ .homepage-refinement-kicker{font:700 .72rem Orbitron,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#ff008f}
+ .homepage-refinement-title{margin:.45rem 0 .3rem;font:700 clamp(1.35rem,3vw,2.15rem) Orbitron,sans-serif;letter-spacing:.08em;color:#fff}
+ .homepage-refinement-copy{margin:0;color:#bdbdbd;font:400 1.08rem Rajdhani,sans-serif;letter-spacing:.03em}
+ .discover-button{display:inline-flex;align-items:center;justify-content:center;margin-top:1rem;padding:.75rem 1.25rem;border-radius:.8rem;background:#ff008f;color:#050505;font:700 .85rem Orbitron,sans-serif;letter-spacing:.08em;text-decoration:none;transition:transform .2s ease,background-color .2s ease}
+ .discover-button:hover,.discover-button:focus-visible{background:#ff4fd8;transform:translateY(-2px)}
+ .spotify-open-link{display:inline-flex;margin-top:.8rem;padding:.55rem .9rem;border:1px solid rgba(255,0,143,.5);border-radius:.7rem;color:#ff4fd8;text-decoration:none;font:600 .8rem Rajdhani,sans-serif;letter-spacing:.1em}
+ .spotify-open-link:hover,.spotify-open-link:focus-visible{color:#fff;border-color:#ff4fd8}
+ .about-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.7rem;margin:1.5rem 0 1rem}
+ .about-summary a{padding:.75rem .5rem;border:1px solid rgba(255,0,143,.22);border-radius:.8rem;text-align:center;color:#ddd;text-decoration:none;font:700 .72rem Orbitron,sans-serif;letter-spacing:.06em}
+ .about-summary a:hover,.about-summary a:focus-visible{border-color:#ff4fd8;color:#fff}
+ .about-details{margin-top:.5rem}
+ .about-details[hidden]{display:none}
+ .about-toggle{display:inline-flex;align-items:center;justify-content:center;padding:.7rem 1.1rem;border:1px solid rgba(255,0,143,.45);border-radius:.8rem;background:transparent;color:#ff4fd8;font:700 .78rem Orbitron,sans-serif;letter-spacing:.08em;cursor:pointer}
+ .about-toggle:hover,.about-toggle:focus-visible{background:rgba(255,0,143,.1);color:#fff}
+ .merch-entrance{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:1.5rem;align-items:stretch;margin-top:2rem;text-align:left}
+ .merch-panel{padding:1.5rem;border-radius:1.5rem;border:1px solid rgba(255,0,143,.24);background:linear-gradient(145deg,rgba(255,0,143,.11),rgba(0,0,0,.55));display:flex;flex-direction:column;justify-content:center}
+ .merch-panel h3{margin:0 0 .5rem;font:700 1.3rem Orbitron,sans-serif;letter-spacing:.08em;color:#fff}
+ .merch-panel p{margin:0;color:#bdbdbd;font:400 1.05rem Rajdhani,sans-serif}
+ .merch-signal-art{min-height:220px;border-radius:1.5rem;border:1px solid rgba(255,0,143,.25);background:radial-gradient(circle at 30% 30%,rgba(255,0,143,.32),transparent 45%),radial-gradient(circle at 70% 70%,rgba(255,79,216,.16),transparent 45%),#050505;display:grid;place-items:center;overflow:hidden}
+ .merch-signal-art span{font:700 clamp(1.4rem,4vw,2.5rem) Orbitron,sans-serif;letter-spacing:.18em;color:#fff;text-align:center;text-shadow:0 0 20px rgba(255,0,143,.55)}
+ .signal-highlight{padding-top:5.25rem!important;padding-bottom:5.25rem!important}
+ .footer-sitemap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem;max-width:760px;margin:2.2rem auto 0;text-align:left}
+ .footer-sitemap h3{margin:0 0 .7rem;color:#ff4fd8;font:700 .78rem Orbitron,sans-serif;letter-spacing:.16em}
+ .footer-sitemap a{display:block;margin:.4rem 0;color:#aaa;text-decoration:none;font:400 .95rem Rajdhani,sans-serif}
+ .footer-sitemap a:hover,.footer-sitemap a:focus-visible{color:#fff}
+ @media(max-width:900px){.about-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.merch-entrance{grid-template-columns:1fr}.footer-sitemap{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ @media(max-width:560px){.homepage-refinement{padding:1.1rem}.about-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-sitemap{grid-template-columns:1fr}.signal-highlight{padding-top:4rem!important;padding-bottom:4rem!important}}
+ `;document.head.appendChild(style);
+ if(release){release.setAttribute('aria-label','Latest releases');}
+ const listenHero=hero?.querySelector('.hero-cta-row a[href="#music"]');
+ if(listenHero){listenHero.style.boxShadow='0 0 24px rgba(255,0,143,.28)';listenHero.style.transform='scale(1.03)';listenHero.setAttribute('data-primary-cta','true');}
+ const spotifyPlayer=$('.spotify-player');
+ if(spotifyPlayer){
+   const kicker=spotifyPlayer.querySelector('.section-kicker');
+   const title=spotifyPlayer.querySelector('h3');
+   if(kicker)kicker.textContent='LISTEN TO LIL SYNN';
+   if(title)title.textContent='SPOTIFY PLAYER';
+   if(!spotifyPlayer.querySelector('.spotify-open-link')){
+     const link=document.createElement('a');link.className='spotify-open-link';link.href='https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU';link.target='_blank';link.rel='noopener noreferrer';link.textContent='OPEN IN SPOTIFY';
+     const wrap=document.createElement('div');wrap.style.textAlign='center';wrap.appendChild(link);spotifyPlayer.appendChild(wrap);
+   }
+ }
+ const music=document.getElementById('music');
+ if(music&&!music.querySelector('[data-discover-panel]')){
+   const grid=document.getElementById('music-grid');
+   const panel=document.createElement('div');panel.className='homepage-refinement';panel.dataset.discoverPanel='true';panel.innerHTML='<div class="homepage-refinement-kicker">DISCOVER</div><div class="homepage-refinement-title">DISCOVER LIL SYNN</div><p class="homepage-refinement-copy">Let the signal choose. Explore the catalog and discover a track at random.</p><a class="discover-button" href="#music-grid">RANDOM SONG / DISCOVER</a>';
+   if(grid)grid.parentNode.insertBefore(panel,grid);
+   const randomButton=panel.querySelector('.discover-button');
+   randomButton?.addEventListener('click',e=>{e.preventDefault();const cards=$$('#music-grid > *');if(!cards.length)return;const chosen=cards[Math.floor(Math.random()*cards.length)];chosen.scrollIntoView({behavior:'smooth',block:'center'});chosen.animate?.([{transform:'scale(1)'},{transform:'scale(1.035)'},{transform:'scale(1)'}],{duration:600});});
+ }
+ const videos=document.getElementById('videos');
+ if(videos){const sub=videos.querySelector('.section-subtitle');if(sub)sub.textContent='The newest transmissions from the LIL SYNN universe.';videos.setAttribute('aria-label','Latest videos from LIL SYNN');}
+ const about=document.getElementById('about');
+ if(about&&!about.querySelector('.about-toggle')){
+   const card=about.querySelector('.about-card');
+   const headings=card?[...card.querySelectorAll('h3')]:[];
+   if(card&&headings.length){
+     const summary=document.createElement('div');summary.className='about-summary';summary.innerHTML=['THE ARTIST','THE PERSONA','THE MUSIC','THE VISUAL WORLD','THE VISION'].map((label,i)=>`<a href="#about-part-${i}">${label}</a>`).join('');
+     card.insertBefore(summary,headings[0]);
+     headings.forEach((h,i)=>h.id=`about-part-${i}`);
+     const details=document.createElement('div');details.className='about-details';details.hidden=true;
+     const nodes=[...card.childNodes];let active=false;for(const node of nodes){if(node===summary)continue;if(node===headings[0])active=true;if(active){details.appendChild(node);}}
+     card.appendChild(details);
+     const toggle=document.createElement('button');toggle.type='button';toggle.className='about-toggle';toggle.textContent='READ THE FULL STORY';toggle.setAttribute('aria-expanded','false');card.insertBefore(toggle,details);
+     toggle.addEventListener('click',()=>{details.hidden=!details.hidden;toggle.textContent=details.hidden?'READ THE FULL STORY':'COLLAPSE STORY';toggle.setAttribute('aria-expanded',String(!details.hidden));if(!details.hidden)details.scrollIntoView({behavior:'smooth',block:'start'});});
+     summary.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();details.hidden=false;toggle.textContent='COLLAPSE STORY';toggle.setAttribute('aria-expanded','true');document.getElementById(a.getAttribute('href').slice(1))?.scrollIntoView({behavior:'smooth',block:'start'});}));
+   }
+ }
+ const merch=document.getElementById('merch');
+ if(merch&&!merch.querySelector('.merch-entrance')){
+   const inner=merch.querySelector('.max-w-5xl');
+   if(inner){
+     const existingLink=inner.querySelector('a[href*="threadless"]');
+     const entrance=document.createElement('div');entrance.className='merch-entrance';
+     entrance.innerHTML='<div class="merch-panel"><h3>WEAR THE SIGNAL</h3><p>Official LIL SYNN merchandise — built for the people inside the signal.</p></div><div class="merch-signal-art" aria-hidden="true"><span>LIL SYNN<br>MERCH</span></div>';
+     const panel=entrance.querySelector('.merch-panel');if(existingLink)panel.appendChild(existingLink);inner.appendChild(entrance);
+   }
+ }
+ const signal=document.getElementById('signal');if(signal)signal.classList.add('signal-highlight');
+ const footer=document.querySelector('footer');
+ if(footer&&!footer.querySelector('.footer-sitemap')){
+   const sitemap=document.createElement('div');sitemap.className='footer-sitemap';sitemap.innerHTML='<div><h3>EXPLORE</h3><a href="#music">Music</a><a href="releases.html">Releases</a><a href="#videos">Videos</a><a href="#about">About</a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer">Lyrics</a></div><div><h3>CONNECT</h3><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">Spotify</a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">Apple Music</a><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer">TikTok</a></div><div><h3>OFFICIAL</h3><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer">Merch</a><a href="#signal">SYNN Signal</a><a href="#contact">Contact</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>';
+   const legal=footer.querySelector('[aria-label="Legal navigation"]');footer.insertBefore(sitemap,legal||null);
+ }
 };if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();window.addEventListener('load',()=>run(),{once:true});
 })();
