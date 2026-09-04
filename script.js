@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["Discord", "https://discord.gg/ZUVsHuCAv"],
       ["GitHub", "https://github.com/orgs/Neurosyn-Dev/repositories"]
     ];
-    const makeGroup = (id, label, links, scrollable = false, showArrow = true) => {
+    const makeGroup = (id, label, links, scrollable = false, showArrow = false) => {
       const group = document.createElement("div");
       group.className = "nav-library-group";
       const button = document.createElement("button");
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       group.append(button, list);
       return group;
     };
-    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true, true);
+    const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true, false);
     const socialsGroup = makeGroup("socialsDropdown", "Socials", socialLinks, false, false);
     legacyGroup.replaceChildren(streamGroup);
     const videosLink = Array.from(menu.querySelectorAll("a")).find(link => link.textContent.trim().toLowerCase() === "videos");
