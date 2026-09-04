@@ -145,4 +145,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   `;
   document.head.appendChild(rhythmStyle);
+
+  // DARK CONTENT BAND — make the entire middle homepage read as one continuous surface.
+  // Remove section seams/borders while preserving the light hero and contact sections.
+  const darkBandStyle = document.createElement("style");
+  darkBandStyle.id = "homepage-dark-band-final";
+  darkBandStyle.textContent = `
+    #presave,
+    #music,
+    #videos,
+    #about,
+    #merch,
+    #signal {
+      background: transparent !important;
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+    }
+    #presave::before,
+    #presave::after,
+    #music::before,
+    #music::after,
+    #videos::before,
+    #videos::after,
+    #about::before,
+    #about::after,
+    #merch::before,
+    #merch::after,
+    #signal::before,
+    #signal::after {
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+    #presave + #music,
+    #music + #videos,
+    #videos + #about,
+    #about + #merch,
+    #merch + #signal {
+      border-top: 0 !important;
+    }
+  `;
+  document.head.appendChild(darkBandStyle);
 });
