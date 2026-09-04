@@ -153,3 +153,6 @@ video { filter:brightness(0.95) contrast(1.05); }
   #presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"],
   #presave .release-feature > .mt-7 > #presave-link { grid-column:auto; justify-self:center; }
 }
+
+/* MERCH — remove the generated dark LIL SYNN MERCH square from the homepage. */
+.merch-entrance { display:none !important; }
