@@ -18,8 +18,14 @@ export default async function handler(req,res){
     const ids=[];
     const seen=new Set();
     const add=id=>{if(id&&!seen.has(id)){seen.add(id);ids.push(id)}};
-    for(const match of html.matchAll(/"videoRenderer"\s*:\s*\{[\s\S]*?"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/g))add(match[1]);
-    if(!ids.length)throw new Error('No videos were found on the LIL SYNN Releases tab');
+
+    // YouTube's current Releases page uses lockupViewModel entries. A release
+    // video is identified by contentType=LOCKUP_CONTENT_TYPE_VIDEO and its
+    // 11-character YouTube video ID in contentId. Only those release-page
+    // entries are accepted here.
+    for(const match of html.matchAll(/"lockupViewModel"\s*:\s*\{[\s\S]*?"contentId"\s*:\s*"([A-Za-z0-9_-]{11})"\s*,\s*"contentType"\s*:\s*"LOCKUP_CONTENT_TYPE_VIDEO"/g))add(match[1]);
+
+    if(!ids.length)throw new Error('No release videos were found on the LIL SYNN Releases tab');
 
     // Use the IDs discovered ONLY from /releases, then use YouTube Data API
     // solely to obtain authoritative publication timestamps for sorting.
