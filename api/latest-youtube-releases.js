@@ -6,44 +6,60 @@ export default async function handler(req,res){
     res.setHeader('Content-Type','application/json; charset=utf-8');
     return res.status(200).json({source,updatedAt:new Date().toISOString(),videos,live,...(warning?{warning}:{})});
   };
+  const collect=(node,ids,seen)=>{
+    if(!node||typeof node!=='object')return;
+    if(Array.isArray(node)){for(const x of node)collect(x,ids,seen);return}
+    if(node.lockupViewModel){
+      const v=node.lockupViewModel;
+      if(v.contentType==='LOCKUP_CONTENT_TYPE_PLAYLIST'&&typeof v.contentId==='string'&&!seen.has(v.contentId)){
+        seen.add(v.contentId);ids.push(v.contentId);
+      }
+    }
+    for(const value of Object.values(node))collect(value,ids,seen);
+  };
   try{
     if(!API_KEY)throw new Error('YOUTUBE_DATA_API_KEY is not configured in Vercel');
 
-    // Fetch the actual YouTube Releases page. The Releases tab is a
-    // collection of release playlists/albums, not the normal uploads feed.
-    const page=await fetch(source,{headers:{'User-Agent':'Mozilla/5.0','Accept-Language':'en-US,en;q=0.9'},cache:'no-store'});
-    if(!page.ok)throw new Error(`YouTube Releases page returned ${page.status}`);
-    const html=await page.text();
+    // Resolve the official channel ID.
+    const cq=new URLSearchParams({part:'id',forHandle:'@LILSYNNOFFICIAL',key:API_KEY});
+    const cr=await fetch(`https://www.googleapis.com/youtube/v3/channels?${cq}`,{cache:'no-store'});
+    const cb=await cr.json();
+    if(!cr.ok||cb.error)throw new Error(cb.error?.message||`YouTube channel lookup failed (${cr.status})`);
+    const channelId=cb.items?.[0]?.id;
+    if(!channelId)throw new Error('LIL SYNN YouTube channel was not found');
 
-    // Current YouTube markup uses lockupViewModel cards. Release cards have
-    // LOCKUP_CONTENT_TYPE_PLAYLIST and contain the release playlist ID in
-    // contentId. Only playlist IDs found on the /releases page are accepted.
+    // Ask YouTube's internal browse API specifically for the Releases tab.
+    // EgtyZWxlYXNlcw== is the Releases-tab parameter; this is not the uploads
+    // playlist and does not query the channel's Videos/Home/Shorts sections.
+    const browse=await fetch('https://www.youtube.com/youtubei/v1/browse?prettyPrint=false',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','User-Agent':'Mozilla/5.0','Accept-Language':'en-US,en;q=0.9'},
+      body:JSON.stringify({context:{client:{hl:'en',gl:'US',clientName:'WEB',clientVersion:'2.20260904.01.00'}},browseId:channelId,params:'EgtyZWxlYXNlcw=='})
+    });
+    const data=await browse.json();
+    if(!browse.ok||data.error)throw new Error(data.error?.message||`YouTube Releases browse failed (${browse.status})`);
+
     const playlistIds=[];
-    const seenPlaylists=new Set();
-    const addPlaylist=id=>{if(id&&!seenPlaylists.has(id)){seenPlaylists.add(id);playlistIds.push(id)}};
-    for(const match of html.matchAll(/"lockupViewModel"\s*:\s*\{[\s\S]*?"contentId"\s*:\s*"([A-Za-z0-9_-]{13,100})"\s*,\s*"contentType"\s*:\s*"LOCKUP_CONTENT_TYPE_PLAYLIST"/g))addPlaylist(match[1]);
-    if(!playlistIds.length)throw new Error('No release playlists were found on the LIL SYNN Releases tab');
+    collect(data,playlistIds,new Set());
+    if(!playlistIds.length)throw new Error('YouTube Releases tab returned no release playlists');
 
-    // Expand only those release playlists through YouTube's official API.
-    const playlistItems=await Promise.all(playlistIds.slice(0,20).map(async playlistId=>{
+    // Expand ONLY the release playlists discovered from the Releases tab.
+    const items=await Promise.all(playlistIds.slice(0,20).map(async playlistId=>{
       const q=new URLSearchParams({part:'snippet,contentDetails',playlistId,maxResults:'50',key:API_KEY});
       const r=await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?${q}`,{cache:'no-store'});
       const body=await r.json();
-      if(!r.ok||body.error)throw new Error(body.error?.message||`YouTube release playlist lookup failed (${r.status})`);
+      if(!r.ok||body.error)throw new Error(body.error?.message||`Release playlist ${playlistId} failed (${r.status})`);
       return body.items||[];
     }));
 
     const ids=[];
     const seenVideos=new Set();
-    for(const items of playlistItems){
-      for(const item of items){
-        const id=item?.contentDetails?.videoId;
-        if(id&&/^[A-Za-z0-9_-]{11}$/.test(id)&&!seenVideos.has(id)){seenVideos.add(id);ids.push(id)}
-      }
+    for(const list of items)for(const item of list){
+      const id=item?.contentDetails?.videoId;
+      if(id&&/^[A-Za-z0-9_-]{11}$/.test(id)&&!seenVideos.has(id)){seenVideos.add(id);ids.push(id)}
     }
     if(!ids.length)throw new Error('The YouTube Releases playlists returned no videos');
 
-    // Sort the release videos by their actual YouTube publication date.
     const videos=[];
     for(let i=0;i<ids.length;i+=50){
       const q=new URLSearchParams({part:'snippet',id:ids.slice(i,i+50).join(','),key:API_KEY});
@@ -57,7 +73,7 @@ export default async function handler(req,res){
     }
     videos.sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt));
     const latest=videos.slice(0,9);
-    if(!latest.length)throw new Error('No dated videos were returned for the YouTube Releases playlists');
+    if(!latest.length)throw new Error('No dated videos were returned for the YouTube Releases tab');
     return send(latest,true);
   }catch(error){
     // Never substitute uploads, search, home, videos, shorts, or any other
