@@ -15,9 +15,9 @@
     video.style.zIndex = '0';
 
     const mobile = window.matchMedia('(max-width: 640px)').matches;
-    const scale = mobile ? 0.82 : 0.88;
+    const scale = mobile ? 0.68 : 0.74;
     video.style.setProperty('transform', `scale(${scale})`, 'important');
-    video.style.setProperty('transform-origin', 'center center', 'important');
+    video.style.setProperty('transform-origin', 'center top', 'important');
     video.style.setProperty('background', '#000', 'important');
   };
 
