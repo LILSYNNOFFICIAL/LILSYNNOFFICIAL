@@ -7,8 +7,15 @@
   <meta name="description" content="Terms of use for the official LIL SYNN website.">
   <link rel="canonical" href="https://lilsynn.com/terms.html">
   <link rel="stylesheet" href="style.css">
+<style id="site-bg-video-style">
+html, body { min-height: 100%; }
+body { position: relative; background: transparent !important; }
+#siteBgVideo { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; }
+#siteBgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.58); z-index: 1; pointer-events: none; }
+body > *:not(#siteBgVideo):not(#siteBgOverlay) { position: relative; z-index: 2; }
+</style>
 </head>
-<body class="bg-black text-white font-['Inter'] min-h-screen">
+<body class="bg-black text-white font-['Inter'] min-h-screen"><video id="siteBgVideo" autoplay loop muted playsinline aria-hidden="true"><source src="assets/mov/BG2.webm" type="video/webm"></video><div id="siteBgOverlay" aria-hidden="true"></div>
   <main class="max-w-4xl mx-auto px-6 py-16">
     <a href="/" class="text-[#ff008f] font-['Orbitron'] tracking-widest">← LIL SYNN</a>
     <h1 class="mt-10 text-4xl md:text-5xl font-['Orbitron'] text-[#ff008f]">TERMS</h1>
