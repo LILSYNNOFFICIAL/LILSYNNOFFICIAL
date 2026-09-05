@@ -3,6 +3,23 @@
   const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
   const merchUrl = 'https://lilsynnofficial.threadless.com/';
 
+  const fitBackgroundVideo = () => {
+    const video = document.getElementById('bgVideo');
+    if (!video) return;
+
+    video.style.top = '0';
+    video.style.height = '100vh';
+    video.style.width = '100vw';
+    video.style.objectFit = 'cover';
+    video.style.objectPosition = 'center top';
+    video.style.transform = 'none';
+    video.style.zIndex = '0';
+
+    if (window.innerWidth <= 640) {
+      video.style.objectPosition = 'center top';
+    }
+  };
+
   const cleanArt = () => {
     document.querySelectorAll('img').forEach(img => {
       if (!unwanted.test(img.getAttribute('src') || '')) return;
@@ -80,11 +97,14 @@
   };
 
   const init = () => {
+    fitBackgroundVideo();
     cleanArt();
     ensureSingleLS();
     ensureMerchButton();
     bindRefresh();
+    window.addEventListener('resize', fitBackgroundVideo, { passive: true });
     new MutationObserver(() => {
+      fitBackgroundVideo();
       cleanArt();
       ensureSingleLS();
       ensureMerchButton();
