@@ -1,5 +1,6 @@
 (() => {
   const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
+  const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
 
   const cleanArt = () => {
     document.querySelectorAll('img').forEach(img => {
@@ -10,17 +11,26 @@
     });
   };
 
-  const ensureLS = () => {
+  const ensureSingleLS = () => {
     const home = document.getElementById('home');
     const heading = home?.querySelector('h1');
-    if (!home || !heading || home.querySelector('img[src*="/assets/img/LS.png"]')) return;
-    const img = document.createElement('img');
-    img.src = '/assets/img/LS.png';
-    img.alt = 'LIL SYNN';
-    img.loading = 'eager';
-    img.decoding = 'async';
-    img.style.cssText = 'display:block;width:min(72vw,420px);max-height:260px;height:auto;object-fit:contain;margin:0 auto 1.25rem;';
-    heading.parentNode.insertBefore(img, heading);
+    if (!home || !heading) return;
+
+    const lsImages = Array.from(home.querySelectorAll('img')).filter(img =>
+      lsPattern.test(img.getAttribute('src') || '')
+    );
+
+    lsImages.slice(1).forEach(img => img.remove());
+
+    if (lsImages.length === 0) {
+      const img = document.createElement('img');
+      img.src = '/assets/img/LS.png';
+      img.alt = 'LIL SYNN';
+      img.loading = 'eager';
+      img.decoding = 'async';
+      img.style.cssText = 'display:block;width:min(72vw,420px);max-height:260px;height:auto;object-fit:contain;margin:0 auto 1.25rem;';
+      heading.parentNode.insertBefore(img, heading);
+    }
   };
 
   const bindRefresh = () => {
@@ -46,11 +56,11 @@
 
   const init = () => {
     cleanArt();
-    ensureLS();
+    ensureSingleLS();
     bindRefresh();
     new MutationObserver(() => {
       cleanArt();
-      ensureLS();
+      ensureSingleLS();
       bindRefresh();
     }).observe(document.body, { childList: true, subtree: true });
   };
