@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply homepage fixes
+      - name: Apply homepage fixes and site background
         shell: bash
         run: |
           python3 - <<'PY'
@@ -22,24 +22,44 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # Remove the four section-art images from the homepage wherever they occur.
           for name in ['MERCH_SHOP.png', 'LATEST_RELEASES.png', 'LISTEN.png', 'MUSIC.png']:
               s = re.sub(r'<(?:a|div)[^>]*>\s*<img[^>]*' + re.escape(name) + r'[^>]*>\s*</(?:a|div)>', '', s, flags=re.I|re.S)
               s = re.sub(r'<img[^>]*' + re.escape(name) + r'[^>]*>', '', s, flags=re.I|re.S)
 
-          # Keep exactly one LS.png hero mark immediately above the LIL SYNN heading.
           s = re.sub(r'<img[^>]*LS\.png[^>]*>', '', s, flags=re.I|re.S)
           marker = '<h1 class="font-[\'Orbitron\'] text-4xl md:text-6xl tracking-[0.18em] text-white drop-shadow-2xl">LIL SYNN</h1>'
           ls = '<img src="assets/img/LS.png" alt="LIL SYNN" class="mx-auto mb-5 w-[min(72vw,420px)] max-h-[260px] object-contain" loading="eager" decoding="async">'
           if marker in s:
               s = s.replace(marker, ls + marker, 1)
 
-          # Load the behavior layer after the existing site scripts.
+          # The new BG2.webm is the homepage background video.
+          s = s.replace('assets/mov/lv_0_20260718234757.mp4', 'assets/mov/BG2.webm')
+          s = s.replace('type="video/mp4"', 'type="video/webm"', 1)
+
           tag = '<script src="homepage-final-fixes.js"></script>'
           if tag not in s:
               s = s.replace('</body>', tag + '\n</body>')
-
           p.write_text(s, encoding='utf-8')
+
+          # Apply BG2.webm to every other root-level HTML page as a fixed background.
+          bg_style = '''<style id="site-bg-video-style">
+          html, body { min-height: 100%; }
+          body { position: relative; background: transparent !important; }
+          #siteBgVideo { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; }
+          #siteBgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.58); z-index: 1; pointer-events: none; }
+          body > *:not(#siteBgVideo):not(#siteBgOverlay) { position: relative; z-index: 2; }
+          </style>'''
+          bg_markup = '<video id="siteBgVideo" autoplay loop muted playsinline aria-hidden="true"><source src="assets/mov/BG2.webm" type="video/webm"></video><div id="siteBgOverlay" aria-hidden="true"></div>'
+
+          for p in Path('.').glob('*.html'):
+              if p.name == 'index.html':
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s = re.sub(r'<style id="site-bg-video-style">.*?</style>', '', s, flags=re.I|re.S)
+              s = re.sub(r'<video id="siteBgVideo".*?</video>\s*<div id="siteBgOverlay"[^>]*></div>', '', s, flags=re.I|re.S)
+              s = s.replace('</head>', bg_style + '\n</head>', 1)
+              s = re.sub(r'(<body\b[^>]*>)', r'\1' + bg_markup, s, count=1, flags=re.I)
+              p.write_text(s, encoding='utf-8')
           PY
 
           if git diff --quiet; then
@@ -48,6 +68,7 @@ jobs:
           fi
           git config user.name 'LIL SYNN Website Bot'
           git config user.email 'lilsynn89@gmail.com'
-          git add index.html
-          git commit -m 'Use LS artwork on homepage'
+          git add '*.html'
+          git add .github/workflows/fix-homepage.yml
+          git commit -m 'Set BG2 as site background'
           git push
