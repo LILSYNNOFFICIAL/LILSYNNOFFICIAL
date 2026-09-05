@@ -1,7 +1,5 @@
 name: Refresh Latest Videos
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
@@ -59,37 +57,11 @@ jobs:
           pathlib.Path('latest-videos.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
           print(json.dumps(latest,indent=2,ensure_ascii=False))
           PY
-      - name: Add merch shop image to homepage
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          marker='<p class="section-subtitle">Official LIL SYNN merchandise.</p><div class="mt-8 flex justify-center">'
-          image='<div class="mt-8 flex justify-center"><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" aria-label="Shop official LIL SYNN merchandise"><img src="assets/img/MERCH_SHOP.png" alt="LIL SYNN official merchandise" class="w-full max-w-[500px] md:max-w-[540px] rounded-2xl border border-[#ff008f]/30 shadow-2xl transition-transform duration-200 hover:scale-[1.02]"></a></div><div class="mt-6 flex justify-center">'
-          if 'src="assets/img/MERCH_SHOP.png"' not in s:
-              if marker not in s:
-                  raise SystemExit('Merch section marker not found in index.html')
-              s=s.replace(marker, '<p class="section-subtitle">Official LIL SYNN merchandise.</p>'+image, 1)
-              p.write_text(s,encoding='utf-8')
-          PY
-      - name: Ensure manifest renderer is loaded after site scripts
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html'); s=p.read_text(encoding='utf-8')
-          tag='<script src="latest-videos.js"></script>'
-          if tag not in s:
-              marker='<script src="music-random.js"></script>'
-              if marker not in s: raise SystemExit('music-random script marker not found')
-              s=s.replace(marker,marker+'\n'+tag,1)
-              p.write_text(s,encoding='utf-8')
-          PY
-      - name: Commit refreshed manifest and homepage changes
+      - name: Commit refreshed video manifest
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot].com'
-          git add latest-videos.json index.html
+          git add latest-videos.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh latest 9 YouTube videos and homepage merch [skip ci]'
+          git commit -m 'Refresh latest 9 YouTube videos [skip ci]'
           git push
