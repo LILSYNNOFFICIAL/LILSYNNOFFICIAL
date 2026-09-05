@@ -1,6 +1,6 @@
 (() => {
   const init = () => {
-    // Keep only the requested LS.png artwork on the homepage.
+    // The homepage should use only LS.png as the section artwork.
     document.querySelectorAll('img').forEach(img => {
       const src = img.getAttribute('src') || '';
       if (/MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i.test(src)) {
@@ -10,7 +10,7 @@
       }
     });
 
-    // Rename the existing random/discover control and make it refresh only #music-grid.
+    // Rename the existing random/discover control to the exact requested label.
     const candidates = Array.from(document.querySelectorAll('button, a'));
     const refresh = candidates.find(el => {
       const t = (el.textContent || '').trim().toLowerCase();
@@ -19,8 +19,7 @@
       return /random\s*song|discover/.test(t) || /random.*(song|music)|discover/.test(id + ' ' + cls);
     });
 
-    if (refresh && !refresh.dataset.randomRefreshBound) {
-      refresh.dataset.randomRefreshBound = 'true';
+    if (refresh) {
       refresh.textContent = 'Random Song Refresh';
       refresh.setAttribute('aria-label', 'Refresh random songs');
       refresh.setAttribute('type', 'button');
