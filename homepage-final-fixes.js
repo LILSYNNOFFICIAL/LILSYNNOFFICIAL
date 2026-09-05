@@ -12,12 +12,13 @@
     video.style.width = '100vw';
     video.style.objectFit = 'cover';
     video.style.objectPosition = 'center top';
-    video.style.transform = 'none';
     video.style.zIndex = '0';
 
-    if (window.innerWidth <= 640) {
-      video.style.objectPosition = 'center top';
-    }
+    const mobile = window.matchMedia('(max-width: 640px)').matches;
+    const scale = mobile ? 0.82 : 0.88;
+    video.style.setProperty('transform', `scale(${scale})`, 'important');
+    video.style.setProperty('transform-origin', 'center center', 'important');
+    video.style.setProperty('background', '#000', 'important');
   };
 
   const cleanArt = () => {
@@ -103,6 +104,7 @@
     ensureMerchButton();
     bindRefresh();
     window.addEventListener('resize', fitBackgroundVideo, { passive: true });
+    window.addEventListener('orientationchange', fitBackgroundVideo, { passive: true });
     new MutationObserver(() => {
       fitBackgroundVideo();
       cleanArt();
