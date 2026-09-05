@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Discover newest channel uploads with YouTube Data API
+      - name: Install current yt-dlp
+        run: python -m pip install --upgrade yt-dlp
+      - name: Discover releases from the YouTube Releases tab only
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         shell: bash
@@ -18,50 +20,76 @@ jobs:
           set -euo pipefail
           test -n "${YOUTUBE_API_KEY:-}" || { echo 'YOUTUBE_API_KEY GitHub Actions secret is missing'; exit 1; }
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request
+          import json, os, pathlib, subprocess, urllib.parse, urllib.request
           from datetime import datetime, timezone
+
           key=os.environ['YOUTUBE_API_KEY']
-          channel='UCfJ2K7mKqJ4u6o7g4G6k5xQ'
+          releases_url='https://www.youtube.com/@LILSYNNOFFICIAL/releases'
+
+          # yt-dlp is pointed at the Releases tab itself. This deliberately
+          # does not use /videos, /shorts, /streams, uploads, search, or home.
+          cmd=['yt-dlp','--flat-playlist','--dump-single-json','--no-warnings',releases_url]
+          raw=subprocess.check_output(cmd,text=True)
+          data=json.loads(raw)
+          entries=data.get('entries') or []
+          playlist_ids=[]
+          seen_playlists=set()
+          for e in entries:
+              if not e: continue
+              pid=e.get('id')
+              url=e.get('webpage_url') or e.get('url')
+              if pid and (e.get('_type')=='url' or e.get('ie_key','').lower().startswith('youtube')):
+                  if url and 'playlist?list=' in url:
+                      pid=urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get('list',[pid])[0]
+                  if pid not in seen_playlists:
+                      seen_playlists.add(pid); playlist_ids.append(pid)
+          if not playlist_ids:
+              raise SystemExit('No release playlists were discovered from the LIL SYNN /releases tab')
+
           def api(path, params):
               q=urllib.parse.urlencode({**params,'key':key})
               with urllib.request.urlopen('https://www.googleapis.com/youtube/v3/'+path+'?'+q,timeout=30) as r:
-                  return json.load(r)
-          c=api('channels',{'part':'contentDetails,snippet','forHandle':'@LILSYNNOFFICIAL'})
-          if not c.get('items'):
-              c=api('channels',{'part':'contentDetails,snippet','id':channel})
-          if not c.get('items'):
-              raise SystemExit('YouTube channel could not be resolved')
-          ch=c['items'][0]
-          uploads=ch['contentDetails']['relatedPlaylists']['uploads']
-          items=[]; token=None
-          while len(items)<50:
-              params={'part':'snippet,contentDetails','playlistId':uploads,'maxResults':50}
-              if token: params['pageToken']=token
-              page=api('playlistItems',params)
-              items.extend(page.get('items',[]))
-              token=page.get('nextPageToken')
-              if not token: break
+                  body=json.load(r)
+              if 'error' in body: raise SystemExit(body['error'].get('message','YouTube API error'))
+              return body
+
+          ids=[]; seen=set()
+          for pid in playlist_ids[:20]:
+              page=api('playlistItems',{'part':'snippet,contentDetails','playlistId':pid,'maxResults':50})
+              for item in page.get('items',[]):
+                  vid=((item.get('contentDetails') or {}).get('videoId'))
+                  if vid and vid not in seen:
+                      seen.add(vid); ids.append(vid)
+
+          if not ids:
+              raise SystemExit('The YouTube Releases tab contained no videos')
+
           videos=[]
-          for item in items:
-              sn=item.get('snippet') or {}
-              vid=((item.get('contentDetails') or {}).get('videoId'))
-              if not vid: continue
-              published=sn.get('publishedAt')
-              if not published: continue
-              videos.append({'id':vid,'title':sn.get('title') or vid,'publishedAt':published})
-          unique={v['id']:v for v in videos}
-          latest=sorted(unique.values(),key=lambda x:x['publishedAt'],reverse=True)[:9]
-          if len(latest)<9:
-              raise SystemExit(f'Only found {len(latest)} dated uploads from the LIL SYNN channel')
-          out={'generatedAt':datetime.now(timezone.utc).isoformat(),'source':'https://www.youtube.com/@LILSYNNOFFICIAL/releases','selection':'newest 9 channel uploads by publishedAt','videos':latest}
+          for i in range(0,len(ids),50):
+              body=api('videos',{'part':'snippet','id':','.join(ids[i:i+50])})
+              for item in body.get('items',[]):
+                  published=(item.get('snippet') or {}).get('publishedAt')
+                  if item.get('id') and published:
+                      videos.append({'id':item['id'],'title':(item.get('snippet') or {}).get('title') or item['id'],'publishedAt':published})
+
+          latest=sorted({v['id']:v for v in videos}.values(),key=lambda x:x['publishedAt'],reverse=True)[:9]
+          if not latest:
+              raise SystemExit('No dated videos were found in the YouTube Releases tab')
+
+          out={
+              'generatedAt':datetime.now(timezone.utc).isoformat(),
+              'source':releases_url,
+              'selection':'newest 9 videos from release playlists on the Releases tab by publishedAt',
+              'videos':latest
+          }
           pathlib.Path('latest-videos.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
           print(json.dumps(latest,indent=2,ensure_ascii=False))
           PY
-      - name: Commit refreshed video manifest
+      - name: Commit refreshed release manifest
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot].com'
           git add latest-videos.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh latest 9 YouTube videos [skip ci]'
+          git commit -m 'Refresh latest 9 YouTube releases [skip ci]'
           git push
