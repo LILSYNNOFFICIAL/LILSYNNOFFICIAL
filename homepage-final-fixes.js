@@ -1,6 +1,7 @@
 (() => {
   const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
   const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
+  const merchUrl = 'https://lilsynnofficial.threadless.com/';
 
   const cleanArt = () => {
     document.querySelectorAll('img').forEach(img => {
@@ -28,8 +29,32 @@
       img.alt = 'LIL SYNN';
       img.loading = 'eager';
       img.decoding = 'async';
-      img.style.cssText = 'display:block;width:min(72vw,420px);max-height:260px;height:auto;object-fit:contain;margin:0 auto 1.25rem;';
+      img.style.cssText = 'display:block;width:min(72vw,420px);max-height:260px;height:auto;object-fit:contain;margin:0 auto .25rem;';
       heading.parentNode.insertBefore(img, heading);
+    } else {
+      lsImages[0].style.marginBottom = '.25rem';
+      heading.style.marginTop = '0';
+    }
+  };
+
+  const ensureMerchButton = () => {
+    const merch = document.getElementById('merch');
+    if (!merch) return;
+    let button = merch.querySelector('[data-wear-the-signal]');
+    if (!button) {
+      button = document.createElement('a');
+      button.href = merchUrl;
+      button.target = '_blank';
+      button.rel = 'noopener noreferrer';
+      button.dataset.wearTheSignal = 'true';
+      button.textContent = 'WEAR THE SIGNAL';
+      button.setAttribute('aria-label', 'Shop official LIL SYNN merch');
+      button.style.cssText = 'display:inline-block;margin-top:1rem;background:#ff008f;color:#000;font-weight:700;padding:.65rem 1.5rem;border-radius:.75rem;text-decoration:none;transition:transform .2s ease,background-color .2s ease;';
+      button.addEventListener('mouseenter', () => { button.style.backgroundColor = '#ff4fd8'; button.style.transform = 'scale(1.05)'; });
+      button.addEventListener('mouseleave', () => { button.style.backgroundColor = '#ff008f'; button.style.transform = 'scale(1)'; });
+      const heading = merch.querySelector('h2');
+      if (heading?.parentNode) heading.parentNode.appendChild(button);
+      else merch.appendChild(button);
     }
   };
 
@@ -57,10 +82,12 @@
   const init = () => {
     cleanArt();
     ensureSingleLS();
+    ensureMerchButton();
     bindRefresh();
     new MutationObserver(() => {
       cleanArt();
       ensureSingleLS();
+      ensureMerchButton();
       bindRefresh();
     }).observe(document.body, { childList: true, subtree: true });
   };
