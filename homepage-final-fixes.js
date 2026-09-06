@@ -2,11 +2,11 @@
   const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
   const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
   const merchUrl = 'https://lilsynnofficial.threadless.com/';
+  const backgroundTrack = '/assets/other/sound/Background.mp3';
 
   const fitBackgroundVideo = () => {
     const video = document.getElementById('bgVideo');
     if (!video) return;
-
     document.documentElement.style.setProperty('background', '#000', 'important');
     document.body.style.setProperty('background', '#000', 'important');
     video.style.setProperty('position', 'fixed', 'important');
@@ -103,16 +103,50 @@
     }, true);
   };
 
+  const ensureBackgroundAudio = () => {
+    let audio = document.getElementById('bgMusic');
+    if (!audio) {
+      audio = document.createElement('audio');
+      audio.id = 'bgMusic';
+      audio.preload = 'auto';
+      audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
+      audio.style.display = 'none';
+      document.body.appendChild(audio);
+    }
+
+    const currentSrc = audio.getAttribute('src') || audio.currentSrc || '';
+    if (!currentSrc || !currentSrc.includes('/assets/other/sound/Background.mp3')) {
+      audio.src = backgroundTrack;
+      audio.load();
+    }
+
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0.65;
+    audio.muted = false;
+    audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
+
+    const tryPlay = () => {
+      audio.muted = false;
+      const promise = audio.play();
+      if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+    };
+
+    tryPlay();
+    if (!audio.dataset.userGestureBound) {
+      audio.dataset.userGestureBound = 'true';
+      ['pointerdown', 'click', 'keydown', 'touchstart'].forEach(eventName => {
+        document.addEventListener(eventName, tryPlay, { passive: true });
+      });
+    }
+  };
+
   const setBackgroundTrackMetadata = () => {
     const audio = document.getElementById('bgMusic');
     if (!audio) return;
     audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
     if ('mediaSession' in navigator && 'MediaMetadata' in window) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: 'The Calm',
-        artist: 'LIL SYNN',
-        album: 'The Calm'
-      });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
     }
   };
 
@@ -122,6 +156,7 @@
     ensureSingleLS();
     ensureMerchButton();
     bindRefresh();
+    ensureBackgroundAudio();
     setBackgroundTrackMetadata();
     window.addEventListener('resize', fitBackgroundVideo, { passive: true });
     window.addEventListener('orientationchange', fitBackgroundVideo, { passive: true });
@@ -131,6 +166,7 @@
       ensureSingleLS();
       ensureMerchButton();
       bindRefresh();
+      ensureBackgroundAudio();
       setBackgroundTrackMetadata();
     }).observe(document.body, { childList: true, subtree: true });
   };
