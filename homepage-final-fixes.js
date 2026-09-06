@@ -60,8 +60,9 @@
 
   const dedupeSpotify = () => {
     const frames=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
-    if(frames.length>1) frames.slice(1).forEach(f=>{const wrap=f.closest('[data-spotify-player]')||f;wrap.remove();});
-    const kept=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'))[0];
+    // Keep the SECOND/LAST Spotify player. Remove every earlier duplicate.
+    if(frames.length>1) frames.slice(0,-1).forEach(f=>{const wrap=f.closest('[data-spotify-player]')||f;wrap.remove();});
+    const kept=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]')).pop();
     if(kept){kept.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');kept.setAttribute('allowfullscreen','');kept.style.width='100%';kept.style.maxWidth='100%';kept.style.border='0';kept.style.borderRadius='12px';}
   };
 
