@@ -106,6 +106,27 @@
 
   const getBgAudio = () => document.getElementById('bgMusic');
 
+  const ensureCalmPlayer = () => {
+    const audio = getBgAudio();
+    if (!audio) return;
+    audio.loop = true;
+    audio.volume = 0.65;
+    audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
+    audio.setAttribute('title', 'The Calm');
+    audio.controls = true;
+    audio.autoplay = true;
+    audio.playsInline = true;
+    audio.style.cssText = 'position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:9999;width:min(520px,calc(100vw - 24px));height:42px;display:block;border-radius:12px;filter:none;';
+    let label = document.getElementById('the-calm-label');
+    if (!label) {
+      label = document.createElement('div');
+      label.id = 'the-calm-label';
+      label.textContent = 'THE CALM';
+      label.style.cssText = 'position:fixed;left:50%;bottom:58px;transform:translateX(-50%);z-index:10000;font:700 11px/1.2 Arial,sans-serif;letter-spacing:.18em;color:#fff;text-shadow:0 1px 4px #000;pointer-events:none;';
+      document.body.appendChild(label);
+    }
+  };
+
   const pauseBackgroundForExternalMedia = () => {
     const audio = getBgAudio();
     if (!audio) return;
@@ -134,29 +155,27 @@
     audio.loop = true;
     audio.volume = 0.65;
     audio.muted = false;
+    audio.autoplay = true;
     audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
-    const play = () => {
-      if (externalMediaPlaying) return;
-      audio.muted = false;
-      const promise = audio.play();
-      if (promise && typeof promise.catch === 'function') promise.catch(() => {});
-    };
-    play();
+    audio.setAttribute('title', 'The Calm');
+    const promise = audio.play();
+    if (promise && typeof promise.catch === 'function') promise.catch(() => {});
     return true;
   };
 
   const bindAudioUnlock = () => {
     if (window.__lilSynnAudioUnlockBound) return;
     window.__lilSynnAudioUnlockBound = true;
-    const unlock = () => {
+    const unlockFromScroll = () => {
       if (!externalMediaPlaying) startBackgroundMusic();
       if ('mediaSession' in navigator && 'MediaMetadata' in window) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
       }
     };
-    ['scroll','wheel','touchstart','touchmove','pointerdown','pointerup','keydown'].forEach(type => {
-      window.addEventListener(type, unlock, { passive: true });
-    });
+    window.addEventListener('scroll', unlockFromScroll, { passive: true });
+    window.addEventListener('wheel', unlockFromScroll, { passive: true });
+    window.addEventListener('touchmove', unlockFromScroll, { passive: true });
+    window.addEventListener('touchstart', unlockFromScroll, { passive: true });
   };
 
   const loadScript = (src, id) => {
@@ -256,6 +275,7 @@
     ensureSingleLS();
     ensureMerchButton();
     bindRefresh();
+    ensureCalmPlayer();
     startBackgroundMusic();
     bindAudioUnlock();
     bindExternalPlayers();
@@ -267,6 +287,7 @@
       ensureSingleLS();
       ensureMerchButton();
       bindRefresh();
+      ensureCalmPlayer();
       bindExternalPlayers();
     }).observe(document.body, { childList: true, subtree: true });
   };
