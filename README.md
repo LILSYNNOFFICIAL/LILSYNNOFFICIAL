@@ -38,6 +38,10 @@ The project is **AI-assisted, but creatively directed by a human**. Lyrics, conc
 | YouTube latest-video automation | 🟢 Operational |
 | YouTube Data API | 🟢 Operational |
 | Homepage music randomizer | 🟢 Operational |
+| Homepage Latest Releases catalog loader | 🟢 Operational |
+| Randomized homepage WebM background | 🟢 Operational |
+| The Calm background music | 🟢 Operational |
+| Spotify / YouTube media coordination | 🟢 Operational |
 | Release catalog | 🟢 Operational |
 | Special Access archive | 🟢 Operational |
 | Responsive/mobile layout | 🟢 Active |
@@ -54,7 +58,7 @@ The site is a custom static/serverless web experience deployed through Vercel. I
 ### Core pages
 
 - `index.html` — primary artist homepage.
-- `releases.html` — complete release archive.
+- `releases.html` — complete release archive and release-rendering source.
 - `special_access.html` — restricted archive and unreleased/demo media.
 - `privacy.html` — privacy/legal content.
 
@@ -62,31 +66,44 @@ The site is a custom static/serverless web experience deployed through Vercel. I
 
 - `release-catalog.json` — canonical music/release database.
 - `music-random.js` — homepage randomized music discovery.
+- `site-polish.js` — homepage release/catalog presentation and supporting UI behavior.
+- `homepage-final-fixes.js` — narrowly scoped homepage compatibility/media behavior; must not become a second release-data system.
 - `latest-videos.json` — generated newest-nine video manifest.
 - `api/youtube.js` — serverless YouTube endpoint.
 - `.github/workflows/update-latest-videos.yml` — automated YouTube refresh.
 - `style.css` — global visual/responsive system.
 - `script.js` — core site interactions.
-- `site-polish.js` — supporting presentation/responsive behavior.
 
 ---
 
 ## ✦ Music Architecture
 
-The **release catalog is the authoritative music database**.
+The **release catalog is the authoritative music database**. Homepage music discovery and homepage Latest Releases are separate consumers of that source.
 
 ```text
                     release-catalog.json
                            │
-              ┌────────────┴────────────┐
-              ▼                         ▼
-        releases.html              music-random.js
-        Release Archive             Homepage Music
-              │                         │
-       Albums / EPs / Singles     Individual songs
-       Tracklists / artwork       Randomized selection
-       Platform links             Spotify + Apple
-                                    Parent artwork
+              ┌────────────┴─────────────┐
+              ▼                          ▼
+        releases.html                site-polish.js
+        Release Archive              Homepage Latest Releases
+              │                          │
+       Full archive                 Newest 3 releases
+       Tracklists                    Album artwork
+       Artwork                       Spotify + Apple
+       Platform links                      │
+              │                          ▼
+              │                       index.html
+              │
+              └──────────────┐
+                             ▼
+                       music-random.js
+                       Homepage Music
+                             │
+                       Individual songs
+                       Randomized selection
+                       Spotify + Apple
+                       Parent artwork
 ```
 
 ### `release-catalog.json`
@@ -95,11 +112,23 @@ The catalog maintains release ordering, release types, tracklists, artwork relat
 
 ### `releases.html`
 
-The public release archive consumes the catalog and presents releases, artwork, tracklists, and platform destinations.
+The public release archive consumes the catalog and presents releases, artwork, tracklists, and platform destinations. **This is the release-management page.** When releases change, update the release data there/catalog as designed; do not create a separate hard-coded homepage release database.
+
+### Homepage Latest Releases
+
+The homepage's **LATEST RELEASES** area is catalog-driven. The existing `site-polish.js` release system reads the canonical release data, selects the newest three releases, resolves their artwork and platform destinations, and renders them into the homepage.
+
+Therefore:
+
+> **Do not hard-code album art, release titles, Spotify links, or Apple Music links into `index.html` as a competing system.**
+
+If the latest three releases change, the homepage should update through the existing catalog/release system after deployment.
 
 ### `music-random.js`
 
-The homepage Music system expands grouped releases into individual songs, preserves each song's parent artwork, builds the eligible pool, and randomizes the displayed selection. Music randomization is independent from Latest Videos.
+The homepage Music system expands grouped releases into individual songs, preserves each song's parent artwork, builds the eligible pool, and randomizes the displayed selection. Music randomization is independent from Latest Releases and Latest Videos.
+
+The **RANDOM SONG REFRESH** control must call the existing `window.lilSynnRefreshMusic()` system. Refreshing the random songs must preserve the user's current scroll position; it must not call `scrollIntoView()` or otherwise jump the page to a selected card.
 
 ---
 
@@ -110,13 +139,13 @@ For a new release, use this workflow:
 ```text
 Upload artwork
       ↓
-Add/update release-catalog.json
+Update release catalog / releases system
       ↓
 Add Spotify + Apple Music destinations
       ↓
 Verify artwork path/title
       ↓
-Releases + homepage consume the catalog
+releases.html + homepage Latest Releases consume the same source
 ```
 
 ### Release data should include, when applicable
@@ -139,31 +168,95 @@ Use unique, descriptive filenames under:
 assets/images/icons/album_art/
 ```
 
-Examples of corrected/intentional artwork assets include:
-
-```text
-home_acoustic_version.png
-39_lil_synn_signal_light_sermon___remastered_2026.jpg
-```
-
 Do not reuse an ambiguous filename for multiple releases. If artwork changes, verify the catalog reference and all consumers before deleting or renaming the old asset.
+
+**Important:** `assets/img/LS.png` is the LIL SYNN logo/hero asset, not a generic release-art fallback. Homepage image-cleanup code must never delete release artwork merely because a filename resembles the logo.
 
 ---
 
-## ✦ Latest Releases
+## ✦ Homepage Background Video
 
-The homepage Latest Releases section is intended to be driven from the release catalog rather than a second manually maintained database.
+The homepage uses the existing `#bgVideo` element for its animated visual background.
 
-The current homepage design displays the **three latest releases**.
+### Random WebM background system
 
-Recent release work has included:
+The background is designed so that a fresh page load can select a random `.webm` from:
 
-- **HOME (ACOUSTIC VERSION)**
-- **I DID IT AGAIN**
-- **Signal Light Sermon**
-- **Rescue You (Acoustic Version)**
+```text
+assets/mov/
+```
 
-Release-specific Spotify and Apple Music buttons should retain the exact supplied destinations.
+Current known background assets include:
+
+```text
+assets/mov/BG_ANI.webm
+assets/mov/HERO_BG_WEBM.webm
+```
+
+The intended maintenance model is:
+
+```text
+Upload a new .webm to assets/mov/
+              ↓
+Automatic discovery
+              ↓
+Random selection on page load
+              ↓
+Existing #bgVideo
+```
+
+Do not create a second competing background-video element. Preserve the existing mobile behavior (`object-fit: cover`) so portrait/mobile screens do not horizontally squash the video.
+
+If automatic directory discovery fails, the existing known background should remain a safe fallback rather than leaving the page without a background.
+
+---
+
+## ✦ The Calm — Background Music
+
+The background music track is **The Calm**. The source file remains:
+
+```text
+assets/other/sound/Background.mp3
+```
+
+The displayed title is **The Calm**; do not rename the underlying file merely to change the UI title.
+
+The Calm has its own compact player at the bottom of the homepage. It should be integrated with the existing page rather than floating independently over the content.
+
+### Playback behavior
+
+The intended experience is:
+
+- Attempt automatic playback when browser policy permits.
+- Keep the audio muted/unintrusive until browser policy allows audible playback.
+- Maintain looping playback while the user browses.
+- When a YouTube video begins playing, pause The Calm.
+- When that YouTube playback ends/pauses, resume The Calm if it was previously playing.
+- Spotify playback must likewise take precedence over The Calm where browser/player events permit detection.
+
+**Browser autoplay policy is a platform constraint.** Code must not pretend that audible autoplay can be guaranteed on every mobile browser. Do not introduce increasingly aggressive autoplay hacks that break the rest of the page.
+
+---
+
+## ✦ Spotify / YouTube Media Rules
+
+The homepage should have **one intended Spotify embed**, not duplicate Spotify players created by corrective scripts.
+
+Media coordination rules:
+
+```text
+The Calm playing
+      ↓
+Spotify / YouTube starts
+      ↓
+The Calm pauses
+      ↓
+External media ends/stops
+      ↓
+The Calm resumes if it was previously playing
+```
+
+YouTube embeds should use the YouTube player API when event-level playback coordination is required. Do not duplicate embeds or inject replacement players as a workaround for a broken existing player.
 
 ---
 
@@ -244,6 +337,7 @@ The systems have intentionally different responsibilities:
 
 ```text
 MUSIC              → randomized song discovery
+LATEST RELEASES    → catalog-driven newest 3 releases
 LATEST VIDEOS      → newest videos by published date
 YOUTUBE FALLBACK   → deterministic backup
 ```
@@ -282,8 +376,6 @@ The player supports track selection, play/pause, seeking, volume, current-track 
 
 For broad browser compatibility, **MP3 is preferred** for future web-playable archive tracks. FLAC browser support can vary. If a FLAC track fails in a target browser, provide a browser-friendly MP3/Opus derivative rather than redesigning the player.
 
-The Blooper/Alt Scenes video is centered under its heading.
-
 ---
 
 ## ✦ Navigation & Responsive UX
@@ -297,6 +389,10 @@ Homepage primary CTAs are:
 **LISTEN NOW · PRE-SAVE · VOTE 4 LIL SYNN**
 
 There should be only one Pre-Save CTA in that top action group.
+
+### Hero logo rule
+
+The homepage hero should display **one** `assets/img/LS.png` logo. If a duplicate appears, identify and remove the duplicate source element specifically; do not use broad image-deletion logic that can remove release artwork or dynamically generated images.
 
 ---
 
@@ -361,7 +457,13 @@ LILSYNNOFFICIAL/
 │   └── youtube.js
 ├── assets/
 │   ├── images/icons/album_art/
+│   ├── img/
+│   │   └── LS.png
+│   ├── mov/
+│   │   ├── BG_ANI.webm
+│   │   └── HERO_BG_WEBM.webm
 │   ├── other/
+│   │   └── sound/Background.mp3
 │   └── youtube-fallback.json
 ├── index.html
 ├── latest-videos.json
@@ -375,6 +477,7 @@ LILSYNNOFFICIAL/
 ├── sitemap.xml
 ├── special_access.html
 ├── style.css
+├── homepage-final-fixes.js
 └── DEPLOYMENT-REVISION.md
 ```
 
@@ -385,11 +488,23 @@ LILSYNNOFFICIAL/
 ### Adding a new release
 
 1. Upload artwork.
-2. Add the release to `release-catalog.json`.
+2. Update the canonical release data/system.
 3. Add Spotify and Apple Music destinations.
 4. Add tracks and track-level links where applicable.
 5. Verify the artwork filename and catalog reference.
 6. Check `releases.html` and the homepage after deployment.
+
+The homepage Latest Releases should automatically consume the same release source and show the newest three releases. **Do not manually rebuild those three cards in `index.html`.**
+
+### Adding a new homepage background
+
+Simply upload a `.webm` file into:
+
+```text
+assets/mov/
+```
+
+The random-background system should discover it automatically. Do not add another `<video>` element to `index.html` for each new background.
 
 ### Adding a new Special Access track
 
@@ -407,13 +522,15 @@ The workflow should determine ordering from `publishedAt`, not from page positio
 
 ### Artwork troubleshooting
 
-If artwork is wrong:
+If artwork is wrong or missing:
 
 1. Confirm the exact file in `assets/images/icons/album_art/`.
-2. Confirm the catalog reference.
-3. Search for duplicate/stale artwork references.
-4. Check browser/CDN caching.
-5. Do not delete a working asset until all references have been audited.
+2. Confirm the canonical release reference.
+3. Confirm the homepage is loading the existing catalog-driven release system.
+4. Search for stale hard-coded homepage artwork references.
+5. Check browser/CDN caching.
+6. Do not add a second homepage release system.
+7. Do not delete a working asset until all references have been audited.
 
 ---
 
@@ -504,6 +621,8 @@ Secret values are intentionally absent from documentation and source control.
 3. **FLAC browser support** — varies; MP3/Opus is safer for web playback.
 4. **`latest-videos.json` is generated data** — normally do not edit it manually.
 5. **Fallback data can become stale** — it exists as a deterministic backup, not the primary source.
+6. **Browser autoplay restrictions** — audible The Calm playback cannot be guaranteed before a user gesture on every browser, especially mobile.
+7. **Directory discovery for random WebM backgrounds** — the client must use an available repository/API-backed file list or equivalent manifest; browsers cannot natively enumerate arbitrary server directories.
 
 Known limitations should be solved deliberately and locally, not through broad rewrites.
 
@@ -515,100 +634,102 @@ This project contains interconnected production systems. Before changing anythin
 
 1. Identify the authoritative source.
 2. Identify every consumer.
-3. Make the smallest targeted change possible.
-4. Preserve existing records and functionality.
-5. Verify generated data.
-6. Verify the deployment.
+3. Read the relevant JS/HTML before editing it.
+4. Make the smallest targeted change possible.
+5. Preserve existing records and functionality.
+6. Verify generated data.
+7. Verify the production deployment/live behavior.
 
 ### Critical rules
 
 - **Never delete or reconstruct `release-catalog.json` from a partial list.** Add records while preserving the existing catalog.
+- The **release catalog/release system is authoritative** for Latest Releases; do not create a competing hard-coded homepage release database.
+- `releases.html` and the homepage Latest Releases must remain connected through the existing release-loading logic.
 - Do not duplicate release data across multiple homepage-only databases.
 - Do not hard-code new YouTube videos into `index.html` when automation is working.
 - Do not put API credentials into source files.
 - Do not globally change module semantics to silence a warning without auditing the entire codebase.
 - Do not replace a major production file with a partial reconstruction.
-- Do not rename artwork without checking all references.
-- Do not create multiple Special Access players when the single-library architecture is intended.
-- Do not make desktop fixes that compromise mobile behavior.
+- Do not use broad DOM cleanup selectors such as “delete every second image” to solve a duplicate-image problem.
+- **Never remove images globally based only on filename.** `LS.png` is a logo; album artwork is separate content.
+- Do not add a second Spotify embed to compensate for a broken first embed.
+- Do not add a second `<video>` background system.
+- Do not replace `music-random.js` with a separate randomizer.
+- The Random Song Refresh control must preserve scroll position.
+- Do not use `scrollIntoView()` as a side effect of random-song refresh.
+- Do not hard-code the newest release artwork into homepage-fix scripts when the catalog-driven release loader already exists.
+- Before modifying any interconnected homepage script, inspect all related JS files and identify the existing data flow.
+
+### Preferred repair pattern
+
+```text
+Observe live problem
+       ↓
+Read README / architecture
+       ↓
+Identify authoritative source
+       ↓
+Trace existing JS consumers
+       ↓
+Inspect production/live output
+       ↓
+Make one narrow change
+       ↓
+Deploy
+       ↓
+Check live site
+       ↓
+Only then proceed to another change
+```
+
+This repository has accumulated several interconnected homepage systems. **Preserving working architecture is more important than making a quick workaround.**
 
 ---
 
-## ✦ Changelog / Project Evolution
+## ✦ Recent Production Lessons
 
-### 2026
+The following lessons are now part of the operating rules because they caused real production regressions during recent homepage work:
 
-- Established the LIL SYNN production website architecture.
-- Centralized music data in `release-catalog.json`.
-- Built the public release archive.
-- Built homepage Music randomization from catalog data.
-- Established Latest Releases as a catalog-driven presentation.
-- Added direct Spotify and Apple Music destinations.
-- Modernized Special Access into a custom library-style HTML5 audio player.
-- Added the current unreleased/demo library.
-- Improved mobile hamburger-menu sizing.
-- Centered the Special Access Blooper/Alt Scenes video.
-- Built Latest Videos automation for the newest nine videos.
-- Migrated Latest Videos from `yt-dlp` to the YouTube Data API after bot-detection failures.
-- Added `publishedAt`-based chronological sorting.
-- Added GitHub Actions secret-based API authentication.
-- Integrated generated video updates into the GitHub → Vercel deployment path.
-- Documented the non-blocking Vercel ESM/CommonJS warning.
+### 1. Latest Releases artwork
 
----
+A homepage image cleanup routine incorrectly treated `LS.png` as disposable duplicate content and caused release artwork to disappear. The fix was to restore the existing catalog-driven release loader and remove destructive global image cleanup.
 
-## ✦ Related Creative / Technology Ecosystem
+**Lesson:** release artwork belongs to the release system. Never manipulate it through a generic homepage image filter.
 
-LIL SYNN exists within a broader independent creative and technology ecosystem associated with **Neurosyn-Dev**.
+### 2. Duplicate Spotify players
 
-Related projects and identities include:
+Adding corrective embeds produced duplicate Spotify players.
 
-- SYNTIENT RECORDS
-- SYNSTATIC
-- Ziggy and Chickenman
-- Chasing Quiet
-- The Lions Roar
-- SYNSOUND
-- BlueNote
-- Neurodivergent Helper
-- MARMalade
-- Neurosyn-Aeon
-- NR-PROMPT-ENGINEERING
+**Lesson:** preserve one intended Spotify embed and repair its source/placement rather than injecting another player.
 
-These projects span music, visual storytelling, AI-assisted creative work, software, prompt engineering, and experimental human-computer interaction.
+### 3. Random Song Refresh scrolling
+
+The random-song refresh could visually refresh the music cards while also jumping the browser to a selected card through `scrollIntoView()`.
+
+**Lesson:** refresh content in place and preserve the user's scroll position.
+
+### 4. The Calm autoplay
+
+The Calm can work after interaction, but mobile browsers may block audible autoplay.
+
+**Lesson:** use browser-compatible autoplay behavior and do not break other media in an attempt to bypass platform restrictions.
+
+### 5. Mobile background video
+
+The desktop background video can look correct while becoming distorted on mobile if forced into the desktop aspect ratio.
+
+**Lesson:** preserve a dedicated mobile presentation using `object-fit: cover` rather than stretching the desktop video dimensions.
+
+### 6. Random WebM backgrounds
+
+The background system should use the existing `#bgVideo` and discover `.webm` files from `assets/mov/` rather than adding one hard-coded video element per background.
+
+**Lesson:** adding a new background should be a file-upload operation, not a homepage rewrite.
 
 ---
 
-## ✦ Maintenance Philosophy
+## ✦ Final Operating Principle
 
-The guiding principle for this repository is:
+> **Read first. Trace the existing architecture. Identify the source of truth. Make the smallest possible change. Verify the live site before declaring success.**
 
-> **Update the source once. Let the systems do the repetitive work.**
-
-Music belongs in the release catalog. YouTube discovery belongs in the API automation. Generated manifests should remain generated. Presentation should consume authoritative data. Production changes should be targeted, reversible, and verified.
-
----
-
-## ✦ Live Resources
-
-- 🌐 [lilsynn.com](https://lilsynn.com)
-- ▶️ [LIL SYNN on YouTube](https://www.youtube.com/@LILSYNNOFFICIAL)
-- 💻 [LILSYNNOFFICIAL on GitHub](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
-
----
-
-## ✦ Contact
-
-**synovamedia@gmail.com**
-
----
-
-<div align="center">
-
-### LIL SYNN
-
-**The signal is alive.**
-
-© 2026 LIL SYNN
-
-</div>
+The goal is not merely to make one visible issue disappear. The goal is to preserve the LIL SYNN production system while making each subsystem easier to maintain and extend.
