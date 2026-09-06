@@ -2,7 +2,6 @@
   const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
   const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
   const merchUrl = 'https://lilsynnofficial.threadless.com/';
-  const backgroundTrack = '/assets/other/sound/Background.mp3';
 
   const fitBackgroundVideo = () => {
     const video = document.getElementById('bgVideo');
@@ -25,7 +24,6 @@
     video.style.setProperty('object-fit', 'fill', 'important');
     video.style.setProperty('object-position', 'center center', 'important');
     video.style.setProperty('transform', 'none', 'important');
-    video.style.setProperty('transform-origin', 'center center', 'important');
     video.style.setProperty('z-index', '0', 'important');
     video.style.setProperty('background', '#000', 'important');
     video.style.setProperty('display', 'block', 'important');
@@ -103,51 +101,42 @@
     }, true);
   };
 
-  const ensureBackgroundAudio = () => {
-    let audio = document.getElementById('bgMusic');
-    if (!audio) {
-      audio = document.createElement('audio');
-      audio.id = 'bgMusic';
-      audio.preload = 'auto';
-      audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
-      audio.style.display = 'none';
-      document.body.appendChild(audio);
-    }
-
-    const currentSrc = audio.getAttribute('src') || audio.currentSrc || '';
-    if (!currentSrc || !currentSrc.includes('/assets/other/sound/Background.mp3')) {
-      audio.src = backgroundTrack;
-      audio.load();
-    }
-
+  const startBackgroundMusic = () => {
+    const audio = document.getElementById('bgMusic');
+    if (!audio) return false;
+    audio.src = '/assets/other/sound/Background.mp3';
     audio.loop = true;
-    audio.preload = 'auto';
     audio.volume = 0.65;
     audio.muted = false;
     audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
-
-    const tryPlay = () => {
+    const play = () => {
       audio.muted = false;
       const promise = audio.play();
       if (promise && typeof promise.catch === 'function') promise.catch(() => {});
     };
-
-    tryPlay();
-    if (!audio.dataset.userGestureBound) {
-      audio.dataset.userGestureBound = 'true';
-      ['pointerdown', 'click', 'keydown', 'touchstart'].forEach(eventName => {
-        document.addEventListener(eventName, tryPlay, { passive: true });
-      });
-    }
+    play();
+    return true;
   };
 
-  const setBackgroundTrackMetadata = () => {
-    const audio = document.getElementById('bgMusic');
-    if (!audio) return;
-    audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
-    if ('mediaSession' in navigator && 'MediaMetadata' in window) {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
-    }
+  const bindAudioUnlock = () => {
+    if (window.__lilSynnAudioUnlockBound) return;
+    window.__lilSynnAudioUnlockBound = true;
+    const unlock = () => {
+      startBackgroundMusic();
+      if ('mediaSession' in navigator && 'MediaMetadata' in window) {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
+      }
+      window.removeEventListener('scroll', unlock);
+      window.removeEventListener('wheel', unlock);
+      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+    window.addEventListener('scroll', unlock, { passive: true, once: true });
+    window.addEventListener('wheel', unlock, { passive: true, once: true });
+    window.addEventListener('touchstart', unlock, { passive: true, once: true });
+    window.addEventListener('pointerdown', unlock, { passive: true, once: true });
+    window.addEventListener('keydown', unlock, { passive: true, once: true });
   };
 
   const init = () => {
@@ -156,8 +145,8 @@
     ensureSingleLS();
     ensureMerchButton();
     bindRefresh();
-    ensureBackgroundAudio();
-    setBackgroundTrackMetadata();
+    startBackgroundMusic();
+    bindAudioUnlock();
     window.addEventListener('resize', fitBackgroundVideo, { passive: true });
     window.addEventListener('orientationchange', fitBackgroundVideo, { passive: true });
     new MutationObserver(() => {
@@ -166,8 +155,6 @@
       ensureSingleLS();
       ensureMerchButton();
       bindRefresh();
-      ensureBackgroundAudio();
-      setBackgroundTrackMetadata();
     }).observe(document.body, { childList: true, subtree: true });
   };
 
