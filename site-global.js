@@ -1,39 +1,39 @@
 (() => {
   const CALM_SRC='/assets/other/sound/Background.mp3';
-  const CALM_KEY='lilSynnTheCalmStateV2';
+  const CALM_KEY='lilSynnTheCalmStateV3';
   const BG_API='https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/mov?ref=main';
+  const IS_HOME=/^(\/|\/index\.html?)$/i.test(location.pathname);
   const MENU=[['Home','/'],['Music','/#music'],['Releases','/releases.html'],['Videos','/#videos'],['About','/#about'],['Merch','https://lilsynnofficial.threadless.com/'],['Lyrics','https://genius.com/artists/Lil-synn'],['Contact','/#contact'],['Privacy','/privacy.html'],['Terms','/terms.html']];
-  const ensureStyle=()=>{if(document.getElementById('lil-synn-global-style'))return;const s=document.createElement('style');s.id='lil-synn-global-style';s.textContent=`#lilSynnGlobalNav{position:fixed;top:0;right:0;z-index:10000;display:flex;align-items:center;padding:12px 16px;pointer-events:none}#lilSynnGlobalNav button{pointer-events:auto;width:48px;height:48px;border:1px solid rgba(255,0,143,.5);border-radius:12px;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);color:#ff008f;font:700 30px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35)}#lilSynnGlobalMenu{position:fixed;top:0;right:0;z-index:9999;width:min(360px,88vw);height:100dvh;box-sizing:border-box;padding:78px 24px 28px;background:rgba(0,0,0,.94);backdrop-filter:blur(18px);border-left:1px solid rgba(255,0,143,.35);transform:translateX(102%);transition:transform .25s ease;overflow:auto}#lilSynnGlobalMenu.open{transform:translateX(0)}#lilSynnGlobalMenu a{display:block;padding:11px 4px;color:#fff;text-decoration:none;font:600 17px/1.25 Rajdhani,Arial,sans-serif;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.06)}#lilSynnGlobalMenu a:hover,#lilSynnGlobalMenu a:focus-visible{color:#ff4fd8}#lilSynnCalm{width:min(92vw,900px);margin:2rem auto 1rem;padding:12px 14px;box-sizing:border-box;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.78);border:1px solid rgba(255,0,143,.25);border-radius:14px;color:#fff;position:relative;z-index:20;font-family:Inter,Arial,sans-serif}#lilSynnCalm strong{white-space:nowrap;font:700 13px Orbitron,Arial,sans-serif;letter-spacing:.08em}#lilSynnCalm strong span{color:#ff008f}#lilSynnCalm button{border:1px solid rgba(255,0,143,.45);background:#090909;color:#ff4fd8;border-radius:9px;width:38px;height:34px;cursor:pointer;font-weight:800}#lilSynnCalm input[type=range]{accent-color:#ff008f;min-width:50px}#lilSynnCalm [data-calm-seek]{flex:1}@media(max-width:600px){#lilSynnCalm{flex-wrap:wrap}#lilSynnCalm strong{width:100%}#lilSynnCalm [data-calm-seek]{min-width:120px}}@media(max-width:700px){#lilSynnGlobalNav{padding:8px 10px}#lilSynnGlobalNav button{width:44px;height:44px;font-size:27px}}`;document.head.appendChild(s)};
+
+  const ensureStyle=()=>{if(document.getElementById('lil-synn-global-style'))return;const s=document.createElement('style');s.id='lil-synn-global-style';s.textContent=`#lilSynnGlobalNav{position:relative;display:flex;align-items:center;z-index:10000}#lilSynnGlobalNav button{width:44px;height:44px;border:1px solid rgba(255,0,143,.5);border-radius:10px;background:rgba(0,0,0,.72);color:#ff008f;font:700 28px/1 Arial,sans-serif;cursor:pointer;flex:0 0 auto}#lilSynnGlobalMenu{position:fixed;top:0;right:0;z-index:9999;width:min(360px,88vw);height:100dvh;box-sizing:border-box;padding:78px 24px 28px;background:rgba(0,0,0,.94);backdrop-filter:blur(18px);border-left:1px solid rgba(255,0,143,.35);transform:translateX(102%);transition:transform .25s ease;overflow:auto}#lilSynnGlobalMenu.open{transform:translateX(0)}#lilSynnGlobalMenu a{display:block;padding:11px 4px;color:#fff;text-decoration:none;font:600 17px/1.25 Rajdhani,Arial,sans-serif;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.06)}#lilSynnGlobalMenu a:hover,#lilSynnGlobalMenu a:focus-visible{color:#ff4fd8}@media(max-width:700px){#lilSynnGlobalNav{margin-left:10px}#lilSynnGlobalNav button{width:42px;height:42px;font-size:26px}}`;document.head.appendChild(s)};
+
   const ensureMenu=()=>{
-    if(document.getElementById('hamburger')&&document.getElementById('sideMenu'))return;
-    if(document.getElementById('lilSynnGlobalNav'))return;
+    // index.html already owns the correct navigation/hamburger. Never add a second one there.
+    if(IS_HOME||document.getElementById('hamburger')||document.getElementById('sideMenu')||document.getElementById('lilSynnGlobalNav'))return;
+    const existingNav=document.querySelector('header .nav, header > .wrap.nav');
     const nav=document.createElement('div');nav.id='lilSynnGlobalNav';
-    const existingHeader=document.querySelector('header .nav, header > .wrap.nav');
     const b=document.createElement('button');b.type='button';b.textContent='☰';b.setAttribute('aria-label','Open navigation');b.setAttribute('aria-expanded','false');
     const menu=document.createElement('div');menu.id='lilSynnGlobalMenu';menu.setAttribute('aria-label','Site navigation');menu.setAttribute('aria-hidden','true');
     const close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Close navigation');close.style.cssText='position:absolute;top:18px;right:18px;width:42px;height:42px;border:1px solid rgba(255,0,143,.45);border-radius:10px;background:#090909;color:#fff;font-size:28px;cursor:pointer;';menu.appendChild(close);
     MENU.forEach(([label,href])=>{const a=document.createElement('a');a.href=href;a.textContent=label;if(/^https?:/.test(href)){a.target='_blank';a.rel='noopener noreferrer'}menu.appendChild(a)});
     const set=open=>{menu.classList.toggle('open',open);menu.setAttribute('aria-hidden',String(!open));b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'Close navigation':'Open navigation')};
     b.addEventListener('click',()=>set(!menu.classList.contains('open')));close.addEventListener('click',()=>set(false));menu.addEventListener('click',e=>{if(e.target.tagName==='A')set(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});
-    if(existingHeader){
-      b.style.cssText='width:44px;height:44px;border:1px solid rgba(255,0,143,.5);border-radius:10px;background:rgba(0,0,0,.7);color:#ff008f;font:700 28px/1 Arial,sans-serif;cursor:pointer;flex:0 0 auto;';
-      existingHeader.appendChild(b);
-      document.body.appendChild(menu);
-    }else{
-      nav.appendChild(b);document.body.append(nav,menu);
-    }
+    if(existingNav){b.style.marginLeft='10px';existingNav.appendChild(b);document.body.appendChild(menu)}else{nav.appendChild(b);document.body.append(nav,menu)}
   };
+
   const ensureCalm=()=>{
     let audio=document.getElementById('bgMusic');
     if(!audio){audio=document.createElement('audio');audio.id='bgMusic';audio.src=CALM_SRC;audio.loop=true;audio.preload='auto';audio.setAttribute('playsinline','');audio.style.display='none';document.body.appendChild(audio)}
     audio.loop=true;audio.preload='auto';if(!audio.src||!audio.src.includes('/assets/other/sound/Background.mp3'))audio.src=CALM_SRC;
-    let state={time:0,playing:false};try{state=JSON.parse(localStorage.getItem(CALM_KEY)||'{}')||state}catch{}
+    let state={time:0,playing:false};try{state=JSON.parse(localStorage.getItem(CALM_KEY)||localStorage.getItem('lilSynnTheCalmStateV2')||'{}')||state}catch{}
     let restored=false;const restore=()=>{if(restored)return;restored=true;if(Number.isFinite(state.time)&&state.time>0&&(!audio.duration||state.time<audio.duration))audio.currentTime=state.time;if(state.playing)audio.play().catch(()=>{})};
     if(audio.readyState>=1)restore();else audio.addEventListener('loadedmetadata',restore,{once:true});
     const save=()=>{try{localStorage.setItem(CALM_KEY,JSON.stringify({time:audio.currentTime||0,playing:!audio.paused&&!audio.ended}))}catch{}};
-    audio.addEventListener('timeupdate',()=>{if(Math.floor(audio.currentTime)%3===0)save()});window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save()});
-    // index.html owns its existing The Calm player. Only create the shared player on pages that do not already have one.
-    let p=document.getElementById('lilSynnCalm')||document.getElementById('theCalmPlayer');
+    audio.addEventListener('timeupdate',save);window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save()});
+
+    // index.html already owns the single visible Calm player. Do not create another one there.
+    if(IS_HOME)return audio;
+    let p=document.getElementById('lilSynnCalm');
     if(!p){
       p=document.createElement('div');p.id='lilSynnCalm';p.innerHTML='<strong>THE CALM <span>• LIL SYNN</span></strong><button type="button" data-calm-toggle aria-label="Play The Calm">▶</button><input data-calm-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="The Calm progress"><button type="button" data-calm-mute aria-label="Mute The Calm">🔊</button>';
       const footer=document.querySelector('footer');if(footer)footer.parentNode.insertBefore(p,footer);else document.body.appendChild(p);
@@ -42,14 +42,17 @@
     }
     return audio;
   };
+
   const randomizeBackground=async()=>{const v=document.getElementById('bgVideo')||document.getElementById('siteBgVideo');if(!v)return;try{const r=await fetch(BG_API+'&_='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('background list unavailable');const files=await r.json();const pool=(Array.isArray(files)?files:[]).filter(f=>f.type==='file'&&/\.webm$/i.test(f.name));if(!pool.length)return;const chosen=pool[Math.floor(Math.random()*pool.length)],src='/assets/mov/'+encodeURIComponent(chosen.name);v.pause();v.querySelectorAll('source').forEach(s=>s.remove());v.removeAttribute('src');v.src=src;v.style.objectFit='cover';v.style.objectPosition='center center';v.load();v.play().catch(()=>{})}catch(e){console.warn('Random WebM background unavailable; retaining existing background',e)}};
+
   const coordinateSpotify=()=>{
     const frames=[...document.querySelectorAll('iframe[src*="open.spotify.com"]')];if(!frames.length)return;
-    // Never replace or recreate the Spotify iframe. A pointer interaction is the safe signal that the user has started using the player.
-    frames.forEach(frame=>{if(frame.dataset.calmSpotifyBound)return;frame.dataset.calmSpotifyBound='1';const pause=()=>{const a=document.getElementById('bgMusic');if(a&&!a.paused){a.dataset.pausedForSpotify='1';a.pause()}};frame.addEventListener('pointerdown',pause,{passive:true});frame.addEventListener('mousedown',pause,{passive:true});frame.addEventListener('touchstart',pause,{passive:true});});
+    const pause=()=>{const a=document.getElementById('bgMusic');if(a&&!a.paused){a.dataset.pausedForSpotify='1';a.pause()}};
+    frames.forEach(frame=>{if(frame.dataset.calmSpotifyBound)return;frame.dataset.calmSpotifyBound='1';frame.addEventListener('pointerdown',pause,{capture:true,passive:true});frame.addEventListener('mousedown',pause,{capture:true,passive:true});frame.addEventListener('touchstart',pause,{capture:true,passive:true});});
+    if(!window.__lilSynnSpotifyGlobalBound){window.__lilSynnSpotifyGlobalBound=true;window.addEventListener('pointerdown',e=>{if(e.target instanceof HTMLIFrameElement&&/open\.spotify\.com/i.test(e.target.src))pause();},{capture:true,passive:true});window.addEventListener('mousedown',e=>{if(e.target instanceof HTMLIFrameElement&&/open\.spotify\.com/i.test(e.target.src))pause();},{capture:true,passive:true});}
   };
+
   const init=()=>{ensureStyle();ensureMenu();ensureCalm();randomizeBackground();coordinateSpotify();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-  const observer=new MutationObserver(()=>coordinateSpotify());
-  if(document.body)observer.observe(document.body,{childList:true,subtree:true});
+  const observer=new MutationObserver(()=>{ensureMenu();ensureCalm();coordinateSpotify()});if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 })();
