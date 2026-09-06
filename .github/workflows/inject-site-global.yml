@@ -24,13 +24,14 @@ jobs:
           for path in Path('.').glob('*.html'):
               text = path.read_text(encoding='utf-8')
               original = text
-              text = text.replace('/site-global.js?v=20260906', '/site-global.js?v=20260907')
+              text = text.replace('/site-global.js?v=20260906', '/site-global.js?v=20260908')
+              text = text.replace('/site-global.js?v=20260907', '/site-global.js?v=20260908')
               if '/site-global.js' not in text:
                   marker = '</body>'
                   if marker not in text.lower():
                       continue
                   idx = text.lower().rfind(marker)
-                  text = text[:idx] + '<script src="/site-global.js?v=20260907" defer></script>\n' + text[idx:]
+                  text = text[:idx] + '<script src="/site-global.js?v=20260908" defer></script>\n' + text[idx:]
               if text != original:
                   path.write_text(text, encoding='utf-8')
                   changed.append(str(path))
