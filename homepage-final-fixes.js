@@ -7,17 +7,28 @@
     const video = document.getElementById('bgVideo');
     if (!video) return;
 
-    video.style.top = '0';
-    video.style.height = '100vh';
-    video.style.width = '100vw';
-    video.style.objectFit = 'fill';
-    video.style.objectPosition = 'center center';
-    video.style.zIndex = '0';
-
-    const scale = 1;
-    video.style.setProperty('transform', `scale(${scale})`, 'important');
+    video.style.setProperty('position', 'fixed', 'important');
+    video.style.setProperty('inset', '0', 'important');
+    video.style.setProperty('top', '0', 'important');
+    video.style.setProperty('right', '0', 'important');
+    video.style.setProperty('bottom', '0', 'important');
+    video.style.setProperty('left', '0', 'important');
+    video.style.setProperty('width', '100vw', 'important');
+    video.style.setProperty('height', '100vh', 'important');
+    video.style.setProperty('min-width', '100vw', 'important');
+    video.style.setProperty('min-height', '100vh', 'important');
+    video.style.setProperty('max-width', 'none', 'important');
+    video.style.setProperty('max-height', 'none', 'important');
+    video.style.setProperty('margin', '0', 'important');
+    video.style.setProperty('padding', '0', 'important');
+    video.style.setProperty('object-fit', 'fill', 'important');
+    video.style.setProperty('object-position', 'center center', 'important');
+    video.style.setProperty('transform', 'none', 'important');
     video.style.setProperty('transform-origin', 'center center', 'important');
+    video.style.setProperty('z-index', '0', 'important');
     video.style.setProperty('background', '#000', 'important');
+    video.style.setProperty('display', 'block', 'important');
+    video.style.setProperty('pointer-events', 'none', 'important');
   };
 
   const cleanArt = () => {
