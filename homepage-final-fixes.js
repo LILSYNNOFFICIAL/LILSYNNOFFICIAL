@@ -10,13 +10,13 @@
     video.style.top = '0';
     video.style.height = '100vh';
     video.style.width = '100vw';
-    video.style.objectFit = 'cover';
-    video.style.objectPosition = 'center top';
+    video.style.objectFit = 'fill';
+    video.style.objectPosition = 'center center';
     video.style.zIndex = '0';
 
     const scale = 1;
     video.style.setProperty('transform', `scale(${scale})`, 'important');
-    video.style.setProperty('transform-origin', 'center top', 'important');
+    video.style.setProperty('transform-origin', 'center center', 'important');
     video.style.setProperty('background', '#000', 'important');
   };
 
