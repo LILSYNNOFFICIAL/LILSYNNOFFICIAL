@@ -23,15 +23,17 @@ jobs:
           changed = []
           for path in Path('.').glob('*.html'):
               text = path.read_text(encoding='utf-8')
-              if '/site-global.js' in text:
-                  continue
-              marker = '</body>'
-              if marker not in text.lower():
-                  continue
-              idx = text.lower().rfind(marker)
-              text = text[:idx] + '<script src="/site-global.js?v=20260906" defer></script>\n' + text[idx:]
-              path.write_text(text, encoding='utf-8')
-              changed.append(str(path))
+              original = text
+              text = text.replace('/site-global.js?v=20260906', '/site-global.js?v=20260907')
+              if '/site-global.js' not in text:
+                  marker = '</body>'
+                  if marker not in text.lower():
+                      continue
+                  idx = text.lower().rfind(marker)
+                  text = text[:idx] + '<script src="/site-global.js?v=20260907" defer></script>\n' + text[idx:]
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(str(path))
 
           print('Updated:', ', '.join(changed) if changed else 'none')
 
@@ -45,5 +47,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add '*.html'
-          git commit -m "Add shared site-global script to all HTML pages"
+          git commit -m "Bump shared site-global cache version"
           git push
