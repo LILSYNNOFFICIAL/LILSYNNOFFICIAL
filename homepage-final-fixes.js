@@ -35,19 +35,41 @@
   const pauseForExternal=()=>{const a=audio();if(!a)return;if(!a.paused){bgWasPlaying=true;a.pause();}externalMediaPlaying=true;};
   const resumeAfterExternal=()=>{if(!externalMediaPlaying)return;externalMediaPlaying=false;if(!bgWasPlaying)return;bgWasPlaying=false;const a=audio();if(a){const p=a.play();if(p?.catch)p.catch(()=>{});}};
 
+  const tryPlayCalm = () => {
+    const a=audio();
+    if(!a || externalMediaPlaying) return;
+    a.autoplay=true;
+    a.muted=false;
+    a.volume=.65;
+    if(a.readyState < 2) a.load();
+    const p=a.play();
+    if(p?.catch) p.catch(()=>{});
+  };
+
   const ensureCalmPlayer = () => {
     const a=audio(); if(!a)return;
-    a.src='/assets/other/sound/Background.mp3';a.loop=true;a.autoplay=true;a.preload='auto';a.volume=.65;a.setAttribute('aria-label','The Calm — LIL SYNN');
+    const src='/assets/other/sound/Background.mp3';
+    if(a.getAttribute('src') !== src) a.setAttribute('src',src);
+    a.loop=true;a.autoplay=true;a.preload='auto';a.volume=.65;a.muted=false;a.setAttribute('aria-label','The Calm — LIL SYNN');
+    if(!a.dataset.calmLoadBound){
+      a.dataset.calmLoadBound='true';
+      a.addEventListener('loadeddata',tryPlayCalm,{once:false});
+      a.addEventListener('canplay',tryPlayCalm,{once:false});
+    }
     let p=document.getElementById('theCalmPlayer');
     if(!p){
       p=document.createElement('div');p.id='theCalmPlayer';p.innerHTML='<div class="calm-title">THE CALM <span>• LIL SYNN</span></div><button type="button" data-calm-toggle>▶</button><input data-calm-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="The Calm progress"><button type="button" data-calm-mute>🔊</button>';
       p.style.cssText='position:relative;z-index:20;width:min(92vw,900px);margin:2rem auto 2rem;padding:.65rem .8rem;display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);border-radius:12px;box-sizing:border-box;';
       p.querySelector('.calm-title').style.cssText='font-weight:700;white-space:nowrap;';p.querySelector('.calm-title span').style.cssText='font-weight:400;opacity:.7;';p.querySelector('[data-calm-seek]').style.cssText='flex:1;min-width:60px;';
       const footer=document.querySelector('footer'); if(footer) footer.parentNode.insertBefore(p,footer); else document.body.appendChild(p);
-      p.querySelector('[data-calm-toggle]').onclick=()=>a.paused?a.play().catch(()=>{}):a.pause();p.querySelector('[data-calm-mute]').onclick=()=>{a.muted=!a.muted;p.querySelector('[data-calm-mute]').textContent=a.muted?'🔇':'🔊';};p.querySelector('[data-calm-seek]').oninput=e=>{if(a.duration)a.currentTime=Number(e.target.value)/100*a.duration;};
-      a.addEventListener('timeupdate',()=>{const s=p.querySelector('[data-calm-seek]');if(s&&a.duration)s.value=a.currentTime/a.duration*100;});a.addEventListener('play',()=>p.querySelector('[data-calm-toggle]').textContent='❚❚');a.addEventListener('pause',()=>p.querySelector('[data-calm-toggle]').textContent='▶');
+      p.querySelector('[data-calm-toggle]').onclick=()=>a.paused?a.play().catch(()=>{}):a.pause();
+      p.querySelector('[data-calm-mute]').onclick=()=>{a.muted=!a.muted;p.querySelector('[data-calm-mute]').textContent=a.muted?'🔇':'🔊';if(!a.muted)tryPlayCalm();};
+      p.querySelector('[data-calm-seek]').oninput=e=>{if(a.duration)a.currentTime=Number(e.target.value)/100*a.duration;};
+      a.addEventListener('timeupdate',()=>{const s=p.querySelector('[data-calm-seek]');if(s&&a.duration)s.value=a.currentTime/a.duration*100;});
+      a.addEventListener('play',()=>p.querySelector('[data-calm-toggle]').textContent='❚❚');
+      a.addEventListener('pause',()=>p.querySelector('[data-calm-toggle]').textContent='▶');
     }
-    const p1=a.play();if(p1?.catch)p1.catch(()=>{});
+    tryPlayCalm();
   };
 
   const loadScript=(src,id)=>{if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=src;s.async=true;document.head.appendChild(s);};
@@ -60,12 +82,11 @@
 
   const dedupeSpotify = () => {
     const frames=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
-    // Keep the SECOND/LAST Spotify player. Remove every earlier duplicate.
     if(frames.length>1) frames.slice(0,-1).forEach(f=>{const wrap=f.closest('[data-spotify-player]')||f;wrap.remove();});
     const kept=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]')).pop();
     if(kept){kept.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');kept.setAttribute('allowfullscreen','');kept.style.width='100%';kept.style.maxWidth='100%';kept.style.border='0';kept.style.borderRadius='12px';}
   };
 
-  const init=()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();window.addEventListener('resize',fitBackgroundVideo,{passive:true});window.addEventListener('orientationchange',fitBackgroundVideo,{passive:true});new MutationObserver(()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();}).observe(document.body,{childList:true,subtree:true});};
+  const init=()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();window.addEventListener('resize',fitBackgroundVideo,{passive:true});window.addEventListener('orientationchange',fitBackgroundVideo,{passive:true});window.addEventListener('pageshow',tryPlayCalm,{passive:true});new MutationObserver(()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();}).observe(document.body,{childList:true,subtree:true});};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
