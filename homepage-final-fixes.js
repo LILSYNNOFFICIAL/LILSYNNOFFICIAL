@@ -25,7 +25,7 @@
     video.style.setProperty('margin', '0', 'important');
     video.style.setProperty('padding', '0', 'important');
     video.style.setProperty('object-fit', mobile ? 'cover' : 'fill', 'important');
-    video.style.setProperty('object-position', mobile ? 'center center' : 'center center', 'important');
+    video.style.setProperty('object-position', 'center center', 'important');
     video.style.setProperty('transform', 'none', 'important');
     video.style.setProperty('z-index', '0', 'important');
     video.style.setProperty('background', '#000', 'important');
@@ -200,31 +200,41 @@
   };
 
   const bindSpotifyPlayers = () => {
-    const frames = Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
+    const frames = Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]')).filter(frame => !frame.closest('[data-lil-synn-spotify-container]'));
     if (!frames.length) return;
     const initSpotify = api => {
       frames.forEach(frame => {
-        if (frame.dataset.lilSynnSpotifyBound) return;
-        const originalSrc = frame.src;
-        const placeholder = document.createElement('div');
-        placeholder.className = frame.className;
-        placeholder.dataset.lilSynnSpotifyPlaceholder = 'true';
-        frame.parentNode.replaceChild(placeholder, frame);
+        if (!frame.isConnected || frame.closest('[data-lil-synn-spotify-container]')) return;
+        const originalSrc = frame.getAttribute('src');
+        if (!originalSrc) return;
+        const width = frame.getAttribute('width') || '100%';
+        const height = frame.getAttribute('height') || '152';
+        const container = document.createElement('div');
+        container.setAttribute('data-lil-synn-spotify-container', 'true');
+        container.style.width = width === '100%' ? '100%' : width + (String(width).match(/%|px$/) ? '' : 'px');
+        container.style.maxWidth = '100%';
+        container.style.minHeight = height + (String(height).match(/%|px$/) ? '' : 'px');
+        container.style.borderRadius = frame.style.borderRadius || '12px';
+        frame.parentNode.replaceChild(container, frame);
         try {
-          const controller = api.createController(placeholder, (originalSrc), { width: '100%', height: '152' });
-          placeholder.dataset.lilSynnSpotifyBound = 'true';
-          controller.addListener('playback_update', event => {
-            const data = event?.data || {};
-            if (data.isPaused === false) pauseBackgroundForExternalMedia();
-            else if (data.isPaused === true) resumeBackgroundAfterExternalMedia();
+          api.createController(container, { url: originalSrc, width, height }, controller => {
+            container.dataset.lilSynnSpotifyBound = 'true';
+            controller.addListener('playback_started', () => pauseBackgroundForExternalMedia());
+            controller.addListener('playback_update', event => {
+              const data = event?.data || {};
+              if (data.isPaused === false) pauseBackgroundForExternalMedia();
+              else if (data.isPaused === true) resumeBackgroundAfterExternalMedia();
+            });
           });
         } catch (_) {
           const restored = document.createElement('iframe');
           restored.src = originalSrc;
-          restored.width = frame.width || '100%';
-          restored.height = frame.height || '152';
-          restored.style.cssText = frame.style.cssText;
-          placeholder.replaceWith(restored);
+          restored.width = width;
+          restored.height = height;
+          restored.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+          restored.setAttribute('allowfullscreen', '');
+          restored.style.cssText = 'border-radius:12px;width:100%;max-width:100%;border:0;';
+          container.replaceWith(restored);
         }
       });
     };
