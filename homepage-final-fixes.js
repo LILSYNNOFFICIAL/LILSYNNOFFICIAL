@@ -7,11 +7,12 @@
     const video = document.getElementById('bgVideo');
     if (!video) return;
 
+    document.documentElement.style.setProperty('background', '#000', 'important');
+    document.body.style.setProperty('background', '#000', 'important');
     video.style.setProperty('position', 'fixed', 'important');
-    video.style.setProperty('inset', '0', 'important');
-    video.style.setProperty('top', '0', 'important');
+    video.style.setProperty('top', '72px', 'important');
     video.style.setProperty('right', '0', 'important');
-    video.style.setProperty('bottom', '0', 'important');
+    video.style.setProperty('bottom', 'auto', 'important');
     video.style.setProperty('left', '0', 'important');
     video.style.setProperty('width', '100vw', 'important');
     video.style.setProperty('height', '100vh', 'important');
@@ -44,13 +45,8 @@
     const home = document.getElementById('home');
     const heading = home?.querySelector('h1');
     if (!home || !heading) return;
-
-    const lsImages = Array.from(home.querySelectorAll('img')).filter(img =>
-      lsPattern.test(img.getAttribute('src') || '')
-    );
-
+    const lsImages = Array.from(home.querySelectorAll('img')).filter(img => lsPattern.test(img.getAttribute('src') || ''));
     lsImages.slice(1).forEach(img => img.remove());
-
     if (lsImages.length === 0) {
       const img = document.createElement('img');
       img.src = '/assets/img/LS.png';
