@@ -1,92 +1,84 @@
 (() => {
-  const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
-  const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
-  const merchUrl = 'https://lilsynnofficial.threadless.com/';
-  let bgWasPlaying = false;
-  let externalMediaPlaying = false;
+  const BG_SRC='/assets/other/sound/Background.mp3';
+  let bgWasPlaying=false, externalMediaPlaying=false;
 
-  const fitBackgroundVideo = () => {
-    const video = document.getElementById('bgVideo');
-    if (!video) return;
-    const mobile = matchMedia('(max-width: 767px)').matches;
-    Object.assign(video.style, {position:'fixed',top:mobile?'56px':'72px',right:'0',bottom:'0',left:'0',width:'100vw',height:mobile?'calc(100dvh - 56px)':'calc(100vh - 72px)',minWidth:'0',minHeight:'0',maxWidth:'none',maxHeight:'none',margin:'0',padding:'0',objectFit:mobile?'cover':'fill',objectPosition:'center center',transform:'none',zIndex:'0',background:'#000',display:'block',pointerEvents:'none'});
-    document.documentElement.style.background='#000'; document.body.style.background='#000';
-  };
-
-  const cleanArt = () => document.querySelectorAll('img').forEach(img => { if(unwanted.test(img.getAttribute('src')||'')){const a=img.closest('a');if(a&&a.children.length===1)a.remove();else img.remove();} });
-
-  const ensureSingleLS = () => {
-    const home=document.getElementById('home'), heading=home?.querySelector('h1'); if(!home||!heading)return;
-    const imgs=Array.from(home.querySelectorAll('img')).filter(i=>lsPattern.test(i.getAttribute('src')||'')); imgs.slice(1).forEach(i=>i.remove());
-    if(!imgs.length){const img=document.createElement('img');img.src='/assets/img/LS.png';img.alt='LIL SYNN';img.loading='eager';img.decoding='async';img.style.cssText='display:block;width:min(72vw,420px);max-height:260px;height:auto;object-fit:contain;margin:0 auto .25rem;';heading.parentNode.insertBefore(img,heading);}
-  };
-
-  const ensureMerchButton = () => {
-    const merch=document.getElementById('merch'); if(!merch||merch.querySelector('[data-wear-the-signal]'))return;
-    const b=document.createElement('a');b.href=merchUrl;b.target='_blank';b.rel='noopener noreferrer';b.dataset.wearTheSignal='true';b.textContent='WEAR THE SIGNAL';b.setAttribute('aria-label','Shop official LIL SYNN merch');b.style.cssText='display:inline-block;margin-top:1rem;background:#ff008f;color:#000;font-weight:700;padding:.65rem 1.5rem;border-radius:.75rem;text-decoration:none;';(merch.querySelector('h2')?.parentNode||merch).appendChild(b);
-  };
-
-  const bindRefresh = () => {
-    const b=Array.from(document.querySelectorAll('button,a')).find(e=>/random\s*song|discover/i.test((e.textContent||'').trim())||/random.*(song|music)|discover/i.test((e.id||'')+' '+String(e.className||'')));
-    if(!b||b.dataset.randomRefreshBound)return;b.dataset.randomRefreshBound='true';b.removeAttribute('href');b.textContent='Random Song Refresh';b.type='button';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const run=()=>typeof window.lilSynnRefreshMusic==='function'&&window.lilSynnRefreshMusic();if(!run())setTimeout(run,300);},true);
-  };
-
-  const audio=()=>document.getElementById('bgMusic');
-  const pauseForExternal=()=>{const a=audio();if(!a)return;if(!a.paused){bgWasPlaying=true;a.pause();}externalMediaPlaying=true;};
-  const resumeAfterExternal=()=>{if(!externalMediaPlaying)return;externalMediaPlaying=false;if(!bgWasPlaying)return;bgWasPlaying=false;const a=audio();if(a){const p=a.play();if(p?.catch)p.catch(()=>{});}};
-
-  const tryPlayCalm = () => {
-    const a=audio();
-    if(!a || externalMediaPlaying) return;
-    a.autoplay=true;
-    a.muted=false;
-    a.volume=.65;
-    if(a.readyState < 2) a.load();
-    const p=a.play();
-    if(p?.catch) p.catch(()=>{});
-  };
-
-  const ensureCalmPlayer = () => {
-    const a=audio(); if(!a)return;
-    const src='/assets/other/sound/Background.mp3';
-    if(a.getAttribute('src') !== src) a.setAttribute('src',src);
-    a.loop=true;a.autoplay=true;a.preload='auto';a.volume=.65;a.muted=false;a.setAttribute('aria-label','The Calm — LIL SYNN');
-    if(!a.dataset.calmLoadBound){
-      a.dataset.calmLoadBound='true';
-      a.addEventListener('loadeddata',tryPlayCalm,{once:false});
-      a.addEventListener('canplay',tryPlayCalm,{once:false});
+  const getAudio=()=>document.getElementById('bgMusic');
+  const ensureAudio=()=>{
+    let a=getAudio();
+    if(!a){
+      a=document.createElement('audio');
+      a.id='bgMusic';
+      a.setAttribute('aria-label','The Calm — LIL SYNN');
+      a.setAttribute('playsinline','');
+      a.setAttribute('preload','auto');
+      a.setAttribute('autoplay','');
+      a.loop=true;
+      a.src=BG_SRC;
+      a.style.display='none';
+      document.body.appendChild(a);
     }
+    if(a.src!==new URL(BG_SRC,location.href).href)a.src=BG_SRC;
+    a.loop=true;a.preload='auto';a.autoplay=true;a.volume=.65;
+    return a;
+  };
+
+  const playCalm=()=>{
+    const a=ensureAudio();
+    if(externalMediaPlaying)return;
+    a.muted=false;a.volume=.65;a.autoplay=true;
+    if(a.readyState===0)a.load();
+    const p=a.play();
+    if(p&&p.catch)p.catch(()=>{});
+  };
+  const pauseExternal=()=>{const a=ensureAudio();if(!a.paused){bgWasPlaying=true;a.pause();}externalMediaPlaying=true;};
+  const resumeExternal=()=>{if(!externalMediaPlaying)return;externalMediaPlaying=false;if(bgWasPlaying){bgWasPlaying=false;playCalm();}};
+
+  const fitVideo=()=>{
+    const v=document.getElementById('bgVideo');if(!v)return;
+    const mobile=matchMedia('(max-width:767px)').matches;
+    Object.assign(v.style,{position:'fixed',top:mobile?'56px':'72px',right:'0',bottom:'0',left:'0',width:'100vw',height:mobile?'calc(100dvh - 56px)':'calc(100vh - 72px)',objectFit:mobile?'cover':'fill',objectPosition:'center center',zIndex:'0',background:'#000',pointerEvents:'none'});
+  };
+
+  const ensureCalmPlayer=()=>{
+    const a=ensureAudio();
     let p=document.getElementById('theCalmPlayer');
     if(!p){
-      p=document.createElement('div');p.id='theCalmPlayer';p.innerHTML='<div class="calm-title">THE CALM <span>• LIL SYNN</span></div><button type="button" data-calm-toggle>▶</button><input data-calm-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="The Calm progress"><button type="button" data-calm-mute>🔊</button>';
-      p.style.cssText='position:relative;z-index:20;width:min(92vw,900px);margin:2rem auto 2rem;padding:.65rem .8rem;display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);border-radius:12px;box-sizing:border-box;';
-      p.querySelector('.calm-title').style.cssText='font-weight:700;white-space:nowrap;';p.querySelector('.calm-title span').style.cssText='font-weight:400;opacity:.7;';p.querySelector('[data-calm-seek]').style.cssText='flex:1;min-width:60px;';
-      const footer=document.querySelector('footer'); if(footer) footer.parentNode.insertBefore(p,footer); else document.body.appendChild(p);
+      p=document.createElement('div');p.id='theCalmPlayer';
+      p.innerHTML='<strong>THE CALM <span>• LIL SYNN</span></strong><button type="button" data-calm-toggle aria-label="Play or pause The Calm">▶</button><input data-calm-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="The Calm progress"><button type="button" data-calm-mute aria-label="Mute The Calm">🔊</button>';
+      p.style.cssText='width:min(92vw,900px);margin:2rem auto;padding:.65rem .8rem;display:flex;align-items:center;gap:.7rem;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);border-radius:12px;box-sizing:border-box;position:relative;z-index:20;';
+      p.querySelector('strong').style.cssText='white-space:nowrap;';p.querySelector('strong span').style.cssText='font-weight:400;opacity:.7;';p.querySelector('[data-calm-seek]').style.cssText='flex:1;min-width:60px;';
+      const footer=document.querySelector('footer');(footer?footer.parentNode:document.body).insertBefore(p,footer||null);
       p.querySelector('[data-calm-toggle]').onclick=()=>a.paused?a.play().catch(()=>{}):a.pause();
-      p.querySelector('[data-calm-mute]').onclick=()=>{a.muted=!a.muted;p.querySelector('[data-calm-mute]').textContent=a.muted?'🔇':'🔊';if(!a.muted)tryPlayCalm();};
+      p.querySelector('[data-calm-mute]').onclick=()=>{a.muted=!a.muted;p.querySelector('[data-calm-mute]').textContent=a.muted?'🔇':'🔊';if(!a.muted)playCalm();};
       p.querySelector('[data-calm-seek]').oninput=e=>{if(a.duration)a.currentTime=Number(e.target.value)/100*a.duration;};
       a.addEventListener('timeupdate',()=>{const s=p.querySelector('[data-calm-seek]');if(s&&a.duration)s.value=a.currentTime/a.duration*100;});
       a.addEventListener('play',()=>p.querySelector('[data-calm-toggle]').textContent='❚❚');
       a.addEventListener('pause',()=>p.querySelector('[data-calm-toggle]').textContent='▶');
+      a.addEventListener('loadeddata',playCalm);a.addEventListener('canplay',playCalm);
     }
-    tryPlayCalm();
+    playCalm();
   };
 
-  const loadScript=(src,id)=>{if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=src;s.async=true;document.head.appendChild(s);};
-  const bindYouTube = () => {
+  const dedupeSpotify=()=>{
+    const f=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
+    if(f.length>1)f.slice(0,-1).forEach(x=>(x.closest('[data-spotify-player]')||x).remove());
+    const kept=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]')).pop();
+    if(kept){kept.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');kept.setAttribute('allowfullscreen','');kept.style.width='100%';kept.style.maxWidth='100%';kept.style.border='0';}
+  };
+
+  const bindYouTube=()=>{
     const fs=Array.from(document.querySelectorAll('iframe[src*="youtube.com"],iframe[src*="youtube-nocookie.com"]'));if(!fs.length)return;
     fs.forEach(f=>{if(!/[?&]enablejsapi=1/.test(f.src))f.src+=(f.src.includes('?')?'&':'?')+'enablejsapi=1';});
-    if(!window.YT?.Player){window.onYouTubeIframeAPIReady=bindYouTube;loadScript('https://www.youtube.com/iframe_api','lil-synn-youtube-api');return;}
-    fs.forEach(f=>{if(f.dataset.lilSynnYouTubeBound)return;f.dataset.lilSynnYouTubeBound='true';try{new YT.Player(f,{events:{onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING)pauseForExternal();else if([YT.PlayerState.ENDED,YT.PlayerState.PAUSED,YT.PlayerState.CUED].includes(e.data))resumeAfterExternal();}}});}catch(_){}});
+    if(!window.YT?.Player){if(!document.getElementById('lil-synn-youtube-api')){const s=document.createElement('script');s.id='lil-synn-youtube-api';s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s);}window.onYouTubeIframeAPIReady=bindYouTube;return;}
+    fs.forEach(f=>{if(f.dataset.calmYT)return;f.dataset.calmYT='1';try{new YT.Player(f,{events:{onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING)pauseExternal();if([YT.PlayerState.ENDED,YT.PlayerState.PAUSED].includes(e.data))resumeExternal();}}});}catch(_){}});
   };
 
-  const dedupeSpotify = () => {
-    const frames=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
-    if(frames.length>1) frames.slice(0,-1).forEach(f=>{const wrap=f.closest('[data-spotify-player]')||f;wrap.remove();});
-    const kept=Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]')).pop();
-    if(kept){kept.setAttribute('allow','autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');kept.setAttribute('allowfullscreen','');kept.style.width='100%';kept.style.maxWidth='100%';kept.style.border='0';kept.style.borderRadius='12px';}
+  const init=()=>{
+    fitVideo();ensureCalmPlayer();dedupeSpotify();bindYouTube();
+    window.addEventListener('resize',fitVideo,{passive:true});
+    window.addEventListener('orientationchange',fitVideo,{passive:true});
+    window.addEventListener('load',playCalm,{passive:true});
+    const obs=new MutationObserver(()=>{ensureCalmPlayer();dedupeSpotify();bindYouTube();});obs.observe(document.body,{childList:true,subtree:true});
   };
-
-  const init=()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();window.addEventListener('resize',fitBackgroundVideo,{passive:true});window.addEventListener('orientationchange',fitBackgroundVideo,{passive:true});window.addEventListener('pageshow',tryPlayCalm,{passive:true});new MutationObserver(()=>{fitBackgroundVideo();cleanArt();ensureSingleLS();ensureMerchButton();bindRefresh();ensureCalmPlayer();bindYouTube();dedupeSpotify();}).observe(document.body,{childList:true,subtree:true});};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
