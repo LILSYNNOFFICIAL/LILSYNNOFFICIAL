@@ -8,23 +8,24 @@
   const fitBackgroundVideo = () => {
     const video = document.getElementById('bgVideo');
     if (!video) return;
+    const mobile = window.matchMedia('(max-width: 767px)').matches;
     document.documentElement.style.setProperty('background', '#000', 'important');
     document.body.style.setProperty('background', '#000', 'important');
     video.style.setProperty('position', 'fixed', 'important');
-    video.style.setProperty('top', '72px', 'important');
+    video.style.setProperty('top', mobile ? '56px' : '72px', 'important');
     video.style.setProperty('right', '0', 'important');
-    video.style.setProperty('bottom', 'auto', 'important');
+    video.style.setProperty('bottom', '0', 'important');
     video.style.setProperty('left', '0', 'important');
     video.style.setProperty('width', '100vw', 'important');
-    video.style.setProperty('height', '100vh', 'important');
-    video.style.setProperty('min-width', '100vw', 'important');
-    video.style.setProperty('min-height', '100vh', 'important');
+    video.style.setProperty('height', mobile ? 'calc(100dvh - 56px)' : 'calc(100vh - 72px)', 'important');
+    video.style.setProperty('min-width', '0', 'important');
+    video.style.setProperty('min-height', '0', 'important');
     video.style.setProperty('max-width', 'none', 'important');
     video.style.setProperty('max-height', 'none', 'important');
     video.style.setProperty('margin', '0', 'important');
     video.style.setProperty('padding', '0', 'important');
-    video.style.setProperty('object-fit', 'fill', 'important');
-    video.style.setProperty('object-position', 'center center', 'important');
+    video.style.setProperty('object-fit', mobile ? 'cover' : 'fill', 'important');
+    video.style.setProperty('object-position', mobile ? 'center center' : 'center center', 'important');
     video.style.setProperty('transform', 'none', 'important');
     video.style.setProperty('z-index', '0', 'important');
     video.style.setProperty('background', '#000', 'important');
@@ -129,7 +130,7 @@
   const startBackgroundMusic = () => {
     const audio = getBgAudio();
     if (!audio) return false;
-    audio.src = '/assets/other/sound/Background.mp3';
+    if (!audio.src || !audio.src.includes('/assets/other/sound/Background.mp3')) audio.src = '/assets/other/sound/Background.mp3';
     audio.loop = true;
     audio.volume = 0.65;
     audio.muted = false;
@@ -152,17 +153,10 @@
       if ('mediaSession' in navigator && 'MediaMetadata' in window) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
       }
-      window.removeEventListener('scroll', unlock);
-      window.removeEventListener('wheel', unlock);
-      window.removeEventListener('touchstart', unlock);
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown', unlock);
     };
-    window.addEventListener('scroll', unlock, { passive: true, once: true });
-    window.addEventListener('wheel', unlock, { passive: true, once: true });
-    window.addEventListener('touchstart', unlock, { passive: true, once: true });
-    window.addEventListener('pointerdown', unlock, { passive: true, once: true });
-    window.addEventListener('keydown', unlock, { passive: true, once: true });
+    ['scroll','wheel','touchstart','touchmove','pointerdown','pointerup','keydown'].forEach(type => {
+      window.addEventListener(type, unlock, { passive: true });
+    });
   };
 
   const loadScript = (src, id) => {
@@ -211,15 +205,27 @@
     const initSpotify = api => {
       frames.forEach(frame => {
         if (frame.dataset.lilSynnSpotifyBound) return;
-        frame.dataset.lilSynnSpotifyBound = 'true';
+        const originalSrc = frame.src;
+        const placeholder = document.createElement('div');
+        placeholder.className = frame.className;
+        placeholder.dataset.lilSynnSpotifyPlaceholder = 'true';
+        frame.parentNode.replaceChild(placeholder, frame);
         try {
-          const controller = api.createController(frame, frame.src, { width: frame.width || '100%', height: frame.height || '152' });
+          const controller = api.createController(placeholder, (originalSrc), { width: '100%', height: '152' });
+          placeholder.dataset.lilSynnSpotifyBound = 'true';
           controller.addListener('playback_update', event => {
             const data = event?.data || {};
             if (data.isPaused === false) pauseBackgroundForExternalMedia();
             else if (data.isPaused === true) resumeBackgroundAfterExternalMedia();
           });
-        } catch (_) {}
+        } catch (_) {
+          const restored = document.createElement('iframe');
+          restored.src = originalSrc;
+          restored.width = frame.width || '100%';
+          restored.height = frame.height || '152';
+          restored.style.cssText = frame.style.cssText;
+          placeholder.replaceWith(restored);
+        }
       });
     };
     if (window.SpotifyIframeApi) initSpotify(window.SpotifyIframeApi);
