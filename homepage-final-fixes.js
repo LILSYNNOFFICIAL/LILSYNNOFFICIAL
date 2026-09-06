@@ -2,6 +2,8 @@
   const unwanted = /MERCH_SHOP\.png|LATEST_RELEASES\.png|LISTEN\.png|MUSIC\.png/i;
   const lsPattern = /(?:^|\/)assets\/img\/LS\.png(?:[?#]|$)/i;
   const merchUrl = 'https://lilsynnofficial.threadless.com/';
+  let bgWasPlaying = false;
+  let externalMediaPlaying = false;
 
   const fitBackgroundVideo = () => {
     const video = document.getElementById('bgVideo');
@@ -101,8 +103,31 @@
     }, true);
   };
 
+  const getBgAudio = () => document.getElementById('bgMusic');
+
+  const pauseBackgroundForExternalMedia = () => {
+    const audio = getBgAudio();
+    if (!audio) return;
+    if (!audio.paused) {
+      bgWasPlaying = true;
+      audio.pause();
+    }
+    externalMediaPlaying = true;
+  };
+
+  const resumeBackgroundAfterExternalMedia = () => {
+    if (!externalMediaPlaying) return;
+    externalMediaPlaying = false;
+    if (!bgWasPlaying) return;
+    bgWasPlaying = false;
+    const audio = getBgAudio();
+    if (!audio) return;
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+
   const startBackgroundMusic = () => {
-    const audio = document.getElementById('bgMusic');
+    const audio = getBgAudio();
     if (!audio) return false;
     audio.src = '/assets/other/sound/Background.mp3';
     audio.loop = true;
@@ -110,6 +135,7 @@
     audio.muted = false;
     audio.setAttribute('aria-label', 'The Calm — LIL SYNN');
     const play = () => {
+      if (externalMediaPlaying) return;
       audio.muted = false;
       const promise = audio.play();
       if (promise && typeof promise.catch === 'function') promise.catch(() => {});
@@ -122,7 +148,7 @@
     if (window.__lilSynnAudioUnlockBound) return;
     window.__lilSynnAudioUnlockBound = true;
     const unlock = () => {
-      startBackgroundMusic();
+      if (!externalMediaPlaying) startBackgroundMusic();
       if ('mediaSession' in navigator && 'MediaMetadata' in window) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: 'The Calm', artist: 'LIL SYNN', album: 'The Calm' });
       }
@@ -139,6 +165,75 @@
     window.addEventListener('keydown', unlock, { passive: true, once: true });
   };
 
+  const loadScript = (src, id) => {
+    if (document.getElementById(id)) return;
+    const script = document.createElement('script');
+    script.id = id;
+    script.src = src;
+    script.async = true;
+    document.head.appendChild(script);
+  };
+
+  const bindYouTubePlayers = () => {
+    const frames = Array.from(document.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="youtube-nocookie.com"]'));
+    if (!frames.length) return;
+    frames.forEach(frame => {
+      const src = frame.getAttribute('src') || '';
+      if (!/[?&]enablejsapi=1(?:&|$)/.test(src)) {
+        const joiner = src.includes('?') ? '&' : '?';
+        frame.setAttribute('src', src + joiner + 'enablejsapi=1');
+      }
+    });
+    if (!window.YT || !window.YT.Player) {
+      window.onYouTubeIframeAPIReady = bindYouTubePlayers;
+      loadScript('https://www.youtube.com/iframe_api', 'lil-synn-youtube-api');
+      return;
+    }
+    frames.forEach(frame => {
+      if (frame.dataset.lilSynnYouTubeBound) return;
+      frame.dataset.lilSynnYouTubeBound = 'true';
+      try {
+        new YT.Player(frame, {
+          events: {
+            onStateChange: event => {
+              if (event.data === YT.PlayerState.PLAYING) pauseBackgroundForExternalMedia();
+              else if (event.data === YT.PlayerState.ENDED || event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.CUED) resumeBackgroundAfterExternalMedia();
+            }
+          }
+        });
+      } catch (_) {}
+    });
+  };
+
+  const bindSpotifyPlayers = () => {
+    const frames = Array.from(document.querySelectorAll('iframe[src*="open.spotify.com"]'));
+    if (!frames.length) return;
+    const initSpotify = api => {
+      frames.forEach(frame => {
+        if (frame.dataset.lilSynnSpotifyBound) return;
+        frame.dataset.lilSynnSpotifyBound = 'true';
+        try {
+          const controller = api.createController(frame, frame.src, { width: frame.width || '100%', height: frame.height || '152' });
+          controller.addListener('playback_update', event => {
+            const data = event?.data || {};
+            if (data.isPaused === false) pauseBackgroundForExternalMedia();
+            else if (data.isPaused === true) resumeBackgroundAfterExternalMedia();
+          });
+        } catch (_) {}
+      });
+    };
+    if (window.SpotifyIframeApi) initSpotify(window.SpotifyIframeApi);
+    else {
+      window.onSpotifyIframeApiReady = initSpotify;
+      loadScript('https://open.spotify.com/embed/iframe-api/v1', 'lil-synn-spotify-api');
+    }
+  };
+
+  const bindExternalPlayers = () => {
+    bindYouTubePlayers();
+    bindSpotifyPlayers();
+  };
+
   const init = () => {
     fitBackgroundVideo();
     cleanArt();
@@ -147,6 +242,7 @@
     bindRefresh();
     startBackgroundMusic();
     bindAudioUnlock();
+    bindExternalPlayers();
     window.addEventListener('resize', fitBackgroundVideo, { passive: true });
     window.addEventListener('orientationchange', fitBackgroundVideo, { passive: true });
     new MutationObserver(() => {
@@ -155,6 +251,7 @@
       ensureSingleLS();
       ensureMerchButton();
       bindRefresh();
+      bindExternalPlayers();
     }).observe(document.body, { childList: true, subtree: true });
   };
 
