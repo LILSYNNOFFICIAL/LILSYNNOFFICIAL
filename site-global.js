@@ -3,12 +3,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const nav = document.querySelector("header .nav");
   if (!nav || document.getElementById("sideMenu")) return;
 
-  // Secondary pages use the same Tailwind-powered navigation system as index.html.
+  // Secondary pages use the same Tailwind menu classes and the same menu CSS rules as index.html.
   if (!document.querySelector('script[src="https://cdn.tailwindcss.com"]')) {
     const tw = document.createElement("script");
     tw.src = "https://cdn.tailwindcss.com";
     document.head.appendChild(tw);
   }
+
+  const navStyle = document.createElement("style");
+  navStyle.id = "homepage-navigation-css";
+  navStyle.textContent = `
+    #sideMenu { z-index:60 !important; overflow:hidden; }
+    .menu-link { transition:color .2s ease, transform .2s ease; }
+    .menu-link:hover, .menu-link:focus-visible { color:#ff4fd8; transform:translateX(3px); }
+    #sideMenu > nav { font-size:.95rem !important; line-height:1.25 !important; }
+    #sideMenu > nav > a, #sideMenu #socialsTrigger, #sideMenu #streamTrigger { font-size:.95rem !important; line-height:1.25 !important; }
+    .nav-library-group { width:100%; min-width:0; flex:0 0 auto !important; min-height:0 !important; display:block !important; }
+    .nav-library-group > button { padding:0; text-align:left; }
+    .nav-library-group > div { min-width:0; }
+    #sideMenu > nav > .nav-library-group:has(#socialsDropdown) { flex:0 0 auto !important; min-height:0 !important; display:block !important; }
+    #sideMenu #socialsDropdown, #sideMenu #streamDropdown { scrollbar-width:auto !important; scrollbar-color:#ff008f #111 !important; }
+    #sideMenu #socialsDropdown::-webkit-scrollbar, #sideMenu #streamDropdown::-webkit-scrollbar { width:10px; }
+    #sideMenu #socialsDropdown::-webkit-scrollbar-track, #sideMenu #streamDropdown::-webkit-scrollbar-track { background:#111; }
+    #sideMenu #socialsDropdown::-webkit-scrollbar-thumb, #sideMenu #streamDropdown::-webkit-scrollbar-thumb { background:#ff008f; border-radius:8px; border:2px solid #111; }
+    @media (min-width:768px) {
+      #sideMenu > nav { height:calc(100vh - 88px); min-height:0; overflow:hidden; gap:1.15rem !important; }
+      #sideMenu > nav > .nav-library-group:has(#socialsDropdown) { flex:0 0 auto !important; min-height:0 !important; display:block !important; }
+      #sideMenu #socialsDropdown { max-height:calc(100vh - 430px); overflow-y:scroll; overflow-x:hidden; overscroll-behavior:contain; padding-right:.75rem; padding-bottom:1rem; }
+      #sideMenu #streamDropdown { max-height:min(48vh,390px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding-right:.65rem; }
+      #sideMenu #socialsDropdown a, #sideMenu #streamDropdown a { font-size:.9rem !important; line-height:1.25 !important; }
+    }
+    @media (max-width:767px) {
+      #sideMenu > nav { max-height:calc(100vh - 82px); padding-bottom:1.5rem; overflow-y:auto; overflow-x:hidden; gap:1.1rem !important; }
+      #sideMenu #socialsDropdown { max-height:34vh; overflow-y:auto; overflow-x:hidden; padding-right:.5rem; }
+      #sideMenu #streamDropdown { max-height:42vh; overflow-y:auto; overflow-x:hidden; }
+      #sideMenu #socialsDropdown a, #sideMenu #streamDropdown a { font-size:.9rem !important; line-height:1.25 !important; }
+    }
+  `;
+  document.head.appendChild(navStyle);
 
   const ham = document.createElement("button");
   ham.id = "hamburger";
@@ -25,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   menu.id = "sideMenu";
   menu.className = "fixed top-0 right-0 h-full w-72 bg-black/90 backdrop-blur-xl transform translate-x-full transition-transform duration-300 z-50";
   menu.setAttribute("aria-label", "Site menu");
+  menu.setAttribute("aria-hidden", "true");
   menu.innerHTML = `
     <div class="flex justify-end p-6 shrink-0">
       <button id="closeMenu" class="text-3xl text-white hover:text-pink-500" aria-label="Close menu">&times;</button>
@@ -56,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </nav>`;
   document.body.appendChild(menu);
 
-  // Match index.html/script.js: Stream is created dynamically immediately after Socials.
   const streamLinks = [
     ["Spotify", "https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"],
     ["Apple Music", "https://music.apple.com/us/artist/lil-synn/1850720041"],
@@ -72,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const makeGroup = (id, label, links, scrollable = false) => {
     const group = document.createElement("div");
+    group.className = "nav-library-group";
     const button = document.createElement("button");
     button.type = "button";
     button.className = "menu-link flex justify-between w-full shrink-0";
@@ -80,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.textContent = label;
     const list = document.createElement("div");
     list.id = id;
-    list.className = `hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']${scrollable ? " max-h-[48vh] overflow-y-auto" : ""}`;
+    list.className = `hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']${scrollable ? " nav-scroll-library" : ""}`;
     links.forEach(([name, href]) => {
       const a = document.createElement("a");
       a.href = href;
@@ -106,9 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const socialsDropdown = menu.querySelector("#socialsDropdown");
   const streamGroup = makeGroup("streamDropdown", "Stream", streamLinks, true);
   const videos = Array.from(menu.querySelectorAll("a")).find(a => a.textContent.trim() === "Videos");
-  if (videos) {
-    videos.after(socialsGroup, streamGroup);
-  }
+  if (videos) videos.after(socialsGroup, streamGroup);
+  else menu.querySelector("nav")?.append(socialsGroup, streamGroup);
+
   socialsButton?.addEventListener("click", event => {
     event.preventDefault();
     event.stopPropagation();
@@ -125,12 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (open) {
       const first = menu.querySelector("a, button");
       if (first) setTimeout(() => first.focus(), 0);
-    } else {
-      ham.focus();
-    }
+    } else ham.focus();
   };
 
-  menu.setAttribute("aria-hidden", "true");
   ham.addEventListener("click", event => {
     event.preventDefault();
     event.stopPropagation();
