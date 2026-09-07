@@ -26,7 +26,7 @@
       #sideMenu .menu-link:hover,#sideMenu .menu-link:focus-visible{color:#ff4fd8!important;transform:translateX(3px)!important;}
       #sideMenu .nav-library-group{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;}
       #sideMenu .nav-library-group>button{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;}
-      #sideMenu .nav-library-group + .nav-library-group{margin-top:-1.5rem!important;padding-top:0!important;}
+      #sideMenu .nav-library-group + .nav-library-group{margin-top:0!important;padding-top:0!important;}
       #sideMenu .dropdown-list{display:flex!important;flex-direction:column!important;gap:.75rem!important;margin:1rem 0 0!important;padding:0 0 1rem 1rem!important;box-sizing:border-box!important;font-family:Rajdhani,sans-serif!important;font-size:1rem!important;line-height:1.25!important;min-height:0!important;overflow-y:scroll!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-width:auto!important;scrollbar-color:#ff008f #111!important;}
       #sideMenu .dropdown-list.hidden{display:none!important;}
       #sideMenu .dropdown-list a{font-family:Rajdhani,sans-serif!important;font-size:1rem!important;line-height:1.25!important;}
