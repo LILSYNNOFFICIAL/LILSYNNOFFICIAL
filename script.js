@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .nav-scroll-library::-webkit-scrollbar-thumb { background: #ff008f; border-radius: 8px; border: 2px solid #111; }
     .nav-scroll-library::-webkit-scrollbar-thumb:hover { background: #ff4fd8; }
     .nav-library-group + .nav-library-group { margin-top: -1.5rem !important; }
+    #sideMenu > nav > .nav-library-group + .nav-library-group { margin-top: -1.5rem !important; padding-top: 0 !important; }
     @media (max-width: 640px) {
       #sideMenu { width: min(86vw, 360px); }
       #sideMenu > nav { max-height: calc(100dvh - 82px); padding-bottom: 1.5rem; }
@@ -122,9 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return group;
   };
 
-  // Secondary pages already receive the complete navigation from site-global.js.
-  // The homepage starts with the reference Socials group only, so add Stream and
-  // normalize both groups here. Never create a second navigation system.
   if (!document.getElementById("streamTrigger")) {
     const originalSocialGroup = document.getElementById("socialsTrigger")?.parentElement;
     const videosLink = [...menu.querySelectorAll(":scope > nav > a")].find(
