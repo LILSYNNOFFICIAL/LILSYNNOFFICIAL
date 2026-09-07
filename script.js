@@ -53,9 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
       libraryPair.className = "nav-library-pair"; libraryPair.append(socialsGroup, streamGroup); originalSocialGroup.replaceWith(socialsGroup); videosLink.after(libraryPair); originalSocialGroup.remove();
     }
   }
-  const bgVideo = document.getElementById("bgVideo"); if (bgVideo) { bgVideo.muted = true; bgVideo.setAttribute("playsinline", ""); const play = bgVideo.play(); if (play?.catch) play.catch(() => {}); }
+  const deferMedia = () => {
+    const bgVideo = document.getElementById("bgVideo");
+    if (bgVideo) { bgVideo.muted = true; bgVideo.setAttribute("playsinline", ""); bgVideo.preload = "metadata"; bgVideo.setAttribute("fetchpriority", "low"); }
+    document.querySelectorAll('#latest-release-art img').forEach(img => { img.loading = 'lazy'; img.decoding = 'async'; img.setAttribute('fetchpriority','low'); });
+    document.querySelectorAll('.spotify-player iframe').forEach(frame => { frame.loading='lazy'; frame.setAttribute('fetchpriority','low'); });
+  };
+  const startBackground = () => { const bgVideo = document.getElementById("bgVideo"); if (!bgVideo) return; const play = bgVideo.play(); if (play?.catch) play.catch(() => {}); };
+  deferMedia();
+  if ('requestIdleCallback' in window) requestIdleCallback(startBackground,{timeout:1200}); else setTimeout(startBackground,500);
   const rhythmStyle = document.createElement("style"); rhythmStyle.id = "homepage-rhythm-final"; rhythmStyle.textContent = `#home, #contact { background:rgba(128,128,128,.18) !important; } #presave, #music, #videos, #about, #merch, #signal { background:rgba(8,8,8,.62) !important; border-top:0 !important; border-bottom:0 !important; box-shadow:none !important; outline:0 !important; } #presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after { border:0 !important; box-shadow:none !important; background:transparent !important; } #presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal { border-top:0 !important; }`;
   document.head.appendChild(rhythmStyle);
-  const deferHeavyEmbeds = () => document.querySelectorAll('.spotify-player iframe').forEach(frame => { frame.loading='lazy'; frame.setAttribute('fetchpriority','low'); });
-  if ('requestIdleCallback' in window) requestIdleCallback(deferHeavyEmbeds,{timeout:1500}); else setTimeout(deferHeavyEmbeds,300);
 });
