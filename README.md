@@ -54,6 +54,12 @@ Right-side fixed menu
 
 The menu opens from the right and is fixed to the viewport. It must never become normal page-flow content or appear at the bottom-left.
 
+### Navigation ownership
+
+`script.js` is the homepage navigation controller. It owns only menu state, accessibility state, homepage Socials/Stream group creation, and navigation-related visual rules. It must not overwrite release data, Latest Releases, YouTube data, or other page content.
+
+`site-global.js` is the secondary-page shell. It creates the complete navigation and background for secondary pages, so `script.js` must recognize an already-complete `Stream` group and leave it alone. There must be exactly one hamburger and one side menu per page.
+
 ### Navigation typography
 
 The homepage uses Tailwind's `text-lg` for the primary menu (`1.125rem`) and `text-base` for dropdown items (`1rem`). Primary navigation uses Orbitron; Socials and Stream options use Rajdhani.
@@ -62,7 +68,7 @@ Socials and Stream are independently collapsed by default. Each dropdown uses a 
 
 ## Animated WebM Background
 
-The site uses `#bgVideo` for the animated background.
+The site uses `#bgVideo` for the animated homepage/secondary-page background.
 
 Known assets:
 
@@ -84,6 +90,8 @@ position: fixed
 ```
 
 The video must remain behind page content and must not create horizontal overflow. Mobile also uses `object-fit: cover`.
+
+**`BG2.webm` is not a repository asset and must not be introduced as a source reference.** The validation workflow explicitly rejects obsolete `BG2.webm` references.
 
 Do not create a second competing background-video system.
 
@@ -189,6 +197,8 @@ Relevant files:
 - `assets/youtube-fallback.json`
 
 `YOUTUBE_API_KEY` is a secret and must never be committed.
+
+`script.js` no longer contains a competing hard-coded Latest Videos list. `latest-videos.js` and `site-polish.js` own that rendering path.
 
 ## Secondary Pages
 
@@ -297,6 +307,12 @@ Before committing website changes:
 11. Test the actual production site.
 
 A Vercel deployment being `READY` does **not** by itself mean the website is visually or functionally correct.
+
+### Automated validation
+
+`.github/workflows/fix-homepage.yml` is now validation-only. It checks required source/assets and canonical release data and rejects obsolete `BG2.webm` references. It does **not** rewrite HTML or create bot commits after every push.
+
+`.github/workflows/inject-site-global.yml` remains responsible only for keeping the secondary-page `site-global.js` cache-buster current.
 
 ## Current Known Asset Locations
 
