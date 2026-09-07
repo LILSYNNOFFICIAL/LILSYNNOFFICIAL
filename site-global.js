@@ -1,16 +1,75 @@
 (()=>{
 const home=/^(\/|\/index\.html?)$/i.test(location.pathname);
-const SRC='/assets/other/sound/Background.mp3',KEY='lilSynnTheCalmStateV4',API='https://api.github.com/repos/LILSYNNOFFICIAL/LILSYNNOFFICIAL/contents/assets/mov?ref=main';
-const STREAM=[['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU'],['Apple Music','https://music.apple.com/us/artist/lil-synn/1850720041'],['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL'],['iTunes','https://music.apple.com/us/artist/lil-synn/1850720041'],['YouTube Music','https://music.youtube.com/@LILSYNNOFFICIAL'],['TIDAL','https://tidal.com/artist/69300200'],['Amazon Music','https://music.amazon.com/artists/B0FZB8RWV8/lil-synn'],['iHeart','https://www.iheart.com/artist/lil-synn-48522401'],['Pandora','https://www.pandora.com/artist/lil-synn/ARZwprX4ZVXjVKc'],['Qobuz','https://www.qobuz.com/us-en/interpreter/lil-synn/29242938']];
-const SOCIAL=[['YouTube','https://www.youtube.com/@LILSYNNOFFICIAL'],['Spotify','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU'],['Apple Music','https://music.apple.com/us/artist/lil-synn/1850720041'],['Instagram','https://www.instagram.com/lilsynnofficial/'],['X / Twitter','https://x.com/lilsynnofficial'],['SoundCloud','https://soundcloud.com/lilsynnofficial'],['TikTok','https://www.tiktok.com/@lilsynnofficial'],['Facebook','https://www.facebook.com/lilsynnofficial'],['Discord','https://discord.gg/ZUVsHuCAv'],['GitHub','https://github.com/orgs/Neurosyn-Dev/repositories']];
-const LINKS=[['Home','/#home'],['Music','/#music'],['Releases','/releases.html'],['Videos','/#videos'],['About','/#about'],['Merch','https://lilsynnofficial.threadless.com/'],['Lyrics','https://genius.com/artists/Lil-synn'],['Contact','/#contact']];
-function css(){if(document.getElementById('lsg'))return;const s=document.createElement('style');s.id='lsg';s.textContent=`#sideMenu{position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:auto!important;width:18rem!important;height:100%!important;background:rgba(0,0,0,.9);backdrop-filter:blur(24px);transform:translateX(100%);transition:transform .3s;z-index:60!important;overflow:hidden!important}#sideMenu.lsg-open{transform:translateX(0)!important}#sideMenu>div:first-child{display:flex;justify-content:flex-end;padding:1.5rem;flex-shrink:0}#sideMenu>nav{display:flex;flex-direction:column;gap:1.5rem;padding:0 2rem;font:1.125rem/1.25 Orbitron,Arial;max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}#sideMenu .menu-link{color:#fff;text-decoration:none;background:none;border:0;cursor:pointer;font:inherit;text-align:left}#sideMenu .nav-library-group{width:100%;min-width:0;flex:0 0 auto!important;min-height:0!important;display:block!important}#sideMenu .nav-library-group>button{padding:0;text-align:left;width:100%}#sideMenu .nav-library-group>div{min-width:0}#sideMenu .nav-scroll-library{max-height:min(48vh,390px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:.65rem;scrollbar-width:auto;scrollbar-color:#ff008f #111}#sideMenu .nav-scroll-library::-webkit-scrollbar{width:9px}#sideMenu .nav-scroll-library::-webkit-scrollbar-track{background:#111;border-radius:8px}#sideMenu .nav-scroll-library::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #111}.nav #hamburger{font-size:3rem;line-height:1;width:auto;height:48px;padding:0;border:0;background:transparent;color:#ff008f;cursor:pointer;margin-left:.5rem}@media(max-width:640px){#sideMenu{width:min(86vw,360px)!important}#sideMenu>nav{max-height:calc(100vh - 82px);padding-bottom:1.5rem}.nav #hamburger{font-size:1.4rem;height:44px}}`;document.head.appendChild(s)}
-function group(id,label,items,scrollable=false){const g=document.createElement('div');g.className='nav-library-group';const b=document.createElement('button');b.type='button';b.className='menu-link flex justify-between w-full shrink-0';b.setAttribute('aria-expanded','false');b.setAttribute('aria-controls',id);b.textContent=label;const list=document.createElement('div');list.id=id;list.className='hidden flex flex-col gap-3 mt-4 pl-4 text-base font-[Rajdhani]'+(scrollable?' nav-scroll-library':'');items.forEach(([name,href])=>{const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.className='menu-link';a.textContent=name;list.append(a)});b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const open=list.classList.contains('hidden');list.classList.toggle('hidden',!open);b.setAttribute('aria-expanded',String(open))});g.append(b,list);return g}
-function buildMenu(){if(document.getElementById('sideMenu'))return document.getElementById('sideMenu');const m=document.createElement('div');m.id='sideMenu';m.className='fixed top-0 right-0 h-full w-72 bg-black/90 backdrop-blur-xl transform translate-x-full transition-transform duration-300 z-50';m.setAttribute('aria-label','Site menu');const row=document.createElement('div');row.className='flex justify-end p-6 shrink-0';const close=document.createElement('button');close.id='closeMenu';close.className='text-3xl text-white hover:text-pink-500';close.type='button';close.setAttribute('aria-label','Close menu');close.innerHTML='&times;';row.append(close);const n=document.createElement('nav');n.className="flex flex-col gap-6 px-8 text-lg font-['Orbitron']";LINKS.forEach(([label,href])=>{const a=document.createElement('a');a.href=href;a.className='menu-link shrink-0';a.textContent=label;if(/^https?:/.test(href)){a.target='_blank';a.rel='noopener noreferrer'}n.append(a);if(label==='Contact'){n.append(group('socialsDropdown','Socials',SOCIAL,false),group('streamDropdown','Stream',STREAM,true))}});m.append(row,n);document.body.append(m);return m}
-function nav(){const existing=document.querySelector('header .nav');if(!existing)return;let ham=existing.querySelector('#hamburger');if(!ham){ham=document.createElement('button');ham.id='hamburger';ham.className='text-5xl text-[#ff008f]';ham.type='button';ham.textContent='☰';existing.append(ham)}const menu=buildMenu();ham.setAttribute('aria-label','Open navigation');ham.setAttribute('aria-controls','sideMenu');ham.setAttribute('aria-expanded','false');menu.setAttribute('aria-hidden','true');const set=open=>{menu.classList.toggle('translate-x-full',!open);menu.setAttribute('aria-hidden',String(!open));ham.setAttribute('aria-expanded',String(open));ham.setAttribute('aria-label',open?'Close navigation':'Open navigation');if(open){const first=menu.querySelector('a,button');if(first)setTimeout(()=>first.focus(),0)}else ham.focus()};ham.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(!menu.classList.contains('translate-x-full'))});menu.querySelector('#closeMenu').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(false)});menu.querySelectorAll('a[href^="/"]').forEach(a=>a.addEventListener('click',()=>set(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.classList.contains('translate-x-full'))set(false)})}
-function ensureFooter(){let f=document.querySelector('footer');if(!f){f=document.createElement('footer');document.body.appendChild(f)}f.style.marginTop='auto'}
-function ensureBackground(){let v=document.getElementById('siteBgVideo');if(!v){v=document.createElement('video');v.id='siteBgVideo';v.autoplay=true;v.loop=true;v.muted=true;v.playsInline=true;v.setAttribute('aria-hidden','true');const o=document.createElement('div');o.id='siteBgOverlay';o.setAttribute('aria-hidden','true');document.body.prepend(o);document.body.prepend(v)}return v}
-function calm(){let a=document.getElementById('bgMusic');if(!a){a=document.createElement('audio');a.id='bgMusic';a.src=SRC;a.loop=true;a.preload='metadata';a.style.display='none';document.body.append(a)}return a}
-async function bg(){const v=ensureBackground();try{const r=await fetch(API,{cache:'force-cache'});if(!r.ok)return;const fs=await r.json(),p=fs.filter(x=>x.type==='file'&&/\.webm$/i.test(x.name));if(p.length){v.src='/assets/mov/'+encodeURIComponent(p[Math.random()*p.length|0].name);v.load();v.play().catch(()=>{})}}catch{}}
-function init(){css();if(home)return;document.body.classList.add('lsg-secondary');ensureFooter();nav();calm();bg()}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init()
+function installIndexNavigation(){
+  if(home)return;
+  const nav=document.querySelector('header .nav');
+  if(!nav)return;
+  if(document.getElementById('sideMenu'))return;
+  const ham=document.createElement('button');
+  ham.id='hamburger';
+  ham.className='text-5xl text-[#ff008f]';
+  ham.style.marginLeft='.5rem';
+  ham.type='button';
+  ham.setAttribute('aria-label','Open navigation');
+  ham.setAttribute('aria-controls','sideMenu');
+  ham.setAttribute('aria-expanded','false');
+  ham.textContent='☰';
+  nav.appendChild(ham);
+
+  const menu=document.createElement('div');
+  menu.id='sideMenu';
+  menu.className='fixed top-0 right-0 h-full w-72 bg-black/90 backdrop-blur-xl transform translate-x-full transition-transform duration-300 z-50';
+  menu.setAttribute('aria-label','Site menu');
+  menu.innerHTML=`
+    <div class="flex justify-end p-6 shrink-0">
+      <button id="closeMenu" class="text-3xl text-white hover:text-pink-500" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="flex flex-col gap-6 px-8 text-lg font-['Orbitron']">
+      <a href="/" class="menu-link shrink-0">Home</a>
+      <a href="/#music" class="menu-link shrink-0">Music</a>
+      <a href="/releases.html" class="menu-link shrink-0">Releases</a>
+      <a href="/#videos" class="menu-link shrink-0">Videos</a>
+      <a href="/#about" class="menu-link shrink-0">About</a>
+      <a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Merch</a>
+      <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Lyrics</a>
+      <a href="/#contact" class="menu-link shrink-0">Contact</a>
+      <div>
+        <button id="socialsTrigger" class="menu-link flex justify-between w-full shrink-0" aria-expanded="false" aria-controls="socialsDropdown">Socials</button>
+        <div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
+          <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a>
+          <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a>
+          <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a>
+          <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="menu-link">Instagram</a>
+          <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a>
+          <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">SoundCloud</a>
+          <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">TikTok</a>
+          <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">Facebook</a>
+          <a href="https://discord.gg/ZUVsHuCAv" target="_blank" rel="noopener noreferrer" class="menu-link">Discord</a>
+          <a href="https://github.com/orgs/Neurosyn-Dev/repositories" target="_blank" rel="noopener noreferrer" class="menu-link">GitHub</a>
+        </div>
+      </div>
+    </nav>`;
+  document.body.appendChild(menu);
+
+  const style=document.createElement('style');
+  style.id='index-navigation-secondary';
+  style.textContent=`
+    :root{--nav-height:72px;--nav-gap:.5rem}
+    header{position:sticky;top:0;z-index:10}
+    .nav{height:var(--nav-height);display:flex;align-items:center;justify-content:space-between}
+    .nav #hamburger{margin-left:.5rem}
+    #sideMenu{position:fixed;top:0;right:0;left:auto;bottom:auto;height:100%;width:18rem;z-index:60;overflow:hidden}
+    #sideMenu>nav{max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+    @media(min-width:768px){#sideMenu>nav{height:calc(100vh - 88px);min-height:0;overflow:hidden}#sideMenu>nav>div:has(#socialsDropdown){flex:1 1 auto;min-height:0;display:flex;flex-direction:column}#sideMenu #socialsDropdown{flex:1 1 auto;min-height:0;max-height:none;overflow-y:scroll;overflow-x:hidden;overscroll-behavior:contain;padding-right:.75rem;padding-bottom:1.5rem;scrollbar-width:auto;scrollbar-color:#ff008f #111}#sideMenu #socialsDropdown::-webkit-scrollbar{width:10px}#sideMenu #socialsDropdown::-webkit-scrollbar-track{background:#111;border-radius:8px}#sideMenu #socialsDropdown::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #111}#sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover{background:#ff4fd8}}
+    @media(max-width:640px){#sideMenu{width:min(86vw,360px)}#sideMenu>nav{max-height:calc(100vh - 82px);padding-bottom:1.5rem}.nav #hamburger{font-size:1.4rem;height:44px}}
+  `;
+  document.head.appendChild(style);
+
+  const script=document.createElement('script');
+  script.src='/script.js';
+  script.defer=false;
+  document.body.appendChild(script);
+}
+function init(){installIndexNavigation();}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init();
 })();
