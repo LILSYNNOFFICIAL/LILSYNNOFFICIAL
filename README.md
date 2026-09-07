@@ -91,7 +91,7 @@ position: fixed
 
 The video must remain behind page content and must not create horizontal overflow. Mobile also uses `object-fit: cover`.
 
-**`BG2.webm` is not a repository asset and must not be introduced as a source reference.** The validation workflow explicitly rejects obsolete `BG2.webm` references.
+**`BG2.webm` is not a repository asset and must not be introduced as a source reference.** The validation workflow normalizes legacy `BG2.webm` references to `BG_ANI.webm` on pushes, then rejects any remaining obsolete references.
 
 Do not create a second competing background-video system.
 
@@ -310,7 +310,7 @@ A Vercel deployment being `READY` does **not** by itself mean the website is vis
 
 ### Automated validation
 
-`.github/workflows/fix-homepage.yml` is now validation-only. It checks required source/assets and canonical release data and rejects obsolete `BG2.webm` references. It does **not** rewrite HTML or create bot commits after every push.
+`.github/workflows/fix-homepage.yml` validates the required architecture/assets and canonical release data. On normal pushes it first normalizes any legacy `BG2.webm` references to the real `BG_ANI.webm` asset, commits that one-time repair when needed, and then rejects any remaining obsolete references. It does not continuously rewrite the site when no repair is needed.
 
 `.github/workflows/inject-site-global.yml` remains responsible only for keeping the secondary-page `site-global.js` cache-buster current.
 
