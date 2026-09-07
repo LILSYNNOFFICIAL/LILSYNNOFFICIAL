@@ -60,11 +60,13 @@ The menu opens from the right and is fixed to the viewport. It must never become
 
 `site-global.js` is the secondary-page shell. It creates the complete navigation and background for secondary pages, so `script.js` must recognize an already-complete `Stream` group and leave it alone. There must be exactly one hamburger and one side menu per page.
 
-### Navigation typography
+### Navigation typography and spacing
 
 The homepage uses Tailwind's `text-lg` for the primary menu (`1.125rem`) and `text-base` for dropdown items (`1rem`). Primary navigation uses Orbitron; Socials and Stream options use Rajdhani.
 
 Socials and Stream are independently collapsed by default. Each dropdown uses a pink scrollbar and the same spacing/behavior as the homepage reference.
+
+**Socials and Stream are adjacent primary navigation groups. There must be no artificial blank vertical gap between the `Socials` trigger and the `Stream` trigger.** Do not add negative-margin hacks, spacer elements, empty blocks, or unrelated layout rules to create the relationship; their spacing must come from the same primary navigation layout used by `index.html`.
 
 ## Animated WebM Background
 
@@ -308,7 +310,20 @@ Before committing website changes:
 
 A Vercel deployment being `READY` does **not** by itself mean the website is visually or functionally correct.
 
-### Automated validation
+### Deployment rate-limit handling
+
+Vercel may reject deployment attempts when the account's deployment allowance has been exhausted, including the `api-deployments-free-per-day` resource-limit condition. This is an external deployment constraint, not a website-code failure.
+
+When that occurs:
+
+- do not create placeholder or meaningless source commits just to trigger another deployment;
+- do not repeatedly spam failed deployment attempts;
+- keep `main` at the validated source state;
+- preserve the existing production deployment until a valid deployment can be created;
+- retry the established Vercel workflow only after the deployment allowance becomes available;
+- after a successful deployment, verify that production is running the intended Git commit before declaring the release complete.
+
+## Automated validation
 
 `.github/workflows/fix-homepage.yml` validates the required architecture/assets and canonical release data. On normal pushes it first normalizes any legacy `BG2.webm` references to the real `BG_ANI.webm` asset, commits that one-time repair when needed, and then rejects any remaining obsolete references. It does not continuously rewrite the site when no repair is needed.
 
@@ -330,3 +345,23 @@ assets/images/icons/album_art/
 ## Maintenance Rule
 
 When fixing a production issue, first identify which existing system owns the behavior, then fix that system. Do not create parallel implementations for navigation, release data, artwork, media playback, or background video merely because the existing system is temporarily broken.
+
+## Current Production Freeze / Owner QA
+
+The finalized website source should remain unchanged unless the site owner reports a specific, reproducible production problem. Do not proactively refactor or regenerate working systems.
+
+Interactive browser testing may be unavailable in some maintenance sessions. When it is unavailable, report the limitation honestly rather than claiming hamburger clicks, dropdown interaction, randomizer interaction, or pixel-level visual verification was performed.
+
+For a deployment-ready state, the required sequence remains:
+
+```text
+Validated GitHub main
+   ↓
+Successful Vercel deployment of that exact commit
+   ↓
+Production alias updated
+   ↓
+Live-site verification
+   ↓
+Owner manual interactive QA when required
+```
