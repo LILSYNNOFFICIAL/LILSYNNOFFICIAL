@@ -27,28 +27,20 @@ document.addEventListener("DOMContentLoaded", () => {
       <a href="/#music" class="menu-link shrink-0">Music</a>
       <a href="/releases.html" class="menu-link shrink-0">Releases</a>
       <a href="/#videos" class="menu-link shrink-0">Videos</a>
-      <a href="/#about" class="menu-link shrink-0">About</a>
-      <a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Merch</a>
-      <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Lyrics</a>
-      <a href="/#contact" class="menu-link shrink-0">Contact</a>
-      <div>
+      <div class="nav-library-group">
         <button id="socialsTrigger" class="menu-link flex justify-between w-full shrink-0" aria-expanded="false" aria-controls="socialsDropdown">Socials</button>
         <div id="socialsDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
-          <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a>
-          <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a>
-          <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a>
           <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" class="menu-link">Instagram</a>
-          <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a>
-          <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">SoundCloud</a>
           <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">TikTok</a>
           <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">Facebook</a>
+          <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" class="menu-link">X / Twitter</a>
           <a href="https://discord.gg/ZUVsHuCAv" target="_blank" rel="noopener noreferrer" class="menu-link">Discord</a>
           <a href="https://github.com/orgs/Neurosyn-Dev/repositories" target="_blank" rel="noopener noreferrer" class="menu-link">GitHub</a>
         </div>
       </div>
-      <div>
+      <div class="nav-library-group">
         <button id="streamTrigger" class="menu-link flex justify-between w-full shrink-0" aria-expanded="false" aria-controls="streamDropdown">Stream</button>
-        <div id="streamDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani']">
+        <div id="streamDropdown" class="hidden flex flex-col gap-3 mt-4 pl-4 text-base font-['Rajdhani'] nav-scroll-library">
           <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" class="menu-link">Spotify</a>
           <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" class="menu-link">Apple Music</a>
           <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" class="menu-link">YouTube</a>
@@ -61,42 +53,39 @@ document.addEventListener("DOMContentLoaded", () => {
           <a href="https://www.qobuz.com/us-en/interpreter/lil-synn/29242938" target="_blank" rel="noopener noreferrer" class="menu-link">Qobuz</a>
         </div>
       </div>
+      <a href="/#about" class="menu-link shrink-0">About</a>
+      <a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Merch</a>
+      <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" class="menu-link shrink-0">Lyrics</a>
+      <a href="/#contact" class="menu-link shrink-0">Contact</a>
     </nav>`;
   document.body.appendChild(menu);
 
   const style = document.createElement("style");
   style.id = "index-navigation-secondary";
   style.textContent = `
-    #sideMenu {
-      position:fixed !important;
-      top:0 !important;
-      right:0 !important;
-      left:auto !important;
-      bottom:auto !important;
-      width:18rem !important;
-      height:100% !important;
-      z-index:60 !important;
-      background:rgba(0,0,0,.90) !important;
-      backdrop-filter:blur(20px);
-      -webkit-backdrop-filter:blur(20px);
-      overflow:hidden;
-      transform:translateX(100%) !important;
-      transition:transform .3s ease !important;
-    }
+    #sideMenu { position:fixed !important; top:0 !important; right:0 !important; left:auto !important; bottom:auto !important; width:18rem !important; height:100% !important; z-index:60 !important; background:rgba(0,0,0,.90) !important; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); overflow:hidden; transform:translateX(100%) !important; transition:transform .3s ease !important; }
     #sideMenu.lsg-open { transform:translateX(0) !important; }
     #sideMenu > div:first-child { display:flex; justify-content:flex-end; padding:1.5rem; flex-shrink:0; }
-    #sideMenu > nav { display:flex; flex-direction:column; gap:1.5rem; padding:0 2rem; color:#fff; font:1.125rem/1 Orbitron,Arial,sans-serif; max-height:calc(100vh - 88px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
+    #sideMenu > nav { display:flex; flex-direction:column; gap:1.15rem; padding:0 2rem; color:#fff; font-size:.95rem; line-height:1.25; font-family:Orbitron,Arial,sans-serif; max-height:calc(100vh - 88px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
+    #sideMenu > nav > a, #sideMenu #socialsTrigger, #sideMenu #streamTrigger { font-size:.95rem; line-height:1.25; }
     #sideMenu a { display:block; color:#fff; text-decoration:none; }
     #sideMenu button { color:#fff; background:transparent; border:0; font:inherit; cursor:pointer; }
     #sideMenu #closeMenu { font:1.875rem/1 Arial,sans-serif; padding:0; margin:0; }
-    #sideMenu .menu-link { color:#fff; }
-    #sideMenu .menu-link:hover { color:#ec4899; }
-    #sideMenu > nav > div { display:block; }
+    #sideMenu .menu-link { color:#fff; transition:color .2s ease,transform .2s ease; }
+    #sideMenu .menu-link:hover, #sideMenu .menu-link:focus-visible { color:#ff4fd8; transform:translateX(3px); }
+    #sideMenu > nav > div { width:100%; min-width:0; flex:0 0 auto; min-height:0; display:block; }
     #sideMenu #socialsDropdown, #sideMenu #streamDropdown { display:none; flex-direction:column; gap:.75rem; margin-top:1rem; padding-left:1rem; font:1rem/1.25 Rajdhani,Arial,sans-serif; }
     #sideMenu #socialsDropdown.flex, #sideMenu #streamDropdown.flex { display:flex; }
+    #sideMenu #streamDropdown { max-height:min(48vh,390px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding-right:.65rem; scrollbar-width:auto; scrollbar-color:#ff008f #111; }
+    #sideMenu #streamDropdown::-webkit-scrollbar { width:9px; }
+    #sideMenu #streamDropdown::-webkit-scrollbar-track { background:#111; border-radius:8px; }
+    #sideMenu #streamDropdown::-webkit-scrollbar-thumb { background:#ff008f; border-radius:8px; border:2px solid #111; }
+    #sideMenu #streamDropdown::-webkit-scrollbar-thumb:hover { background:#ff4fd8; }
+    #sideMenu #socialsDropdown a, #sideMenu #streamDropdown a { font-size:.9rem; line-height:1.25; }
     @media (max-width:640px) {
       #sideMenu { width:min(86vw,360px) !important; }
-      #sideMenu > nav { max-height:calc(100vh - 82px); padding-bottom:1.5rem; }
+      #sideMenu > nav { max-height:calc(100vh - 82px); padding-bottom:1.5rem; gap:1.1rem; }
+      #sideMenu #streamDropdown { max-height:42vh; }
     }
   `;
   document.head.appendChild(style);
@@ -112,40 +101,18 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.setAttribute("aria-hidden", String(!open));
     ham.setAttribute("aria-expanded", String(open));
     ham.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
-    if (open) {
-      const first = menu.querySelector("a, button");
-      if (first) setTimeout(() => first.focus(), 0);
-    } else {
-      ham.focus();
-    }
+    if (open) { const first=menu.querySelector("a, button"); if(first)setTimeout(()=>first.focus(),0); }
+    else ham.focus();
   };
 
-  ham.addEventListener("click", event => {
-    event.preventDefault();
-    event.stopPropagation();
-    setMenuState(menu.classList.contains("translate-x-full"));
-  });
-  document.getElementById("closeMenu").addEventListener("click", event => {
-    event.preventDefault();
-    event.stopPropagation();
-    setMenuState(false);
-  });
+  ham.addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); setMenuState(menu.classList.contains("translate-x-full")); });
+  document.getElementById("closeMenu").addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); setMenuState(false); });
   menu.querySelectorAll('a[href^="/"]').forEach(link => link.addEventListener("click", () => setMenuState(false)));
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !menu.classList.contains("translate-x-full")) setMenuState(false);
-  });
+  document.addEventListener("keydown", event => { if (event.key === "Escape" && !menu.classList.contains("translate-x-full")) setMenuState(false); });
 
   const bindDropdown = (triggerId, dropdownId) => {
-    const trigger = document.getElementById(triggerId);
-    const dropdown = document.getElementById(dropdownId);
-    trigger.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const open = dropdown.classList.contains("hidden");
-      dropdown.classList.toggle("hidden", !open);
-      dropdown.classList.toggle("flex", open);
-      trigger.setAttribute("aria-expanded", String(open));
-    });
+    const trigger = document.getElementById(triggerId), dropdown = document.getElementById(dropdownId);
+    trigger.addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); const open=dropdown.classList.contains("hidden"); dropdown.classList.toggle("hidden",!open); dropdown.classList.toggle("flex",open); trigger.setAttribute("aria-expanded",String(open)); });
   };
   bindDropdown("socialsTrigger", "socialsDropdown");
   bindDropdown("streamTrigger", "streamDropdown");
