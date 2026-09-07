@@ -12,7 +12,7 @@ h1,h2,h3 { font-family:'Orbitron',sans-serif; }
 .menu-link:hover,.menu-link:focus-visible { color:var(--glow); transform:translateX(3px); }
 .neon-text { text-shadow:0 0 30px var(--pink),0 0 60px var(--glow),0 0 90px var(--purple); }
 .glass { background:rgba(13,13,13,.75); backdrop-filter:blur(20px); border:1px solid rgba(255,0,143,.3); }
-section { background:transparent !important; }
+section { background:transparent!important; }
 section[id] { scroll-margin-top:88px; }
 .section-heading { text-align:center; margin-bottom:2.5rem; }
 .section-kicker { font-family:'Rajdhani',sans-serif; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:#ff4fd8; font-size:.85rem; margin-bottom:.55rem; }
@@ -52,6 +52,14 @@ video { filter:brightness(.95) contrast(1.05); }
 @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto;} *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;} }
 :focus-visible { outline:2px solid #ff4fd8; outline-offset:4px; }
 
+#sideMenu > nav { font-size:.95rem!important; line-height:1.25!important; }
+#sideMenu > nav > a,#sideMenu #socialsTrigger { font-size:.95rem!important; line-height:1.25!important; }
+#sideMenu #socialsDropdown { scrollbar-width:auto!important; scrollbar-color:#ff008f #111!important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar { width:10px!important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar-track { background:#111!important; }
+#sideMenu #socialsDropdown::-webkit-scrollbar-thumb { background:#ff008f!important; border-radius:8px!important; border:2px solid #111!important; }
+@media (min-width:768px) { #sideMenu > nav { gap:1.15rem!important; } #sideMenu > nav > div:has(#socialsDropdown) { flex:1 1 auto!important; min-height:0!important; display:flex!important; flex-direction:column!important; } #sideMenu #socialsDropdown { flex:0 1 auto!important; min-height:0!important; max-height:calc(100vh - 430px)!important; overflow-y:scroll!important; overflow-x:hidden!important; overscroll-behavior:contain!important; padding-right:.75rem!important; padding-bottom:1rem!important; } #sideMenu #socialsDropdown a { font-size:.9rem!important; line-height:1.25!important; } }
+@media (max-width:767px) { #sideMenu > nav { overflow-y:auto!important; overflow-x:hidden!important; gap:1.1rem!important; padding-bottom:1.5rem!important; } #sideMenu #socialsDropdown { max-height:34vh!important; overflow-y:auto!important; overflow-x:hidden!important; padding-right:.5rem!important; } #sideMenu #socialsDropdown a { font-size:.9rem!important; line-height:1.25!important; } }
 #music { scroll-margin-top:88px; }
 #music-grid { align-items:stretch; }
 #music-grid .music-card { display:flex; flex-direction:column; height:100%; }
@@ -62,14 +70,23 @@ video { filter:brightness(.95) contrast(1.05); }
 #music-grid .music-card-title { overflow-wrap:anywhere; }
 #music-grid .music-card-meta { font-size:.95rem; }
 #music .spotify-player { margin-top:4rem; }
+@media (max-width:767px) { #music-grid{gap:1.25rem;} #music .section-subtitle{padding:0 .75rem;} #music .spotify-player iframe{min-height:352px;} }
 #presave .release-feature > .mt-7 { display:grid!important; grid-template-columns:repeat(2,max-content); justify-content:center; align-items:center; gap:.75rem; }
 #presave .release-feature > .mt-7 > #latest-apple { order:1; }
 #presave .release-feature > .mt-7 > a[href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU"] { order:2; }
 #presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"] { order:3; grid-column:1/-1; justify-self:center; }
 #presave .release-feature > .mt-7 > #presave-link { order:4; grid-column:1/-1; justify-self:center; }
+@media (max-width:640px) { #presave .release-feature > .mt-7{grid-template-columns:1fr;} #presave .release-feature > .mt-7 > a[aria-label="Listen to LIL SYNN on Apple Music"],#presave .release-feature > .mt-7 > #presave-link{grid-column:auto;justify-self:center;} }
 .merch-entrance { display:none!important; }
 #home,#contact { background:rgba(128,128,128,.18)!important; }
 #presave,#music,#videos,#about,#merch,#signal { background:rgba(8,8,8,.62)!important; }
+
+/* Footer/contact readability. */
+#contact,#contact > div,#contact .section-kicker,#contact h3,#contact p,#contact a { position:relative!important; z-index:100!important; isolation:isolate!important; opacity:1!important; visibility:visible!important; filter:none!important; -webkit-filter:none!important; mix-blend-mode:normal!important; background:transparent!important; background-image:none!important; text-shadow:none!important; -webkit-text-stroke:0!important; text-decoration:none!important; }
+#contact .section-kicker,#contact h3 { color:#ff008f!important; -webkit-text-fill-color:#ff008f!important; font-weight:700!important; }
+#contact p:not(.section-kicker) { color:#fff!important; -webkit-text-fill-color:#fff!important; font-weight:700!important; }
+#contact a { color:#ff4fd8!important; -webkit-text-fill-color:#ff4fd8!important; font-weight:700!important; }
+#contact a:hover,#contact a:focus-visible { color:#ff008f!important; -webkit-text-fill-color:#ff008f!important; }
 
 /* Shared secondary-page shell polish. */
 body:has(.hero) { padding-top:72px; }
@@ -85,18 +102,7 @@ body:has(.hero) .content { margin:0 auto 28px; border:1px solid rgba(255,0,143,.
 body:has(.hero) .catalog { padding:34px 0 64px; }
 body:has(.hero) .catalog-head { margin-bottom:26px; }
 body:has(.hero) .footer,body:has(.hero) .site-footer { margin-top:28px; }
-
-/* Homepage brand: replace the emoji placeholder with the real LIL SYNN mark. */
 nav a[aria-label="LIL SYNN home"] > span:first-child { display:block; width:38px; height:38px; font-size:0!important; line-height:1; background:url('/assets/img/LS.png') center/contain no-repeat; flex:none; }
 @media (max-width:640px) {
-  body:has(.hero) { padding-top:64px; }
-  body:has(.hero) .hero { min-height:330px; height:330px; padding:34px 18px 28px; }
-  body:has(.hero) .hero .panel { inset:16px 4% 16px; }
-  body:has(.hero) .hero img { width:min(68vw,240px); max-height:145px; }
-  body:has(.hero) .brand-icon { width:30px; height:30px; }
-  body:has(.hero) .brand { font-size:1.2rem; }
-  body:has(.hero) .hamb { font-size:1.8rem; }
-  body:has(.hero) .content { border-radius:18px; padding:28px 6%; }
-  body:has(.hero) .catalog { padding-top:24px; }
-  nav a[aria-label="LIL SYNN home"] > span:first-child { width:30px; height:30px; }
+ body:has(.hero){padding-top:64px;} body:has(.hero) .hero{min-height:330px;height:330px;padding:34px 18px 28px;} body:has(.hero) .hero .panel{inset:16px 4% 16px;} body:has(.hero) .hero img{width:min(68vw,240px);max-height:145px;} body:has(.hero) .brand-icon{width:30px;height:30px;} body:has(.hero) .brand{font-size:1.2rem;} body:has(.hero) .hamb{font-size:1.8rem;} body:has(.hero) .content{border-radius:18px;padding:28px 6%;} body:has(.hero) .catalog{padding-top:24px;} nav a[aria-label="LIL SYNN home"] > span:first-child{width:30px;height:30px;}
 }
