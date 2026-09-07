@@ -1,74 +1,60 @@
-name: Apply homepage fixes
+name: Validate homepage architecture
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  fix-homepage:
+  validate-homepage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Apply homepage fixes and site background
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required source and media assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f style.css
+          test -f script.js
+          test -f site-polish.js
+          test -f homepage-final-fixes.js
+          test -f music-random.js
+          test -f latest-videos.js
+          test -f release-catalog.json
+          test -f assets/mov/BG_ANI.webm
+          test -f assets/mov/HERO_BG_WEBM.webm
+          test -f assets/images/icons/album_art/Never\ Known_album_cover.jpg
+          test -f assets/images/icons/album_art/home_acoustic_version.png
+          test -f assets/images/icons/album_art/I\ DID\ IT\ AGAIN.jpg
+          echo "Required homepage architecture and canonical media assets are present."
+
+      - name: Ensure obsolete BG2 source references are absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .; then
+            echo 'ERROR: BG2.webm is not a repository asset and must not be referenced by source.'
+            exit 1
+          fi
+
+      - name: Validate release catalog JSON
         shell: bash
         run: |
           python3 - <<'PY'
+          import json
           from pathlib import Path
-          import re
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          for name in ['MERCH_SHOP.png', 'LATEST_RELEASES.png', 'LISTEN.png', 'MUSIC.png']:
-              s = re.sub(r'<(?:a|div)[^>]*>\s*<img[^>]*' + re.escape(name) + r'[^>]*>\s*</(?:a|div)>', '', s, flags=re.I|re.S)
-              s = re.sub(r'<img[^>]*' + re.escape(name) + r'[^>]*>', '', s, flags=re.I|re.S)
-
-          s = re.sub(r'<img[^>]*LS\.png[^>]*>', '', s, flags=re.I|re.S)
-          marker = '<h1 class="font-[\'Orbitron\'] text-4xl md:text-6xl tracking-[0.18em] text-white drop-shadow-2xl">LIL SYNN</h1>'
-          ls = '<img src="assets/img/LS.png" alt="LIL SYNN" class="mx-auto mb-5 w-[min(72vw,420px)] max-h-[260px] object-contain" loading="eager" decoding="async">'
-          if marker in s:
-              s = s.replace(marker, ls + marker, 1)
-
-          # The new BG2.webm is the homepage background video.
-          s = s.replace('assets/mov/lv_0_20260718234757.mp4', 'assets/mov/BG2.webm')
-          s = s.replace('type="video/mp4"', 'type="video/webm"', 1)
-
-          tag = '<script src="homepage-final-fixes.js"></script>'
-          if tag not in s:
-              s = s.replace('</body>', tag + '\n</body>')
-          p.write_text(s, encoding='utf-8')
-
-          # Apply BG2.webm to every other root-level HTML page as a fixed background.
-          bg_style = '''<style id="site-bg-video-style">
-          html, body { min-height: 100%; }
-          body { position: relative; background: transparent !important; }
-          #siteBgVideo { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; }
-          #siteBgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.58); z-index: 1; pointer-events: none; }
-          body > *:not(#siteBgVideo):not(#siteBgOverlay) { position: relative; z-index: 2; }
-          </style>'''
-          bg_markup = '<video id="siteBgVideo" autoplay loop muted playsinline aria-hidden="true"><source src="assets/mov/BG2.webm" type="video/webm"></video><div id="siteBgOverlay" aria-hidden="true"></div>'
-
-          for p in Path('.').glob('*.html'):
-              if p.name == 'index.html':
-                  continue
-              s = p.read_text(encoding='utf-8')
-              s = re.sub(r'<style id="site-bg-video-style">.*?</style>', '', s, flags=re.I|re.S)
-              s = re.sub(r'<video id="siteBgVideo".*?</video>\s*<div id="siteBgOverlay"[^>]*></div>', '', s, flags=re.I|re.S)
-              s = s.replace('</head>', bg_style + '\n</head>', 1)
-              s = re.sub(r'(<body\b[^>]*>)', r'\1' + bg_markup, s, count=1, flags=re.I)
-              p.write_text(s, encoding='utf-8')
+          data = json.loads(Path('release-catalog.json').read_text(encoding='utf-8'))
+          expected = ['Never Known', 'HOME (ACOUSTIC VERSION)', 'I DID IT AGAIN']
+          assert data.get('order', [])[:3] == expected, data.get('order', [])[:3]
+          for title in expected:
+              assert data.get('spotify', {}).get(title), f'Missing Spotify URL for {title}'
+              assert data.get('apple', {}).get(title), f'Missing Apple Music URL for {title}'
+          print('Canonical release catalog validation passed.')
           PY
-
-          if git diff --quiet; then
-            echo 'No changes needed.'
-            exit 0
-          fi
-          git config user.name 'LIL SYNN Website Bot'
-          git config user.email 'lilsynn89@gmail.com'
-          git add '*.html'
-          git add .github/workflows/fix-homepage.yml
-          git commit -m 'Set BG2 as site background'
-          git push
