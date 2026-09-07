@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .nav-scroll-library::-webkit-scrollbar-track { background: #111; border-radius: 8px; }
     .nav-scroll-library::-webkit-scrollbar-thumb { background: #ff008f; border-radius: 8px; border: 2px solid #111; }
     .nav-scroll-library::-webkit-scrollbar-thumb:hover { background: #ff4fd8; }
+    .nav-library-group + .nav-library-group { margin-top: -1.5rem; }
     @media (max-width: 640px) {
       #sideMenu { width: min(86vw, 360px); }
       #sideMenu > nav { max-height: calc(100dvh - 82px); padding-bottom: 1.5rem; }
