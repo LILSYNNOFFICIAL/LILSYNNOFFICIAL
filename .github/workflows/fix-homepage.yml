@@ -32,11 +32,25 @@ jobs:
             sed -i 's#https://lilsynn.com/releases"#https://lilsynn.com/releases.html"#g' releases.html
             changed=1
           fi
+          if [ -f special_access.html ] && ! grep -q 'rel="canonical"' special_access.html; then
+            python3 - <<'PY'
+            from pathlib import Path
+            p = Path('special_access.html')
+            s = p.read_text(encoding='utf-8')
+            marker = '<title>LIL SYNN | Special Access</title>'
+            replacement = marker + '<meta name="description" content="Special Access archive for unreleased LIL SYNN recordings, alternate versions, visuals, and rare material."><link rel="canonical" href="https://lilsynn.com/special_access.html">'
+            if marker in s:
+                p.write_text(s.replace(marker, replacement, 1), encoding='utf-8')
+            else:
+                raise SystemExit('special_access title marker not found')
+            PY
+            changed=1
+          fi
           if [ "$changed" -eq 1 ]; then
             git config user.name 'LIL SYNN Website Bot'
             git config user.email 'lilsynn89@gmail.com'
             git add '*.html'
-            git commit -m 'fix: normalize legacy background and release canonical references'
+            git commit -m 'fix: normalize legacy background and page SEO metadata'
             git push
           fi
 
@@ -52,6 +66,7 @@ jobs:
           test -f music-random.js
           test -f latest-videos.js
           test -f release-catalog.json
+          test -f sitemap.xml
           test -f assets/mov/BG_ANI.webm
           test -f assets/mov/HERO_BG_WEBM.webm
           test -f assets/images/icons/album_art/Never\ Known_album_cover.jpg
@@ -73,6 +88,23 @@ jobs:
         run: |
           set -euo pipefail
           grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
+
+      - name: Validate Special Access SEO
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'rel="canonical" href="https://lilsynn.com/special_access.html"' special_access.html
+          grep -q 'name="description"' special_access.html
+
+      - name: Validate sitemap coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'https://lilsynn.com/' sitemap.xml
+          grep -q 'https://lilsynn.com/releases.html' sitemap.xml
+          grep -q 'https://lilsynn.com/special_access.html' sitemap.xml
+          grep -q 'https://lilsynn.com/privacy.html' sitemap.xml
+          grep -q 'https://lilsynn.com/terms.html' sitemap.xml
 
       - name: Validate release catalog JSON
         shell: bash
