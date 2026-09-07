@@ -15,20 +15,29 @@
       nav a[aria-label="LIL SYNN home"]{gap:.6rem!important}
       nav a[aria-label="LIL SYNN home"]>span:last-child{font-size:1.45rem!important;line-height:1!important}
       #hamburger,.hamb{font-size:2rem!important;line-height:1!important}
+
+      /* ONE universal menu: always attached to the top-right and never bottom-left. */
       #sideMenu,.menu{position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:0!important;width:min(86vw,360px)!important;height:100dvh!important;z-index:60!important;background:rgba(5,5,8,.96)!important;border-left:1px solid rgba(255,0,143,.18);overflow:hidden!important}
       #sideMenu .menu-link,.menu a,.menu button{color:#fff!important}
       #sideMenu .menu-link:hover,.menu a:hover,.menu button:hover{color:var(--ls-glow)!important}
-      #sideMenu>nav,.menu nav{display:flex!important;flex-direction:column!important;gap:1.5rem!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding-bottom:3rem!important}
+      #sideMenu>nav,.menu nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding:0 2rem 3rem!important;min-height:0!important}
       #sideMenu.translate-x-full{transform:translateX(100%)!important}
       #sideMenu:not(.translate-x-full){transform:translateX(0)!important}
       .menu{transform:translateX(100%)!important;transition:transform .3s!important}
       .menu.open{transform:translateX(0)!important}
-      #sideMenu>nav>div:has(#socialsDropdown){flex:0 0 auto!important;min-height:0!important}
-      #sideMenu #socialsDropdown{max-height:42vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:.75rem;padding-bottom:1rem;scrollbar-width:auto;scrollbar-color:#ff008f #111}
-      #sideMenu #socialsDropdown::-webkit-scrollbar{width:10px}
-      #sideMenu #socialsDropdown::-webkit-scrollbar-track{background:#111;border-radius:8px}
-      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #111}
-      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
+
+      /* Socials and Stream are separate groups with clean, ordered vertical lists. */
+      #sideMenu>nav>.group,.menu nav>.group{display:flex!important;flex-direction:column!important;gap:.65rem!important;width:100%!important;flex:0 0 auto!important;min-height:0!important}
+      #sideMenu>nav>.group>button,.menu nav>.group>button{display:block!important;width:100%!important;flex:0 0 auto!important;padding:0!important;margin:0!important;text-align:left!important}
+      #sideMenu #socialsDropdown,#sideMenu #tg .drop,.menu #sg .drop,.menu #tg .drop{display:flex;flex-direction:column;gap:.6rem;margin:0 0 0 1rem;padding:.25rem .5rem .75rem .75rem;min-height:0;max-height:32vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:auto;scrollbar-color:#ff008f #111;flex:0 1 auto}
+      #sideMenu #socialsDropdown.hidden,#sideMenu #tg .drop[hidden],.menu .drop[hidden]{display:none!important}
+      #sideMenu #socialsDropdown::-webkit-scrollbar,#sideMenu #tg .drop::-webkit-scrollbar,.menu #sg .drop::-webkit-scrollbar,.menu #tg .drop::-webkit-scrollbar{width:10px}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-track,#sideMenu #tg .drop::-webkit-scrollbar-track,.menu #sg .drop::-webkit-scrollbar-track,.menu #tg .drop::-webkit-scrollbar-track{background:#111;border-radius:8px}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb,#sideMenu #tg .drop::-webkit-scrollbar-thumb,.menu #sg .drop::-webkit-scrollbar-thumb,.menu #tg .drop::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #111}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover,#sideMenu #tg .drop::-webkit-scrollbar-thumb:hover,.menu #sg .drop::-webkit-scrollbar-thumb:hover,.menu #tg .drop::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
+      #sideMenu #socialsDropdown a,#sideMenu #tg .drop a,.menu #sg .drop a,.menu #tg .drop a{display:block!important;position:static!important;flex:0 0 auto!important;line-height:1.25!important;white-space:normal!important;margin:0!important;padding:0!important}
+      #sideMenu>nav>.group + .group,.menu nav>.group + .group{margin-top:.15rem!important}
+
       #home{background:transparent!important;isolation:isolate}
       #home:after{content:"";position:absolute;inset:auto 5% 34px;height:170px;max-width:1040px;margin:auto;border:1px solid rgba(255,0,143,.18);border-radius:28px;background:linear-gradient(180deg,rgba(5,5,8,.22),rgba(5,5,8,.70));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1;pointer-events:none}
       #home>div:last-child{position:relative;z-index:3}
@@ -68,8 +77,8 @@
         nav a[aria-label="LIL SYNN home"]>span:first-child,.brand-icon{width:30px!important;height:30px!important;min-width:30px!important}
         nav a[aria-label="LIL SYNN home"]>span:last-child{font-size:1.15rem!important}
         #hamburger,.hamb{font-size:1.65rem!important}
-        #sideMenu>nav,.menu nav{gap:1.25rem!important;padding-bottom:4rem!important}
-        #sideMenu #socialsDropdown{max-height:none}
+        #sideMenu>nav,.menu nav{gap:1.1rem!important;padding:0 1.25rem 4rem!important}
+        #sideMenu #socialsDropdown,#sideMenu #tg .drop,.menu #sg .drop,.menu #tg .drop{max-height:34vh;margin-left:.75rem;padding-right:.5rem}
         #home:after{inset:auto 4% 20px;height:145px;border-radius:22px}
         #home h1{font-size:clamp(1.9rem,9vw,2.7rem)!important}
         #home p{font-size:.95rem!important;line-height:1.35!important;max-width:30rem;margin-inline:auto}
@@ -115,8 +124,7 @@
     ];
     const linkMarkup = (items) => items.map(([label,href]) => `<a class="menu-link" target="_blank" rel="noopener noreferrer" href="${href}">${label}</a>`).join('');
 
-    // Canonical navigation: the Releases/Special Access menu is the source of truth.
-    // Normalize every page to the exact same menu items, order, groups and links.
+    // Canonical navigation: one menu source for every page that loads this shared file.
     const menu = document.querySelector('#sideMenu nav,.menu nav');
     if (menu) {
       menu.innerHTML = `
@@ -153,12 +161,11 @@
     const closeButton = document.querySelector('#closeMenu,.close button');
     if (menuRoot && hamburger && !hamburger.dataset.canonicalNavBound) {
       hamburger.dataset.canonicalNavBound = 'true';
-      if (hamburger.id === 'hamb') {
-        hamburger.addEventListener('click', event => {
-          event.preventDefault();
-          menuRoot.classList.add('open');
-        });
-      }
+      hamburger.addEventListener('click', event => {
+        event.preventDefault();
+        menuRoot.classList.add('open');
+        menuRoot.classList.remove('translate-x-full');
+      });
       closeButton?.addEventListener('click', event => {
         event.preventDefault();
         menuRoot.classList.remove('open');
@@ -173,7 +180,6 @@
       });
     }
 
-    // Last-resort fallback if the catalog script is blocked or delayed.
     const latest = document.getElementById('latest-release-title');
     if (latest && /HELLO GOODBYE/i.test(latest.textContent.trim())) latest.textContent = 'Never Known';
     const latestArt = document.querySelector('#latest-release-art img');
