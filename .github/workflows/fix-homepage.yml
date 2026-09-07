@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-homepage:
@@ -15,44 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Normalize obsolete background and canonical references
-        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
-        shell: bash
-        run: |
-          set -euo pipefail
-          changed=0
-          for file in *.html; do
-            if grep -q 'assets/mov/BG2.webm' "$file"; then
-              sed -i 's#assets/mov/BG2.webm#assets/mov/BG_ANI.webm#g' "$file"
-              changed=1
-            fi
-          done
-          if [ -f releases.html ] && grep -q 'https://lilsynn.com/releases"' releases.html; then
-            sed -i 's#https://lilsynn.com/releases"#https://lilsynn.com/releases.html"#g' releases.html
-            changed=1
-          fi
-          if [ -f special_access.html ] && ! grep -q 'rel="canonical"' special_access.html; then
-            python3 - <<'PY'
-            from pathlib import Path
-            p = Path('special_access.html')
-            s = p.read_text(encoding='utf-8')
-            marker = '<title>LIL SYNN | Special Access</title>'
-            replacement = marker + '<meta name="description" content="Special Access archive for unreleased LIL SYNN recordings, alternate versions, visuals, and rare material."><link rel="canonical" href="https://lilsynn.com/special_access.html">'
-            if marker in s:
-                p.write_text(s.replace(marker, replacement, 1), encoding='utf-8')
-            else:
-                raise SystemExit('special_access title marker not found')
-            PY
-            changed=1
-          fi
-          if [ "$changed" -eq 1 ]; then
-            git config user.name 'LIL SYNN Website Bot'
-            git config user.email 'lilsynn89@gmail.com'
-            git add '*.html'
-            git commit -m 'fix: normalize legacy background and page SEO metadata'
-            git push
-          fi
 
       - name: Validate required source and media assets
         shell: bash
@@ -62,18 +24,19 @@ jobs:
           test -f style.css
           test -f script.js
           test -f site-polish.js
+          test -f homepage-final-fixes.js
           test -f music-random.js
           test -f latest-videos.js
           test -f release-catalog.json
           test -f sitemap.xml
           test -f assets/mov/BG_ANI.webm
           test -f assets/mov/HERO_BG_WEBM.webm
-          test -f assets/images/icons/album_art/Never\ Known_album_cover.jpg
-          test -f assets/images/icons/album_art/home_acoustic_version.png
-          test -f assets/images/icons/album_art/I\ DID\ IT\ AGAIN.jpg
+          test -f "assets/images/icons/album_art/Never Known_album_cover.jpg"
+          test -f "assets/images/icons/album_art/home_acoustic_version.png"
+          test -f "assets/images/icons/album_art/I DID IT AGAIN.jpg"
           echo "Required homepage architecture and canonical media assets are present."
 
-      - name: Reject obsolete BG2 references after normalization
+      - name: Reject obsolete BG2 references
         shell: bash
         run: |
           set -euo pipefail
@@ -109,14 +72,4 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          data = json.loads(Path('release-catalog.json').read_text(encoding='utf-8'))
-          expected = ['Never Known', 'HOME (ACOUSTIC VERSION)', 'I DID IT AGAIN']
-          assert data.get('order', [])[:3] == expected, data.get('order', [])[:3]
-          for title in expected:
-              assert data.get('spotify', {}).get(title), f'Missing Spotify URL for {title}'
-              assert data.get('apple', {}).get(title), f'Missing Apple Music URL for {title}'
-          print('Canonical release catalog validation passed.')
-          PY
+          python3 -c "import json; from pathlib import Path; data=json.loads(Path('release-catalog.json').read_text(encoding='utf-8')); expected=['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']; assert data.get('order',[])[:3]==expected, data.get('order',[])[:3]; assert all(data.get('spotify',{}).get(t) and data.get('apple',{}).get(t) for t in expected); print('Canonical release catalog validation passed.')"
