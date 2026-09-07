@@ -23,12 +23,14 @@
       #sideMenu>.menu-close-row{height:auto!important;display:flex!important;justify-content:flex-end!important;padding:1.5rem!important;box-sizing:border-box!important;}
       #closeMenu{display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;font-size:1.875rem!important;line-height:1!important;cursor:pointer!important;}
 
+      /* Match index.html: Orbitron .95rem main navigation, 1.15rem vertical rhythm. */
       #sideMenu>nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;width:100%!important;margin:0!important;padding:0 2rem!important;box-sizing:border-box!important;color:#fff!important;font-family:Orbitron,sans-serif!important;font-size:.95rem!important;line-height:1.25!important;height:calc(100dvh - 88px)!important;min-height:0!important;overflow:hidden!important;}
       #sideMenu>nav>a,#sideMenu .menu-link{display:block!important;flex:0 0 auto!important;width:auto!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;text-decoration:none!important;font-family:Orbitron,sans-serif!important;font-size:.95rem!important;line-height:1.25!important;text-align:left!important;transition:color .2s ease,transform .2s ease!important;}
       #sideMenu .menu-link:hover,#sideMenu .menu-link:focus-visible{color:#ff4fd8!important;transform:translateX(3px)!important;}
       #sideMenu .nav-library-group{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;}
-      #sideMenu .nav-library-group>button{width:100%!important;display:flex!important;justify-content:space-between!important;}
+      #sideMenu .nav-library-group>button{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;}
 
+      /* Match index.html dropdowns: Rajdhani .9rem, collapsed with hidden, scrollable when expanded. */
       #sideMenu .dropdown-list{display:flex!important;flex-direction:column!important;gap:.75rem!important;margin:1rem 0 0!important;padding:0 0 1rem 1rem!important;box-sizing:border-box!important;font-family:Rajdhani,sans-serif!important;font-size:.9rem!important;line-height:1.25!important;min-height:0!important;overflow-y:scroll!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-width:auto!important;scrollbar-color:#ff008f #111!important;}
       #sideMenu .dropdown-list.hidden{display:none!important;}
       #sideMenu .dropdown-list a{font-family:Rajdhani,sans-serif!important;font-size:.9rem!important;line-height:1.25!important;}
@@ -38,9 +40,9 @@
       #sideMenu .dropdown-list::-webkit-scrollbar-thumb:hover{background:#ff4fd8!important;}
       #sideMenu .nav-scroll-library{max-height:390px!important;}
 
-      /* Start the animated background just below the pink divider, spanning the complete page width. */
-      #bgVideo{position:fixed!important;top:73px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 73px)!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;object-fit:cover!important;object-position:center center!important;transform:none!important;z-index:0!important;opacity:.95!important;pointer-events:none!important;display:block!important;}
-      #secondary-bg-overlay{position:fixed!important;top:73px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 73px)!important;margin:0!important;padding:0!important;background:linear-gradient(to bottom,rgba(0,0,0,.20),rgba(0,0,0,.40))!important;z-index:1!important;pointer-events:none!important;}
+      /* Start the animated background just below the pink divider, spanning the complete viewport width. */
+      #bgVideo{position:fixed!important;top:74px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 74px)!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;object-fit:cover!important;object-position:center center!important;transform:none!important;z-index:0!important;opacity:.95!important;pointer-events:none!important;display:block!important;}
+      #secondary-bg-overlay{position:fixed!important;top:74px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 74px)!important;margin:0!important;padding:0!important;background:linear-gradient(to bottom,rgba(0,0,0,.20),rgba(0,0,0,.40))!important;z-index:1!important;pointer-events:none!important;}
       body>main,body>section,body>.wrap,body>div:not(#sideMenu):not(#secondary-site-nav):not(#secondary-bg-overlay):not(#bgVideo),body>footer{position:relative;z-index:2;}
 
       @media(max-width:640px){
@@ -51,8 +53,8 @@
         #sideMenu{width:min(86vw,360px)!important;}
         #sideMenu>nav{gap:1.15rem!important;padding-bottom:1.5rem!important;overflow-y:auto!important;overflow-x:hidden!important;}
         #sideMenu .dropdown-list{max-height:34vh!important;overflow-y:scroll!important;}
-        #bgVideo{top:73px!important;height:calc(100dvh - 73px)!important;}
-        #secondary-bg-overlay{top:73px!important;height:calc(100dvh - 73px)!important;}
+        #bgVideo{top:74px!important;height:calc(100dvh - 74px)!important;}
+        #secondary-bg-overlay{top:74px!important;height:calc(100dvh - 74px)!important;}
       }
     `;
     document.head.appendChild(style);
