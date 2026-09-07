@@ -18,6 +18,14 @@
       #sideMenu,.menu{background:rgba(5,5,8,.96)!important;border-left:1px solid rgba(255,0,143,.18)}
       #sideMenu .menu-link,.menu a,.menu button{color:#fff!important}
       #sideMenu .menu-link:hover,.menu a:hover,.menu button:hover{color:var(--ls-glow)!important}
+      #sideMenu>nav,.menu nav{gap:1.5rem!important}
+      #sideMenu>nav>div:has(#socialsDropdown){flex:0 0 auto!important;min-height:0!important}
+      #sideMenu>nav{overflow-y:auto!important;overflow-x:hidden!important}
+      #sideMenu #socialsDropdown{max-height:42vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:.75rem;padding-bottom:1rem;scrollbar-width:auto;scrollbar-color:#ff008f #111}
+      #sideMenu #socialsDropdown::-webkit-scrollbar{width:10px}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-track{background:#111;border-radius:8px}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #111}
+      #sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
       #home{background:transparent!important;isolation:isolate}
       #home:after{content:"";position:absolute;inset:auto 5% 34px;height:170px;max-width:1040px;margin:auto;border:1px solid rgba(255,0,143,.18);border-radius:28px;background:linear-gradient(180deg,rgba(5,5,8,.22),rgba(5,5,8,.70));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1;pointer-events:none}
       #home>div:last-child{position:relative;z-index:3}
@@ -47,6 +55,23 @@
       .footer-social-icons a,.icons a{transition:transform .2s ease,opacity .2s ease,filter .2s ease}
       .footer-social-icons a:hover,.icons a:hover{transform:translateY(-3px) scale(1.05);opacity:1;filter:drop-shadow(0 5px 12px rgba(255,0,143,.25))}
       .footer-social-icons img,.icons img{width:36px;height:36px;object-fit:contain;display:block}
+
+      /* Canonical release archive grid: release cards span the catalog width;
+         every single uses the same compact artwork card geometry. */
+      body:has(#releases) #releases{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+      body:has(#releases) #releases .release{grid-column:1/-1;margin:0}
+      body:has(#releases) #releases .single{margin:0;width:auto}
+
+      @media(max-width:900px){
+        body:has(#releases) #releases{grid-template-columns:repeat(4,minmax(0,1fr))}
+      }
+      @media(max-width:700px){
+        body:has(#releases) #releases{grid-template-columns:repeat(3,minmax(0,1fr))}
+      }
+      @media(max-width:560px){
+        body:has(#releases) #releases{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      }
+
       @media(max-width:640px){
         nav a[aria-label="LIL SYNN home"]>span:first-child,.brand-icon{width:30px!important;height:30px!important;min-width:30px!important}
         nav a[aria-label="LIL SYNN home"]>span:last-child{font-size:1.15rem!important}
@@ -76,19 +101,29 @@
       }
     });
 
-    // Keep the homepage navigation aligned with the canonical Releases menu.
-    const menu = document.querySelector('#sideMenu nav');
-    if (menu && !menu.querySelector('[data-global-stream]')) {
-      const stream = document.createElement('div');
-      stream.dataset.globalStream = 'true';
-      stream.innerHTML = '<button type="button" class="menu-link flex justify-between w-full shrink-0" aria-expanded="false">Stream</button><div class="flex flex-col gap-3 mt-4 pl-4 text-base" hidden><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU">Spotify</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.apple.com/us/artist/lil-synn/1850720041">Apple Music</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/@LILSYNNOFFICIAL">YouTube</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.youtube.com/@LILSYNNOFFICIAL">YouTube Music</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://tidal.com/artist/69300200">TIDAL</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn">Amazon Music</a></div>';
-      stream.querySelector('button').addEventListener('click', () => {
+    // One canonical Stream group, immediately after Socials, on every page.
+    const menu = document.querySelector('#sideMenu nav,.menu nav');
+    if (menu) {
+      const socialGroups = [...menu.querySelectorAll('#sg')];
+      socialGroups.slice(1).forEach(group => group.remove());
+      const social = socialGroups[0];
+      menu.querySelectorAll('#tg,[data-global-stream]').forEach(group => group.remove());
+
+      if (social) {
+        const stream = document.createElement('div');
+        stream.id = 'tg';
+        stream.dataset.canonicalStream = 'true';
+        stream.className = social.className || 'group';
+        stream.innerHTML = '<button type="button" class="menu-link flex justify-between w-full shrink-0" aria-expanded="false">Stream</button><div class="flex flex-col gap-3 mt-4 pl-4 text-base" hidden><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU">Spotify</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.apple.com/us/artist/lil-synn/1850720041">Apple Music</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/@LILSYNNOFFICIAL">YouTube</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.youtube.com/@LILSYNNOFFICIAL">YouTube Music</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://tidal.com/artist/69300200">TIDAL</a><a class="menu-link" target="_blank" rel="noopener noreferrer" href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn">Amazon Music</a></div>';
+        const button = stream.querySelector('button');
         const panel = stream.querySelector('div');
-        const open = panel.hidden;
-        panel.hidden = !open;
-        stream.querySelector('button').setAttribute('aria-expanded', String(open));
-      });
-      menu.appendChild(stream);
+        button.addEventListener('click', () => {
+          const open = panel.hidden;
+          panel.hidden = !open;
+          button.setAttribute('aria-expanded', String(open));
+        });
+        social.insertAdjacentElement('afterend', stream);
+      }
     }
 
     // Last-resort fallback if the catalog script is blocked or delayed.
@@ -100,7 +135,6 @@
       latestArt.alt = 'LIL SYNN — Never Known artwork';
     }
 
-    // Keep social/stream groups usable when the menu becomes taller than the viewport.
     const side = document.getElementById('sideMenu');
     if (side) side.setAttribute('role', 'dialog');
   };
