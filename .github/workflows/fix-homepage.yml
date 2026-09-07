@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Normalize obsolete background references
+      - name: Normalize obsolete background and canonical references
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
         shell: bash
         run: |
@@ -28,11 +28,15 @@ jobs:
               changed=1
             fi
           done
+          if [ -f releases.html ] && grep -q 'https://lilsynn.com/releases"' releases.html; then
+            sed -i 's#https://lilsynn.com/releases"#https://lilsynn.com/releases.html"#g' releases.html
+            changed=1
+          fi
           if [ "$changed" -eq 1 ]; then
             git config user.name 'LIL SYNN Website Bot'
             git config user.email 'lilsynn89@gmail.com'
             git add '*.html'
-            git commit -m 'fix: replace obsolete BG2 background references'
+            git commit -m 'fix: normalize legacy background and release canonical references'
             git push
           fi
 
@@ -63,6 +67,12 @@ jobs:
             echo 'ERROR: BG2.webm is not a repository asset and must not be referenced by source.'
             exit 1
           fi
+
+      - name: Validate releases canonical URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
 
       - name: Validate release catalog JSON
         shell: bash
