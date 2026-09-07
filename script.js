@@ -1,3 +1,53 @@
+// Performance guard: keep homepage enrichment on same-origin/local data paths.
+// This runs before site-polish.js so third-party directory/API calls never block first paint.
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+  const jsonResponse = data => new Response(JSON.stringify(data), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json; charset=utf-8' }
+  });
+
+  const localCatalogArt = [
+    { name: 'Never Known_album_cover.jpg', type: 'file' },
+    { name: 'home_acoustic_version.png', type: 'file' },
+    { name: 'I DID IT AGAIN.jpg', type: 'file' }
+  ];
+
+  const localAppleSongs = [
+    { wrapperType: 'track', kind: 'song', artistName: 'LIL SYNN', trackName: 'Never Known', trackViewUrl: 'https://music.apple.com/us/song/never-known/6807245073' },
+    { wrapperType: 'track', kind: 'song', artistName: 'LIL SYNN', trackName: 'HOME (ACOUSTIC VERSION)', trackViewUrl: 'https://music.apple.com/us/song/home-acoustic-version/6807254277' },
+    { wrapperType: 'track', kind: 'song', artistName: 'LIL SYNN', trackName: 'I DID IT AGAIN', trackViewUrl: 'https://music.apple.com/us/song/i-did-it-again/6807251598' },
+    { wrapperType: 'track', kind: 'song', artistName: 'LIL SYNN', trackName: 'Rescue You (Acoustic Version)', trackViewUrl: 'https://music.apple.com/us/song/rescue-you-acoustic-version/6807294984' }
+  ];
+
+  window.fetch = async (input, init) => {
+    const url = typeof input === 'string' ? input : input?.url || '';
+    if (/api\.github\.com\/repos\/LILSYNNOFFICIAL\/LILSYNNOFFICIAL\/contents\/assets\/images\/icons\/album_art/i.test(url)) {
+      return jsonResponse(localCatalogArt);
+    }
+    if (/itunes\.apple\.com\/lookup/i.test(url)) {
+      return jsonResponse({ results: localAppleSongs });
+    }
+    if (/api\.github\.com\/repos\/LILSYNNOFFICIAL\/LILSYNNOFFICIAL\/contents\/assets\/mov/i.test(url)) {
+      return jsonResponse([
+        { name: 'BG_ANI.webm', type: 'file' },
+        { name: 'HERO_BG_WEBM.webm', type: 'file' }
+      ]);
+    }
+    if (/\/api\/latest-youtube-releases(?:\?|$)/i.test(url)) {
+      const response = await nativeFetch('/latest-videos.json', { cache: 'force-cache' });
+      if (response.ok) {
+        const data = await response.json();
+        return jsonResponse({ videos: Array.isArray(data.videos) ? data.videos : [] });
+      }
+    }
+    if (/\/release-catalog\.json(?:\?|$)/i.test(url)) {
+      return nativeFetch('/release-catalog.json', { ...init, cache: 'force-cache' });
+    }
+    return nativeFetch(input, init);
+  };
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
   const ham = document.getElementById("hamburger");
   const menu = document.getElementById("sideMenu");
