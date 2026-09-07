@@ -67,15 +67,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const style = document.createElement("style");
   style.id = "index-navigation-secondary";
   style.textContent = `
-    #sideMenu { position:fixed; top:0; right:0; left:auto; bottom:auto; height:100%; width:18rem; z-index:60; overflow:hidden; }
-    #sideMenu > nav { max-height:calc(100vh - 88px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
-    #sideMenu a, #sideMenu button { box-sizing:border-box; }
-    #sideMenu .menu-link { color:#fff; text-decoration:none; }
+    #sideMenu {
+      position:fixed !important;
+      top:0 !important;
+      right:0 !important;
+      left:auto !important;
+      bottom:auto !important;
+      width:18rem !important;
+      height:100% !important;
+      z-index:60 !important;
+      background:rgba(0,0,0,.90) !important;
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      overflow:hidden;
+      transform:translateX(100%) !important;
+      transition:transform .3s ease !important;
+    }
+    #sideMenu.lsg-open { transform:translateX(0) !important; }
+    #sideMenu > div:first-child { display:flex; justify-content:flex-end; padding:1.5rem; flex-shrink:0; }
+    #sideMenu > nav { display:flex; flex-direction:column; gap:1.5rem; padding:0 2rem; color:#fff; font:1.125rem/1 Orbitron,Arial,sans-serif; max-height:calc(100vh - 88px); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
+    #sideMenu a { display:block; color:#fff; text-decoration:none; }
+    #sideMenu button { color:#fff; background:transparent; border:0; font:inherit; cursor:pointer; }
+    #sideMenu #closeMenu { font:1.875rem/1 Arial,sans-serif; padding:0; margin:0; }
+    #sideMenu .menu-link { color:#fff; }
     #sideMenu .menu-link:hover { color:#ec4899; }
-    #sideMenu #socialsDropdown, #sideMenu #streamDropdown { display:none; }
+    #sideMenu > nav > div { display:block; }
+    #sideMenu #socialsDropdown, #sideMenu #streamDropdown { display:none; flex-direction:column; gap:.75rem; margin-top:1rem; padding-left:1rem; font:1rem/1.25 Rajdhani,Arial,sans-serif; }
     #sideMenu #socialsDropdown.flex, #sideMenu #streamDropdown.flex { display:flex; }
-    @media(max-width:640px){
-      #sideMenu { width:min(86vw,360px); }
+    @media (max-width:640px) {
+      #sideMenu { width:min(86vw,360px) !important; }
       #sideMenu > nav { max-height:calc(100vh - 82px); padding-bottom:1.5rem; }
     }
   `;
@@ -88,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const setMenuState = open => {
     menu.classList.toggle("translate-x-full", !open);
+    menu.classList.toggle("lsg-open", open);
     menu.setAttribute("aria-hidden", String(!open));
     ham.setAttribute("aria-expanded", String(open));
     ham.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
