@@ -15,32 +15,32 @@
       #secondary-site-nav .brand{display:flex!important;align-items:center!important;gap:.75rem!important;color:#ff008f!important;text-decoration:none!important;font-family:Orbitron,sans-serif!important;font-size:2.25rem!important;letter-spacing:.1em!important;}
       #secondary-site-nav .brand-icon{font-size:3rem!important;line-height:1!important;}
       #secondary-site-nav .brand-name{font-size:2.25rem!important;line-height:1!important;}
-      #hamburger{display:block!important;position:relative!important;width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;margin-left:.5rem!important;padding:0!important;border:0!important;background:transparent!important;color:#ff008f!important;font:inherit!important;font-size:3rem!important;line-height:1!important;cursor:pointer!important;}
+      #hamburger{display:block!important;position:relative!important;width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;margin-left:.5rem!important;padding:0!important;border:0!important;background:transparent!important;color:#ff008f!important;font-family:inherit!important;font-size:3rem!important;line-height:1!important;cursor:pointer!important;}
 
       #sideMenu{position:fixed!important;top:0!important;right:0!important;bottom:0!important;left:auto!important;width:18rem!important;height:100vh!important;height:100dvh!important;margin:0!important;padding:0!important;box-sizing:border-box!important;background:rgba(0,0,0,.90)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;transform:translate3d(100%,0,0)!important;transition:transform .3s ease!important;z-index:60!important;overflow:hidden!important;display:block!important;}
       #sideMenu.translate-x-full{transform:translate3d(100%,0,0)!important;}
       #sideMenu:not(.translate-x-full){transform:translate3d(0,0,0)!important;}
       #sideMenu>.menu-close-row{height:auto!important;display:flex!important;justify-content:flex-end!important;padding:1.5rem!important;box-sizing:border-box!important;}
-      #closeMenu{display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;font-size:1.875rem!important;line-height:1!important;cursor:pointer!important;}
+      #closeMenu{display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;font-family:inherit!important;font-size:1.875rem!important;line-height:1!important;cursor:pointer!important;}
 
-      /* Match index.html: Orbitron .95rem main navigation, 1.15rem vertical rhythm. */
-      #sideMenu>nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;width:100%!important;margin:0!important;padding:0 2rem!important;box-sizing:border-box!important;color:#fff!important;font-family:Orbitron,sans-serif!important;font-size:.95rem!important;line-height:1.25!important;height:calc(100dvh - 88px)!important;min-height:0!important;overflow:hidden!important;}
-      #sideMenu>nav>a,#sideMenu .menu-link{display:block!important;flex:0 0 auto!important;width:auto!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;text-decoration:none!important;font-family:Orbitron,sans-serif!important;font-size:.95rem!important;line-height:1.25!important;text-align:left!important;transition:color .2s ease,transform .2s ease!important;}
+      /* Exact index.html main-navigation sizing: Tailwind text-lg = 1.125rem, gap-6 = 1.5rem. */
+      #sideMenu>nav{display:flex!important;flex-direction:column!important;gap:1.5rem!important;width:100%!important;margin:0!important;padding:0 2rem!important;box-sizing:border-box!important;color:#fff!important;font-family:Orbitron,sans-serif!important;font-size:1.125rem!important;line-height:1.25!important;height:calc(100dvh - 88px)!important;min-height:0!important;overflow:hidden!important;}
+      #sideMenu>nav>a,#sideMenu .menu-link{display:block!important;flex:0 0 auto!important;width:auto!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;text-decoration:none!important;font-family:Orbitron,sans-serif!important;font-size:1.125rem!important;line-height:1.25!important;text-align:left!important;transition:color .2s ease,transform .2s ease!important;}
       #sideMenu .menu-link:hover,#sideMenu .menu-link:focus-visible{color:#ff4fd8!important;transform:translateX(3px)!important;}
       #sideMenu .nav-library-group{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;}
       #sideMenu .nav-library-group>button{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;}
 
-      /* Match index.html dropdowns: Rajdhani .9rem, collapsed with hidden, scrollable when expanded. */
-      #sideMenu .dropdown-list{display:flex!important;flex-direction:column!important;gap:.75rem!important;margin:1rem 0 0!important;padding:0 0 1rem 1rem!important;box-sizing:border-box!important;font-family:Rajdhani,sans-serif!important;font-size:.9rem!important;line-height:1.25!important;min-height:0!important;overflow-y:scroll!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-width:auto!important;scrollbar-color:#ff008f #111!important;}
+      /* Exact index.html dropdown sizing: Tailwind text-base = 1rem, gap-3 = .75rem, mt-4/pl-4. */
+      #sideMenu .dropdown-list{display:flex!important;flex-direction:column!important;gap:.75rem!important;margin:1rem 0 0!important;padding:0 0 1rem 1rem!important;box-sizing:border-box!important;font-family:Rajdhani,sans-serif!important;font-size:1rem!important;line-height:1.25!important;min-height:0!important;overflow-y:scroll!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-width:auto!important;scrollbar-color:#ff008f #111!important;}
       #sideMenu .dropdown-list.hidden{display:none!important;}
-      #sideMenu .dropdown-list a{font-family:Rajdhani,sans-serif!important;font-size:.9rem!important;line-height:1.25!important;}
+      #sideMenu .dropdown-list a{font-family:Rajdhani,sans-serif!important;font-size:1rem!important;line-height:1.25!important;}
       #sideMenu .dropdown-list::-webkit-scrollbar{width:10px!important;}
       #sideMenu .dropdown-list::-webkit-scrollbar-track{background:#111!important;border-radius:8px!important;}
       #sideMenu .dropdown-list::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:8px!important;border:2px solid #111!important;}
       #sideMenu .dropdown-list::-webkit-scrollbar-thumb:hover{background:#ff4fd8!important;}
-      #sideMenu .nav-scroll-library{max-height:390px!important;}
+      #sideMenu .nav-scroll-library{max-height:min(48vh,390px)!important;}
 
-      /* Start the animated background just below the pink divider, spanning the complete viewport width. */
+      /* WebM begins just below the pink divider and spans the full available width. */
       #bgVideo{position:fixed!important;top:74px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 74px)!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;object-fit:cover!important;object-position:center center!important;transform:none!important;z-index:0!important;opacity:.95!important;pointer-events:none!important;display:block!important;}
       #secondary-bg-overlay{position:fixed!important;top:74px!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:calc(100dvh - 74px)!important;margin:0!important;padding:0!important;background:linear-gradient(to bottom,rgba(0,0,0,.20),rgba(0,0,0,.40))!important;z-index:1!important;pointer-events:none!important;}
       body>main,body>section,body>.wrap,body>div:not(#sideMenu):not(#secondary-site-nav):not(#secondary-bg-overlay):not(#bgVideo),body>footer{position:relative;z-index:2;}
@@ -51,7 +51,7 @@
         #secondary-site-nav .brand-name{font-size:1.25rem!important;}
         #hamburger{font-size:1.4rem!important;}
         #sideMenu{width:min(86vw,360px)!important;}
-        #sideMenu>nav{gap:1.15rem!important;padding-bottom:1.5rem!important;overflow-y:auto!important;overflow-x:hidden!important;}
+        #sideMenu>nav{gap:1.5rem!important;padding-bottom:1.5rem!important;overflow-y:auto!important;overflow-x:hidden!important;}
         #sideMenu .dropdown-list{max-height:34vh!important;overflow-y:scroll!important;}
         #bgVideo{top:74px!important;height:calc(100dvh - 74px)!important;}
         #secondary-bg-overlay{top:74px!important;height:calc(100dvh - 74px)!important;}
