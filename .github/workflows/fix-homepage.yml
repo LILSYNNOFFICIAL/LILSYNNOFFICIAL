@@ -62,7 +62,6 @@ jobs:
           test -f style.css
           test -f script.js
           test -f site-polish.js
-          test -f homepage-final-fixes.js
           test -f music-random.js
           test -f latest-videos.js
           test -f release-catalog.json
@@ -109,6 +108,7 @@ jobs:
       - name: Validate release catalog JSON
         shell: bash
         run: |
+          set -euo pipefail
           python3 - <<'PY'
           import json
           from pathlib import Path
