@@ -21,6 +21,7 @@
       #home{background:transparent!important;isolation:isolate}
       #home:after{content:"";position:absolute;inset:auto 5% 34px;height:170px;max-width:1040px;margin:auto;border:1px solid rgba(255,0,143,.18);border-radius:28px;background:linear-gradient(180deg,rgba(5,5,8,.22),rgba(5,5,8,.70));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1;pointer-events:none}
       #home>div:last-child{position:relative;z-index:3}
+      #home>div:last-child>div{width:min(100%,980px);margin-inline:auto}
       #home h1{font-size:clamp(2.2rem,6vw,4rem)!important;letter-spacing:.16em!important;text-shadow:0 8px 32px rgba(0,0,0,.8)!important}
       #home p{color:#fff!important;opacity:1!important;font-weight:600!important;letter-spacing:.08em!important}
       .hero-cta-stack{position:relative;z-index:4}
@@ -52,7 +53,10 @@
         #hamburger,.hamb{font-size:1.65rem!important}
         #home:after{inset:auto 4% 20px;height:145px;border-radius:22px}
         #home h1{font-size:clamp(1.9rem,9vw,2.7rem)!important}
-        #home p{font-size:.95rem!important}
+        #home p{font-size:.95rem!important;line-height:1.35!important;max-width:30rem;margin-inline:auto}
+        .hero-cta-row{width:100%;gap:.55rem}
+        .hero-cta-row a{flex:1 1 0;min-width:0;padding:.65rem .8rem!important;font-size:.9rem}
+        .hero-vote{padding:.6rem 1.2rem!important}
         body:has(.hero){padding-top:64px}
         body:has(.hero) .hero{min-height:320px!important;height:320px!important;padding:28px 18px 24px!important}
         body:has(.hero) .hero .panel{inset:12px 4% 12px!important}
@@ -95,6 +99,10 @@
       latestArt.src = '/assets/images/icons/album_art/Never Known_album_cover.jpg';
       latestArt.alt = 'LIL SYNN — Never Known artwork';
     }
+
+    // Keep social/stream groups usable when the menu becomes taller than the viewport.
+    const side = document.getElementById('sideMenu');
+    if (side) side.setAttribute('role', 'dialog');
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once:true });
