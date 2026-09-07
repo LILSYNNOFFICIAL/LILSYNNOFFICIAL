@@ -99,4 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
     #presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after { border:0 !important; box-shadow:none !important; background:transparent !important; }
     #presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal { border-top:0 !important; }
   `; document.head.appendChild(rhythmStyle);
+  const deferHeavyEmbeds = () => document.querySelectorAll('.spotify-player iframe').forEach(frame => { frame.loading='lazy'; frame.setAttribute('fetchpriority','low'); });
+  if ('requestIdleCallback' in window) requestIdleCallback(deferHeavyEmbeds,{timeout:1500}); else setTimeout(deferHeavyEmbeds,300);
 });
