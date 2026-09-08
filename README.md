@@ -38,6 +38,7 @@ site-global.js
 ┌──────────────────────────────┐
 │ ONE FIXED HEADER             │
 │ LS_HEADPHONES.png Easter egg │
+│ THE CALM ON/OFF              │
 │ hamburger                    │
 └──────────────────────────────┘
                ↓
@@ -61,7 +62,7 @@ Every page uses:
 - the headphone image is intentionally clickable and links to `/special_access.html`
 - the headphone image is an Easter egg, not a normal navigation label
 - 52px desktop artwork and 42px narrow/mobile artwork
-- fixed 72px desktop header and 64px narrow/mobile header
+- fixed 112px desktop header and 102px narrow/mobile header so the audio control can sit directly beneath the artwork
 - universal hamburger menu
 - identical positioning across homepage and secondary pages
 
@@ -180,13 +181,19 @@ assets/other/sound/Background.mp3
 
 The UI name is **THE CALM**.
 
-`site-global.js` detects the `Background.mp3` audio element and adds a subtle floating ON/OFF control. The control:
+The control is now part of the universal header and sits directly underneath the `LS_HEADPHONES.png` Special Access Easter egg instead of floating near the bottom of the viewport.
 
-- does not dominate the page
+`site-global.js` detects the `Background.mp3` audio element and adds a subtle ON/OFF control to the header. The control:
+
+- remains intentionally small and unobtrusive
 - toggles mute state without removing the audio element
 - updates its accessible label/state
 - attempts playback when the user turns it back on
 - waits briefly if the page-specific script creates the audio element after the global shell initializes
+- pauses and mutes The Calm automatically when a YouTube video starts playing on the site
+- also pauses/mutes The Calm when a native HTML5 video starts playing
+
+The YouTube behavior listens for YouTube iframe state-change messages, so playing a YouTube video does not leave the background track competing with the video audio.
 
 Browser autoplay restrictions still apply. The site cannot guarantee audible autoplay on every browser/device.
 
@@ -361,14 +368,16 @@ Before committing website changes:
 8. Verify exactly one rendered header, one rendered side menu, and one rendered footer.
 9. Verify the headphone Easter egg routes to Special Access.
 10. Verify the UP_ARROWS control appears and returns to the top.
-11. Verify The Calm can be muted/unmuted.
-12. Verify release filters and reset behavior.
-13. Verify the catalog remains in canonical order by default.
-14. Verify Touching to the North remains SoundCloud-only.
-15. Verify responsive behavior.
-16. Commit with a meaningful message.
-17. Confirm Vercel deploys the intended commit.
-18. Test the actual production site.
+11. Verify The Calm control appears beneath the header Easter egg.
+12. Verify The Calm can be muted/unmuted.
+13. Verify The Calm pauses when YouTube playback starts.
+14. Verify release filters and reset behavior.
+15. Verify the catalog remains in canonical order by default.
+16. Verify Touching to the North remains SoundCloud-only.
+17. Verify responsive behavior.
+18. Commit with a meaningful message.
+19. Confirm Vercel deploys the intended commit.
+20. Test the actual production site.
 
 A Vercel deployment being `READY` does **not** by itself prove visual or functional correctness.
 
