@@ -28,11 +28,15 @@
       style.textContent = `
         :root{--ls-pink:#ff008f;--ls-glow:#ff4fd8;--ls-panel:rgba(7,7,10,.68)}
         html{background:#050505} body{background:#050505!important;color:#fff!important}
-        nav[aria-label="Primary navigation"],.nav{background:rgba(4,4,7,.72)!important;border-bottom:1px solid rgba(255,0,143,.28)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
-        nav[aria-label="Primary navigation"]>div,.nav-inner{max-width:1180px!important}
+        /* The index header is the canonical position: fixed flush to the viewport top. */
+        nav[aria-label="Primary navigation"],.nav{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:72px!important;z-index:50!important;background:rgba(4,4,7,.72)!important;border-bottom:1px solid rgba(255,0,143,.28)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+        nav[aria-label="Primary navigation"]>div,.nav-inner{max-width:1180px!important;height:100%!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;margin-left:auto!important;margin-right:auto!important}
         nav a[aria-label="LIL SYNN home"]>span:first-child,.brand-icon{display:block!important;width:38px!important;height:38px!important;min-width:38px!important;font-size:0!important;line-height:1!important;background:url('/assets/img/LS.png') center/contain no-repeat!important}
         nav a[aria-label="LIL SYNN home"]{gap:.6rem!important} nav a[aria-label="LIL SYNN home"]>span:last-child{font-size:1.45rem!important;line-height:1!important}
         #hamburger,.hamb{font-size:2rem!important;line-height:1!important}
+        /* Do not add a second 72px page-level offset. The fixed header owns its own space. */
+        body:has(.hero){padding-top:0!important}
+        body:has(.hero) .hero{box-sizing:border-box!important;min-height:calc(100vh - 72px)!important;padding-top:72px!important}
         #sideMenu,.menu{position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:0!important;width:min(86vw,360px)!important;height:100dvh!important;z-index:60!important;background:rgba(5,5,8,.96)!important;border-left:1px solid rgba(255,0,143,.18)!important;overflow:hidden!important}
         #sideMenu .menu-link,.menu a,.menu button{color:#fff!important} #sideMenu .menu-link:hover,.menu a:hover,.menu button:hover{color:var(--ls-glow)!important}
         #sideMenu>nav,.menu nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding:0 2rem 3rem!important;min-height:0!important;max-height:calc(100dvh - 88px)!important}
@@ -51,7 +55,6 @@
         #presave,#music,#videos,#about,#merch,#signal,#contact{background:rgba(6,6,9,.74)!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important}
         #music-grid{max-width:1100px;margin-left:auto;margin-right:auto}.music-card{box-shadow:0 14px 45px rgba(0,0,0,.28)!important}.section-subtitle{color:#c2c2c2!important}
         .about-card{background:linear-gradient(145deg,rgba(13,13,17,.94),rgba(28,0,21,.78))!important}
-        body:has(.hero){padding-top:72px} body:has(.hero) .hero{min-height:360px!important;height:360px!important;justify-content:center!important;padding:36px 24px 30px!important}
         body:has(.hero) .hero img{width:min(44vw,280px)!important;max-height:165px!important;margin-bottom:10px!important}
         body:has(.hero) .content,body:has(.hero) .catalog{position:relative} body:has(.hero) .footer,body:has(.hero) .site-footer{background:rgba(5,5,8,.8)!important}
         body:has(#releases) #releases{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px} body:has(#releases) #releases .release{grid-column:1/-1;margin:0} body:has(#releases) #releases .single{margin:0;width:auto}
