@@ -16,19 +16,19 @@
 - Deployment platform: Vercel
 - Primary page: `index.html`
 - Shared visual system: `style.css`
-- Core navigation interactions: `script.js`
+- Core homepage behavior: `script.js`
 - Homepage presentation/enrichment: `site-polish.js`
 - Homepage media/background/release compatibility: `homepage-final-fixes.js`
 - Random music discovery: `music-random.js`
 - Latest video rendering: `latest-videos.js` + `latest-videos.json` + `api/latest-youtube-releases.js`
-- Secondary-page shell: `site-global.js`
+- Universal navigation shell: `site-global.js`
 - Canonical release data: `release-catalog.json`
 
-## Important Architecture Rule
+## Global Navigation Architecture
 
-`index.html` is the reference implementation for the site's global navigation, responsive behavior, animated background geometry, typography, and menu interaction model.
+There is **one navigation system across the entire site**. `releases.html` is the canonical reference implementation for the header, hamburger, right-side menu, Socials dropdown, Stream dropdown, spacing, positioning, and menu behavior. `index.html` must use the same navigation model and must not maintain a visually or behaviorally separate legacy menu.
 
-Secondary pages must visually/functionally follow that implementation. `site-global.js` provides the secondary-page shell; it must not become a competing navigation architecture or invent a different menu state model.
+`site-global.js` is the universal navigation compatibility layer. It normalizes the navigation DOM, styling, menu state, accessibility state, Socials/Stream groups, and shared visual behavior so every HTML page presents the same menu.
 
 The canonical navigation model is:
 
@@ -42,35 +42,48 @@ Right-side fixed menu
   ├── Music
   ├── Releases
   ├── Videos
-  ├── Socials
-  │   └── collapsed dropdown → full social links
-  ├── Stream
-  │   └── collapsed dropdown → full streaming links
   ├── About
   ├── Merch
   ├── Lyrics
-  └── Contact
+  ├── Contact
+  ├── Socials
+  │   └── collapsed dropdown → 8 social links
+  └── Stream
+      └── collapsed dropdown → 6 streaming links
 ```
 
-The menu opens from the right and is fixed to the viewport. It must never become normal page-flow content or appear at the bottom-left.
+The menu is fixed to the right side of the viewport, uses a full viewport-height panel, and must never become normal page-flow content or appear at the bottom-left.
 
-### Navigation ownership
+### Canonical menu links
 
-`script.js` is the homepage navigation controller. It owns only menu state, accessibility state, homepage Socials/Stream group creation, and navigation-related visual rules. It must not overwrite release data, Latest Releases, YouTube data, or other page content.
+**Socials:** YouTube, Spotify, Apple Music, Instagram, X / Twitter, SoundCloud, TikTok, Facebook.
 
-`site-global.js` is the secondary-page shell. It creates the complete navigation and background for secondary pages, so `script.js` must recognize an already-complete `Stream` group and leave it alone. There must be exactly one hamburger and one side menu per page.
+**Stream:** Spotify, Apple Music, YouTube, YouTube Music, TIDAL, Amazon Music.
 
-### Navigation typography and spacing
+Socials and Stream are independently collapsed by default. They are adjacent primary navigation groups with consistent spacing. Do not add spacer elements, negative-margin hacks, duplicate menus, or page-specific positioning rules to recreate the relationship.
 
-The homepage uses Tailwind's `text-lg` for the primary menu (`1.125rem`) and `text-base` for dropdown items (`1rem`). Primary navigation uses Orbitron; Socials and Stream options use Rajdhani.
+### Navigation implementation rules
 
-Socials and Stream are independently collapsed by default. Each dropdown uses a pink scrollbar and the same spacing/behavior as the homepage reference.
+- Exactly one hamburger control and one side menu per page.
+- The header is fixed flush to the top of the viewport.
+- The side menu is fixed to the right and uses `100dvh` height.
+- Menu content scrolls inside the menu rather than expanding the page.
+- `aria-expanded`, `aria-controls`, and `aria-hidden` must remain synchronized with menu state.
+- Escape closes the menu.
+- Opening one dropdown closes the other dropdown.
+- Navigation links must retain their canonical destinations.
+- `site-global.js` must remain loaded on pages that use the universal shell.
+- Do not create a second navigation architecture when fixing a page-specific issue.
 
-**Socials and Stream are adjacent primary navigation groups. There must be no artificial blank vertical gap between the `Socials` trigger and the `Stream` trigger.** Do not add negative-margin hacks, spacer elements, empty blocks, or unrelated layout rules to create the relationship; their spacing must come from the same primary navigation layout used by `index.html`.
+### Index-specific CSS rule
+
+`index.html` historically contained broad selectors such as `nav { height: 72px; }`. Those selectors can also match the `<nav>` nested inside the side menu and cause layout differences. Navigation CSS must therefore target the header and menu structures explicitly rather than applying header geometry to every `<nav>` element.
+
+The universal shell now explicitly normalizes the homepage and secondary-page menu structures so the index menu matches the canonical Releases menu.
 
 ## Animated WebM Background
 
-The site uses `#bgVideo` for the animated homepage/secondary-page background.
+The site uses an animated WebM background behind page content.
 
 Known assets:
 
@@ -79,9 +92,9 @@ assets/mov/BG_ANI.webm
 assets/mov/HERO_BG_WEBM.webm
 ```
 
-The homepage/secondary shell can randomly select an available `.webm` from `assets/mov/`, with a known asset retained as fallback when discovery fails.
+The background may select an available `.webm` from `assets/mov/`, with a known asset retained as fallback when discovery fails.
 
-The current geometry intentionally starts the video **below the pink navigation divider**:
+The geometry intentionally starts the video below the pink navigation divider:
 
 ```text
 top: 74px
@@ -111,7 +124,7 @@ Existing Spotify and Apple Music URLs in the catalog are authoritative. Never re
 
 ### Releases archive
 
-`releases.html` consumes the canonical release data and presents the release archive.
+`releases.html` consumes the canonical release data and presents the complete release archive. It is also the canonical navigation reference page.
 
 ### Homepage Latest Releases
 
@@ -131,7 +144,7 @@ home_acoustic_version.png
 I DID IT AGAIN.jpg
 ```
 
-`homepage-final-fixes.js` also verifies the rendered Latest Releases cards and restores those canonical artwork paths if a renderer/cache leaves a placeholder or stale image. This is a compatibility safeguard, not a second release database.
+`homepage-final-fixes.js` verifies the rendered Latest Releases cards and restores those canonical artwork paths if a renderer/cache leaves a placeholder or stale image. This is a compatibility safeguard, not a second release database.
 
 **Do not hard-code new release records into `index.html`.** Fix the catalog/renderer instead.
 
@@ -200,7 +213,7 @@ Relevant files:
 
 `YOUTUBE_API_KEY` is a secret and must never be committed.
 
-`script.js` no longer contains a competing hard-coded Latest Videos list. `latest-videos.js` and `site-polish.js` own that rendering path.
+`script.js` must not contain a competing hard-coded Latest Videos list. `latest-videos.js` and `site-polish.js` own that rendering path.
 
 ## Secondary Pages
 
@@ -211,7 +224,7 @@ The secondary pages currently include:
 - `privacy.html`
 - `terms.html`
 
-`site-global.js` supplies their shared shell: header/navigation, right-side menu, Socials/Stream dropdowns, and randomized WebM background.
+`site-global.js` supplies their shared shell, including the header/navigation, right-side menu, Socials/Stream dropdowns, and shared visual normalization.
 
 The shell must preserve each page's existing content and links. It must not replace release data, music URLs, or page-specific functionality.
 
@@ -235,8 +248,8 @@ Future browser-facing archive audio should preferably have MP3/Opus alternatives
 
 Primary fonts:
 
-- Orbitron — branding/headings/primary navigation
-- Rajdhani — supporting text/dropdowns
+- Orbitron — branding, headings, and primary navigation
+- Rajdhani — supporting text and dropdown options
 - Inter — general page/body fallback where used
 
 Primary accent:
@@ -258,13 +271,14 @@ The interface is intentionally dark, cinematic, high-contrast, and media-forward
 Preserve:
 
 - keyboard focus states
-- `aria-expanded` and `aria-controls` on menu/dropdown controls
+- `aria-expanded`, `aria-controls`, and `aria-hidden` menu state
 - Escape-to-close behavior
 - reduced-motion behavior where implemented
 - mobile-friendly menu sizing
 - `playsinline` for video
 - no horizontal overflow
 - meaningful image alt text
+- independently collapsible Socials and Stream groups
 
 Test at large desktop, standard desktop, tablet, mobile, and narrow mobile.
 
@@ -296,17 +310,18 @@ Never create a second release database just to make one page display a release.
 
 Before committing website changes:
 
-1. Inspect `git status` / changed files.
+1. Inspect changed files.
 2. Review the complete diff.
 3. Confirm no unrelated files changed.
 4. Validate HTML/JS/CSS syntax where applicable.
 5. Check console errors and failed network requests.
 6. Verify artwork/WebM assets.
 7. Verify navigation DOM and dropdown state.
-8. Verify responsive behavior.
-9. Commit with a meaningful message.
-10. Confirm Vercel deploys the intended commit.
-11. Test the actual production site.
+8. Compare `index.html` navigation behavior against `releases.html` when navigation is touched.
+9. Verify responsive behavior.
+10. Commit with a meaningful message.
+11. Confirm Vercel deploys the intended commit.
+12. Test the actual production site.
 
 A Vercel deployment being `READY` does **not** by itself mean the website is visually or functionally correct.
 
@@ -323,7 +338,7 @@ When that occurs:
 - retry the established Vercel workflow only after the deployment allowance becomes available;
 - after a successful deployment, verify that production is running the intended Git commit before declaring the release complete.
 
-## Automated validation
+## Automated Validation
 
 `.github/workflows/fix-homepage.yml` validates the required architecture/assets and canonical release data. On normal pushes it first normalizes any legacy `BG2.webm` references to the real `BG_ANI.webm` asset, commits that one-time repair when needed, and then rejects any remaining obsolete references. It does not continuously rewrite the site when no repair is needed.
 
@@ -345,6 +360,8 @@ assets/images/icons/album_art/
 ## Maintenance Rule
 
 When fixing a production issue, first identify which existing system owns the behavior, then fix that system. Do not create parallel implementations for navigation, release data, artwork, media playback, or background video merely because the existing system is temporarily broken.
+
+For navigation specifically, treat `releases.html` as the canonical reference and keep `index.html` synchronized with it through the universal shell. A page-specific CSS selector must never accidentally change the geometry of the shared menu.
 
 ## Current Production Freeze / Owner QA
 
