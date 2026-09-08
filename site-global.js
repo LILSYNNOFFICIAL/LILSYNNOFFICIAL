@@ -24,7 +24,7 @@
     ['Lyrics','https://genius.com/artists/Lil-synn','external'],['Contact','/#contact']
   ];
 
-  const external = (href, extra='') => extra === 'external' ? ` target="_blank" rel="noopener noreferrer"` : '';
+  const external = (_href, extra='') => extra === 'external' ? ` target="_blank" rel="noopener noreferrer"` : '';
   const links = items => items.map(item => `<a href="${item[1]}"${external(item[1],item[2])}>${item[0]}</a>`).join('');
   const socialLinks = socials.map(([label,href]) => `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`).join('');
   const streamLinks = links(streams);
@@ -33,7 +33,7 @@
     <header class="ls-header" data-ls-header>
       <div class="ls-header-inner">
         <a class="ls-brand" href="/" aria-label="LIL SYNN home">
-          <img src="/assets/img/LS.png" alt="" aria-hidden="true">
+          <img src="/assets/images/icons/LS_HEADPHONES.png" alt="" aria-hidden="true">
           <span>LIL SYNN</span>
         </a>
         <button class="ls-menu-toggle" type="button" aria-label="Open navigation" aria-controls="ls-site-menu" aria-expanded="false">☰</button>
@@ -120,6 +120,67 @@
     setOpen(false);
   };
 
+  const addBackToTop = () => {
+    if(document.querySelector('[data-ls-back-to-top]')) return;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='ls-back-to-top';
+    button.dataset.lsBackToTop='true';
+    button.setAttribute('aria-label','Back to top');
+    button.title='Back to top';
+    button.innerHTML='<img src="/assets/images/icons/UP_ARROWS.png" alt="">';
+    button.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+    document.body.appendChild(button);
+    const update=()=>button.classList.toggle('visible',window.scrollY>280);
+    window.addEventListener('scroll',update,{passive:true});
+    update();
+  };
+
+  const initArtistAccordion = () => {
+    const about=document.querySelector('#about .about-card');
+    if(!about||about.dataset.accordionReady)return;
+    const headings=[...about.querySelectorAll('h3')];
+    if(!headings.length)return;
+    about.dataset.accordionReady='true';
+    const intro=about.querySelector('.section-kicker')?.nextElementSibling;
+    const controls=document.createElement('div');
+    controls.className='artist-section-controls';
+    controls.setAttribute('aria-label','Artist sections');
+    const sections=[];
+    headings.forEach((heading,index)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='artist-section-button';
+      button.textContent=heading.textContent.trim();
+      button.setAttribute('aria-expanded','false');
+      const panel=document.createElement('div');
+      panel.className='artist-section-panel';
+      panel.id=`artist-section-${index}`;
+      heading.parentNode.insertBefore(panel,heading);
+      panel.appendChild(heading);
+      let node=panel.nextSibling;
+      while(node && node.tagName!=='H3'){
+        const next=node.nextSibling;
+        panel.appendChild(node);
+        node=next;
+      }
+      panel.hidden=true;
+      button.addEventListener('click',()=>{
+        sections.forEach(({button:otherButton,panel:otherPanel})=>{
+          const active=otherPanel===panel;
+          otherPanel.hidden=!active;
+          otherButton.setAttribute('aria-expanded',String(active));
+          otherButton.classList.toggle('active',active);
+        });
+        requestAnimationFrame(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}));
+      });
+      sections.push({button,panel});
+      controls.appendChild(button);
+    });
+    const firstH3=headings[0];
+    about.insertBefore(controls,firstH3.parentElement===about?firstH3:sections[0].panel);
+  };
+
   const normalizeLegacy = () => {
     document.querySelectorAll('.hero p,#home p').forEach(p=>{if(/Dark electronic music\. Atmospheric sound\. Emotion without limits\./i.test(p.textContent.trim()))p.textContent='Dark sound. Raw emotion. No limits';});
     const latest=document.getElementById('latest-release-title');
@@ -128,12 +189,37 @@
     if(latestArt&&/heal2\.png/i.test(latestArt.getAttribute('src')||'')){latestArt.src='/assets/images/icons/album_art/Never Known_album_cover.jpg';latestArt.alt='LIL SYNN — Never Known artwork';}
   };
 
+  const normalizeReleases = () => {
+    const root=document.getElementById('releases');
+    if(!root||root.dataset.lsNormalized)return;
+    const apply=async()=>{
+      try{
+        const response=await fetch('/release-catalog.json',{cache:'no-store'});
+        if(!response.ok)throw new Error('catalog unavailable');
+        const catalog=await response.json();
+        const order=new Map((catalog.order||[]).map((title,index)=>[String(title).toLowerCase(),index]));
+        [...root.children].sort((a,b)=>{
+          const aTitle=(a.querySelector('.name,.single-name')?.textContent||'').trim().toLowerCase();
+          const bTitle=(b.querySelector('.name,.single-name')?.textContent||'').trim().toLowerCase();
+          return (order.get(aTitle)??9999)-(order.get(bTitle)??9999);
+        }).forEach(el=>root.appendChild(el));
+        root.dataset.lsNormalized='true';
+      }catch(e){console.warn('Release order normalization unavailable',e)}
+    };
+    if(root.children.length>0)apply();
+    const observer=new MutationObserver(()=>{if(root.children.length>0){apply();observer.disconnect();}});
+    observer.observe(root,{childList:true});
+  };
+
   const init = () => {
     shell();
     ensureMeta();
     replaceShell();
     initMenu();
+    addBackToTop();
     normalizeLegacy();
+    initArtistAccordion();
+    normalizeReleases();
     document.querySelectorAll('a[target="_blank"]').forEach(a=>{if(!a.rel)a.rel='noopener noreferrer';});
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
