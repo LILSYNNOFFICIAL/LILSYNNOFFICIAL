@@ -34,12 +34,11 @@
         nav a[aria-label="LIL SYNN home"]>span:first-child,.brand-icon{display:block!important;width:38px!important;height:38px!important;min-width:38px!important;font-size:0!important;line-height:1!important;background:url('/assets/img/LS.png') center/contain no-repeat!important}
         nav a[aria-label="LIL SYNN home"]{gap:.6rem!important} nav a[aria-label="LIL SYNN home"]>span:last-child{font-size:1.45rem!important;line-height:1!important}
         #hamburger,.hamb{font-size:2rem!important;line-height:1!important}
-        /* Do not add a second 72px page-level offset. The fixed header owns its own space. */
         body:has(.hero){padding-top:0!important}
         body:has(.hero) .hero{box-sizing:border-box!important;min-height:calc(100vh - 72px)!important;padding-top:72px!important}
         #sideMenu,.menu{position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:0!important;width:min(86vw,360px)!important;height:100dvh!important;z-index:60!important;background:rgba(5,5,8,.96)!important;border-left:1px solid rgba(255,0,143,.18)!important;overflow:hidden!important}
         #sideMenu .menu-link,.menu a,.menu button{color:#fff!important} #sideMenu .menu-link:hover,.menu a:hover,.menu button:hover{color:var(--ls-glow)!important}
-        #sideMenu>nav,.menu nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding:0 2rem 3rem!important;min-height:0!important;max-height:calc(100dvh - 88px)!important}
+        #sideMenu>nav,.menu nav{display:flex!important;flex-direction:column!important;gap:1.15rem!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding:0 2rem 3rem!important;min-height:0!important;max-height:calc(100dvh - 88px)!important;box-sizing:border-box!important}
         #sideMenu.translate-x-full,.menu{transform:translateX(100%)!important} #sideMenu:not(.translate-x-full),.menu.open{transform:translateX(0)!important}
         #sideMenu>nav>.group,.menu nav>.group{display:flex!important;flex-direction:column!important;gap:.55rem!important;width:100%!important;flex:0 0 auto!important;min-height:0!important;margin:0!important}
         #sideMenu>nav>.group>button,.menu nav>.group>button{display:block!important;width:100%!important;flex:0 0 auto!important;padding:0!important;margin:0!important;text-align:left!important}
