@@ -16,103 +16,185 @@
 - Deployment platform: Vercel
 - Primary page: `index.html`
 - Shared visual system: `style.css`
+- Universal shell CSS: `site-global.css`
+- Universal shell JavaScript: `site-global.js`
 - Core homepage behavior: `script.js`
 - Homepage presentation/enrichment: `site-polish.js`
 - Homepage media/background/release compatibility: `homepage-final-fixes.js`
 - Random music discovery: `music-random.js`
 - Latest video rendering: `latest-videos.js` + `latest-videos.json` + `api/latest-youtube-releases.js`
-- Universal navigation shell: `site-global.js`
 - Canonical release data: `release-catalog.json`
+- Custom not-found page: `404.html`
 
-## Global Navigation Architecture
+## Universal Site Shell: One Header, One Menu, One Footer
 
-There is **one navigation system across the entire site**. `releases.html` is the canonical reference implementation for the header, hamburger, right-side menu, Socials dropdown, Stream dropdown, spacing, positioning, and menu behavior. `index.html` must use the same navigation model and must not maintain a visually or behaviorally separate legacy menu.
-
-`site-global.js` is the universal navigation compatibility layer. It normalizes the navigation DOM, styling, menu state, accessibility state, Socials/Stream groups, and shared visual behavior so every HTML page presents the same menu.
-
-The canonical navigation model is:
+The site now has one canonical shell for every HTML page:
 
 ```text
-Header
-  ├── LIL SYNN brand
-  └── hamburger
-
-Right-side fixed menu
-  ├── Home
-  ├── Music
-  ├── Releases
-  ├── Videos
-  ├── About
-  ├── Merch
-  ├── Lyrics
-  ├── Contact
-  ├── Socials
-  │   └── collapsed dropdown → 8 social links
-  └── Stream
-      └── collapsed dropdown → 6 streaming links
+site-global.css
+       ↓
+site-global.js
+       ↓
+┌──────────────────────────────┐
+│ ONE FIXED HEADER             │
+│ logo + LIL SYNN + hamburger  │
+└──────────────────────────────┘
+               ↓
+┌──────────────────────────────┐
+│ ONE RIGHT-SIDE MENU          │
+│ Home / Music / Releases ...  │
+│ Socials                      │
+│ Stream                       │
+└──────────────────────────────┘
+               ↓
+        PAGE-SPECIFIC CONTENT
+               ↓
+┌──────────────────────────────┐
+│ ONE UNIVERSAL FOOTER         │
+│ navigation + social icons    │
+│ legal links + copyright      │
+└──────────────────────────────┘
 ```
 
-The menu is fixed to the right side of the viewport, uses a full viewport-height panel, and must never become normal page-flow content or appear at the bottom-left.
+`site-global.js` is the owner of the shared shell. It replaces legacy page-specific header/menu/footer markup with the canonical shell at runtime so `index.html`, `releases.html`, `special_access.html`, `privacy.html`, `terms.html`, and `404.html` use the same structure and behavior.
 
-### Canonical menu links
+`site-global.css` owns the shell geometry, responsive behavior, accessibility focus styling, fixed header, right-side menu, dropdowns, and footer presentation. Page-specific CSS must not redefine the shared shell.
+
+### Canonical header
+
+Every page gets the same:
+
+- LIL SYNN logo from `/assets/img/LS.png`
+- LIL SYNN wordmark
+- fixed 72px desktop header, 64px narrow/mobile header
+- hamburger button
+- accessible header semantics
+- pink divider and glass/dark treatment
+
+The header is fixed flush to the viewport top. It is never implemented differently on the homepage versus secondary pages.
+
+### Canonical menu
+
+The right-side menu is fixed to the viewport and uses `100dvh`. Its own content scrolls internally so a long Socials or Stream list cannot push the page layout around.
+
+Canonical primary navigation:
+
+- Home
+- Music
+- Releases
+- Videos
+- About
+- Merch
+- Lyrics
+- Contact
+- Socials
+- Stream
 
 **Socials:** YouTube, Spotify, Apple Music, Instagram, X / Twitter, SoundCloud, TikTok, Facebook.
 
 **Stream:** Spotify, Apple Music, YouTube, YouTube Music, TIDAL, Amazon Music.
 
-Socials and Stream are independently collapsed by default. They are adjacent primary navigation groups with consistent spacing. Do not add spacer elements, negative-margin hacks, duplicate menus, or page-specific positioning rules to recreate the relationship.
+Socials and Stream are independently collapsed by default. Opening one closes the other.
 
-### Navigation implementation rules
+### Menu accessibility
 
-- Exactly one hamburger control and one side menu per page.
-- The header is fixed flush to the top of the viewport.
-- The side menu is fixed to the right and uses `100dvh` height.
-- Menu content scrolls inside the menu rather than expanding the page.
-- `aria-expanded`, `aria-controls`, and `aria-hidden` must remain synchronized with menu state.
-- Escape closes the menu.
-- Opening one dropdown closes the other dropdown.
-- Navigation links must retain their canonical destinations.
-- `site-global.js` must remain loaded on pages that use the universal shell.
-- Do not create a second navigation architecture when fixing a page-specific issue.
+The universal shell maintains:
 
-### Index-specific CSS rule
+- `aria-expanded`
+- `aria-controls`
+- `aria-hidden`
+- keyboard focus states
+- Escape-to-close
+- internal scrolling
+- body scroll locking while the drawer is open
+- consistent external-link security using `noopener noreferrer`
 
-`index.html` historically contained broad selectors such as `nav { height: 72px; }`. Those selectors can also match the `<nav>` nested inside the side menu and cause layout differences. Navigation CSS must therefore target the header and menu structures explicitly rather than applying header geometry to every `<nav>` element.
+Do not add another hamburger, another side menu, another Socials implementation, or page-specific menu positioning.
 
-The universal shell now explicitly normalizes the homepage and secondary-page menu structures so the index menu matches the canonical Releases menu.
+### Canonical footer
+
+Every page receives the same footer containing:
+
+- LIL SYNN branding
+- `Dark sound. Raw emotion. No limits`
+- common navigation
+- SYNN SIGNAL
+- Special Access
+- eight social profiles
+- Privacy
+- Terms
+- current-year copyright
+
+The footer is generated once by `site-global.js`. Adding or removing a global footer item should be done there, not by copying markup into individual HTML pages.
+
+## HTML Page Responsibilities
+
+The HTML files should own **content**, not competing versions of the website shell.
+
+Current pages:
+
+- `index.html` → homepage content and homepage-specific scripts
+- `releases.html` → release catalog renderer and catalog-specific controls
+- `special_access.html` → archive videos and unreleased/demo audio player
+- `privacy.html` → privacy content
+- `terms.html` → terms content
+- `404.html` → custom not-found experience
+
+The universal shell may normalize legacy markup for compatibility, but new pages must not add legacy `.nav`, `.menu`, or duplicated `<footer>` implementations.
+
+## Global Asset and Styling Rules
+
+Primary fonts:
+
+- Orbitron: branding, headings, primary navigation
+- Rajdhani: supporting text, controls, dropdowns
+- Inter: general body text where appropriate
+
+Primary accent:
+
+```text
+#ff008f
+```
+
+Hover pink:
+
+```text
+#ff4fd8
+```
+
+The visual identity is dark, cinematic, high-contrast, and media-forward.
+
+`site-global.css` owns only the global shell. `style.css` owns the shared visual system and page components. Page-specific styles should be limited to the page that actually needs them.
+
+## SEO and Metadata
+
+Each HTML page should have:
+
+- unique `<title>`
+- useful meta description
+- canonical URL
+- viewport declaration
+- meaningful language declaration
+- appropriate Open Graph/Twitter metadata on public marketing pages where applicable
+
+`site-global.js` supplies safe metadata fallbacks and canonical normalization when a page is missing basic metadata.
 
 ## Animated WebM Background
 
-The site uses an animated WebM background behind page content.
-
-Known assets:
+Known background assets:
 
 ```text
 assets/mov/BG_ANI.webm
 assets/mov/HERO_BG_WEBM.webm
 ```
 
-The background may select an available `.webm` from `assets/mov/`, with a known asset retained as fallback when discovery fails.
+`BG2.webm` is not a repository asset and must never be reintroduced.
 
-The geometry intentionally starts the video below the pink navigation divider:
-
-```text
-top: 74px
-height: calc(100dvh - 74px)
-width: 100vw
-object-fit: cover
-position: fixed
-```
-
-The video must remain behind page content and must not create horizontal overflow. Mobile also uses `object-fit: cover`.
-
-**`BG2.webm` is not a repository asset and must not be introduced as a source reference.** The validation workflow normalizes legacy `BG2.webm` references to `BG_ANI.webm` on pushes, then rejects any remaining obsolete references.
-
-Do not create a second competing background-video system.
+The background must remain behind page content and must not create horizontal overflow.
 
 ## Music / Release Architecture
 
-`release-catalog.json` is the canonical release database. It contains release ordering, release/group information, track lists, Spotify destinations, Apple Music destinations, track-level Spotify destinations, and Apple Music data.
+`release-catalog.json` is the canonical release database. It contains release ordering, group information, track lists, Spotify destinations, Apple Music destinations, and track-level streaming destinations.
 
 Current catalog order begins:
 
@@ -120,23 +202,13 @@ Current catalog order begins:
 2. `HOME (ACOUSTIC VERSION)`
 3. `I DID IT AGAIN`
 
-Existing Spotify and Apple Music URLs in the catalog are authoritative. Never regenerate, guess, replace, or modify a correct URL merely to fix artwork or presentation.
-
-### Releases archive
-
-`releases.html` consumes the canonical release data and presents the complete release archive. It is also the canonical navigation reference page.
-
-### Homepage Latest Releases
-
-The homepage `LATEST RELEASES` renderer is catalog-driven through `site-polish.js` and uses the first three entries in `release-catalog.json`.
-
-Artwork is resolved from:
+Artwork lives in:
 
 ```text
 assets/images/icons/album_art/
 ```
 
-The current canonical artwork files for the newest three releases are:
+Newest canonical artwork:
 
 ```text
 Never Known_album_cover.jpg
@@ -144,49 +216,35 @@ home_acoustic_version.png
 I DID IT AGAIN.jpg
 ```
 
-`homepage-final-fixes.js` verifies the rendered Latest Releases cards and restores those canonical artwork paths if a renderer/cache leaves a placeholder or stale image. This is a compatibility safeguard, not a second release database.
+Never create a second release database in an HTML page merely to make a release display correctly.
 
-**Do not hard-code new release records into `index.html`.** Fix the catalog/renderer instead.
+### Releases archive
 
-### Artwork matching
+`releases.html` consumes `release-catalog.json` and renders the complete archive. It is no longer the owner of the global header/footer. Its responsibility is release content and sorting.
 
-Release artwork filenames are not guaranteed to exactly equal release titles. Numeric `lil_synn_` prefixes and descriptive suffixes such as `_album_cover` are valid. Artwork resolution must therefore normalize filenames rather than requiring literal title equality.
+### Homepage releases
 
-### Discover LIL SYNN / random music
+`site-polish.js` and `homepage-final-fixes.js` handle homepage release presentation and compatibility. `site-global.js` only handles universal shell normalization and legacy release fallback cleanup.
 
-`music-random.js` is the existing randomized music system. It consumes the release architecture, expands grouped releases into individual tracks, preserves parent-release artwork, and supplies Spotify/Apple destinations where available.
+### Random music
 
-Do not replace this with a static hard-coded list.
+`music-random.js` owns randomized catalog discovery. Do not replace it with a hard-coded static list.
 
 ## Media / The Calm
 
-The background music track is:
+Background audio:
 
 ```text
 assets/other/sound/Background.mp3
 ```
 
-The UI title is **The Calm**. The underlying filename must remain unchanged.
+The UI title is **The Calm**. The filename must remain unchanged.
 
-`homepage-final-fixes.js` maintains the compact player and coordinates it with external media where browser events permit:
-
-```text
-The Calm playing
-    ↓
-Spotify / YouTube begins
-    ↓
-The Calm pauses
-    ↓
-External media stops/ends
-    ↓
-The Calm resumes if it was previously playing
-```
-
-Browser autoplay restrictions are real; audible autoplay cannot be guaranteed on every browser/device.
+Browser autoplay restrictions are real. Audible autoplay cannot be guaranteed on every browser/device.
 
 ## YouTube / Latest Videos
 
-The production Latest Videos system uses the official YouTube Data API rather than scraping YouTube pages.
+The production Latest Videos path uses the official YouTube Data API:
 
 ```text
 YouTube channel
@@ -202,7 +260,7 @@ latest-videos.json
 index.html
 ```
 
-Relevant files:
+Relevant files include:
 
 - `api/youtube.js`
 - `api/latest-youtube-releases.js`
@@ -213,26 +271,11 @@ Relevant files:
 
 `YOUTUBE_API_KEY` is a secret and must never be committed.
 
-`script.js` must not contain a competing hard-coded Latest Videos list. `latest-videos.js` and `site-polish.js` own that rendering path.
-
-## Secondary Pages
-
-The secondary pages currently include:
-
-- `releases.html`
-- `special_access.html`
-- `privacy.html`
-- `terms.html`
-
-`site-global.js` supplies their shared shell, including the header/navigation, right-side menu, Socials/Stream dropdowns, and shared visual normalization.
-
-The shell must preserve each page's existing content and links. It must not replace release data, music URLs, or page-specific functionality.
-
 ## Special Access
 
-`special_access.html` contains the unreleased/demo library and bloopers/alternate-scenes video content.
+`special_access.html` contains restricted archive material, early transmissions, bloopers/alternate scenes, and unreleased/demo audio.
 
-Current archive audio assets include:
+Current archive audio includes:
 
 ```text
 assets/other/Before(1).mp3
@@ -242,69 +285,27 @@ assets/other/Reset The Pin.flac
 assets/other/Ties Remain2.mp3
 ```
 
-Future browser-facing archive audio should preferably have MP3/Opus alternatives when FLAC compatibility is insufficient.
+The page-specific archive player remains owned by `special_access.html`. The universal shell does not alter its audio controls.
 
-## Global Visual System
-
-Primary fonts:
-
-- Orbitron — branding, headings, and primary navigation
-- Rajdhani — supporting text and dropdown options
-- Inter — general page/body fallback where used
-
-Primary accent:
-
-```text
-#ff008f
-```
-
-Hover pink commonly uses:
-
-```text
-#ff4fd8
-```
-
-The interface is intentionally dark, cinematic, high-contrast, and media-forward.
-
-## Accessibility / Responsive Rules
+## Accessibility and Responsive Rules
 
 Preserve:
 
+- meaningful image alt text
 - keyboard focus states
-- `aria-expanded`, `aria-controls`, and `aria-hidden` menu state
-- Escape-to-close behavior
-- reduced-motion behavior where implemented
+- `aria-expanded`, `aria-controls`, and `aria-hidden`
+- Escape-to-close
+- reduced-motion behavior
 - mobile-friendly menu sizing
 - `playsinline` for video
 - no horizontal overflow
-- meaningful image alt text
-- independently collapsible Socials and Stream groups
+- internal scrolling for long navigation menus
 
-Test at large desktop, standard desktop, tablet, mobile, and narrow mobile.
+Test large desktop, standard desktop, tablet, mobile, and narrow mobile.
 
-## Release Change Workflow
+## 404
 
-```text
-Add artwork
-   ↓
-Update canonical release catalog
-   ↓
-Verify Spotify + Apple destinations
-   ↓
-Verify artwork filename/path
-   ↓
-Verify releases.html
-   ↓
-Verify homepage Latest Releases
-   ↓
-Verify Discover/random music artwork
-   ↓
-Deploy
-   ↓
-Verify production
-```
-
-Never create a second release database just to make one page display a release.
+`404.html` uses the same universal header/footer and provides a branded `SIGNAL LOST / PAGE NOT FOUND` experience with a return-home action.
 
 ## Git / Deployment QA
 
@@ -315,70 +316,38 @@ Before committing website changes:
 3. Confirm no unrelated files changed.
 4. Validate HTML/JS/CSS syntax where applicable.
 5. Check console errors and failed network requests.
-6. Verify artwork/WebM assets.
-7. Verify navigation DOM and dropdown state.
-8. Compare `index.html` navigation behavior against `releases.html` when navigation is touched.
-9. Verify responsive behavior.
-10. Commit with a meaningful message.
-11. Confirm Vercel deploys the intended commit.
-12. Test the actual production site.
+6. Verify artwork, WebM, and audio assets.
+7. Verify the universal shell exists on every HTML page.
+8. Verify exactly one rendered header, one rendered side menu, and one rendered footer.
+9. Verify Socials and Stream independently expand/collapse.
+10. Verify responsive behavior.
+11. Commit with a meaningful message.
+12. Confirm Vercel deploys the intended commit.
+13. Test the actual production site.
 
-A Vercel deployment being `READY` does **not** by itself mean the website is visually or functionally correct.
+A Vercel deployment being `READY` does **not** by itself prove visual or functional correctness.
 
-### Deployment rate-limit handling
+### Deployment rate limits
 
-Vercel may reject deployment attempts when the account's deployment allowance has been exhausted, including the `api-deployments-free-per-day` resource-limit condition. This is an external deployment constraint, not a website-code failure.
-
-When that occurs:
-
-- do not create placeholder or meaningless source commits just to trigger another deployment;
-- do not repeatedly spam failed deployment attempts;
-- keep `main` at the validated source state;
-- preserve the existing production deployment until a valid deployment can be created;
-- retry the established Vercel workflow only after the deployment allowance becomes available;
-- after a successful deployment, verify that production is running the intended Git commit before declaring the release complete.
+If Vercel reports an account deployment allowance such as `api-deployments-free-per-day`, do not create meaningless commits or spam retries. Keep `main` at the validated source state and retry only when deployment capacity is available.
 
 ## Automated Validation
 
-`.github/workflows/fix-homepage.yml` validates the required architecture/assets and canonical release data. On normal pushes it first normalizes any legacy `BG2.webm` references to the real `BG_ANI.webm` asset, commits that one-time repair when needed, and then rejects any remaining obsolete references. It does not continuously rewrite the site when no repair is needed.
+`.github/workflows/fix-homepage.yml` validates required architecture/assets and canonical release data. It also handles legacy `BG2.webm` normalization where configured.
 
-`.github/workflows/inject-site-global.yml` remains responsible only for keeping the secondary-page `site-global.js` cache-buster current.
+`.github/workflows/inject-site-global.yml` keeps the universal shell cache-buster current where required.
 
-## Current Known Asset Locations
+## Maintenance Rules
 
-```text
-assets/img/LS.png
-assets/img/MERCH_SHOP.png
-assets/mov/BG_ANI.webm
-assets/mov/HERO_BG_WEBM.webm
-assets/other/sound/Background.mp3
-assets/images/icons/album_art/
-```
+1. Fix the system that owns the behavior.
+2. Do not create parallel implementations of navigation, footer, release data, artwork, media playback, or background video.
+3. Do not add page-specific selectors that redefine global shell geometry.
+4. Keep global links and social destinations centralized in `site-global.js`.
+5. Keep global shell CSS centralized in `site-global.css`.
+6. Keep release data centralized in `release-catalog.json`.
+7. Keep page-specific functionality in the page or its dedicated script.
+8. Never claim live deployment or browser verification unless it was actually verified.
 
-`assets/img/LS.png` is the LIL SYNN logo/hero asset. It is not a release-art fallback and must never be removed by broad image cleanup logic.
+The design goal is simple:
 
-## Maintenance Rule
-
-When fixing a production issue, first identify which existing system owns the behavior, then fix that system. Do not create parallel implementations for navigation, release data, artwork, media playback, or background video merely because the existing system is temporarily broken.
-
-For navigation specifically, treat `releases.html` as the canonical reference and keep `index.html` synchronized with it through the universal shell. A page-specific CSS selector must never accidentally change the geometry of the shared menu.
-
-## Current Production Freeze / Owner QA
-
-The finalized website source should remain unchanged unless the site owner reports a specific, reproducible production problem. Do not proactively refactor or regenerate working systems.
-
-Interactive browser testing may be unavailable in some maintenance sessions. When it is unavailable, report the limitation honestly rather than claiming hamburger clicks, dropdown interaction, randomizer interaction, or pixel-level visual verification was performed.
-
-For a deployment-ready state, the required sequence remains:
-
-```text
-Validated GitHub main
-   ↓
-Successful Vercel deployment of that exact commit
-   ↓
-Production alias updated
-   ↓
-Live-site verification
-   ↓
-Owner manual interactive QA when required
-```
+> **One header to rule them all. One menu to rule them all. One footer to rule them all. One source of truth.**
