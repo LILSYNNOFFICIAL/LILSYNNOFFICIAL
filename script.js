@@ -7,8 +7,8 @@ const ensureBackgroundVideo=()=>{
   let overlay=document.querySelector('.ls-global-bg-overlay');
   if(!overlay){overlay=document.createElement('div');overlay.className='ls-global-bg-overlay';document.body.prepend(overlay)}
   if(video.querySelector('source')){video.play().catch(()=>{});return}
-  const attach=()=>{if(video.querySelector('source'))return;const source=document.createElement('source');source.src='/assets/mov/LG_BG_STARS.webm';source.type='video/webm';video.appendChild(source);video.load();video.play().catch(()=>{})};
-  const start=()=>setTimeout(attach,2500);
+  const attach=()=>{if(video.querySelector('source'))return;const source=document.createElement('source');source.src='/assets/mov/LS_BG_STARS.webm';source.type='video/webm';video.appendChild(source);video.load();video.play().catch(()=>{})};
+  const start=()=>setTimeout(attach,1200);
   if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 };
 const addHomepageRandomize=()=>{const grid=document.getElementById('music-grid');if(!grid)return;const buttons=[...document.querySelectorAll('.discover-button')];if(buttons.length>1)buttons.slice(1).forEach(b=>b.closest('.homepage-refinement')?.remove());if(document.querySelector('.discover-button'))return;const panel=document.createElement('div');panel.className='homepage-refinement';panel.innerHTML='<button type="button" class="discover-button">RANDOMIZE</button>';grid.parentNode.insertBefore(panel,grid);panel.querySelector('button').addEventListener('click',()=>window.lilSynnRefreshMusic?.())};
