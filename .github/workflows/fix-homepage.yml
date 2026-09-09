@@ -67,6 +67,7 @@ jobs:
               s = s.replace('.ls-header .ls-brand{display:none!important}', '')
               s = s.replace('.ls-header .ls-footer{padding-bottom:28px}', '.ls-footer{padding-bottom:28px}')
               s = s.replace("background-image:url('/assets/images/icons/LS_HEADPHONES.png');background-repeat:no-repeat;background-position:center;background-size:64px 64px;", '')
+              s = s.replace('.ls-global-top-art img{width:min(90vw,460px);max-height:350px;', '.ls-global-top-art img{width:min(78vw,390px);max-height:300px;')
               return s
           update('site-global.css', css)
 
@@ -75,6 +76,10 @@ jobs:
               replacement = "const releaseFix=()=>{const root=document.querySelector('.release-page #releases');if(!root)return;let running=false;let observer;const run=()=>{if(running)return;running=true;observer.disconnect();reorderReleases().finally(()=>{running=false;observer.observe(root,{childList:true})})};observer=new MutationObserver(run);observer.observe(root,{childList:true});run()};const videoOrder="
               return re.sub(pattern, replacement, s, count=1, flags=re.S)
           update('script.js', script)
+
+          def footer(s):
+              return re.sub(r'<a href="/special_access\.html">Special Access</a>', '', s, count=1)
+          update('site-global.js', footer)
 
       - name: Generate WebM manifest
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
