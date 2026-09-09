@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Remove legacy homepage shell and normalize background video
+      - name: Normalize homepage shell and background
         if: github.event_name == 'push'
         shell: python
         run: |
@@ -35,6 +35,24 @@ jobs:
           for pattern in legacy:s=re.sub(pattern,'',s,flags=re.I|re.S)
           s=re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>','',s,flags=re.I)
           s=s.replace('</head>','<script src="/site-global.js?v=20260911"></script></head>',1)
+          if s!=original:p.write_text(s,encoding='utf-8')
+
+      - name: Normalize Special Access shell and SEO
+        if: github.event_name == 'push'
+        shell: python
+        run: |
+          import re
+          from pathlib import Path
+          p=Path('special_access.html'); s=p.read_text(encoding='utf-8'); original=s
+          s=re.sub(r'<video\b[^>]*\bid=["\']bg["\'][^>]*>.*?</video>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<div\b[^>]*\bid=["\']ov["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<nav\b[^>]*\bclass=["\'][^"\']*\bnav\b[^"\']*["\'][^>]*>.*?</nav>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<div\b[^>]*\bid=["\']menu["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<footer\b[^>]*\bclass=["\'][^"\']*site-footer[^"\']*["\'][^>]*>.*?</footer>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<link[^>]+rel=["\']canonical["\'][^>]*>','',s,flags=re.I)
+          s=re.sub(r'<meta[^>]+name=["\']description["\'][^>]*>','',s,flags=re.I)
+          head='<meta name="description" content="LIL SYNN Special Access archive for exclusive recordings, alternate versions, visuals, and unreleased material."><link rel="canonical" href="https://lilsynn.com/special_access.html"><link rel="stylesheet" href="/site-global.css?v=20260911"><script src="/site-global.js?v=20260911"></script>'
+          s=s.replace('</head>',head+'</head>',1)
           if s!=original:p.write_text(s,encoding='utf-8')
 
       - name: Retire obsolete homepage fixer
@@ -57,14 +75,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html assets/mov/index.json && [ ! -e homepage-final-fixes.js ]; then
+          if git diff --quiet; then
             echo 'No source cleanup or video manifest changes needed.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'Normalize homepage shell and background video manifest'
+          git commit -m 'Normalize global shell and background video architecture'
           git push
 
       - name: Validate required source and media assets
@@ -72,6 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f index.html
+          test -f special_access.html
           test -f style.css
           test -f script.js
           test -f site-polish.js
@@ -96,15 +115,20 @@ jobs:
           ! grep -q 'assets/img/LS_HEADPHONES.png' index.html
           ! grep -q 'homepage-final-fixes.js' index.html
           ! grep -q 'id="bgVideo"' index.html
+          ! grep -q 'class="nav"' special_access.html
+          ! grep -q 'id="menu"' special_access.html
+          ! grep -q 'id="bg"' special_access.html
+          ! grep -q 'class="site-footer"' special_access.html
           ! grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .
           ! grep -Rni --exclude-dir=.git --include='*.html' 'aria-label="Primary navigation"' .
           ! grep -Rni --exclude-dir=.git --include='*.html' 'id="sideMenu"' .
 
-      - name: Validate universal shell reference
+      - name: Validate universal shell references
         shell: bash
         run: |
           set -euo pipefail
           test "$(grep -o '/site-global.js' index.html | wc -l)" -eq 1
+          grep -q '/site-global.js' special_access.html
 
       - name: Validate releases canonical URL
         shell: bash
