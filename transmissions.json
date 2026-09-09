@@ -1,37 +1,8 @@
 {
   "transmissions": [
-    {
-      "id": "system-online",
-      "label": "TRANSMISSION 001",
-      "title": "SYSTEM ONLINE",
-      "body": "The LIL SYNN signal is active. Explore the catalog, enter the archive, and follow the sound.",
-      "cta": "EXPLORE MUSIC",
-      "href": "/#music"
-    },
-    {
-      "id": "hello-goodbye",
-      "label": "TRANSMISSION 002",
-      "title": "HELLO GOODBYE",
-      "body": "The latest album is in rotation. Ten tracks. One complete world.",
-      "cta": "LISTEN NOW",
-      "href": "https://open.spotify.com/album/1cwzhlX5MIxBRdCiZawmQx?si=elV5OdZcTY6l1q-bP09ANg",
-      "external": true
-    },
-    {
-      "id": "visual-frequency",
-      "label": "TRANSMISSION 003",
-      "title": "VISUAL FREQUENCY",
-      "body": "Music, visuals, animation, and storytelling are being built as one connected universe.",
-      "cta": "WATCH",
-      "href": "/#videos"
-    },
-    {
-      "id": "archive-explorer",
-      "label": "TRANSMISSION 004",
-      "title": "ARCHIVE EXPLORER",
-      "body": "Search the catalog by release, track, type, or streaming platform and follow any result into its canonical release experience.",
-      "cta": "ENTER ARCHIVE",
-      "href": "/archive.html"
-    }
+    {"id":"system-online","label":"TRANSMISSION 001","title":"SYSTEM ONLINE","body":"The LIL SYNN signal is active. Explore the catalog, enter the archive, and follow the sound.","cta":"EXPLORE MUSIC","href":"/#music"},
+    {"id":"hello-goodbye","label":"TRANSMISSION 002","title":"HELLO GOODBYE","body":"A complete LIL SYNN album remains in the archive. Ten tracks. One complete world.","cta":"OPEN RELEASE","href":"/release.html?id=Hello%20Goodbye"},
+    {"id":"visual-frequency","label":"TRANSMISSION 003","title":"VISUAL FREQUENCY","body":"Music, visuals, animation, and storytelling are being built as one connected universe.","cta":"WATCH","href":"/#videos"},
+    {"id":"archive-explorer","label":"TRANSMISSION 004","title":"ARCHIVE EXPLORER","body":"Search the catalog by release, track, type, or streaming platform and follow any result into its canonical release experience.","cta":"ENTER ARCHIVE","href":"/archive.html"}
   ]
 }
