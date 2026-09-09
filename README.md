@@ -312,6 +312,11 @@ Real defects previously identified and corrected include:
 - Accessibility skip-navigation behavior
 - Release SEO/structured-data identity
 - Signal caching behavior
+- Duplicate Special Access metadata injection
+- Privacy and Terms pages losing the global shell
+- Self-triggering site normalization workflow
+- Duplicate homepage randomizer click handling
+- Retired `site-polish.js` module
 
 ---
 
@@ -363,6 +368,7 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 - Signal respects low-power settings
 - Signal transmissions can use browser caching
 - Archive Explorer resolves through canonical release detail routes
+- Homepage randomizer has one click owner
 
 ### Accessibility
 
@@ -550,7 +556,6 @@ LILSYNNOFFICIAL/
 ├── site-global.css
 ├── script.js
 ├── signal-engine.js
-├── site-polish.js
 ├── music-random.js
 ├── latest-videos.js
 ├── release-catalog.json
