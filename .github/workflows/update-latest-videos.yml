@@ -3,6 +3,10 @@ on:
   schedule:
     - cron: '0 9 * * *'
   workflow_dispatch:
+  push:
+    paths:
+      - 'release-catalog.json'
+      - '.github/workflows/update-latest-videos.yml'
 permissions:
   contents: write
 jobs:
@@ -12,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install current yt-dlp
         run: python -m pip install --upgrade yt-dlp
-      - name: Discover releases from the YouTube Releases tab only
+      - name: Discover release videos from the YouTube Releases tab only
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         shell: bash
@@ -20,46 +24,63 @@ jobs:
           set -euo pipefail
           test -n "${YOUTUBE_API_KEY:-}" || { echo 'YOUTUBE_API_KEY GitHub Actions secret is missing'; exit 1; }
           python - <<'PY'
-          import json, os, pathlib, subprocess, urllib.parse, urllib.request
+          import json, os, pathlib, re, subprocess, urllib.parse, urllib.request, unicodedata
           from datetime import datetime, timezone
 
           key=os.environ['YOUTUBE_API_KEY']
           releases_url='https://www.youtube.com/@LILSYNNOFFICIAL/releases'
+          catalog=json.loads(pathlib.Path('release-catalog.json').read_text(encoding='utf-8'))
+          canonical=(catalog.get('order') or [])[:9]
+          if len(canonical) < 9:
+              raise SystemExit('The canonical release catalog does not contain 9 releases')
 
-          # yt-dlp is pointed at the Releases tab itself. This deliberately
-          # does not use /videos, /shorts, /streams, uploads, search, or home.
-          cmd=['yt-dlp','--flat-playlist','--dump-single-json','--no-warnings',releases_url]
-          raw=subprocess.check_output(cmd,text=True)
+          def norm(value):
+              value=unicodedata.normalize('NFKD',str(value or '')).lower()
+              value=value.replace('’','').replace("'",'')
+              return re.sub(r'[^a-z0-9]+','',value)
+
+          # Point yt-dlp at the Releases tab itself. Never use /videos, /shorts,
+          # /streams, uploads, search, home, or YouTube's displayed ordering.
+          raw=subprocess.check_output(['yt-dlp','--flat-playlist','--dump-single-json','--no-warnings',releases_url],text=True)
           data=json.loads(raw)
           entries=data.get('entries') or []
           playlist_ids=[]
           seen_playlists=set()
-          for e in entries:
-              if not e: continue
-              pid=e.get('id')
-              url=e.get('webpage_url') or e.get('url')
-              if pid and (e.get('_type')=='url' or e.get('ie_key','').lower().startswith('youtube')):
-                  if url and 'playlist?list=' in url:
-                      pid=urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get('list',[pid])[0]
-                  if pid not in seen_playlists:
-                      seen_playlists.add(pid); playlist_ids.append(pid)
+          for entry in entries:
+              if not entry: continue
+              pid=entry.get('id')
+              url=entry.get('webpage_url') or entry.get('url') or ''
+              if url and 'playlist?list=' in url:
+                  pid=urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get('list',[pid])[0]
+              if pid and pid not in seen_playlists:
+                  seen_playlists.add(pid)
+                  playlist_ids.append(pid)
           if not playlist_ids:
               raise SystemExit('No release playlists were discovered from the LIL SYNN /releases tab')
 
           def api(path, params):
               q=urllib.parse.urlencode({**params,'key':key})
-              with urllib.request.urlopen('https://www.googleapis.com/youtube/v3/'+path+'?'+q,timeout=30) as r:
-                  body=json.load(r)
-              if 'error' in body: raise SystemExit(body['error'].get('message','YouTube API error'))
+              with urllib.request.urlopen('https://www.googleapis.com/youtube/v3/'+path+'?'+q,timeout=30) as response:
+                  body=json.load(response)
+              if 'error' in body:
+                  raise SystemExit(body['error'].get('message','YouTube API error'))
               return body
 
-          ids=[]; seen=set()
+          ids=[]
+          seen_ids=set()
           for pid in playlist_ids[:20]:
-              page=api('playlistItems',{'part':'snippet,contentDetails','playlistId':pid,'maxResults':50})
-              for item in page.get('items',[]):
-                  vid=((item.get('contentDetails') or {}).get('videoId'))
-                  if vid and vid not in seen:
-                      seen.add(vid); ids.append(vid)
+              page_token=None
+              while True:
+                  params={'part':'snippet,contentDetails','playlistId':pid,'maxResults':50}
+                  if page_token: params['pageToken']=page_token
+                  page=api('playlistItems',params)
+                  for item in page.get('items',[]):
+                      vid=((item.get('contentDetails') or {}).get('videoId'))
+                      if vid and vid not in seen_ids:
+                          seen_ids.add(vid)
+                          ids.append(vid)
+                  page_token=page.get('nextPageToken')
+                  if not page_token: break
 
           if not ids:
               raise SystemExit('The YouTube Releases tab contained no videos')
@@ -68,22 +89,42 @@ jobs:
           for i in range(0,len(ids),50):
               body=api('videos',{'part':'snippet','id':','.join(ids[i:i+50])})
               for item in body.get('items',[]):
-                  published=(item.get('snippet') or {}).get('publishedAt')
-                  if item.get('id') and published:
-                      videos.append({'id':item['id'],'title':(item.get('snippet') or {}).get('title') or item['id'],'publishedAt':published})
+                  snippet=item.get('snippet') or {}
+                  if item.get('id'):
+                      videos.append({'id':item['id'],'title':snippet.get('title') or item['id'],'publishedAt':snippet.get('publishedAt') or ''})
 
-          latest=sorted({v['id']:v for v in videos}.values(),key=lambda x:x['publishedAt'],reverse=True)[:9]
-          if not latest:
-              raise SystemExit('No dated videos were found in the YouTube Releases tab')
+          # The canonical release catalog decides which nine releases belong on
+          # the homepage. YouTube's Releases tab is used only to locate each
+          # release's actual video URL/ID. Matching is title-based and tolerant
+          # of YouTube title decorations such as "LIL SYNN - ..." or "[Official Video]".
+          selected=[]
+          used=set()
+          for release in canonical:
+              target=norm(release)
+              matches=[v for v in videos if v['id'] not in used and (norm(v['title'])==target or target in norm(v['title']) or norm(v['title']) in target)]
+              if not matches:
+                  print(f'WARNING: no YouTube Releases video matched canonical release: {release}')
+                  continue
+              # Prefer an exact normalized title match; otherwise choose the
+              # closest title by length so decorative YouTube suffixes do not
+              # change which release is selected.
+              exact=[v for v in matches if norm(v['title'])==target]
+              chosen=sorted(exact or matches,key=lambda v:abs(len(norm(v['title']))-len(target)))[0]
+              used.add(chosen['id'])
+              selected.append({'id':chosen['id'],'title':chosen['title'],'publishedAt':chosen['publishedAt'],'release':release})
+
+          if len(selected) != 9:
+              missing=[release for release in canonical if not any(v.get('release')==release for v in selected)]
+              raise SystemExit('Could not resolve all 9 canonical releases to YouTube Releases videos: '+', '.join(missing))
 
           out={
               'generatedAt':datetime.now(timezone.utc).isoformat(),
               'source':releases_url,
-              'selection':'newest 9 videos from release playlists on the Releases tab by publishedAt',
-              'videos':latest
+              'selection':'first 9 releases from canonical release-catalog order; YouTube Releases tab used only to resolve video IDs',
+              'videos':selected
           }
           pathlib.Path('latest-videos.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-          print(json.dumps(latest,indent=2,ensure_ascii=False))
+          print(json.dumps(selected,indent=2,ensure_ascii=False))
           PY
       - name: Commit refreshed release manifest
         run: |
