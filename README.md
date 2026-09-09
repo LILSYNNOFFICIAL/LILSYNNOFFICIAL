@@ -83,13 +83,18 @@ It provides:
 
 - Desktop header: `150px`
 - Mobile header: `118px`
-- `LS_LOGO.png` independently centered
-- THE CALM lower-left
-- Menu right-aligned
-- `LS.png` begins at the exact header boundary
+- `LS_LOGO.png` is independently centered inside the header
+- THE CALM remains lower-left
+- Menu remains right-aligned
+- Header begins at viewport top (`top: 0`)
+- `LS.png` begins at the exact bottom boundary of the global header
 - `LS_HEADPHONES.png` is footer-only and links to Special Access
 - Releases, Archive, Visuals, and Universe are available through the hamburger menu
 - No duplicate page-specific global header is required
+
+### Current maintenance focus
+
+The five-phase architecture is established. Current work is maintenance and refinement of the production shell, including global header geometry, logo sizing, `LS.png` boundary alignment, responsive behavior, cache consistency, and real runtime verification.
 
 ### Easter eggs
 
@@ -147,7 +152,7 @@ Track requests resolve to their canonical parent release. Album/EP tracks are th
 
 ---
 
-# 🚀 Phase 1 — Foundation — COMPLETE
+# 🚀 Phase 1 - Foundation - COMPLETE
 
 Completed:
 
@@ -164,7 +169,7 @@ Completed:
 
 ---
 
-# 🚀 Phase 2 — Music Discovery + Conversion — COMPLETE
+# 🚀 Phase 2 - Music Discovery + Conversion - COMPLETE
 
 Completed:
 
@@ -211,7 +216,7 @@ The persistent personal/native music player was intentionally excluded from this
 
 ---
 
-# 🚀 Phase 3 — LIL SYNN UNIVERSE — COMPLETE
+# 🚀 Phase 3 - LIL SYNN UNIVERSE - COMPLETE
 
 The Universe is implemented as a real site experience, not merely a concept page.
 
@@ -235,7 +240,7 @@ Completed:
 
 ---
 
-# 🚀 Phase 4 — Visual Gallery — COMPLETE
+# 🚀 Phase 4 - Visual Gallery - COMPLETE
 
 `gallery.html` is the dedicated visual archive.
 
@@ -259,11 +264,11 @@ The gallery intentionally consumes the existing artwork mapping and release cata
 
 ---
 
-# 🚀 Phase 5 — Absolute Polish + Production Integrity — COMPLETE
+# 🚀 Phase 5 - Absolute Polish + Production Integrity - COMPLETE BASELINE
 
-Phase 5 is the final planned phase. **There is no Phase 6 in this project roadmap.**
+The original five-phase build is complete. Phase 5 established the production-integrity baseline. The repository remains under active maintenance and refinement rather than opening a new numbered roadmap phase.
 
-Completed:
+Completed baseline:
 
 - SEO metadata
 - Canonical URLs
@@ -389,10 +394,10 @@ Transmission copy must not claim that a release is the latest unless the canonic
 Current transmission history includes:
 
 ```text
-TRANSMISSION 001 — SYSTEM ONLINE
-TRANSMISSION 002 — HELLO GOODBYE
-TRANSMISSION 003 — VISUAL FREQUENCY
-TRANSMISSION 004 — ARCHIVE EXPLORER
+TRANSMISSION 001 - SYSTEM ONLINE
+TRANSMISSION 002 - HELLO GOODBYE
+TRANSMISSION 003 - VISUAL FREQUENCY
+TRANSMISSION 004 - ARCHIVE EXPLORER
 ```
 
 ---
@@ -631,14 +636,14 @@ Site Doctor is repository QA. It does not pretend to replace real browser verifi
 
 # 🧬 Cache & Versioning
 
-Shared shell assets use intentional version query parameters:
+Shared shell assets currently use the repository's intentional cache-busting query parameters:
 
 ```html
 <script src="/site-global.js?v=20260914"></script>
 <link id="site-global-css" rel="stylesheet" href="/site-global.css?v=20260914">
 ```
 
-Version changes should correspond to meaningful shared-asset changes.
+`20260914` is the current asset-version identifier in the source. It should be treated as a cache-busting value, not as a roadmap date. Any future shared-shell version change should be synchronized across all consumers and documented when it represents a meaningful shared-asset change.
 
 ---
 
@@ -699,9 +704,9 @@ LILSYNNOFFICIAL/
 
 ---
 
-# 🏁 Final Project Status
+# 🏁 Current Project Status
 
-All five planned phases are complete:
+The original five-phase build is complete, with ongoing maintenance and production refinement:
 
 ```text
 PHASE 1  FOUNDATION                         ✓
@@ -709,9 +714,13 @@ PHASE 2  MUSIC DISCOVERY + CONVERSION      ✓
 PHASE 3  LIL SYNN UNIVERSE                 ✓
 PHASE 4  VISUAL GALLERY                    ✓
 PHASE 5  ABSOLUTE POLISH + INTEGRITY       ✓
+
+CURRENT STATE: MAINTENANCE + REFINEMENT
 ```
 
-The roadmap ends at Phase 5. Future work should be treated as maintenance, corrections, content/catalog updates, or optional evolution of the existing systems, not as a new roadmap phase.
+There is no Phase 6 in the current roadmap. Future work should be treated as maintenance, corrections, content/catalog updates, runtime verification, or optional evolution of the existing systems unless a new roadmap is explicitly defined.
+
+The current production-refinement focus includes the shared global header, logo sizing and centering, exact `LS.png` header-boundary placement, responsive behavior, cache consistency, and verification of the real deployed runtime.
 
 ---
 
@@ -729,7 +738,7 @@ STREAMING DESTINATIONS STAY PRIMARY
 NO PERSONALIZED CHATBOT REQUIRED
 NO PERSISTENT PERSONAL PLAYER
 VERIFY THE REAL RUNTIME
-UPDATE THE README WHEN A PHASE IS DONE
+UPDATE THE README WHEN A MATERIAL SYSTEM CHANGE IS MADE
 ```
 
 <div align="center">
