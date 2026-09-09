@@ -29,16 +29,16 @@ jobs:
           s = p.read_text(encoding='utf-8')
           original = s
 
-          # Remove the old fixed primary navigation.
+          # Remove the old fixed primary navigation regardless of incidental Tailwind formatting.
           s = re.sub(
-              r'<nav\s+class="fixed top-0 z-50 w-full bg-black/60 backdrop-blur-lg border-b border\[#ff008f\]/30"\s+aria-label="Primary navigation">.*?</nav>',
+              r'<nav\b[^>]*\baria-label=["\']Primary navigation["\'][^>]*>.*?</nav>',
               '', s, count=1, flags=re.I | re.S
           )
 
-          # Remove the complete old side drawer. It contains nested div/nav elements,
-          # so match greedily up to the #home section that follows it.
+          # Remove the complete old side drawer. It contains nested elements, so consume
+          # everything from its opening tag through the closing div immediately before #home.
           s = re.sub(
-              r'<div\s+id="sideMenu"\b[^>]*>.*</div>\s*(?=<section\s+id="home"\b)',
+              r'<div\b[^>]*\bid=["\']sideMenu["\'][^>]*>.*?(?=<section\b[^>]*\bid=["\']home["\'])',
               '', s, count=1, flags=re.I | re.S
           )
 
@@ -46,7 +46,7 @@ jobs:
           s = re.sub(r'<header(?![^>]*data-ls-header)[^>]*>.*?</header>', '', s, flags=re.I | re.S)
           s = re.sub(r'<footer(?![^>]*data-ls-footer)[^>]*>.*?</footer>', '', s, flags=re.I | re.S)
 
-          # Remove the old homepage-final-fixes loader. site-global.js is now canonical.
+          # Remove the obsolete homepage fixer loader if a stale copy exists.
           s = re.sub(r'<script[^>]+src=["\'][^"\']*homepage-final-fixes\.js[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
 
           # Remove legacy homepage shell CSS that depended on the old nav/menu implementation.
@@ -81,9 +81,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f homepage-final-fixes.js ]; then
-            rm homepage-final-fixes.js
-          fi
+          rm -f homepage-final-fixes.js
 
       - name: Commit source cleanup
         if: github.event_name == 'push'
