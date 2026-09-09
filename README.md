@@ -2,7 +2,7 @@
 
 ## Official Website Repository
 
-Production source for [lilsynn.com](https://lilsynn.com).
+Production source for https://lilsynn.com.
 
 The site is deployed from `main` through Vercel.
 
@@ -12,18 +12,20 @@ The site is deployed from `main` through Vercel.
 
 The site follows one core rule:
 
-> **One global shell, one navigation system, one release database, one background-video system, and no competing implementations.**
+> **One global shell, one navigation system, one canonical release database, one background-video system, and no competing implementations.**
 
 | System | Responsibility |
 |---|---|
 | `index.html` | Homepage content and landing experience |
-| `site-global.js` | Canonical header, navigation, footer, shared controls, metadata, About accordion, and shell behavior |
-| `site-global.css` | Canonical shell styling, positioning, responsive behavior, controls, and global background presentation |
-| `script.js` | Global randomized WebM background and homepage presentation behavior |
-| `site-polish.js` | Homepage-specific release and video presentation |
-| `music-random.js` | Catalog-derived random music cards and RANDOMIZE button |
+| `site-global.js` | Canonical header, navigation, footer, shared controls, metadata, About accordion, shell behavior, release/video corrections |
+| `site-global.css` | Canonical shell styling, responsive layout, header positioning, controls, background presentation, release presentation |
+| `script.js` | Global randomized WebM background, homepage presentation, global release/video ordering and deduplication helpers |
+| `latest-videos.js` | Loads the canonical latest-video manifest, resolves videos against catalog order, deduplicates, and renders playable video cards |
+| `latest-videos.json` | Canonical YouTube Releases video manifest with IDs, titles, dates, and release names |
+| `music-random.js` | Catalog-derived music-card pool, artwork mapping, random selection, and the single RANDOMIZE control |
+| `site-polish.js` | Homepage-specific release/video presentation |
 | `release-catalog.json` | Canonical release order, groups, tracks, artwork and streaming destinations |
-| `releases.html` | Release archive presentation, ordering and filters |
+| `releases.html` | Release archive presentation, filters, ordering, and artwork rendering |
 | `.github/workflows/fix-homepage.yml` | Source cleanup, WebM manifest generation, and architecture validation |
 
 ---
@@ -49,65 +51,62 @@ It owns:
 - Body scroll locking
 - Duplicate-shell cleanup
 
-Every page should use the same shell.
+Every page should use the same shell. There must not be page-specific copies of the global header, navigation, menu, footer, THE CALM control, or Back To Top control.
 
-There must not be page-specific copies of the global header, navigation, menu, footer, THE CALM control, or Back To Top control.
-
-## Duplicate prevention
-
-The source architecture intentionally removes the old homepage shell instead of hiding it after load.
-
-The homepage must not contain:
-
-- `aria-label="Primary navigation"`
-- `#sideMenu`
-- `.site-headphones`
-- `assets/img/LS_HEADPHONES.png`
-- `homepage-final-fixes.js`
-- a second `site-global.js` loader
-- an old homepage background video implementation
-
-The canonical shell is:
+## Canonical loader
 
 ```html
 <script src="/site-global.js?v=20260911"></script>
 ```
 
-`site-global.js` also removes stale top-level shell elements defensively so older pages cannot create a second navigation system.
+The source architecture removes obsolete homepage shell markup instead of allowing multiple competing shells to initialize.
 
-The GitHub workflow validates these rules across HTML files.
+Legacy items that must not return include:
+
+- `aria-label="Primary navigation"` page-level duplicate navigation
+- `#sideMenu`
+- `.site-headphones`
+- `assets/img/LS_HEADPHONES.png`
+- `homepage-final-fixes.js`
+- duplicate `site-global.js` loaders
+- obsolete homepage-only background-video markup
 
 ---
 
-# Global Header
+# Header
 
-The global header is intentionally positioned slightly below the top edge instead of touching the viewport edge.
+The header is fixed to the viewport and spans the full width.
 
-It has three conceptual areas:
+Current layout logic:
 
 1. **Far left:** `LS_HEADPHONES.png`
-2. **Center:** reserved space for future artwork/content
-3. **Right:** navigation button
+2. **Center:** `LS_LOGO.png`, absolutely centered independently of left controls
+3. **Bottom-left:** THE CALM control, pinned directly to the header's left edge
+4. **Right:** navigation toggle
 
-The header mark uses:
+The header has no rounded outer corners and no left inset that would visually pull THE CALM away from the edge.
+
+The headphone control uses:
 
 ```text
 /assets/images/icons/LS_HEADPHONES.png
 ```
 
-The headphone artwork is also the Special Access Easter egg.
+Desktop headphone sizing is currently `175px × 175px`. Mobile is `145px × 145px`. The artwork is allowed to overflow the 150px desktop / 118px mobile header height so it can remain visually large.
 
-Clicking the headphone artwork opens:
+The centered header logo is positioned with:
 
 ```text
-/special_access.html
+left: 50%
+top: 50%
+transform: translate(-50%, -50%)
 ```
 
-The clickable Special Access target is constrained to the headphone artwork box. It does not use an oversized invisible link around the whole header.
+This keeps the logo mathematically centered even when the headphone control is enlarged.
 
-The old `assets/img/LS_HEADPHONES.png` path must never return.
+THE CALM is positioned with `left: 0` and is therefore attached to the actual left edge of the header rather than being placed inside the headphone control's layout flow.
 
-The header is intentionally designed so additional center content can be added later without rebuilding the shell.
+The clickable Special Access target is constrained to the headphone artwork box and opens `/special_access.html`.
 
 ---
 
@@ -115,40 +114,11 @@ The header is intentionally designed so additional center content can be added l
 
 The site uses one responsive navigation drawer.
 
-The drawer contains:
+Primary navigation includes Home, Music, Releases, Videos, About, Merch, Lyrics, and Contact.
 
-### Primary
+Social and streaming destinations are grouped inside the same drawer.
 
-- Home
-- Music
-- Releases
-- Videos
-- About
-- Merch
-- Lyrics
-- Contact
-
-### Socials
-
-- YouTube
-- Spotify
-- Apple Music
-- Instagram
-- X / Twitter
-- SoundCloud
-- TikTok
-- Facebook
-
-### Stream
-
-- Spotify
-- Apple Music
-- YouTube
-- YouTube Music
-- TIDAL
-- Amazon Music
-
-The navigation supports:
+The drawer supports:
 
 - Responsive sizing
 - Internal scrolling
@@ -158,83 +128,125 @@ The navigation supports:
 - Body scroll locking
 - No competing page-level menu
 
-The source-level cleanup is important because an old header plus the new global header causes visible jumping and duplicate controls during page initialization.
-
 ---
 
 # Global Background WebM System
 
-The website has one shared full-page background-video system.
-
-Background videos are stored in:
+Background videos live in:
 
 ```text
 /assets/mov/
 ```
 
-The GitHub Actions workflow automatically generates:
+The GitHub Actions workflow generates:
 
 ```text
 /assets/mov/index.json
 ```
 
-containing every `.webm` file currently in that directory.
+from the `.webm` files currently in that directory.
 
-On page load, `script.js`:
+`script.js`:
 
 1. Creates or adopts the global background video.
-2. Moves the homepage video into the document-level background layer when necessary.
-3. Loads `/assets/mov/index.json`.
-4. Selects one WebM at random.
+2. Moves it to the document-level background layer when necessary.
+3. Loads the WebM manifest.
+4. Selects one available WebM randomly.
 5. Plays it muted and inline.
-6. Covers the entire viewport with `object-fit: cover`.
+6. Covers the viewport with `object-fit: cover`.
 7. Places a dark overlay above the video and below page content.
 
-This means adding a new `.webm` file to `assets/mov` automatically makes it eligible for random selection after the manifest is regenerated.
+If the manifest cannot be loaded, `BG_ANI.webm` is retained as the fallback.
 
-There is no hard-coded single background choice in the global system.
-
-If the manifest cannot be loaded, `BG_ANI.webm` remains the fallback.
-
-The old in-section-only `#bgVideo` architecture is removed from homepage source by the cleanup workflow.
+Adding a new WebM to `assets/mov` makes it eligible for selection after the manifest is regenerated.
 
 ---
 
-# Homepage RANDOMIZE
+# Global Top Artwork
 
-The homepage music catalog includes a real button:
+The global shell inserts `LS.png` directly below the fixed header as shared top artwork.
+
+The canonical asset is:
 
 ```text
-RANDOMIZE
+/assets/img/LS.png
 ```
 
-`music-random.js` builds the random music pool from `release-catalog.json` and associated artwork/streaming data.
+The old homepage copy is hidden/removed so the artwork does not appear twice.
 
-The button generates a new randomized selection instead of merely displaying non-interactive text.
+The top-art block owns the header offset. Individual pages should not add another large artificial header gap when the global top-art system already provides the visual offset.
 
-The randomizer avoids repeatedly returning the exact previous set when enough catalog entries are available.
+---
 
-The canonical release database remains untouched. Randomization is presentation-only.
+# THE CALM
+
+THE CALM is a global shell feature and must have one controller.
+
+Ambient audio source:
+
+```text
+/assets/other/sound/Background.mp3
+```
+
+The control belongs to the global header and is positioned independently from the headphones and centered logo.
+
+Shared media behavior prevents competing playback behavior where applicable.
+
+---
+
+# Back To Top
+
+Back To Top is global and uses:
+
+```text
+/assets/images/icons/UP_ARROWS.png
+```
+
+Individual pages must not create competing Back To Top controls.
+
+---
+
+# Music RANDOMIZE
+
+The homepage Music section contains exactly **one** RANDOMIZE control.
+
+`music-random.js` owns the random music system.
+
+Its logic is:
+
+1. Read `release-catalog.json`.
+2. Walk releases in canonical catalog order.
+3. Pull tracks from release group `tracks` arrays.
+4. Exclude SoundCloud-only `Touching to the North` entries from the Spotify-driven random pool.
+5. Resolve Spotify and artwork data from the catalog and artwork map.
+6. Deduplicate tracks before adding them to the pool.
+7. Select up to 8 tracks using a Fisher-Yates-style shuffle.
+8. Compare the candidate set with the previous set stored in `sessionStorage`.
+9. Retry selection when possible so the exact same set is not repeatedly displayed.
+10. Randomize the presentation order of the chosen cards.
+11. Render real music cards with artwork and streaming links.
+
+The catalog itself is never randomized or mutated. Randomization is presentation-only.
+
+There are defensive guards in both the global shell and `music-random.js` so duplicate `.discover-button` / RANDOMIZE controls are removed or ignored. The intended final state is one `.homepage-refinement` containing one `.discover-button`.
+
+The click handler also prevents duplicate listeners from causing multiple randomizations and can scroll the resulting music selection into view.
 
 ---
 
 # About Sections
 
-The About area uses an expandable section system.
+The About area uses expandable panels.
 
-Each artist/persona/music section has its own control.
-
-When a section is opened:
+When a section opens:
 
 - Its content becomes visible.
-- The page scrolls to that section.
-- The section is positioned below the global header.
-- Other sections are closed so the selected section is easy to read.
-- A small `×` button appears inside the open section.
+- The page scrolls to the selected panel.
+- The global header offset is respected.
+- Other panels are closed.
+- An individual `×` close control is available inside the open panel.
 
-Clicking the `×` closes that individual section without requiring the user to reopen another section.
-
-This avoids the old behavior where opening an About section could create awkward jumping and made it difficult to selectively collapse content.
+Keyboard and focus behavior must remain accessible.
 
 ---
 
@@ -250,33 +262,29 @@ It owns:
 - Standalone singles
 - Track listings
 - Artwork mappings
-- Spotify links
-- Apple Music links
-- SoundCloud links and sets
+- Spotify destinations
+- Apple Music destinations
+- SoundCloud destinations and sets
 
 `releases.html` owns presentation only.
 
 ## Canonical track order
 
-Track rows are rendered directly from each group's `tracks` array in `release-catalog.json`.
+Track rows come directly from each group's `tracks` array.
 
-The renderer does not alphabetize, randomize, reverse, or otherwise mutate the track arrays.
+The renderer must not alphabetize, reverse, randomize, or otherwise mutate the catalog track arrays.
 
-Therefore the catalog is the authoritative track order.
+To change track order, edit `release-catalog.json`.
 
-When changing a track sequence, edit the corresponding `tracks` array in `release-catalog.json`, not the renderer.
+## Canonical archive order
 
-## Archive order
+The archive order comes from `release-catalog.json` `order`.
 
-The default archive order comes directly from the catalog's `order` array.
+The release renderer and global correction logic create maps/copies for presentation so the canonical catalog itself is never mutated.
 
-Presentation sorting creates a copy of that array so sorting cannot mutate canonical catalog order.
+## Filters
 
----
-
-# Release Filters
-
-`releases.html` provides two independent controls:
+`releases.html` provides:
 
 ### Filter
 
@@ -285,19 +293,34 @@ Presentation sorting creates a copy of that array so sorting cannot mutate canon
 - EPs
 - Singles
 
+The default state is explicitly **All releases**.
+
 ### Order
 
 - Catalog order
 - A → Z
 - Z → A
 
-Both controls rerender the archive immediately.
+Filtering and sorting are presentation-only.
 
-Filtering does not modify the catalog data.
+Albums and EPs remain grouped with their track lists. Standalone singles remain independently renderable and filterable.
 
-Sorting does not modify the catalog data.
+---
 
-Albums and EPs remain grouped with their track lists, while standalone singles remain available through the Singles filter.
+# Release Artwork Logic
+
+Standalone singles can render their own artwork.
+
+`releases.html` maintains explicit artwork mappings where needed, including:
+
+```text
+Signal Light Sermon (Remastered 2026)
+→ 39_lil_synn_signal_light_sermon___remastered_2026.jpg
+```
+
+`script.js` also contains the shared single-art mapping and a `prepareSingleArt()` guard that injects missing artwork into single cards when the release archive is reordered.
+
+The renderer never creates duplicate artwork assets to hide a path problem. When artwork is missing, verify the catalog, filename, and asset path.
 
 ---
 
@@ -305,11 +328,7 @@ Albums and EPs remain grouped with their track lists, while standalone singles r
 
 ## Signal Light Sermon
 
-There are two distinct releases with similar names.
-
-### `Signal Light Sermon`
-
-This is the track on:
+`Signal Light Sermon` is the track on:
 
 ```text
 Touching to the North
@@ -323,11 +342,13 @@ Required destinations:
 - Spotify: NO
 - Apple Music: NO
 
-### `Signal Light Sermon (Remastered 2026)`
+## Signal Light Sermon (Remastered 2026)
 
-This is a separate standalone single with its own Spotify and Apple Music destinations.
+This is a separate standalone single.
 
-Never reuse the standalone remastered destinations for the album track.
+It has its own artwork and its own streaming destinations.
+
+Never reuse the standalone remastered release destinations for the album track.
 
 ---
 
@@ -341,7 +362,7 @@ Its set is:
 https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
 ```
 
-The album must never receive Spotify or Apple Music buttons through generic fallback logic.
+It must never receive Spotify or Apple Music buttons through generic fallback logic.
 
 | Destination | Allowed |
 |---|---:|
@@ -358,91 +379,77 @@ Use exact catalog destinations when known.
 
 Never infer a streaming destination from a similar title.
 
-Apple Music search fallback is permitted only where an exact direct destination is not available.
+Apple Music search fallback is permitted only where an exact direct destination is unavailable.
 
-Release-specific restrictions always override generic fallback logic.
-
----
-
-# Artwork
-
-Canonical global assets include:
-
-```text
-/assets/images/icons/LS_HEADPHONES.png
-/assets/images/icons/UP_ARROWS.png
-```
-
-Release artwork mappings are controlled by the catalog/renderer.
-
-When artwork fails:
-
-1. Check `release-catalog.json`.
-2. Check the actual repository filename.
-3. Check the renderer path.
-4. Fix the owning system.
-5. Do not create duplicate assets to hide a path error.
-
----
-
-# THE CALM
-
-The ambient audio source is:
-
-```text
-/assets/other/sound/Background.mp3
-```
-
-THE CALM is a global shell feature and must have one controller.
-
-When video playback begins, shared behavior can pause or mute ambient audio to avoid competing media.
-
----
-
-# Back To Top
-
-Back To Top is a global shell feature.
-
-It uses:
-
-```text
-/assets/images/icons/UP_ARROWS.png
-```
-
-Individual pages must not create competing Back To Top controls.
+Release-specific restrictions override generic fallback behavior.
 
 ---
 
 # Latest Videos
 
-Homepage Latest Videos uses:
+The homepage Latest Videos system is driven by:
 
 ```text
-/api/latest-youtube-releases
+latest-videos.json
 ```
 
-The API represents YouTube Releases rather than the generic uploads feed.
+The manifest is a canonical resolved list of YouTube Releases videos with:
 
-Release playlist/card ordering is preserved and release representations are not flattened into an unrelated upload-date ranking.
+- YouTube video ID
+- Title
+- Published timestamp
+- Matching release name
+
+The manifest is ordered according to the canonical release catalog. The YouTube Releases source is used to resolve video IDs, while the release catalog determines presentation order.
+
+`latest-videos.js` then:
+
+1. Fetches `release-catalog.json` and `latest-videos.json` without relying on stale browser cache.
+2. Deduplicates the manifest by YouTube ID and normalized title.
+3. Walks the canonical catalog order.
+4. Matches a manifest video to each release using normalized title matching.
+5. Prevents reuse of an already-selected ID or title.
+6. Stops at the intended nine-video homepage limit.
+7. Renders one article card per unique video.
+8. Uses the YouTube thumbnail until the user presses play.
+9. Replaces the thumbnail card with a privacy-enhanced `youtube-nocookie.com` iframe when played.
+
+`script.js` also contains a defensive `videoOrder()` observer. It removes duplicate cards by video ID/title and reorders remaining cards against `release-catalog.json` when another homepage system inserts or changes the cards.
+
+This two-layer protection exists because multiple homepage systems can participate in rendering. The goal is that the user sees each video exactly once and in canonical release order.
 
 ---
 
 # Responsive Design
 
-The shared shell must work across desktop, tablet, mobile and narrow-mobile layouts.
+The global shell must work across desktop, tablet, mobile, and narrow-mobile layouts.
+
+Current shell breakpoints preserve:
+
+- Desktop header height: `150px`
+- Mobile header height: `118px`
+- Desktop headphones: `175px × 175px`
+- Mobile headphones: `145px × 145px`
+- Centered desktop logo: `440px × 138px`
+- Mobile logo: `300px × 100px`
+- THE CALM: left edge at `0`
+
+The header controls are intentionally independent so changing headphone size cannot shift the centered logo.
 
 Pay particular attention to:
 
-- Header offset and positioning
+- Header positioning
 - Far-left headphone alignment
-- Future center-header content
+- Far-left THE CALM alignment
+- Center logo alignment
 - Navigation drawer sizing
 - Long navigation scrolling
 - Release filters
 - Track rows
-- Randomize control
-- About section controls
-- Full-page background video
+- Single artwork
+- RANDOMIZE control count
+- Latest Videos duplication
+- Background video coverage
 - Horizontal overflow
 
 Do not solve responsive problems by creating a second shell.
@@ -471,23 +478,23 @@ Preserve:
 
 `.github/workflows/fix-homepage.yml` protects the architecture.
 
-On pushes to `main`, it:
+On pushes to `main`, it can:
 
-1. Removes legacy homepage navigation.
-2. Removes the legacy side drawer.
-3. Removes stale global shell markup.
-4. Removes the obsolete homepage fixer.
-5. Removes the old homepage-only background-video element.
-6. Ensures exactly one canonical `site-global.js` loader remains.
-7. Generates `assets/mov/index.json` from the WebM files currently in `assets/mov`.
-8. Commits those source changes when needed.
-9. Validates required files and media.
-10. Rejects obsolete shell references across HTML pages.
-11. Validates canonical release data.
-12. Validates Special Access SEO.
-13. Validates sitemap coverage.
+1. Remove legacy homepage navigation.
+2. Remove the legacy side drawer.
+3. Remove stale global shell markup.
+4. Remove the obsolete homepage fixer.
+5. Remove obsolete homepage-only background-video elements.
+6. Ensure exactly one canonical `site-global.js` loader remains.
+7. Generate `assets/mov/index.json` from the current WebM files.
+8. Commit generated/source cleanup when required.
+9. Validate required files and media.
+10. Reject obsolete shell references across HTML pages.
+11. Validate canonical release data.
+12. Validate Special Access SEO.
+13. Validate sitemap coverage.
 
-The workflow is a guardrail, not a substitute for real browser testing.
+The workflow is an architecture guardrail, not a substitute for real browser testing.
 
 ---
 
@@ -496,20 +503,24 @@ The workflow is a guardrail, not a substitute for real browser testing.
 When changing the site:
 
 1. Identify the system that owns the behavior.
-2. Fix that system instead of stacking another patch on top.
-3. Inspect the current file and blob SHA before replacement.
+2. Fix that system instead of stacking another competing patch on top.
+3. Fetch the current file and blob SHA before replacing it.
 4. Preserve unrelated working behavior.
 5. Keep release data in `release-catalog.json`.
-6. Keep global behavior in `site-global.js` and `site-global.css`.
-7. Keep global motion/background behavior in `script.js`.
-8. Keep homepage-specific release/video presentation in homepage systems.
-9. Never duplicate the global shell.
-10. Never reuse streaming links between distinct releases.
-11. Never add Spotify or Apple Music to `Touching to the North`.
-12. Never use the old headphone asset path.
-13. Never reintroduce `#sideMenu` or `.site-headphones`.
-14. Never bring back `homepage-final-fixes.js` as a competing shell loader.
-15. Never claim browser or production verification unless it actually happened.
+6. Keep global shell behavior in `site-global.js` and `site-global.css`.
+7. Keep global background/motion behavior in `script.js`.
+8. Keep latest-video resolution/rendering in `latest-videos.js` and `latest-videos.json`.
+9. Keep music randomization in `music-random.js`.
+10. Keep homepage-specific presentation in its owning homepage systems.
+11. Never duplicate the global shell.
+12. Never reuse streaming links between distinct releases.
+13. Never add Spotify or Apple Music to `Touching to the North`.
+14. Never use the old headphone asset path.
+15. Never reintroduce `#sideMenu` or `.site-headphones`.
+16. Never bring back `homepage-final-fixes.js` as a competing shell loader.
+17. Never add a second RANDOMIZE control.
+18. Never allow duplicate Latest Video cards.
+19. Never claim browser or production verification unless it actually happened.
 
 ---
 
@@ -525,25 +536,36 @@ Before a significant change is considered complete:
 - [ ] No legacy `#sideMenu`
 - [ ] No legacy `.site-headphones`
 - [ ] No old headphone asset path
-- [ ] Special Access click target matches the headphone artwork box
-- [ ] Header is offset from the top edge
-- [ ] Headphones are aligned far left
-- [ ] Center header area remains available for future artwork
-- [ ] RANDOMIZE is a real button
+- [ ] Special Access target matches the headphone artwork box
+- [ ] Header touches the viewport edges as designed
+- [ ] Headphones are pinned far left
+- [ ] THE CALM is pinned to the absolute left edge
+- [ ] Center logo remains centered independently
+- [ ] Global `LS.png` appears once below the header
+- [ ] RANDOMIZE appears exactly once
+- [ ] RANDOMIZE produces real catalog-derived cards
+- [ ] Randomizer avoids the previous exact set when possible
 - [ ] About sections open and scroll correctly
 - [ ] About sections have individual `×` close buttons
 - [ ] Background WebM covers the entire page
 - [ ] Background WebM is selected randomly from `assets/mov`
 - [ ] WebM manifest is generated
 - [ ] Release track order follows catalog arrays
-- [ ] Release filter works
+- [ ] Release filter defaults to All releases
+- [ ] Release filtering works
 - [ ] Release ordering works
 - [ ] Albums render
 - [ ] EPs render
 - [ ] Singles render
+- [ ] Standalone single artwork renders where mapped
 - [ ] Touching to the North remains SoundCloud-only
 - [ ] Signal Light Sermon album track remains separate from the remastered single
-- [ ] Latest Videos uses YouTube Releases
+- [ ] Latest Videos uses `latest-videos.json`
+- [ ] Latest Videos follows canonical catalog order
+- [ ] Latest Videos contains no duplicate IDs
+- [ ] Latest Videos contains no duplicate normalized titles
+- [ ] Latest Videos renders no more than nine cards
+- [ ] Video playback replaces the thumbnail with a playable iframe
 - [ ] Mobile layout checked
 - [ ] Narrow-mobile layout checked
 - [ ] Production behavior claimed only when actually verified
@@ -559,6 +581,8 @@ If a global behavior is wrong, repair the global owner.
 If release data is wrong, repair the catalog.
 
 If homepage presentation is wrong, repair the homepage renderer.
+
+If duplicate UI appears, trace every system that can create that UI and make ownership explicit.
 
 Do not create another implementation to compete with the existing one.
 
