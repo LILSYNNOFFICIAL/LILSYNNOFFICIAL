@@ -121,9 +121,9 @@ jobs:
           ! grep -q 'id="menu"' special_access.html
           ! grep -q 'id="bg"' special_access.html
           ! grep -q 'class="site-footer"' special_access.html
-          ! grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .
-          ! grep -Rni --exclude-dir=.git --include='*.html' 'aria-label="Primary navigation"' .
-          ! grep -Rni --exclude-dir=.git --include='*.html' 'id="sideMenu"' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude='*.md' 'assets/mov/BG2.webm' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'aria-label="Primary navigation"' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'id="sideMenu"' .
 
       - name: Validate universal shell references
         shell: bash
