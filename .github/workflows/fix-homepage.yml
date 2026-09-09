@@ -26,6 +26,7 @@ jobs:
           from pathlib import Path
 
           VERSION = '20260914'
+          # Shell transparency refinement: keep the header and footer lighter over the cinematic background.
           root = Path('.')
 
           def update(path, transform):
