@@ -48,7 +48,7 @@ jobs:
           s=re.sub(r'<div\b[^>]*\bid=["\']ov["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<nav\b[^>]*\bclass=["\'][^"\']*\bnav\b[^"\']*["\'][^>]*>.*?</nav>','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<div\b[^>]*\bid=["\']menu["\'][^>]*>.*?(?=<header\b[^>]*\bclass=["\'][^"\']*\bhero\b)','',s,count=1,flags=re.I|re.S)
-          s=re.sub(r'<footer\b[^>]*\bclass=["\'][^"\']*site-footer[^"\']*["\'][^>]*>.*?</footer>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<footer\b[^>]*\bclass=["\'][^"\']*site-footer[^"\']*["\'][^>]*>.*?</footer>','',s,flags=re.I|re.S)
           s=re.sub(r'<link[^>]+rel=["\']canonical["\'][^>]*>','',s,flags=re.I)
           s=re.sub(r'<meta[^>]+name=["\']description["\'][^>]*>','',s,flags=re.I)
           s=re.sub(r'<link[^>]+href=["\']/site-global\.css(?:\?[^"\']*)?["\'][^>]*>','',s,flags=re.I)
@@ -101,6 +101,7 @@ jobs:
           test -f release-catalog.json
           test -f sitemap.xml
           test -f assets/mov/index.json
+          test -f assets/mov/LG_BG_STARS.webm
           test -f assets/images/icons/LS_HEADPHONES.png
           test -f assets/images/icons/UP_ARROWS.png
           test -f "assets/images/icons/album_art/Never Known_album_cover.jpg"
@@ -122,6 +123,7 @@ jobs:
           ! grep -q 'id="bg"' special_access.html
           ! grep -q 'class="site-footer"' special_access.html
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude='*.md' 'assets/mov/BG2.webm' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude='*.md' 'assets/mov/BG_ANI.webm' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'aria-label="Primary navigation"' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'id="sideMenu"' .
 
