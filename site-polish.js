@@ -43,7 +43,7 @@
               </article>`;
             }).join('')}
           </div>
-          <div class="mt-8 flex justify-center"><a href="releases.html" class="cta-secondary">VIEW RELEASE ARCHIVE</a></div>
+          <div class="mt-8 flex justify-center gap-3 flex-wrap"><a href="releases.html" class="cta-secondary">VIEW RELEASE ARCHIVE</a><a href="coming_soon.html" class="cta-secondary">COMING SOON</a></div>
         </div>`;
 
       const style = document.createElement('style');
