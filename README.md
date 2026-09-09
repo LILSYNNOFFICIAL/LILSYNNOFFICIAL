@@ -16,11 +16,11 @@
 
 This repository is the production source of truth for the official LIL SYNN website at **lilsynn.com**. It is a browser-native artist platform built from static HTML, centralized CSS, deterministic JavaScript modules, canonical JSON data, media assets, API endpoints, and GitHub automation.
 
-The site is intentionally music-first. It creates a unified LIL SYNN experience while keeping official streaming and video platforms as the destination for listening and watching.
-
 ### Architectural doctrine
 
 > **One shell. One source of truth. Explicit ownership. Deterministic rendering. Root-cause fixes. Real verification.**
+
+Do not create a second system when an existing canonical system already owns the behavior.
 
 ---
 
@@ -53,13 +53,13 @@ PRESENTATION
   HTML + CSS + media assets
 ```
 
-The release catalog is the canonical identity and ordering layer. Feature pages consume that source rather than maintaining competing release lists.
+`release-catalog.json` is the canonical release identity and ordering layer. Feature pages consume canonical data instead of maintaining competing release lists.
 
 ---
 
 # 👑 Global Shell
 
-`site-global.js` owns the shared site shell and loads the shared feature modules.
+`site-global.js` owns the shared shell and shared behavior.
 
 It provides:
 
@@ -69,38 +69,36 @@ It provides:
 - THE CALM control
 - Back To Top
 - About controls
-- Escape / keyboard behavior
+- Escape and keyboard behavior
 - Body scroll locking
 - Global `LS.png` top artwork
 - Skip navigation
-- Global MusicGroup structured data
+- MusicGroup structured data
 - Signal loading
 - Latest Releases loading
-- Random music loading
+- Random music discovery
 - Global easter-egg behavior
 
 ### Header contract
 
 - Desktop header: `150px`
 - Mobile header: `118px`
-- `LS_LOGO.png` is independently centered inside the header
+- `LS_LOGO.png` is independently centered
+- Header begins at viewport top (`top: 0`)
 - THE CALM remains lower-left
 - Menu remains right-aligned
-- Header begins at viewport top (`top: 0`)
-- `LS.png` begins at the exact bottom boundary of the global header
-- `LS_HEADPHONES.png` is footer-only and links to Special Access
+- `LS.png` begins at the exact bottom boundary of the header
+- `LS_HEADPHONES.png` remains footer-only and links to Special Access
 - Releases, Archive, Visuals, and Universe are available through the hamburger menu
 - No duplicate page-specific global header is required
 
 ### Current maintenance focus
 
-The five-phase architecture is established. Current work is maintenance and refinement of the production shell, including global header geometry, logo sizing, `LS.png` boundary alignment, responsive behavior, cache consistency, and real runtime verification.
+The five-phase architecture is established. Current work is maintenance and refinement of the production shell, content, media, responsive behavior, cache consistency, and real runtime verification.
 
 ### Easter eggs
 
-The global shell contains deterministic discovery behavior:
-
-- Five logo clicks trigger an unknown-frequency Signal
+- Five logo clicks trigger the Signal layer
 - Keyboard sequence `L I L S Y N` triggers the same Signal layer
 
 ---
@@ -112,213 +110,38 @@ The global shell contains deterministic discovery behavior:
 - Release order
 - Release identity
 - Release type
-- Album / EP track sets
+- Album and EP track sets
 - Track identity
 - Spotify destinations
 - Apple Music destinations
-- SoundCloud sets and tracks
+- SoundCloud destinations
 - Platform availability restrictions
 
-The current canonical catalog begins with the newest entries, including:
+The homepage Latest Releases section derives its three cards from the first three canonical catalog entries. It must never become a manually maintained duplicate release list.
 
-```text
-Never Known
-HOME (ACOUSTIC VERSION)
-I DID IT AGAIN
-Rescue You (Acoustic Version)
-Somewhere In-Between
-Black Glass
-Hello Goodbye
-...
-```
-
-This means the homepage Latest Releases section is not hardcoded to Hello Goodbye. It derives its three cards from the first three entries in the canonical catalog.
-
-### Release URLs
-
-A release can be addressed directly:
-
-```text
-/release.html?id=Hello%20Goodbye
-```
-
-A track can also be addressed directly:
-
-```text
-/release.html?id=It's%20You
-```
-
-Track requests resolve to their canonical parent release. Album/EP tracks are therefore presented inside the correct release set rather than being treated as unrelated releases.
+Track URLs resolve to their canonical parent release when applicable.
 
 ---
 
-# 🚀 Phase 1 - Foundation - COMPLETE
+# 🚀 Project Status
 
-Completed:
-
-- Dynamic release engine
-- Global shell
-- Signal / transmission foundation
-- Site Doctor foundation
-- Global motion system
-- Reduced-motion handling
-- Low-power handling
-- Cinematic reveal behavior
-- Shared ownership rules
-- Production-oriented shell architecture
-
----
-
-# 🚀 Phase 2 - Music Discovery + Conversion - COMPLETE
-
-Completed:
-
-- Canonical release discovery
-- Release-to-release navigation
-- Related releases
-- Streaming-first calls to action
-- Spotify pathways
-- Apple Music pathways
-- SoundCloud pathways
-- YouTube discovery
-- Release detail experiences
-- Homepage latest-release discovery
-- Deterministic Randomize music discovery
-- Release cards linked to individual release experiences
-
-### Homepage Latest Releases
-
-`latest-releases.js` dynamically reads `release-catalog.json` and renders exactly the top three canonical catalog entries into the homepage Latest Releases section.
+The original five planned build phases are complete at the architecture level:
 
 ```text
-release-catalog.json
-        ↓
-  catalog.order
-        ↓
-      top 3
-        ↓
-LATEST RELEASES
+PHASE 1  FOUNDATION                         ✓
+PHASE 2  MUSIC DISCOVERY + CONVERSION      ✓
+PHASE 3  LIL SYNN UNIVERSE                 ✓
+PHASE 4  VISUAL GALLERY                    ✓
+PHASE 5  ABSOLUTE POLISH + INTEGRITY       ✓ BASELINE
 ```
 
-This prevents stale hardcoded releases from becoming the homepage's definition of "latest."
-
-### Randomize
-
-`music-random.js` is the dedicated Randomize / discovery module. Its ownership is centralized so `script.js` no longer competes with it through a second randomizer implementation.
-
-### Streaming law
-
-```text
-DISCOVER → ENGAGE → OFFICIAL PLATFORM → STREAM / WATCH
-```
-
-The persistent personal/native music player was intentionally excluded from this upgrade.
-
----
-
-# 🚀 Phase 3 - LIL SYNN UNIVERSE - COMPLETE
-
-The Universe is implemented as a real site experience, not merely a concept page.
-
-Completed:
-
-- `universe.html`
-- Catalog timeline
-- Release-to-Universe navigation
-- Transmission history
-- `transmissions.json` integration
-- Signal / Oracle layer
-- Special Access expansion
-- Release-specific visual atmosphere hooks
-- Header logo easter egg
-- Keyboard easter egg sequence
-- Connected Release / Archive / Visual pathways
-
-### Design law
-
-> **Music, visuals, transmissions, and story should feel connected without requiring visitor profiling or a personalized chatbot.**
-
----
-
-# 🚀 Phase 4 - Visual Gallery - COMPLETE
-
-`gallery.html` is the dedicated visual archive.
-
-Completed:
-
-- Existing LIL SYNN artwork
-- Album filtering
-- EP filtering
-- Single filtering
-- Fullscreen artwork viewer
-- Previous / next controls
-- Keyboard navigation
-- Escape-to-close
-- Mobile swipe navigation
-- Release associations through the canonical catalog
-- Catalog-order visual timeline
-- Lazy-loaded artwork
-- Reduced-motion-safe transitions
-
-The gallery intentionally consumes the existing artwork mapping and release catalog instead of creating another visual database.
-
----
-
-# 🚀 Phase 5 - Absolute Polish + Production Integrity - COMPLETE BASELINE
-
-The original five-phase build is complete. Phase 5 established the production-integrity baseline. The repository remains under active maintenance and refinement rather than opening a new numbered roadmap phase.
-
-Completed baseline:
-
-- SEO metadata
-- Canonical URLs
-- Open Graph metadata
-- MusicGroup / release structured data
-- Skip navigation
-- Keyboard accessibility
-- Reduced motion
-- Low-power behavior
-- Responsive/mobile refinement
-- Global header alignment
-- Global footer consistency
-- Asset validation
-- JavaScript syntax validation
-- Inline page-script validation
-- Duplicate shell detection
-- Duplicate metadata detection
-- Release catalog integrity checks
-- Stale asset detection
-- Cache/version consistency
-- Dead-code cleanup
-- Root-cause QA hardening
-- Privacy / Terms shell normalization
-- 404 shell normalization
-- Homepage latest-release normalization
-- Releases-page ordering normalization
-- Oversized single-artwork constraints
-- Track-to-parent-release resolution
-- Archive release-set artwork/context
-- Visual Gallery
-- Universe navigation
-- Hamburger discovery routes
-
-### Site Doctor
-
-```text
-.github/workflows/site-doctor.yml
-          ↓
-Node 22
-          ↓
-node tools/site-doctor.mjs
-```
-
-The Site Doctor is deterministic repository QA. It checks both standalone JavaScript and inline HTML JavaScript and is designed to catch structural regressions before they reach production.
+There is intentionally no numbered Phase 6. Future work is maintenance, correction, content updates, media updates, refinement, optimization, and optional evolution of existing systems.
 
 ---
 
 # 📚 Releases vs Archive
 
-**Both systems remain. They serve different jobs.**
+**Releases = presentation. Archive = exploration.**
 
 ### Releases
 
@@ -326,87 +149,60 @@ The Site Doctor is deterministic repository QA. It checks both standalone JavaSc
 /releases.html
 ```
 
-The curated visual catalog. It presents the release library in canonical order with artwork, type information, track context, filtering, and direct release experiences.
+Curated visual release presentation with canonical ordering, artwork, release type, track context, filtering, and direct release experiences.
 
-Album and EP cards are allowed to present the larger release-set experience. Singles are constrained so their artwork does not overwhelm the catalog layout.
-
-### Archive Explorer
+### Archive
 
 ```text
 /archive.html
 ```
 
-The utility discovery layer. It provides:
-
-- Release search
-- Track search
-- Album / EP / Single filters
-- Spotify / Apple Music / SoundCloud filters
-- Catalog ordering
-- A-Z / Z-A sorting
-- Release-set artwork
-- Parent release context
-- Shareable query state
-
-A track found through Archive resolves to its canonical parent release experience.
-
-> **Releases = presentation. Archive = exploration.**
+Utility discovery layer with release search, track search, release-type filters, platform filters, catalog sorting, A-Z/Z-A sorting, release-set artwork, parent-release context, and shareable query state.
 
 ---
 
 # 🖼️ Visual System
 
-Artwork is shared across the site through the canonical release catalog and global artwork mapping.
+Existing production assets should be reused before creating replacements.
 
-The repository contains the release artwork library under:
+Known existing assets include:
 
 ```text
+/assets/images/icons/LS_LOGO.png
+/assets/images/icons/UP_ARROWS.png
+/assets/images/icons/LS_HEADPHONES.png
+/assets/img/LS.png
 /assets/images/icons/album_art/
-```
-
-Recent catalog artwork additions include dedicated assets for releases such as `Never Known`, `I DID IT AGAIN`, `HOME (ACOUSTIC VERSION)`, and `RESCUE YOU` alongside the established catalog artwork, including the `Heavy` / `Enough` artwork set.
-
-The repository also retains the animated media assets:
-
-```text
 /assets/mov/LS_BG_STARS.webm
 /assets/mov/HERO_BG_WEBM.webm
+/assets/other/sound/Background.mp3
 ```
 
-The global cinematic background system is wired around `LS_BG_STARS.webm` with explicit background, overlay, and content stacking layers.
+Existing release artwork already covers the established catalog, including current catalog entries such as `Never Known`, `HOME (ACOUSTIC VERSION)`, `I DID IT AGAIN`, `Rescue You`, `Somewhere In-Between`, `Black Glass`, `Hello Goodbye`, and the established artwork library.
+
+**Do not ask the user to recreate or re-upload an asset that already exists in the repository.** Audit the repository first.
 
 ---
 
 # 📡 Transmission / Signal System
 
-`transmissions.json` is the canonical Signal message source.
+`transmissions.json` is the canonical Signal source for homepage Signal behavior, Universe history, Archive discovery, Oracle behavior, and easter-egg events.
 
-The system powers:
-
-- Homepage Signal
-- Signal Oracle
-- Universe transmission history
-- Archive transmission discovery
-- Easter-egg Signal events
-
-Transmission copy must not claim that a release is the latest unless the canonical release feed establishes that ordering.
-
-Current transmission history includes:
-
-```text
-TRANSMISSION 001 - SYSTEM ONLINE
-TRANSMISSION 002 - HELLO GOODBYE
-TRANSMISSION 003 - VISUAL FREQUENCY
-TRANSMISSION 004 - ARCHIVE EXPLORER
-```
+Transmission copy must not claim that something is the latest release unless the canonical release catalog establishes that ordering.
 
 ---
 
 # 🎧 Music Discovery
 
-The site deliberately does **not** include the previously proposed persistent personal/native music player.
+The site intentionally does not use the previously proposed persistent personal/native music player.
 
-Instead, the music experience is built around deterministic discovery and official platform handoff:
+The music journey is:
+
+```text
+DISCOVER → ENGAGE → OFFICIAL PLATFORM → STREAM / WATCH
+```
+
+Primary discovery surfaces:
 
 - Latest Releases
 - Randomize
@@ -424,13 +220,15 @@ THE CALM remains a separate ambient/environment layer.
 
 # 🎬 Global Motion
 
-The primary global background asset is:
+`script.js` owns global background-video behavior.
+
+Primary background asset:
 
 ```text
 /assets/mov/LS_BG_STARS.webm
 ```
 
-`script.js` owns global background-video behavior while `site-global.css` provides explicit layering:
+Layering law:
 
 ```text
 Background Video
@@ -440,9 +238,7 @@ Overlay
 Global Shell / Page Content
 ```
 
-The previous negative-z-index stacking approach was removed because it could place the WebM behind the document's effective rendering layer.
-
-Reduced-motion and low-power behavior reduce visual intensity rather than duplicating or replacing the shell.
+Reduced-motion and low-power behavior reduce visual intensity instead of creating duplicate rendering systems.
 
 ---
 
@@ -456,7 +252,7 @@ Primary source:
 /assets/other/sound/Background.mp3
 ```
 
-Foreground video playback can pause or mute THE CALM to avoid competing audio ownership.
+Foreground video playback can pause or mute THE CALM to prevent competing audio ownership.
 
 ---
 
@@ -491,75 +287,17 @@ When a duplicate appears, identify the canonical owner before adding another pat
 
 ---
 
-# 🐛 QA Hardening Log
-
-Structural defects addressed during the architecture work include:
-
-- MutationObserver feedback loops
-- Release reorder race conditions
-- YouTube ordering observer recursion
-- Incorrect Somewhere In-Between artwork
-- Incorrect legacy background references
-- Undefined `--glow` variable
-- Legacy Special Access header duplication
-- Special Access archive-player regression
-- 404 shell/alignment mismatch
-- Duplicate global stylesheet injection
-- Accessibility skip-navigation behavior
-- Release SEO / structured-data identity
-- Signal caching behavior
-- Duplicate metadata injection
-- Privacy / Terms shell regressions
-- Self-triggering homepage normalization workflow
-- Duplicate homepage randomizer ownership
-- Retired `site-polish.js`
-- Stale hardcoded homepage latest release
-- Releases-page ordering race
-- Oversized single artwork in Releases
-- Track URLs failing to resolve to parent release sets
-- Archive lacking release-set artwork/context
-- Global WebM stacking-context visibility issue
-- Missing hamburger discovery routes
-- Missing Universe system
-- Missing Visual Gallery system
-- Stale transmission claim about the latest release
-
----
-
-# 🩺 Site Doctor Coverage
-
-`tools/site-doctor.mjs` validates:
-
-- Global shell presence
-- Duplicate global JavaScript
-- Duplicate global CSS
-- Duplicate meta descriptions
-- Duplicate canonical links
-- Missing local references
-- Missing `<main>` landmarks as warnings
-- Legacy shell markers
-- Release catalog JSON validity
-- Duplicate catalog order entries
-- Group track integrity
-- Standalone JavaScript syntax
-- Inline HTML JavaScript syntax
-- CSS variable references
-- Stale background references
-- Required global assets
-- Required discovery routes/modules
-- Transmission JSON validity
-
-Workflow:
+# 🩺 Site Doctor
 
 ```text
-push / pull request
-        ↓
-GitHub Actions
-        ↓
+.github/workflows/site-doctor.yml
+          ↓
 Node 22
-        ↓
-Site Doctor
+          ↓
+node tools/site-doctor.mjs
 ```
+
+Site Doctor validates repository structure, standalone JavaScript, inline HTML JavaScript, CSS variables, required assets, release catalog integrity, transmission JSON, discovery modules, and duplicate shell/metadata conditions.
 
 Site Doctor is repository QA. It does not pretend to replace real browser verification.
 
@@ -571,11 +309,10 @@ Site Doctor is repository QA. It does not pretend to replace real browser verifi
 
 - Header begins at viewport `0`
 - Logo remains independently centered
+- Header height is correct on desktop and mobile
 - THE CALM remains lower-left
 - Menu remains right-aligned
-- Releases and Archive are both navigable
-- Visuals and Universe are both navigable
-- `LS.png` begins at the header boundary
+- `LS.png` begins exactly at the header boundary
 - No duplicate global shell
 - Special Access remains in the footer
 - Skip navigation is keyboard-visible
@@ -583,67 +320,55 @@ Site Doctor is repository QA. It does not pretend to replace real browser verifi
 ### Release system
 
 - Canonical catalog order preserved
-- Album / EP track sets preserved
-- Track URL resolves to parent release set
-- Selected track is highlighted
+- Album/EP track sets preserved
+- Track URLs resolve to parent release sets
+- Selected track is highlighted when applicable
 - Release artwork resolves
 - Streaming destinations remain canonical
 - Latest Releases uses the catalog's top three entries
 
-### Releases
+### Releases and Archive
 
-- Visual catalog presentation
-- Album / EP / Single filtering
-- Canonical ordering
-- Artwork size constraints
-- Direct release navigation
+- Filters work
+- Sorting works
+- Search works
+- Artwork resolves
+- Release-set context is correct
+- Direct release navigation works
+- Shareable query state works
 
-### Archive
+### Visuals and Universe
 
-- Search release
-- Search track
-- Show parent release set
-- Album / EP / Single filters
-- Platform filters
-- Catalog / A-Z / Z-A sorting
-- Shareable query state
-
-### Visuals
-
-- Fullscreen viewer
-- Previous / next
-- Keyboard controls
-- Mobile swipe
-- Reduced-motion behavior
-
-### Universe
-
-- Release timeline
-- Transmission history
-- Signal / Oracle layer
-- Release / Archive / Visual pathways
-- Easter-egg layer
+- Fullscreen viewer works
+- Previous/next works
+- Keyboard controls work
+- Mobile swipe works
+- Reduced-motion behavior works
+- Universe timeline works
+- Transmission history works
+- Signal/Oracle layer works
+- Release/Archive/Visual pathways work
 
 ### Production
 
-- Site Doctor workflow present
-- Deployment path documented
-- Production behavior checked separately from repository QA
-- Cache behavior checked
-- Shared consumers checked for regressions
+- Site Doctor passes
+- Deployment path is understood
+- Production behavior is checked separately from repository QA
+- Cache behavior is checked
+- Shared consumers are checked for regressions
 
 ---
 
 # 🧬 Cache & Versioning
 
-Shared shell assets currently use the repository's intentional cache-busting query parameters:
+Shared shell assets currently use the repository's intentional cache-busting value:
 
 ```html
 <script src="/site-global.js?v=20260914"></script>
 <link id="site-global-css" rel="stylesheet" href="/site-global.css?v=20260914">
 ```
 
-`20260914` is the current asset-version identifier in the source. It should be treated as a cache-busting value, not as a roadmap date. Any future shared-shell version change should be synchronized across all consumers and documented when it represents a meaningful shared-asset change.
+`20260914` is a cache-busting identifier currently present in source. It is not a roadmap date. Any future shared-shell version change must be synchronized across all consumers.
 
 ---
 
@@ -659,17 +384,326 @@ Vercel
 lilsynn.com
 ```
 
-Important:
+Remember:
 
 ```text
 SOURCE ≠ CI ≠ DEPLOYMENT ≠ CACHE ≠ RUNTIME DOM
 ```
 
-A Vercel build-rate-limit or upgrade-cap failure is a deployment-state problem and is not automatically evidence of a source-code failure.
+A deployment failure is not automatically a source-code failure.
 
 ---
 
-# 🗺 Repository Topology
+# 🧑‍🎤 OWNER ACTION QUEUE
+
+This section is the handoff list for things that require LIL SYNN's input, approval, source material, or creative direction.
+
+**Important:** The assistant must inspect the repository before asking for anything. If the information or asset already exists in GitHub, use it. Do not ask the user to provide it again.
+
+## 1. Content that actually needs owner input
+
+Provide or confirm only when it has changed or is missing from the repository:
+
+- New releases not yet represented in `release-catalog.json`
+- New tracks, album/EP tracklists, release dates, release types, or platform destinations
+- New official streaming links when they are not already present
+- New official video links or video metadata not already present
+- New artist bio/about copy when the existing copy is no longer correct
+- New lyrics or lyric-page content when a release needs it
+- New merch information when merch inventory, URLs, or products change
+- New Special Access content when the secret experience needs new material
+- New Universe/transmission story content when you want the narrative expanded
+- Any legal/business copy that has materially changed
+
+### Do NOT re-send
+
+The repository already contains the core site architecture, shell, navigation, current social/platform wiring, canonical release system, existing release artwork, background video system, THE CALM, Site Doctor, Universe, Archive, Releases, Gallery, and the current global header implementation.
+
+---
+
+# 🖼️ OWNER IMAGE QUEUE
+
+No routine image re-upload is required right now for assets that already exist.
+
+The following are the **recommended new visual assets to create next** if the corresponding pages need stronger visual presentation. These are additions, not replacements for existing assets.
+
+## Image 1 - Homepage hero / identity artwork
+
+**Purpose:** A primary LIL SYNN visual for the homepage that can sit behind or beside the opening identity/content without replacing `LS.png` or the global logo.
+
+**Recommended generation prompt:**
+
+```text
+Create a cinematic vertical-to-wide key art image for the music artist LIL SYNN. A faceless hooded male figure stands alone in a dark cosmic environment. His entire face is covered by smooth thin matte-black cloth with absolutely no visible skin, seams, eyes, nose, mouth, or facial features. The only eye area is a pair of reflective pink and purple galaxy aviator sunglasses, reflecting stars and nebulae. Black hooded streetwear, black gloves, dark gothic cosmic styling, hot-pink and magenta accents, black dominant palette, silver and chrome metallic details, subtle spiked circular halo geometry, distant crescent moon, deep star field, atmospheric depth, emotional and mysterious rather than horror, premium album-art photography, realistic human proportions, restrained cinematic lighting, clean negative space for website copy, no text, no logos, no watermark, no raised hand, no weapons, no gore.
+```
+
+## Image 2 - About page portrait
+
+**Purpose:** A dedicated identity image for About instead of reusing the homepage hero everywhere.
+
+**Recommended generation prompt:**
+
+```text
+Create a premium editorial portrait of the LIL SYNN persona. Faceless hooded male figure, entire face and forehead completely covered by a smooth thin matte-black cloth with no seams or openings. Reflective pink and purple galaxy aviator sunglasses are the only visible facial identifier. Black hood fully raised, black streetwear, black gloves, subtle silver and chrome hardware, dark cosmic atmosphere, hot-pink and magenta accents, faint star field and atmospheric haze, intimate mysterious musician portrait, emotionally intense but controlled, realistic photography, strong silhouette, black background, no text, no logo, no watermark, no exposed skin, no visible facial features, no raised hand.
+```
+
+## Image 3 - Universe key art
+
+**Purpose:** Visual anchor for the Universe page and story/transmission system.
+
+**Recommended generation prompt:**
+
+```text
+Create cinematic key art for the LIL SYNN UNIVERSE. A faceless hooded male figure in black stands inside an impossible cosmic transmission chamber. Entire face covered by smooth thin matte-black cloth, no facial features or skin. Reflective pink and purple galaxy aviator sunglasses glow subtly from reflected stars. Around him are a large spiked circular metallic halo, crescent moon shapes, fragmented chrome geometry, distant galaxies, faint transmission interference, and subtle pink-magenta light. The scene should feel like a mysterious music universe rather than science fiction combat. Premium dark editorial photography, gothic cosmic atmosphere, black, hot pink, magenta, silver and chrome, deep shadows, cinematic depth, no text, no logo, no watermark.
+```
+
+## Image 4 - Visual Gallery header artwork
+
+**Purpose:** A wide visual introduction for the Gallery without replacing the actual release artwork catalog.
+
+**Recommended generation prompt:**
+
+```text
+Create a wide cinematic banner for a dark music visual archive called LIL SYNN. Use the established LIL SYNN visual identity: faceless hooded male figure, entire face covered by smooth matte-black cloth, reflective pink and purple galaxy aviator sunglasses, black hooded streetwear, black gloves, hot-pink and magenta accents, black dominant palette, silver/chrome details, cosmic stars, subtle crescent moon and spiked circular halo. Composition should leave generous negative space for a website heading. Premium editorial album photography, atmospheric, mysterious, emotionally heavy, clean and sophisticated, no text, no logos, no watermark.
+```
+
+## Image 5 - Special Access key art
+
+**Purpose:** A mysterious visual for the existing Special Access experience.
+
+**Recommended generation prompt:**
+
+```text
+Create an extremely dark cinematic secret-room image for LIL SYNN Special Access. A faceless hooded male figure is barely illuminated in a black cosmic chamber. His entire face is covered by smooth thin matte-black cloth with no seams or facial features. Reflective pink and purple galaxy aviator sunglasses catch tiny star reflections. Chrome fragments, faint magenta light, a subtle circular halo, distant crescent moon geometry, and atmospheric particles surround him. The image should feel exclusive, hidden, and discovered rather than frightening. Premium realistic photography, deep blacks, restrained hot-pink/magenta highlights, silver/chrome details, no text, no logo, no watermark.
+```
+
+## Image 6 - 404 / lost-signal artwork
+
+**Purpose:** Give the 404 page a deliberate LIL SYNN identity instead of generic error-page imagery.
+
+**Recommended generation prompt:**
+
+```text
+Create a cinematic LIL SYNN lost-signal scene for a 404 page. Empty dark cosmic space with a distant faceless hooded figure seen from behind, black hood and black streetwear, subtle reflective pink-purple galaxy sunglasses barely visible in profile, fragmented chrome signal rings, faint magenta transmission interference, scattered stars, a small crescent moon, deep black negative space for error-page copy. Premium atmospheric photography, mysterious and emotional, minimal composition, no text, no logo, no watermark.
+```
+
+### Image generation rules
+
+For any new LIL SYNN visual:
+
+- Preserve the established faceless hooded identity
+- Entire face must remain covered
+- Pink/purple galaxy aviators are the key visual identifier
+- Keep black, hot pink/magenta, silver/chrome, and cosmic elements consistent
+- Do not add random hands, exposed facial features, skin, weapons, or generic superhero imagery
+- Do not put website copy inside generated artwork unless specifically requested
+- Do not replace existing release artwork unless explicitly approved
+
+---
+
+# ✍️ CONTENT QUEUE FOR THE OWNER
+
+When a content update is needed, the assistant should ask for the smallest missing piece only.
+
+### New release
+
+Provide only what is not already in the repo:
+
+```text
+Release name:
+Release type: Single / EP / Album
+Release date:
+Tracklist:
+Official Spotify URL:
+Official Apple Music URL:
+Official SoundCloud URL:
+Official YouTube URL:
+Artwork: existing repo asset / new image needed
+```
+
+### New video
+
+```text
+Video title:
+Official YouTube URL:
+Release/track association, if any:
+Thumbnail available? yes/no
+```
+
+### New Universe transmission
+
+```text
+Transmission title:
+Transmission body:
+Associated release/track, if any:
+Placement/order:
+```
+
+### New About copy
+
+Say exactly what changed or provide the new copy. Do not resend existing site information unless it is being replaced.
+
+---
+
+# 🛠️ WHAT TO ASK THE ASSISTANT TO DO
+
+These are reusable prompts for future website work. The assistant should inspect the current repository first and should not ask for information already available in GitHub.
+
+## Full site audit
+
+```text
+Audit the current LIL SYNN website repo end to end. Inspect the actual code, data, assets, workflows, and architecture. Tell me what is broken, stale, duplicated, missing, weak, or inconsistent. Separate confirmed defects from recommendations. Do not change anything yet.
+```
+
+## Fix everything confirmed
+
+```text
+Using the current LIL SYNN repo as the source of truth, fix every confirmed defect from your audit. Preserve existing architecture and ownership rules. Do not rewrite working systems unnecessarily. Run Site Doctor and relevant verification after the changes.
+```
+
+## Header audit
+
+```text
+Audit the global LIL SYNN header on desktop and mobile. Check viewport-top alignment, header height, LS_LOGO sizing and centering, THE CALM position, menu position, LS.png boundary alignment, page-content spacing, z-index, responsive behavior, and duplicate shell injection. Fix root causes only.
+```
+
+## Visual audit
+
+```text
+Audit every page of the LIL SYNN site for visual consistency. Check typography, spacing, artwork sizing, image cropping, hierarchy, black/pink/gold/chrome branding, responsive behavior, empty states, and visual repetition. Identify the highest-value improvements first, then implement them without breaking the shared shell.
+```
+
+## Mobile audit
+
+```text
+Perform a mobile-first audit of the current LIL SYNN site. Check the real responsive CSS and JavaScript behavior for navigation, header, logo, LS.png, cards, artwork, buttons, filters, galleries, videos, forms, and overflow. Fix confirmed issues and verify the shared shell afterward.
+```
+
+## Accessibility audit
+
+```text
+Audit the current LIL SYNN website for practical accessibility. Check keyboard navigation, focus states, landmarks, headings, labels, contrast, reduced motion, touch targets, alt text, dialogs, menus, and screen-reader semantics. Fix confirmed issues without flattening the site's visual identity.
+```
+
+## Performance audit
+
+```text
+Audit LIL SYNN for performance without sacrificing the visual experience. Inspect image sizes, lazy loading, video behavior, JavaScript loading, cache strategy, layout shifts, unnecessary observers, duplicate assets, and expensive effects. Make only evidence-backed optimizations and run Site Doctor afterward.
+```
+
+## SEO audit
+
+```text
+Audit every public LIL SYNN page for SEO and sharing metadata. Check titles, descriptions, canonical URLs, Open Graph, structured data, sitemap coverage, indexability, duplicate metadata, and release identity. Fix inconsistencies using the existing canonical architecture.
+```
+
+## Release catalog audit
+
+```text
+Audit release-catalog.json against every release-related page and asset reference. Find missing artwork, stale links, duplicate identities, incorrect ordering, broken parent-track relationships, inconsistent release types, and platform mismatches. Do not invent missing information. Give me the exact owner inputs required, if any.
+```
+
+## Image audit
+
+```text
+Audit all website image usage against the actual repository assets. Tell me which images are already good enough, which are being misused, which are missing, and which new visuals would materially improve the site. Do not ask me to upload anything that already exists. For genuinely missing visuals, give me exact image-generation prompts.
+```
+
+## Content audit
+
+```text
+Audit the site's visible copy and content against the current repository data. Find stale release names, outdated descriptions, placeholder language, duplicate copy, inaccurate claims, broken links, and missing calls to action. Do not rewrite my voice without showing me what needs changing.
+```
+
+## Conversion audit
+
+```text
+Audit the LIL SYNN website as a music-fan conversion funnel. Check whether a first-time visitor can quickly understand who LIL SYNN is, discover music, find the newest release, choose a streaming platform, explore visuals, and move deeper into the site. Recommend and implement only improvements that preserve the site's identity.
+```
+
+## Site Doctor expansion
+
+```text
+Inspect tools/site-doctor.mjs and identify important regressions it currently cannot detect. Add deterministic checks only where they provide real value. Do not turn Site Doctor into a noisy linter. Run it after the changes and report every result.
+```
+
+## Production verification
+
+```text
+Verify the current LIL SYNN repo as production infrastructure. Check source consistency, workflows, cache versions, asset references, JavaScript syntax, HTML inline scripts, canonical data, deployment configuration, and likely runtime failure points. Separate repository evidence from browser/runtime evidence and tell me exactly what still needs real browser verification.
+```
+
+## Cleanup pass
+
+```text
+Perform a conservative architecture cleanup of the LIL SYNN repo. Find dead code, duplicate ownership, stale comments, obsolete scripts, redundant CSS, legacy references, and accidental complexity. Do not remove anything unless you can establish that it is unused or superseded. Verify after cleanup.
+```
+
+## Improve one page
+
+```text
+Take [PAGE NAME] and make it materially better without redesigning the entire website. First inspect how the page currently works and what shared systems it consumes. Identify the top five improvements by user value, implement them in order, and verify that global shell behavior remains unchanged.
+```
+
+## Make it feel more LIL SYNN
+
+```text
+Review the current site through the established LIL SYNN visual identity: faceless hooded figure, black, hot pink/magenta, silver/chrome, cosmic atmosphere, emotional darkness, premium music presentation, and restrained cinematic motion. Find places where the site feels generic or disconnected from the identity. Propose concrete improvements and implement only the strongest ones.
+```
+
+---
+
+# 🧠 MASTER WEBSITE PROMPT
+
+Use this when you want a full improvement pass without explaining the architecture again:
+
+```text
+Work directly from the current LIL SYNN website repository as the source of truth.
+
+Do not ask me for information, assets, links, code, or decisions that already exist in the repository or established project context. Inspect first.
+
+Preserve the existing architecture. Use canonical data and existing owners. Do not create duplicate systems, duplicate global shells, competing release lists, redundant randomizers, or unnecessary abstraction.
+
+Audit the requested area first. Separate confirmed defects from subjective recommendations. Fix root causes rather than stacking patches. Preserve existing working behavior unless the requested improvement requires a change.
+
+For visual work, preserve the LIL SYNN identity: faceless hooded male figure, entire face covered by smooth black cloth, reflective pink/purple galaxy aviator sunglasses, black streetwear, black gloves, hot pink/magenta, silver/chrome, cosmic/gothic atmosphere, emotional cinematic presentation. Do not introduce generic AI-looking imagery, exposed facial features, random hands, weapons, or unrelated aesthetics.
+
+For content, use the repository's canonical data first. Do not invent release dates, links, credits, tracklists, biographies, or other facts.
+
+For images, audit existing assets first. If something is genuinely missing, tell me exactly what image is needed and provide a production-ready generation prompt rather than vaguely asking for an image.
+
+For code, make the smallest coherent change, preserve ownership boundaries, run relevant tests and Site Doctor, inspect the final diff, and report what was changed and what still requires real browser verification.
+
+Do not call work complete just because the code parses. Verify the actual behavior that matters.
+```
+
+---
+
+# 📋 OWNER HANDOFF ORDER
+
+When work is blocked on LIL SYNN, request things in this order and nothing else:
+
+```text
+1. NEW OR CHANGED RELEASE DATA
+   ↓
+2. NEW OR CHANGED OFFICIAL LINKS
+   ↓
+3. NEW OR CHANGED CONTENT/COPY
+   ↓
+4. NEW VISUAL DIRECTION
+   ↓
+5. GENERATE ANY GENUINELY MISSING IMAGES
+   ↓
+6. REAL BROWSER CHECKS THE ASSISTANT CANNOT PROVE FROM SOURCE
+   ↓
+7. FINAL APPROVAL FOR SUBJECTIVE DESIGN CHANGES
+```
+
+If an item is already known, already stored in GitHub, already generated, or already decided, **do not ask for it again**.
+
+---
+
+# 🏁 Repository Topology
 
 ```text
 LILSYNNOFFICIAL/
@@ -704,29 +738,7 @@ LILSYNNOFFICIAL/
 
 ---
 
-# 🏁 Current Project Status
-
-The original five-phase build is complete, with ongoing maintenance and production refinement:
-
-```text
-PHASE 1  FOUNDATION                         ✓
-PHASE 2  MUSIC DISCOVERY + CONVERSION      ✓
-PHASE 3  LIL SYNN UNIVERSE                 ✓
-PHASE 4  VISUAL GALLERY                    ✓
-PHASE 5  ABSOLUTE POLISH + INTEGRITY       ✓
-
-CURRENT STATE: MAINTENANCE + REFINEMENT
-```
-
-There is no Phase 6 in the current roadmap. Future work should be treated as maintenance, corrections, content/catalog updates, runtime verification, or optional evolution of the existing systems unless a new roadmap is explicitly defined.
-
-The current production-refinement focus includes the shared global header, logo sizing and centering, exact `LS.png` header-boundary placement, responsive behavior, cache consistency, and verification of the real deployed runtime.
-
----
-
 # 👑 Maintainer Doctrine
-
-This repository is production infrastructure for the LIL SYNN digital universe.
 
 ```text
 ONE OWNER
@@ -734,11 +746,14 @@ ONE SOURCE OF TRUTH
 ONE GLOBAL EXPERIENCE
 ZERO DUPLICATE SYSTEMS
 ROOT CAUSE OVER PATCHES
+EXISTING ASSETS BEFORE NEW ASSETS
+CANONICAL DATA BEFORE MANUAL COPY
 STREAMING DESTINATIONS STAY PRIMARY
 NO PERSONALIZED CHATBOT REQUIRED
 NO PERSISTENT PERSONAL PLAYER
 VERIFY THE REAL RUNTIME
-UPDATE THE README WHEN A MATERIAL SYSTEM CHANGE IS MADE
+DO NOT ASK FOR WHAT ALREADY EXISTS
+UPDATE THIS README WHEN THE OWNER HANDOFF CHANGES
 ```
 
 <div align="center">
