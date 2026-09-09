@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LIL SYNN | Archive Explorer</title>
+  <meta name="description" content="Search and explore the complete LIL SYNN release archive by release, track, type, and streaming platform.">
+  <link rel="canonical" href="https://lilsynn.com/archive.html">
+  <link rel="stylesheet" id="site-global-css" href="/site-global.css?v=20260914">
+  <style>
+    body{background:transparent;color:#fff}
+    .archive-page{max-width:1180px;margin:0 auto;padding:150px 24px 80px}
+    .archive-page h1{text-align:center;font:700 clamp(32px,6vw,60px) Orbitron,sans-serif;letter-spacing:.08em;margin:0 0 10px}
+    .intro{text-align:center;color:#bbb;max-width:780px;margin:0 auto 28px;line-height:1.6}
+    .explorer{background:rgba(8,8,8,.84);border:1px solid rgba(255,0,143,.28);border-radius:18px;padding:18px;margin-bottom:24px}
+    .controls{display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(3,minmax(130px,1fr));gap:10px}
+    .control{display:flex;flex-direction:column;gap:6px}
+    .control label{font:700 11px Rajdhani,sans-serif;letter-spacing:.12em;color:#999}
+    .control input,.control select{width:100%;box-sizing:border-box;background:#090909;color:#fff;border:1px solid rgba(255,0,143,.42);border-radius:9px;padding:11px 12px;font:600 14px Rajdhani,sans-serif}
+    .summary{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px;color:#999;font:600 12px Rajdhani,sans-serif;letter-spacing:.08em}
+    .summary strong{color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .card{display:flex;flex-direction:column;min-height:170px;background:rgba(8,8,8,.84);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;transition:transform .2s ease,border-color .2s ease}
+    .card:hover{transform:translateY(-2px);border-color:rgba(255,0,143,.5)}
+    .eyebrow{color:#ff4fd8;font:700 10px Rajdhani,sans-serif;letter-spacing:.14em}
+    .card h2{font:700 19px Orbitron,sans-serif;line-height:1.25;margin:8px 0 10px}
+    .card p{color:#aaa;font:600 13px Rajdhani,sans-serif;line-height:1.45;margin:0 0 14px}
+    .tracks{color:#777;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-footer{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .platforms{color:#999;font:700 10px Rajdhani,sans-serif;letter-spacing:.08em}
+    .open{color:#fff;text-decoration:none;border:1px solid rgba(255,0,143,.48);border-radius:7px;padding:7px 9px;font:700 10px Rajdhani,sans-serif;letter-spacing:.1em}
+    .open:hover,.open:focus-visible{color:#fff;border-color:#ff4fd8;background:rgba(255,0,143,.12)}
+    .empty{text-align:center;color:#aaa;padding:55px 20px;border:1px dashed rgba(255,255,255,.13);border-radius:14px}
+    @media(max-width:900px){.controls{grid-template-columns:1fr 1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.archive-page{padding:132px 14px 55px}.controls{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.card{min-height:150px}}
+    @media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+  </style>
+</head>
+<body>
+  <main class="archive-page" id="main-content">
+    <h1>ARCHIVE EXPLORER</h1>
+    <p class="intro">Search the LIL SYNN catalog by release, track, format, or official streaming destination. Every result resolves back to the canonical release experience.</p>
+    <section class="explorer" aria-label="Archive filters">
+      <div class="controls">
+        <div class="control">
+          <label for="query">SEARCH</label>
+          <input id="query" type="search" autocomplete="off" placeholder="Release or track name…">
+        </div>
+        <div class="control">
+          <label for="type">TYPE</label>
+          <select id="type"><option value="all">All types</option><option value="album">Albums</option><option value="ep">EPs</option><option value="single">Singles</option></select>
+        </div>
+        <div class="control">
+          <label for="platform">PLATFORM</label>
+          <select id="platform"><option value="all">All platforms</option><option value="spotify">Spotify</option><option value="apple">Apple Music</option><option value="soundcloud">SoundCloud</option></select>
+        </div>
+        <div class="control">
+          <label for="sort">ORDER</label>
+          <select id="sort"><option value="catalog">Catalog order</option><option value="az">A → Z</option><option value="za">Z → A</option></select>
+        </div>
+      </div>
+      <div class="summary" aria-live="polite"><span><strong id="count">0</strong> RELEASES MATCH</span><span>CANONICAL CATALOG</span></div>
+    </section>
+    <section id="results" class="grid" aria-label="Release archive results" aria-live="polite"></section>
+  </main>
+  <script>
+    const qEl=document.getElementById('query'),typeEl=document.getElementById('type'),platformEl=document.getElementById('platform'),sortEl=document.getElementById('sort'),results=document.getElementById('results'),countEl=document.getElementById('count');
+    const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const norm=s=>String(s??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
+    let data=null;
+    function typeFor(title){return data?.groups?.[title]?.type?.toLowerCase()||'single'}
+    function tracksFor(title){return Array.isArray(data?.groups?.[title]?.tracks)?data.groups[title].tracks:[]}
+    function hasPlatform(title,platform){
+      const g=data?.groups?.[title];
+      if(platform==='spotify')return Boolean(data?.spotify?.[title]||g?.spotify||tracksFor(title).some(t=>data?.trackSpotify?.[t]));
+      if(platform==='apple')return Boolean(data?.apple?.[title]||g?.apple||tracksFor(title).some(t=>data?.apple?.[t]));
+      if(platform==='soundcloud')return Boolean(data?.soundcloud?.[title]||g?.soundcloud||data?.trackSoundcloud?.[title]||tracksFor(title).some(t=>data?.trackSoundcloud?.[t]));
+      return true;
+    }
+    function syncUrl(){
+      const p=new URLSearchParams();
+      if(qEl.value.trim())p.set('q',qEl.value.trim());
+      if(typeEl.value!=='all')p.set('type',typeEl.value);
+      if(platformEl.value!=='all')p.set('platform',platformEl.value);
+      if(sortEl.value!=='catalog')p.set('sort',sortEl.value);
+      const next=p.toString()?`${location.pathname}?${p}`:location.pathname;
+      history.replaceState(null,'',next);
+    }
+    function render(){
+      if(!data)return;
+      const query=norm(qEl.value),type=typeEl.value,platform=platformEl.value,sort=sortEl.value;
+      let order=[...(data.order||[])].filter(title=>{
+        const tracks=tracksFor(title),hay=norm([title,...tracks].join(' '));
+        return (!query||hay.includes(query))&&(type==='all'||typeFor(title)===type)&&hasPlatform(title,platform);
+      });
+      if(sort==='az')order.sort((a,b)=>a.localeCompare(b));
+      if(sort==='za')order.sort((a,b)=>b.localeCompare(a));
+      countEl.textContent=order.length;
+      if(!order.length){results.className='';results.innerHTML='<div class="empty">No releases match the current archive filters.</div>';syncUrl();return;}
+      results.className='grid';
+      results.innerHTML=order.map((title,i)=>{
+        const g=data.groups?.[title],tracks=tracksFor(title),type=typeFor(title).toUpperCase();
+        const platforms=[hasPlatform(title,'spotify')?'SPOTIFY':'',hasPlatform(title,'apple')?'APPLE MUSIC':'',hasPlatform(title,'soundcloud')?'SOUNDCLOUD':''].filter(Boolean).join(' · ')||'ARCHIVE ONLY';
+        const detail='/release.html?id='+encodeURIComponent(title);
+        const trackText=tracks.length?`${tracks.length} track${tracks.length===1?'':'s'}${tracks.length<=3&&tracks.length>0?' · '+tracks.join(' · '):''}`:'Single release';
+        return `<article class="card"><div class="eyebrow">${esc(String(i+1).padStart(2,'0'))} · ${esc(type)}</div><h2>${esc(title)}</h2><p><span class="tracks">${esc(trackText)}</span></p><div class="card-footer"><span class="platforms">${esc(platforms)}</span><a class="open" href="${detail}">OPEN ↗</a></div></article>`;
+      }).join('');
+      syncUrl();
+    }
+    function loadState(){
+      const p=new URLSearchParams(location.search);
+      qEl.value=p.get('q')||''; typeEl.value=['all','album','ep','single'].includes(p.get('type'))?p.get('type'):'all'; platformEl.value=['all','spotify','apple','soundcloud'].includes(p.get('platform'))?p.get('platform'):'all'; sortEl.value=['catalog','az','za'].includes(p.get('sort'))?p.get('sort'):'catalog';
+    }
+    [qEl,typeEl,platformEl,sortEl].forEach(el=>el.addEventListener('input',render));
+    [typeEl,platformEl,sortEl].forEach(el=>el.addEventListener('change',render));
+    fetch('/release-catalog.json',{cache:'default'}).then(r=>{if(!r.ok)throw new Error('catalog unavailable');return r.json()}).then(c=>{data=c;loadState();render()}).catch(()=>{results.className='';results.innerHTML='<div class="empty">Unable to load the release archive.</div>'});
+  </script>
+  <script src="/site-global.js?v=20260914" defer></script>
+</body>
+</html>
