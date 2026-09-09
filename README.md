@@ -29,12 +29,12 @@ The site uses one runtime-generated header, one navigation drawer, and one foote
 
 ### Universal header
 
-Every page uses `/assets/images/icons/LS_HEADPHONES.png` as the Special Access Easter egg. The current universal header is intentionally shorter than the previous version while the headphone artwork is substantially larger:
+Every page uses `/assets/images/icons/LS_HEADPHONES.png` as the Special Access Easter egg. The universal header is intentionally compact while the headphone artwork is now substantially larger:
 
-- 96px desktop header
-- 88px narrow/mobile header
-- 68px desktop headphone artwork
-- 58px narrow/mobile headphone artwork
+- 90px desktop header
+- 82px narrow/mobile header
+- 84px desktop headphone artwork
+- 72px narrow/mobile headphone artwork
 - headphone image links to `/special_access.html`
 - universal hamburger/menu remains in the same global position
 
@@ -61,7 +61,7 @@ Do not add another global hamburger, side menu, or footer implementation.
 
 ## Releases Archive
 
-`release-catalog.json` remains the canonical release database and owns catalog order, release groups, release types, tracks, Spotify destinations, Apple Music destinations when known, and the SoundCloud exception for `Touching to the North`.
+`release-catalog.json` is the canonical release database and owns catalog order, release groups, release types, tracks, Spotify destinations, Apple Music destinations when known, and the SoundCloud exception for `Touching to the North`.
 
 The canonical order begins:
 
@@ -70,10 +70,15 @@ The canonical order begins:
 3. `I DID IT AGAIN`
 4. `Rescue You (Acoustic Version)`
 5. `Somewhere In-Between`
+6. `Black Glass`
+7. `Black Glass - Acoustic Version`
+8. `Hello Goodbye`
+
+The standalone `Black Glass - Acoustic Version` and `Don't Say It (Acoustic)` entries are explicitly included in the canonical order so they appear in the release archive and in **Singles Only**, while the parent EP/album cards retain their track listings.
 
 ### Release filters
 
-`releases.html` now has exactly two user-facing filters:
+`releases.html` has exactly two user-facing filters:
 
 1. **SORT BY**
    - Newest to Oldest — default
@@ -84,8 +89,6 @@ The canonical order begins:
    - Albums/EPs Only
 
 The default display follows the canonical catalog order. No legacy A→Z, Z→A, platform, or release-type sorting controls are exposed on the page.
-
-The page marks its own filter bar with `data-release-filter` so the universal compatibility layer does not inject a competing filter bar.
 
 ### Streaming links
 
@@ -98,14 +101,14 @@ Confirmed Apple Music destinations currently used include the LIL SYNN releases 
 `Touching to the North` is deliberately SoundCloud-only:
 
 ```text
-https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
+https://soundcloud.com/lilsynnofficial/sets/touching-to-north
 ```
 
 It must not imply Spotify or Apple Music availability.
 
 ## Homepage / The Latest Signals
 
-`site-polish.js` renders the `THE LATEST SIGNALS` section from the canonical release catalog. The section now places:
+`site-polish.js` renders the `THE LATEST SIGNALS` section from the canonical release catalog. The section places:
 
 - `VIEW RELEASE ARCHIVE`
 - `COMING SOON`
@@ -165,19 +168,20 @@ Before committing website changes:
 1. Inspect changed files.
 2. Review the complete diff.
 3. Confirm no unrelated files changed.
-4. Validate HTML/JS/CSS syntax where applicable.
+4. Validate HTML/JS/CSS/JSON syntax where applicable.
 5. Check console errors and failed network requests.
 6. Verify artwork, WebM, and audio assets.
 7. Verify the universal shell exists on every HTML page.
 8. Verify exactly one rendered header, one rendered side menu, and one rendered footer.
 9. Verify the headphone Easter egg routes to Special Access.
 10. Verify the release filters and default catalog order.
-11. Verify `Touching to the North` remains SoundCloud-only.
-12. Verify `COMING SOON` routes to `coming_soon.html`.
-13. Verify responsive behavior.
-14. Commit with a meaningful message.
-15. Confirm Vercel deploys the intended commit.
-16. Test the actual production site.
+11. Verify the standalone acoustic releases are present in the catalog and Singles Only view.
+12. Verify `Touching to the North` remains SoundCloud-only.
+13. Verify `COMING SOON` routes to `coming_soon.html`.
+14. Verify responsive behavior.
+15. Commit with a meaningful message.
+16. Confirm Vercel deploys the intended commit.
+17. Test the actual production site.
 
 A Vercel deployment being `READY` does **not** by itself prove visual or functional correctness.
 
