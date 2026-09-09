@@ -49,6 +49,25 @@ jobs:
           # Remove the old homepage-final-fixes loader. site-global.js is now canonical.
           s = re.sub(r'<script[^>]+src=["\'][^"\']*homepage-final-fixes\.js[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
 
+          # Remove legacy homepage shell CSS that depended on the old nav/menu implementation.
+          legacy_css_patterns = [
+              r':root\s*\{\s*--nav-height\s*:\s*72px\s*;\s*--nav-gap\s*:\s*0\.5rem\s*;\s*\}',
+              r'#home\s*\{[^}]*padding-top:\s*calc\(var\(--nav-height\).*?\}',
+              r'#bgVideo\s*\{[^}]*top:\s*var\(--nav-height\)[^}]*\}',
+              r'\.video-gradient-overlay\s*\{\s*z-index:\s*5;\s*pointer-events:\s*none;\s*\}',
+              r'\.neon-text\s*\{\s*text-shadow:\s*none\s*!important;\s*filter:\s*none\s*!important;\s*color:\s*#fff\s*!important;\s*\}',
+              r'section\s*\{\s*position:\s*relative;\s*z-index:\s*10;\s*\}',
+              r'#sideMenu>nav>div:has\(#socialsDropdown\)\{.*?\}',
+              r'#sideMenu #socialsDropdown\{.*?\}',
+              r'#sideMenu #socialsDropdown::-webkit-scrollbar\{.*?\}',
+              r'#sideMenu #socialsDropdown::-webkit-scrollbar-track\{.*?\}',
+              r'#sideMenu #socialsDropdown::-webkit-scrollbar-thumb\{.*?\}',
+              r'#sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover\{.*?\}',
+              r'@media\(max-width:640px\)\{nav \.flex\.items-center \.text-4xl\{.*?\}\s*nav \.max-w-7xl\{.*?\}\}',
+          ]
+          for pattern in legacy_css_patterns:
+              s = re.sub(pattern, '', s, flags=re.I | re.S)
+
           # Ensure the canonical universal shell is loaded exactly once.
           s = re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>', '', s, flags=re.I)
           marker = '<script src="/site-global.js?v=20260911"></script>'
@@ -57,18 +76,27 @@ jobs:
           if s != original:
               p.write_text(s, encoding='utf-8')
 
+      - name: Retire obsolete homepage fixer
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f homepage-final-fixes.js ]; then
+            rm homepage-final-fixes.js
+          fi
+
       - name: Commit source cleanup
         if: github.event_name == 'push'
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html; then
+          if git diff --quiet -- index.html homepage-final-fixes.js; then
             echo 'No legacy homepage shell changes needed.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html
+          git add -A index.html homepage-final-fixes.js
           git commit -m 'Remove legacy homepage shell from source'
           git push
 
