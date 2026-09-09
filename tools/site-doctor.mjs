@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -10,6 +11,8 @@ const htmlFiles=fs.readdirSync(root).filter(x=>x.endsWith('.html'));
 const jsFiles=[];
 const walk=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules'].includes(entry.name))continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')||entry.name.endsWith('.mjs'))jsFiles.push(full)}};
 walk(root);
+
+const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`lilsynn-inline-${process.pid}-${index}.js`);try{fs.writeFileSync(temp,code,'utf8');execFileSync(process.execPath,['--check',temp],{stdio:'pipe'})}catch{fail(`${file}: inline JavaScript syntax check failed (script ${index})`)}finally{try{fs.unlinkSync(temp)}catch{}}};
 
 for(const file of htmlFiles){
  const html=fs.readFileSync(path.join(root,file),'utf8');
@@ -24,6 +27,8 @@ for(const file of htmlFiles){
  if(canonicals.length>1)fail(`${file}: duplicate canonical links`);
  if(['archive.html','release.html','gallery.html','universe.html'].includes(file)&&!exists('release-catalog.json'))fail(`${file}: release catalog dependency missing`);
  if(!/<main\b/i.test(html))warn(`${file}: no main landmark found; verify accessibility intent`);
+ let inlineIndex=0;
+ for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(/\bsrc\s*=/.test(match[1]))continue;const code=match[2].trim();if(code)checkInlineScript(file,code,++inlineIndex)}
  for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
  if(/id=["']sideMenu["']|aria-label=["']Primary navigation["']|homepage-final-fixes\.js/i.test(html))fail(`${file}: legacy shell marker detected`);
 }
