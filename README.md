@@ -70,6 +70,8 @@ It owns:
 - Global `LS.png` top artwork
 - Global motion-loader coordination
 - Signal/experience loading when the page exposes `#signal`
+- Global skip navigation
+- Global MusicGroup structured data
 
 The shell is idempotent. Re-running initialization must not create duplicate global components.
 
@@ -168,7 +170,7 @@ Every release archive card can open its corresponding detail route without creat
 
 # 🚀 Phase 2 — Discovery + Streaming Conversion — COMPLETE
 
-Phase 2 is complete at the source-implementation level.
+Phase 2 established the discovery and streaming-conversion layer.
 
 The objective was:
 
@@ -212,6 +214,51 @@ No personal profiling layer. No chatbot designed to keep visitors away from stre
 
 ```text
 7cd9537f0eae22e5d650f130746cea32446f747f
+```
+
+---
+
+# 🚀 Phase 3 — Discoverability + Accessibility + Performance — COMPLETE
+
+Phase 3 hardened the existing experience without changing the streaming-first strategy.
+
+## Phase 3 capabilities
+
+### Discoverability
+
+- Global `MusicGroup` JSON-LD structured data
+- Release-specific `MusicAlbum` / `MusicRelease` structured data
+- Dynamic release canonical URLs
+- Release-specific Open Graph artwork
+- Release-specific titles and descriptions
+- Crawl-friendly release identity URLs
+
+### Accessibility
+
+- Global keyboard-accessible **Skip to main content** control
+- Automatic main-content target creation where needed
+- Existing visible focus system preserved
+- Existing keyboard navigation and Escape behavior preserved
+- Reduced-motion behavior preserved
+
+### Performance
+
+- Signal transmissions now use normal browser caching instead of forcing a fresh network fetch on every page load
+- Low-power and Save-Data behavior remains active
+- Existing lazy media and thumbnail-first strategies remain intact
+- No new framework or heavy client dependency was introduced
+
+### Phase 3 design law
+
+> **Make the existing experience easier to understand, easier to navigate, and cheaper for the browser to run.**
+
+Phase 3 completion commits:
+
+```text
+31fe7ae96e0d0f7c281484c40e947827eb4fac0e  global accessibility + structured data
+ a0dbff339edd103298c0c8100f03b9fa87bc2c24  release SEO metadata + structured data
+4ddb5b2555c1b080f158e2b678740aa5251b05d6  signal transmission caching
+ ef75807166f8de78b2adc99b3835a0c107b1a30a  skip navigation refinement
 ```
 
 ---
@@ -376,6 +423,18 @@ The 404 page was brought into the current global shell and cache-versioning arch
 
 `site-global.js` recognizes explicitly loaded canonical global CSS and avoids injecting a second copy.
 
+## Phase 3 accessibility hardening
+
+The global shell now provides a keyboard-accessible skip link to the page's primary `<main>` landmark without requiring every page to duplicate the control.
+
+## Phase 3 structured data hardening
+
+The shell provides global artist structured data, while `release.html` provides release-specific structured data and canonical/Open Graph identity after the catalog resolves.
+
+## Phase 3 caching hardening
+
+Signal transmissions now allow normal browser caching, reducing unnecessary repeat downloads while preserving the existing low-power path.
+
 ---
 
 # 🩺 Site Doctor
@@ -422,6 +481,7 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 - `LS.png` begins at the header boundary
 - No duplicate header/footer
 - Special Access remains in footer
+- Skip navigation is available to keyboard users
 
 ### Data
 
@@ -440,6 +500,7 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 - Global motion has one owner
 - THE CALM has one owner
 - Signal experience respects low-power settings
+- Signal transmissions can use browser caching
 
 ### Responsive
 
@@ -454,12 +515,25 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 ### Accessibility
 
 - Keyboard navigation
+- Skip navigation
 - Visible focus
 - Meaningful labels
 - Correct ARIA state
 - Escape-to-close
 - Body scroll locking
 - Reduced-motion support
+
+### SEO
+
+- Canonical URLs
+- Page-specific release canonical identity
+- Meta descriptions
+- Open Graph metadata
+- Release artwork metadata
+- MusicGroup structured data
+- Release structured data
+- Crawlable page structure
+- Sitemap coverage
 
 ### Production
 
@@ -486,7 +560,7 @@ Priorities:
 - Muted inline background video
 - Responsive media sizing
 - Explicit data manifests
-- Cache-aware shared assets
+- Browser caching where safe
 - Reduced-motion and low-power handling
 
 ---
@@ -495,7 +569,7 @@ Priorities:
 
 Accessibility is architectural.
 
-Preserve semantic controls, keyboard navigation, visible focus, meaningful labels, accurate ARIA state, Escape behavior, focus-friendly navigation, reduced-motion support, and responsive layouts without unnecessary overflow.
+Preserve semantic controls, keyboard navigation, skip navigation, visible focus, meaningful labels, accurate ARIA state, Escape behavior, focus-friendly navigation, reduced-motion support, and responsive layouts without unnecessary overflow.
 
 Every new interactive component should work without requiring a pointer.
 
@@ -508,10 +582,13 @@ The production system supports:
 - Canonical URLs
 - Meta descriptions
 - Open Graph metadata
+- Release-specific canonical URLs
+- Release-specific Open Graph artwork
+- Global MusicGroup structured data
+- Release MusicAlbum / MusicRelease structured data
 - Crawlable page structure
 - Sitemap coverage
 - Dedicated 404 handling
-- Release-specific dynamic metadata on `release.html`
 
 Page-specific identity remains the responsibility of each page while the global shell handles shared normalization.
 
@@ -527,6 +604,8 @@ Shared assets may use intentional version query parameters:
 ```
 
 Do not increment versions randomly. Cache invalidation should correspond to meaningful shared-asset changes.
+
+Dynamic Signal transmissions use normal browser caching because the data is small, non-personalized publishing content and does not require a forced network request on every visit.
 
 ---
 
@@ -607,6 +686,7 @@ Never solve a structural problem by stacking arbitrary CSS or duplicate systems 
 7. **Run broader repository validation.**
 8. **Deploy through the production pipeline.**
 9. **Check the real runtime.**
+10. **Update the README when a phase is completed.**
 
 ---
 
@@ -628,36 +708,6 @@ A production change is DONE only when applicable conditions are satisfied:
 ```
 
 A change that exists only in GitHub is **implemented**, not necessarily **production-verified**.
-
----
-
-# 📌 Current Project Status
-
-## Phase 1 — COMPLETE
-
-Phase 1 established the release-experience foundation, including dynamic `release.html`, release catalog resolution, archive-to-detail routing, streaming destination CTAs, artwork resolution, tracklist presentation, Signal foundation, Site Doctor, CI workflow, shell hardening, observer-loop fixes, asset corrections, and Special Access preservation.
-
-Phase 1 archive-link commit:
-
-```text
-be6237a64c4393c6f1c8172fa8050d08afc8f16d
-```
-
-## Phase 2 — COMPLETE
-
-Phase 2 established the discovery and streaming-conversion layer, including release navigation, related recommendations, streaming-first CTAs, dynamic release metadata, Signal transmissions, non-personalized Oracle discovery, direct official-platform pathways, cinematic reveals, and low-power behavior.
-
-Phase 2 completion commit:
-
-```text
-7cd9537f0eae22e5d650f130746cea32446f747f
-```
-
-## Phase 3 — NEXT
-
-Phase 3 is the **Discoverability + Accessibility + Performance hardening** phase.
-
-Its objective is to make the existing experience easier for search engines and assistive technology to understand while reducing unnecessary browser work, without changing the streaming-first strategy.
 
 ---
 
@@ -736,6 +786,7 @@ ZERO DUPLICATE SYSTEMS
 ROOT CAUSE OVER PATCHES
 STREAMING DESTINATIONS STAY PRIMARY
 VERIFY THE REAL RUNTIME
+UPDATE THE README WHEN A PHASE IS DONE
 ```
 
 ---
