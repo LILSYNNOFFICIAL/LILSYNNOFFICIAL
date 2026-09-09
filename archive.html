@@ -6,7 +6,6 @@
   <title>LIL SYNN | Archive Explorer</title>
   <meta name="description" content="Search and explore the complete LIL SYNN release archive by release, track, type, and streaming platform.">
   <link rel="canonical" href="https://lilsynn.com/archive.html">
-  <link rel="stylesheet" id="site-global-css" href="/site-global.css?v=20260914">
   <style>
     body{background:transparent;color:#fff}
     .archive-page{max-width:1180px;margin:0 auto;padding:150px 24px 80px}
@@ -35,7 +34,7 @@
     @media(max-width:600px){.archive-page{padding:132px 14px 55px}.controls{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.card{min-height:150px}}
     @media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
   </style>
-</head>
+<script src="/site-global.js?v=20260914" defer></script></head>
 <body>
   <main class="archive-page" id="main-content">
     <h1>ARCHIVE EXPLORER</h1>
@@ -115,6 +114,5 @@
     [typeEl,platformEl,sortEl].forEach(el=>el.addEventListener('change',render));
     fetch('/release-catalog.json',{cache:'default'}).then(r=>{if(!r.ok)throw new Error('catalog unavailable');return r.json()}).then(c=>{data=c;loadState();render()}).catch(()=>{results.className='';results.innerHTML='<div class="empty">Unable to load the release archive.</div>'});
   </script>
-  <script src="/site-global.js?v=20260914" defer></script>
-</body>
+  </body>
 </html>
