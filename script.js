@@ -183,3 +183,34 @@ if (!window.__lsSiteMotionLoaded) {
     }
   })();
 }
+
+/* LIL SYNN header banner positioning */
+(() => {
+  const addHeaderBanner = () => {
+    const header = document.querySelector('header.ls-header[data-ls-header]');
+    if (!header || header.querySelector('[data-ls-header-banner]')) return;
+    const banner = document.createElement('div');
+    banner.className = 'ls-header-banner-art';
+    banner.dataset.lsHeaderBanner = 'true';
+    banner.innerHTML = '<img src="/assets/img/Image%201%20-%20Homepage%20hero%20identity%20artwork.png" alt="" aria-hidden="true" decoding="async">';
+    header.insertBefore(banner, header.firstElementChild);
+
+    const style = document.createElement('style');
+    style.id = 'ls-header-banner-position';
+    style.textContent = `
+      .ls-header{background:rgba(4,4,7,.28)!important;overflow:hidden!important}
+      .ls-header-banner-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;overflow:hidden!important;pointer-events:none!important}
+      .ls-header-banner-art img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 78%!important}
+      .ls-header-inner{position:relative!important;z-index:1!important}
+      .ls-header-logo{z-index:2!important}
+      @media(max-width:640px){.ls-header-banner-art img{object-position:center 78%!important}}
+    `;
+    document.head.appendChild(style);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addHeaderBanner, { once: true });
+  } else {
+    addHeaderBanner();
+  }
+})();
