@@ -36,9 +36,9 @@ jobs:
           )
 
           # Remove the complete old side drawer. It contains nested div/nav elements,
-          # so this intentionally uses the final closing div immediately before #home.
+          # so match greedily up to the #home section that follows it.
           s = re.sub(
-              r'<div\s+id="sideMenu"\b[^>]*>.*?</div>\s*(?=<section\s+id="home"\b)',
+              r'<div\s+id="sideMenu"\b[^>]*>.*</div>\s*(?=<section\s+id="home"\b)',
               '', s, count=1, flags=re.I | re.S
           )
 
