@@ -1,599 +1,848 @@
 # LIL SYNN
 
-## Official Website Repository
+> **Official digital home of LIL SYNN.**
+>
+> A production-grade artist website built around a single global experience, canonical release data, media-driven presentation, and a deliberately controlled visual system.
 
-Production source for https://lilsynn.com.
+<p align="center">
+  <strong>Music • Releases • Videos • About • Merch • Lyrics • Contact</strong>
+</p>
 
-The site is deployed from `main` through Vercel.
+<p align="center">
+  <a href="https://lilsynn.com">Live Site</a> ·
+  <a href="https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL">Source</a>
+</p>
 
 ---
 
-## Architecture
+## Overview
 
-The site follows one core rule:
+This repository is the production source for **[LIL SYNN](https://lilsynn.com)**.
 
-> **One global shell, one navigation system, one canonical release database, one background-video system, and no competing implementations.**
+It is intentionally more than a collection of static pages. The site is organized as a small, browser-native publishing system where shared behavior, release metadata, artwork, streaming destinations, video presentation, and visual effects have clearly defined owners.
 
-| System | Responsibility |
+The guiding principle is simple:
+
+> **Build the system once. Make every page use the system. Keep the data authoritative.**
+
+That means the website should not solve the same problem in five different files. Shared behavior belongs in the shared layer. Release truth belongs in the release catalog. Presentation layers consume that truth without mutating it.
+
+---
+
+## Production Stack
+
+| Layer | Role |
 |---|---|
-| `index.html` | Homepage content and landing experience |
-| `site-global.js` | Canonical header, navigation, footer, shared controls, metadata, About accordion, shell behavior, release/video corrections |
-| `site-global.css` | Canonical shell styling, responsive layout, header positioning, controls, background presentation, release presentation |
-| `script.js` | Global randomized WebM background, homepage presentation, global release/video ordering and deduplication helpers |
-| `latest-videos.js` | Loads the canonical latest-video manifest, resolves videos against catalog order, deduplicates, and renders playable video cards |
-| `latest-videos.json` | Canonical YouTube Releases video manifest with IDs, titles, dates, and release names |
-| `music-random.js` | Catalog-derived music-card pool, artwork mapping, random selection, and the single RANDOMIZE control |
-| `site-polish.js` | Homepage-specific release/video presentation |
-| `release-catalog.json` | Canonical release order, groups, tracks, artwork and streaming destinations |
-| `releases.html` | Release archive presentation, filters, ordering, and artwork rendering |
-| `.github/workflows/fix-homepage.yml` | Source cleanup, WebM manifest generation, and architecture validation |
+| **HTML** | Page structure and semantic content |
+| **CSS** | Global visual system, responsive layout, shell styling |
+| **Vanilla JavaScript** | Interaction, rendering, media orchestration, shared behavior |
+| **JSON** | Canonical release and media manifests |
+| **GitHub** | Source control and production source of truth |
+| **Vercel** | Production deployment and delivery |
+| **GitHub Actions** | Automated cleanup, media manifest generation, and architecture validation |
+| **YouTube** | Latest Releases video source |
+| **Spotify / Apple Music / SoundCloud** | Streaming destinations |
+
+No framework is required for the core site experience. The architecture favors deterministic browser code, small focused modules, and explicit ownership over unnecessary abstraction.
+
+---
+
+# Architecture
+
+## The Source-of-Truth Model
+
+The most important architectural rule in the project is the separation between **data**, **behavior**, and **presentation**.
+
+```text
+                         ┌──────────────────────┐
+                         │ release-catalog.json │
+                         │   CANONICAL TRUTH    │
+                         └──────────┬───────────┘
+                                    │
+                ┌───────────────────┼───────────────────┐
+                │                   │                   │
+                ▼                   ▼                   ▼
+          Release Archive      Music Selection      Video Ordering
+                │                   │                   │
+                ▼                   ▼                   ▼
+            releases.html      music-random.js    latest-videos.js
+                │                   │                   │
+                └───────────────────┼───────────────────┘
+                                    ▼
+                              Global Experience
+                                    │
+                         site-global.js / CSS
+                                    │
+                                    ▼
+                              Every Page
+```
+
+### Canonical data
+
+`release-catalog.json` defines release order, release groupings, tracks, artwork relationships, and known streaming destinations.
+
+### Shared behavior
+
+`site-global.js`, `site-global.css`, and the global media layer provide behavior and presentation that should remain consistent across the site.
+
+### Page presentation
+
+Individual HTML pages render their own content while consuming the shared systems. A page should not create a competing version of a global feature simply because it needs to display it.
+
+---
+
+# Repository Map
+
+| File / Directory | Responsibility |
+|---|---|
+| `index.html` | Main artist landing page and homepage experience |
+| `releases.html` | Full release archive, filters, ordering, track presentation, artwork |
+| `site-global.js` | Canonical global shell, navigation, shared controls, metadata, accessibility behavior, defensive cleanup |
+| `site-global.css` | Canonical shell styling, responsive behavior, header, navigation, controls, shared visual presentation |
+| `script.js` | Global background media, homepage orchestration, ordering/deduplication safeguards, shared presentation helpers |
+| `music-random.js` | Catalog-driven music randomizer and music-card rendering |
+| `latest-videos.js` | Latest Releases video resolution, canonical ordering, deduplication, playback UI |
+| `latest-videos.json` | Resolved YouTube Releases manifest |
+| `release-catalog.json` | **Canonical release database** |
+| `site-polish.js` | Homepage-specific presentation refinements |
+| `assets/img/` | Artist artwork, release artwork, logos, imagery |
+| `assets/images/icons/` | Shared interface artwork and icon assets |
+| `assets/mov/` | Background WebM media |
+| `assets/other/sound/` | Shared audio assets |
+| `.github/workflows/fix-homepage.yml` | Automated source cleanup, media indexing, and validation |
 
 ---
 
 # Global Shell
 
-`site-global.js` is the authoritative global shell.
+`site-global.js` is the **single owner of the global site shell**.
 
-It owns:
+It is responsible for the shared experience used across pages, including:
 
-- Global header
+- Header
 - Primary navigation
 - Responsive navigation drawer
-- Socials group
-- Stream group
+- Social destinations
+- Streaming destinations
 - Footer
-- Special Access headphone link
-- THE CALM controller
+- Special Access
+- THE CALM
 - Back To Top
 - Shared metadata
 - About accordion behavior
-- Keyboard and Escape handling
+- Keyboard interaction
+- Escape-to-close behavior
 - Body scroll locking
 - Duplicate-shell cleanup
+- Defensive normalization of shared homepage systems where necessary
 
-Every page should use the same shell. There must not be page-specific copies of the global header, navigation, menu, footer, THE CALM control, or Back To Top control.
+## Global Shell Contract
 
-## Canonical loader
+Every page should consume the same global shell.
 
-```html
-<script src="/site-global.js?v=20260911"></script>
-```
+There must not be competing page-level implementations of:
 
-The source architecture removes obsolete homepage shell markup instead of allowing multiple competing shells to initialize.
+- The global header
+- The primary navigation
+- The navigation drawer
+- The footer
+- THE CALM
+- Back To Top
+- Shared shell controls
 
-Legacy items that must not return include:
-
-- `aria-label="Primary navigation"` page-level duplicate navigation
-- `#sideMenu`
-- `.site-headphones`
-- `assets/img/LS_HEADPHONES.png`
-- `homepage-final-fixes.js`
-- duplicate `site-global.js` loaders
-- obsolete homepage-only background-video markup
+If a shared feature needs to change, change the owner of that feature instead of creating another patch that competes with it.
 
 ---
 
-# Header
+# Header System
 
-The header is fixed to the viewport and spans the full width.
+The header is a **viewport-level global component**, not a page-specific decoration.
 
-Current layout logic:
-
-1. **Far left:** `LS_HEADPHONES.png`
-2. **Center:** `LS_LOGO.png`, absolutely centered independently of left controls
-3. **Bottom-left:** THE CALM control, pinned directly to the header's left edge
-4. **Right:** navigation toggle
-
-The header has no rounded outer corners and no left inset that would visually pull THE CALM away from the edge.
-
-The headphone control uses:
+The intended layout contract is:
 
 ```text
-/assets/images/icons/LS_HEADPHONES.png
+┌──────────────────────────────────────────────────────────┐
+│  SPECIAL ACCESS      CENTERED LS_LOGO             MENU  │
+│                                                          │
+│  THE CALM                                                │
+└──────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                     LS.png artwork
 ```
 
-Desktop headphone sizing is currently `175px × 175px`. Mobile is `145px × 145px`. The artwork is allowed to overflow the 150px desktop / 118px mobile header height so it can remain visually large.
+Key rules:
 
-The centered header logo is positioned with:
+1. The header begins at the very top of the viewport.
+2. The header spans the full viewport width.
+3. The header has enough vertical height to accommodate the visual system without creating an artificial inset.
+4. `LS_LOGO.png` is centered independently of the left-side controls.
+5. The logo can be enlarged without shifting the mathematical center of the header.
+6. Special Access remains anchored to its own artwork/control area.
+7. THE CALM is positioned independently and can remain attached to the actual left edge.
+8. `LS.png` begins immediately at the bottom boundary of the global header.
+9. Individual pages must not invent their own header offset when the global shell already owns it.
 
-```text
-left: 50%
-top: 50%
-transform: translate(-50%, -50%)
-```
-
-This keeps the logo mathematically centered even when the headphone control is enlarged.
-
-THE CALM is positioned with `left: 0` and is therefore attached to the actual left edge of the header rather than being placed inside the headphone control's layout flow.
-
-The clickable Special Access target is constrained to the headphone artwork box and opens `/special_access.html`.
+The critical idea is **independent positioning**. Changing the size of one control must not push another control out of alignment.
 
 ---
 
-# Navigation Stability
+# Navigation
 
-The site uses one responsive navigation drawer.
+The site uses one responsive navigation system.
 
-Primary navigation includes Home, Music, Releases, Videos, About, Merch, Lyrics, and Contact.
+Primary destinations include:
 
-Social and streaming destinations are grouped inside the same drawer.
+- Home
+- Music
+- Releases
+- Videos
+- About
+- Merch
+- Lyrics
+- Contact
 
-The drawer supports:
+Social and streaming destinations are presented within the shared navigation experience.
 
-- Responsive sizing
-- Internal scrolling
-- Keyboard use
+The navigation system is expected to support:
+
+- Desktop and mobile layouts
+- Internal scrolling where required
+- Keyboard navigation
 - Escape-to-close
-- ARIA state
+- Accessible expanded/collapsed state
 - Body scroll locking
-- No competing page-level menu
+- Responsive sizing
+- A single source of interaction truth
+
+Legacy duplicate navigation systems must not be reintroduced.
 
 ---
 
-# Global Background WebM System
+# Global Visual System
 
-Background videos live in:
+The site's visual language is intentionally dark, cinematic, atmospheric, and music-first.
+
+The global layer is responsible for consistency in:
+
+- Typography
+- Header geometry
+- Navigation presentation
+- Shared controls
+- Background treatment
+- Glass-style surfaces where used
+- Responsive spacing
+- Interactive states
+- Artwork presentation
+
+The site should feel like **one product**, not a collection of unrelated HTML pages.
+
+---
+
+# Background Motion System
+
+Background WebM assets live under:
 
 ```text
 /assets/mov/
 ```
 
-The GitHub Actions workflow generates:
+The build workflow generates:
 
 ```text
 /assets/mov/index.json
 ```
 
-from the `.webm` files currently in that directory.
+from the available `.webm` files.
 
-`script.js`:
+The global background system is responsible for:
 
-1. Creates or adopts the global background video.
-2. Moves it to the document-level background layer when necessary.
-3. Loads the WebM manifest.
-4. Selects one available WebM randomly.
-5. Plays it muted and inline.
-6. Covers the viewport with `object-fit: cover`.
-7. Places a dark overlay above the video and below page content.
+1. Creating or adopting the document-level background video.
+2. Loading the generated media manifest.
+3. Selecting an available WebM.
+4. Playing it muted and inline.
+5. Covering the viewport with the appropriate object-fit behavior.
+6. Maintaining a readable contrast layer between motion and page content.
+7. Falling back gracefully when the manifest cannot be loaded.
 
-If the manifest cannot be loaded, `BG_ANI.webm` is retained as the fallback.
+Adding a new WebM to `assets/mov/` should make it eligible after the media manifest is regenerated.
 
-Adding a new WebM to `assets/mov` makes it eligible for selection after the manifest is regenerated.
-
----
-
-# Global Top Artwork
-
-The global shell inserts `LS.png` directly below the fixed header as shared top artwork.
-
-The canonical asset is:
-
-```text
-/assets/img/LS.png
-```
-
-The old homepage copy is hidden/removed so the artwork does not appear twice.
-
-The top-art block owns the header offset. Individual pages should not add another large artificial header gap when the global top-art system already provides the visual offset.
+The background system should never become a page-specific duplicate.
 
 ---
 
 # THE CALM
 
-THE CALM is a global shell feature and must have one controller.
+**THE CALM** is a global experience control.
 
-Ambient audio source:
+Its ambient audio source is:
 
 ```text
 /assets/other/sound/Background.mp3
 ```
 
-The control belongs to the global header and is positioned independently from the headphones and centered logo.
+The controller belongs to the global shell and should have exactly one authoritative implementation.
 
-Shared media behavior prevents competing playback behavior where applicable.
+The architecture should prevent multiple page scripts from fighting over the same playback state.
 
 ---
 
 # Back To Top
 
-Back To Top is global and uses:
+Back To Top is a global control and uses:
 
 ```text
 /assets/images/icons/UP_ARROWS.png
 ```
 
-Individual pages must not create competing Back To Top controls.
+Individual pages should not add competing versions of the same control.
 
 ---
 
-# Music RANDOMIZE
+# Music System
 
-The homepage Music section contains exactly **one** RANDOMIZE control.
+## RANDOMIZE
 
-`music-random.js` owns the random music system.
+The homepage Music section uses one **RANDOMIZE** control.
 
-Its logic is:
+`music-random.js` owns the feature.
 
-1. Read `release-catalog.json`.
-2. Walk releases in canonical catalog order.
-3. Pull tracks from release group `tracks` arrays.
-4. Exclude SoundCloud-only `Touching to the North` entries from the Spotify-driven random pool.
-5. Resolve Spotify and artwork data from the catalog and artwork map.
-6. Deduplicate tracks before adding them to the pool.
-7. Select up to 8 tracks using a Fisher-Yates-style shuffle.
-8. Compare the candidate set with the previous set stored in `sessionStorage`.
-9. Retry selection when possible so the exact same set is not repeatedly displayed.
-10. Randomize the presentation order of the chosen cards.
-11. Render real music cards with artwork and streaming links.
+The randomizer follows a deterministic data pipeline:
 
-The catalog itself is never randomized or mutated. Randomization is presentation-only.
+```text
+release-catalog.json
+        ↓
+canonical release order
+        ↓
+track pool
+        ↓
+validation + deduplication
+        ↓
+random presentation selection
+        ↓
+music cards
+```
 
-There are defensive guards in both the global shell and `music-random.js` so duplicate `.discover-button` / RANDOMIZE controls are removed or ignored. The intended final state is one `.homepage-refinement` containing one `.discover-button`.
+The catalog itself is never randomized or mutated.
 
-The click handler also prevents duplicate listeners from causing multiple randomizations and can scroll the resulting music selection into view.
+The randomizer may:
+
+- Read the canonical release catalog
+- Build a playable track pool
+- Resolve artwork
+- Resolve streaming destinations
+- Exclude releases that are intentionally outside the supported streaming pool
+- Deduplicate tracks
+- Randomize presentation
+- Remember the previous session selection when useful
+
+The randomizer must not become a second release database.
+
+### Touching to the North
+
+`Touching to the North` is intentionally SoundCloud-only.
+
+Its tracks must not be silently promoted into Spotify/Apple Music presentation through generic fallback logic.
 
 ---
 
-# About Sections
+# Release Archive
 
-The About area uses expandable panels.
-
-When a section opens:
-
-- Its content becomes visible.
-- The page scrolls to the selected panel.
-- The global header offset is respected.
-- Other panels are closed.
-- An individual `×` close control is available inside the open panel.
-
-Keyboard and focus behavior must remain accessible.
-
----
-
-# Releases
-
-`release-catalog.json` is the canonical release database.
+`release-catalog.json` is the **canonical release database**.
 
 It owns:
 
 - Release order
+- Release types
 - Albums
 - EPs
 - Standalone singles
-- Track listings
-- Artwork mappings
+- Track order
+- Artwork relationships
 - Spotify destinations
 - Apple Music destinations
-- SoundCloud destinations and sets
+- SoundCloud destinations
+- SoundCloud sets where applicable
 
-`releases.html` owns presentation only.
+`releases.html` is responsible for **presentation**, not for redefining the catalog.
 
-## Canonical track order
+## Track Order
 
-Track rows come directly from each group's `tracks` array.
+Track rows should come directly from the catalog's `tracks` arrays.
 
-The renderer must not alphabetize, reverse, randomize, or otherwise mutate the catalog track arrays.
+The renderer must not silently:
 
-To change track order, edit `release-catalog.json`.
+- Alphabetize tracks
+- Reverse tracks
+- Randomize tracks
+- Mutate the canonical arrays
 
-## Canonical archive order
+If track order needs to change, change the catalog.
 
-The archive order comes from `release-catalog.json` `order`.
+## Archive Order
 
-The release renderer and global correction logic create maps/copies for presentation so the canonical catalog itself is never mutated.
+The canonical archive order is defined by the catalog's explicit ordering data.
+
+Presentation-level sorting is allowed for user-selected views, but it must not mutate canonical data.
 
 ## Filters
 
-`releases.html` provides:
-
-### Filter
+The release archive supports presentation-level filtering for:
 
 - All releases
 - Albums
 - EPs
 - Singles
 
-The default state is explicitly **All releases**.
-
-### Order
+Ordering views may include:
 
 - Catalog order
 - A → Z
 - Z → A
 
-Filtering and sorting are presentation-only.
-
-Albums and EPs remain grouped with their track lists. Standalone singles remain independently renderable and filterable.
+The default should remain the complete canonical archive unless explicitly changed by the user.
 
 ---
 
-# Release Artwork Logic
+# Release Identity & Streaming Integrity
 
-Standalone singles can render their own artwork.
+A release title is not enough to safely infer a streaming destination.
 
-`releases.html` maintains explicit artwork mappings where needed, including:
+**Exact release identity wins.**
 
-```text
-Signal Light Sermon (Remastered 2026)
-→ 39_lil_synn_signal_light_sermon___remastered_2026.jpg
-```
-
-`script.js` also contains the shared single-art mapping and a `prepareSingleArt()` guard that injects missing artwork into single cards when the release archive is reordered.
-
-The renderer never creates duplicate artwork assets to hide a path problem. When artwork is missing, verify the catalog, filename, and asset path.
-
----
-
-# Critical Release Separation
+This prevents a common class of production bugs where two similarly named releases accidentally inherit one another's links.
 
 ## Signal Light Sermon
 
-`Signal Light Sermon` is the track on:
+The `Signal Light Sermon` track associated with `Touching to the North` is a SoundCloud-only catalog entry.
 
-```text
-Touching to the North
-```
-
-It is SoundCloud-only.
-
-Required destinations:
-
-- SoundCloud: YES
-- Spotify: NO
-- Apple Music: NO
+It must not inherit the streaming destinations belonging to the separate remastered single.
 
 ## Signal Light Sermon (Remastered 2026)
 
-This is a separate standalone single.
+This is a separate standalone release with its own artwork and streaming destinations.
 
-It has its own artwork and its own streaming destinations.
+The two identities must remain separate in data, artwork, and links.
 
-Never reuse the standalone remastered release destinations for the album track.
+## Touching to the North
 
----
+This album is SoundCloud-only.
 
-# Touching to the North
+Allowed:
 
-`Touching to the North` is a SoundCloud-only album.
-
-Its set is:
-
-```text
-https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
-```
-
-It must never receive Spotify or Apple Music buttons through generic fallback logic.
-
-| Destination | Allowed |
+| Destination | Status |
 |---|---:|
-| SoundCloud track | Yes |
-| SoundCloud set | Yes |
-| Spotify | **No** |
-| Apple Music | **No** |
+| SoundCloud track | ✅ |
+| SoundCloud set | ✅ |
+| Spotify | ❌ |
+| Apple Music | ❌ |
+
+Generic streaming fallback logic must respect these release-level restrictions.
 
 ---
 
-# Streaming Rules
+# Artwork System
 
-Use exact catalog destinations when known.
+Artwork is treated as structured release data, not as an incidental filename.
 
-Never infer a streaming destination from a similar title.
+Where artwork is mapped explicitly, the renderer should consume that mapping rather than guessing from titles.
 
-Apple Music search fallback is permitted only where an exact direct destination is unavailable.
+When artwork fails to render, verify in this order:
 
-Release-specific restrictions override generic fallback behavior.
+1. Release identity
+2. Catalog mapping
+3. Actual filename
+4. Asset directory
+5. URL/path construction
+6. Renderer behavior
+
+Do not create duplicate assets or unrelated JavaScript patches merely to conceal an incorrect path.
 
 ---
 
 # Latest Videos
 
-The homepage Latest Videos system is driven by:
+The homepage Latest Videos experience is powered by:
 
 ```text
 latest-videos.json
 ```
 
-The manifest is a canonical resolved list of YouTube Releases videos with:
+The manifest contains resolved YouTube Releases information such as:
 
-- YouTube video ID
+- Video ID
 - Title
 - Published timestamp
-- Matching release name
+- Associated release
 
-The manifest is ordered according to the canonical release catalog. The YouTube Releases source is used to resolve video IDs, while the release catalog determines presentation order.
+The important architectural distinction is:
 
-`latest-videos.js` then:
+> **YouTube provides the video source. The release catalog controls release order.**
 
-1. Fetches `release-catalog.json` and `latest-videos.json` without relying on stale browser cache.
-2. Deduplicates the manifest by YouTube ID and normalized title.
-3. Walks the canonical catalog order.
-4. Matches a manifest video to each release using normalized title matching.
-5. Prevents reuse of an already-selected ID or title.
-6. Stops at the intended nine-video homepage limit.
-7. Renders one article card per unique video.
-8. Uses the YouTube thumbnail until the user presses play.
-9. Replaces the thumbnail card with a privacy-enhanced `youtube-nocookie.com` iframe when played.
+`latest-videos.js` is responsible for:
 
-`script.js` also contains a defensive `videoOrder()` observer. It removes duplicate cards by video ID/title and reorders remaining cards against `release-catalog.json` when another homepage system inserts or changes the cards.
+1. Loading the canonical release catalog.
+2. Loading the latest-video manifest.
+3. Avoiding stale cache where appropriate.
+4. Deduplicating by video identity and normalized title.
+5. Matching videos to canonical releases.
+6. Following catalog order rather than trusting source ordering.
+7. Preventing duplicate release/video selection.
+8. Rendering the intended homepage video count.
+9. Providing a thumbnail-first playback experience.
+10. Switching to a privacy-enhanced YouTube embed when the user chooses to play.
 
-This two-layer protection exists because multiple homepage systems can participate in rendering. The goal is that the user sees each video exactly once and in canonical release order.
+This means a YouTube source reorder should not silently reorder the site's release presentation.
 
----
+### Defensive ordering
 
-# Responsive Design
+Because multiple browser systems can participate in homepage rendering, defensive deduplication/order guards may exist in shared code as a safety net.
 
-The global shell must work across desktop, tablet, mobile, and narrow-mobile layouts.
-
-Current shell breakpoints preserve:
-
-- Desktop header height: `150px`
-- Mobile header height: `118px`
-- Desktop headphones: `175px × 175px`
-- Mobile headphones: `145px × 145px`
-- Centered desktop logo: `440px × 138px`
-- Mobile logo: `300px × 100px`
-- THE CALM: left edge at `0`
-
-The header controls are intentionally independent so changing headphone size cannot shift the centered logo.
-
-Pay particular attention to:
-
-- Header positioning
-- Far-left headphone alignment
-- Far-left THE CALM alignment
-- Center logo alignment
-- Navigation drawer sizing
-- Long navigation scrolling
-- Release filters
-- Track rows
-- Single artwork
-- RANDOMIZE control count
-- Latest Videos duplication
-- Background video coverage
-- Horizontal overflow
-
-Do not solve responsive problems by creating a second shell.
+Those guards are not a replacement for clear ownership. They exist to protect the final DOM from duplicate or out-of-order content.
 
 ---
 
 # Accessibility
+
+Accessibility is part of the architecture, not a final polish pass.
 
 Preserve:
 
 - Keyboard navigation
 - Visible focus states
 - Meaningful image alt text
-- `aria-expanded`
-- `aria-controls`
-- `aria-hidden`
-- Accessible icon labels
+- Correct `aria-expanded` state
+- Correct `aria-controls` relationships
+- Appropriate `aria-hidden` state
+- Accessible button labels
 - Escape-to-close behavior
-- Individual About close buttons
-- Reduced-motion behavior
-- Responsive layouts without unnecessary horizontal scrolling
+- Focus-friendly dialogs/drawers
+- Reduced-motion considerations
+- Responsive layouts without unnecessary horizontal overflow
+
+Any new interactive component should be usable without relying exclusively on a pointer or touch screen.
+
+---
+
+# Responsive Design
+
+The site must remain coherent across:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+- Narrow mobile widths
+
+Responsive work should preserve the global component model.
+
+### Important rule
+
+**Do not solve a responsive problem by creating another version of the global shell.**
+
+Instead:
+
+1. Identify the owning component.
+2. Adjust its responsive rules.
+3. Verify neighboring controls.
+4. Verify mobile overflow.
+5. Verify desktop alignment.
+
+The global header is especially sensitive because logo size, left-side controls, navigation, and top artwork all interact spatially.
 
 ---
 
 # GitHub Actions
 
-`.github/workflows/fix-homepage.yml` protects the architecture.
+The repository includes automation under:
 
-On pushes to `main`, it can:
+```text
+.github/workflows/fix-homepage.yml
+```
 
-1. Remove legacy homepage navigation.
-2. Remove the legacy side drawer.
-3. Remove stale global shell markup.
-4. Remove the obsolete homepage fixer.
-5. Remove obsolete homepage-only background-video elements.
-6. Ensure exactly one canonical `site-global.js` loader remains.
-7. Generate `assets/mov/index.json` from the current WebM files.
-8. Commit generated/source cleanup when required.
-9. Validate required files and media.
-10. Reject obsolete shell references across HTML pages.
-11. Validate canonical release data.
-12. Validate Special Access SEO.
-13. Validate sitemap coverage.
+The workflow acts as an architectural guardrail.
 
-The workflow is an architecture guardrail, not a substitute for real browser testing.
+Depending on the current implementation, it can handle tasks such as:
 
----
+- Removing obsolete homepage shell markup
+- Preventing duplicate navigation implementations
+- Removing stale legacy references
+- Ensuring the canonical global loader remains
+- Generating the WebM manifest
+- Validating required files and media
+- Checking release data integrity
+- Validating SEO-related files
+- Validating sitemap coverage
+- Committing generated changes when appropriate
 
-# Change Discipline
+Automation is intended to **protect the architecture**, not hide failures.
 
-When changing the site:
-
-1. Identify the system that owns the behavior.
-2. Fix that system instead of stacking another competing patch on top.
-3. Fetch the current file and blob SHA before replacing it.
-4. Preserve unrelated working behavior.
-5. Keep release data in `release-catalog.json`.
-6. Keep global shell behavior in `site-global.js` and `site-global.css`.
-7. Keep global background/motion behavior in `script.js`.
-8. Keep latest-video resolution/rendering in `latest-videos.js` and `latest-videos.json`.
-9. Keep music randomization in `music-random.js`.
-10. Keep homepage-specific presentation in its owning homepage systems.
-11. Never duplicate the global shell.
-12. Never reuse streaming links between distinct releases.
-13. Never add Spotify or Apple Music to `Touching to the North`.
-14. Never use the old headphone asset path.
-15. Never reintroduce `#sideMenu` or `.site-headphones`.
-16. Never bring back `homepage-final-fixes.js` as a competing shell loader.
-17. Never add a second RANDOMIZE control.
-18. Never allow duplicate Latest Video cards.
-19. Never claim browser or production verification unless it actually happened.
+A passing workflow does not automatically mean the site has been visually verified in a real browser.
 
 ---
 
-# QA Checklist
+# Deployment
 
-Before a significant change is considered complete:
+The production deployment path is:
+
+```text
+Developer change
+      ↓
+GitHub / main
+      ↓
+GitHub Actions
+      ↓
+Validation + generated assets
+      ↓
+Vercel
+      ↓
+https://lilsynn.com
+```
+
+The repository's `main` branch is the production source branch.
+
+When debugging production behavior, distinguish between:
+
+- Source code state
+- Generated asset state
+- GitHub Actions state
+- Vercel deployment state
+- Browser cache state
+- Runtime DOM state
+
+A fix is not considered production-verified simply because it exists in GitHub.
+
+---
+
+# Cache & Asset Strategy
+
+Shared JavaScript and CSS may use cache-busting version parameters when necessary.
+
+Example:
+
+```html
+<script src="/site-global.js?v=YYYYMMDD"></script>
+```
+
+When a shared asset changes and users may receive an older cached copy, update the appropriate cache-busting strategy rather than adding redundant scripts.
+
+For data files that must reflect the newest catalog state, fetch behavior should be chosen deliberately rather than assuming the browser will always deliver the desired version.
+
+---
+
+# Legacy Code Policy
+
+The project has accumulated iterative improvements over time. Some older implementations are specifically forbidden from returning because they compete with the canonical architecture.
+
+Do not reintroduce obsolete systems such as:
+
+- `#sideMenu`
+- `.site-headphones`
+- `homepage-final-fixes.js` as a competing global shell
+- Duplicate `site-global.js` loaders
+- Duplicate global navigation markup
+- Duplicate THE CALM controllers
+- Duplicate Back To Top controls
+- Obsolete homepage-only background-video implementations
+- Independent release databases that disagree with `release-catalog.json`
+
+If an old system appears necessary, first determine whether the canonical owner is missing functionality. Fix the owner before creating a second owner.
+
+---
+
+# Engineering Principles
+
+## 1. One owner per behavior
+
+Every meaningful behavior should have a clearly identifiable owner.
+
+## 2. Data is not presentation
+
+Canonical release data should not be mutated simply to support a UI sort or randomization.
+
+## 3. Deterministic software does deterministic work
+
+Sorting, filtering, deduplication, path resolution, validation, and DOM operations belong to normal code.
+
+## 4. Avoid patch stacking
+
+If three scripts are all correcting the same component, the architecture needs consolidation rather than a fourth script.
+
+## 5. Exact identity beats fuzzy inference
+
+Release-specific links, artwork, and media relationships should be resolved from explicit data whenever possible.
+
+## 6. Defensive code should remain defensive
+
+Observers and guards are useful when external or asynchronous systems can alter the DOM. They should not become the primary architecture.
+
+## 7. Preserve working behavior
+
+A change should solve the requested problem without casually rewriting unrelated systems.
+
+## 8. Verify what you actually verified
+
+Never describe a production change as browser-tested, Vercel-verified, or visually confirmed unless that verification actually occurred.
+
+---
+
+# Change Workflow
+
+Before modifying the site:
+
+1. **Identify the owner.**
+2. **Read the current implementation.**
+3. **Trace its dependencies.**
+4. **Make the smallest architectural change that solves the problem.**
+5. **Do not create a competing implementation.**
+6. **Preserve unrelated working behavior.**
+7. **Validate the data layer if the change touches releases/media.**
+8. **Check responsive behavior when touching layout.**
+9. **Check generated assets/workflows when applicable.**
+10. **Verify the actual deployed result before calling it production-complete.**
+
+---
+
+# Production QA Checklist
+
+## Global Shell
 
 - [ ] One global header
+- [ ] Header starts at the viewport top
+- [ ] Header spans the full width
+- [ ] Header geometry is consistent across pages
+- [ ] Center logo remains mathematically centered
+- [ ] Left-side controls do not shift the logo
+- [ ] Special Access remains correctly anchored
+- [ ] THE CALM remains correctly anchored
+- [ ] `LS.png` begins directly below the global header
 - [ ] One navigation drawer
 - [ ] One footer
 - [ ] One THE CALM controller
 - [ ] One Back To Top control
 - [ ] No legacy `#sideMenu`
 - [ ] No legacy `.site-headphones`
-- [ ] No old headphone asset path
-- [ ] Special Access target matches the headphone artwork box
-- [ ] Header touches the viewport edges as designed
-- [ ] Headphones are pinned far left
-- [ ] THE CALM is pinned to the absolute left edge
-- [ ] Center logo remains centered independently
-- [ ] Global `LS.png` appears once below the header
-- [ ] RANDOMIZE appears exactly once
-- [ ] RANDOMIZE produces real catalog-derived cards
-- [ ] Randomizer avoids the previous exact set when possible
-- [ ] About sections open and scroll correctly
-- [ ] About sections have individual `×` close buttons
-- [ ] Background WebM covers the entire page
-- [ ] Background WebM is selected randomly from `assets/mov`
-- [ ] WebM manifest is generated
-- [ ] Release track order follows catalog arrays
-- [ ] Release filter defaults to All releases
-- [ ] Release filtering works
-- [ ] Release ordering works
-- [ ] Albums render
-- [ ] EPs render
-- [ ] Singles render
-- [ ] Standalone single artwork renders where mapped
-- [ ] Touching to the North remains SoundCloud-only
-- [ ] Signal Light Sermon album track remains separate from the remastered single
-- [ ] Latest Videos uses `latest-videos.json`
-- [ ] Latest Videos follows canonical catalog order
-- [ ] Latest Videos contains no duplicate IDs
-- [ ] Latest Videos contains no duplicate normalized titles
-- [ ] Latest Videos renders no more than nine cards
-- [ ] Video playback replaces the thumbnail with a playable iframe
-- [ ] Mobile layout checked
-- [ ] Narrow-mobile layout checked
-- [ ] Production behavior claimed only when actually verified
+- [ ] No duplicate global script loaders
+
+## Music
+
+- [ ] Exactly one RANDOMIZE control
+- [ ] Randomizer reads canonical catalog data
+- [ ] Tracks are deduplicated
+- [ ] Catalog order is not mutated
+- [ ] Artwork resolves correctly
+- [ ] Streaming destinations remain release-specific
+- [ ] SoundCloud-only material is not promoted to unsupported platforms
+
+## Releases
+
+- [ ] Catalog is the source of truth
+- [ ] Track order matches catalog arrays
+- [ ] Archive order matches canonical order
+- [ ] All releases filter works
+- [ ] Albums filter works
+- [ ] EPs filter works
+- [ ] Singles filter works
+- [ ] A → Z works
+- [ ] Z → A works
+- [ ] Artwork resolves correctly
+- [ ] Similar release names do not share incorrect links
+
+## Videos
+
+- [ ] Latest Videos uses the manifest
+- [ ] Release catalog controls canonical order
+- [ ] Duplicate video IDs are removed
+- [ ] Duplicate titles are removed where appropriate
+- [ ] Video cards render once
+- [ ] Thumbnail-first playback works
+- [ ] YouTube playback uses the intended privacy-enhanced embed
+- [ ] Missing video data fails gracefully
+
+## Media
+
+- [ ] Background WebM manifest exists
+- [ ] Background selection works
+- [ ] Background covers the viewport
+- [ ] Foreground content remains readable
+- [ ] THE CALM audio source resolves
+- [ ] Reduced-motion behavior remains respected
+
+## Responsive / Accessibility
+
+- [ ] Desktop verified
+- [ ] Tablet verified
+- [ ] Mobile verified
+- [ ] Narrow mobile verified
+- [ ] No unintended horizontal overflow
+- [ ] Keyboard navigation works
+- [ ] Focus states remain visible
+- [ ] Escape closes the navigation drawer
+- [ ] ARIA state is synchronized
+- [ ] Interactive controls have accessible labels
+
+## Deployment
+
+- [ ] GitHub source updated
+- [ ] GitHub Actions completed successfully where applicable
+- [ ] Generated assets are current
+- [ ] Vercel deployment completed
+- [ ] Production URL serves the expected revision
+- [ ] Browser cache has been considered
+- [ ] Actual production behavior has been checked
 
 ---
 
-# Production Principle
+# Project Philosophy
 
-> **Build one correct system instead of stacking patches on top of an incorrect system.**
+The goal is not to make the codebase look complicated.
 
-If a global behavior is wrong, repair the global owner.
+The goal is to make the **experience** feel effortless.
 
-If release data is wrong, repair the catalog.
+Visitors should see an artist website that feels cohesive, intentional, fast, immersive, and unmistakably LIL SYNN.
 
-If homepage presentation is wrong, repair the homepage renderer.
+Behind that experience, the engineering should remain disciplined:
 
-If duplicate UI appears, trace every system that can create that UI and make ownership explicit.
+```text
+ONE SHELL
+ONE NAVIGATION SYSTEM
+ONE RELEASE DATABASE
+ONE MEDIA STRATEGY
+ONE OWNER PER BEHAVIOR
 
-Do not create another implementation to compete with the existing one.
+                    ↓
+
+          LESS CONFLICT
+          LESS DUPLICATION
+          LESS FRAGILITY
+          MORE CONTROL
+
+                    ↓
+
+              LIL SYNN
+```
 
 ---
 
-## Repository
+## Official Links
 
-**LIL SYNN Official Website**
+- **Website:** https://lilsynn.com
+- **TikTok:** https://www.tiktok.com/@lilsynnofficial
+- **GitHub:** https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL
 
-Production site: https://lilsynn.com
+---
 
-Branch: `main`
+## Maintainer Note
 
-Deployment: Vercel
+This repository is a live production system. Treat shared shell files, canonical JSON data, generated manifests, and deployment automation as infrastructure.
+
+When in doubt, do not add another patch.
+
+**Find the owner. Fix the owner. Keep the architecture clean.**
+
+---
+
+<p align="center">
+  <strong>LIL SYNN</strong><br>
+  <sub>Official Website • Production Source • Built to Evolve</sub>
+</p>
