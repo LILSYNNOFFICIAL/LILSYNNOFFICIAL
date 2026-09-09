@@ -101,7 +101,7 @@ Confirmed Apple Music destinations currently used include the LIL SYNN releases 
 `Touching to the North` is deliberately SoundCloud-only:
 
 ```text
-https://soundcloud.com/lilsynnofficial/sets/touching-to-north
+https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
 ```
 
 It must not imply Spotify or Apple Music availability.
