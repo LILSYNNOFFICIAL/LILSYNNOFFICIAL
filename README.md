@@ -160,17 +160,17 @@ The page resolves the requested release against `release-catalog.json` and deriv
 
 ### Phase 1 foundation
 
-Phase 1 introduced the dynamic release experience and connected archive cards to release detail pages.
+Phase 1 established the dynamic release experience and connected archive cards to release detail pages.
 
 Every release archive card can open its corresponding detail route without creating a second release data source.
 
 ---
 
-# 🚀 Phase 2 — Discovery + Streaming Conversion
+# 🚀 Phase 2 — Discovery + Streaming Conversion — COMPLETE
 
-**Phase 2 is the active discovery layer built on top of the Phase 1 release foundation.**
+Phase 2 is complete at the source-implementation level.
 
-The objective is simple:
+The objective was:
 
 > **Help visitors discover more LIL SYNN music while directing them outward to Spotify, Apple Music, SoundCloud, and YouTube.**
 
@@ -178,55 +178,21 @@ The website is a gateway to the streaming ecosystem, not a replacement for it.
 
 ## Phase 2 capabilities
 
-### 1. Release-to-release navigation
-
-Release detail pages now expose:
-
-- Previous release
-- Next release
-- More from the archive
+- Release-to-release navigation
+- Previous / next release routing
+- Related archive recommendations
 - Direct return to the complete release archive
 - Direct routes into Music and Latest Videos
-
-This creates a deterministic catalog journey instead of forcing visitors back to the archive after every release.
-
-### 2. Streaming-first calls to action
-
-Release experiences prioritize official outbound listening destinations.
-
-The architecture deliberately avoids replacing Spotify, Apple Music, SoundCloud, or YouTube with a proprietary on-site player that could reduce streaming activity.
-
-### 3. Signal / Transmission system
-
-`transmissions.json` provides non-personalized site updates and discovery content.
-
-`signal-engine.js` injects the Signal experience into pages containing `#signal`.
-
-Current capabilities include:
-
-- Live Frequency / The Signal cards
-- Release and visual transmissions
+- Strong streaming-first calls to action
+- Dynamic release metadata updates
+- Signal / transmission discovery
 - Non-personalized Signal Oracle
-- Random discovery recommendations
-- Direct outbound Spotify listening
-- Direct YouTube video discovery
-- Direct release archive discovery
+- Direct Spotify / Apple Music / SoundCloud / YouTube pathways
+- Cinematic reveal behavior
+- `prefers-reduced-motion` handling
+- Save-Data / slow-connection handling
 
-The Oracle is intentionally non-personalized. It does not build a behavioral profile or attempt to keep the visitor inside a chatbot experience.
-
-### 4. Cinematic reveals
-
-The Signal experience supports intersection-based reveal behavior while respecting:
-
-- `prefers-reduced-motion`
-- Save-Data
-- Slow mobile connections
-
-Low-power conditions disable unnecessary reveal work.
-
-### 5. Discovery without revenue cannibalization
-
-Phase 2 follows these rules:
+### Streaming conversion law
 
 ```text
 DISCOVER
@@ -240,7 +206,13 @@ GO TO OFFICIAL PLATFORM
 STREAM / WATCH
 ```
 
-The site should increase audience discovery and streaming conversion, not compete with the platforms that deliver the streams.
+No personal profiling layer. No chatbot designed to keep visitors away from streaming services. No proprietary player replacing official streaming destinations.
+
+### Phase 2 completion commit
+
+```text
+7cd9537f0eae22e5d650f130746cea32446f747f
+```
 
 ---
 
@@ -262,15 +234,7 @@ canonical release order
 Latest Videos UI
 ```
 
-The renderer owns:
-
-- Video deduplication
-- ID/title handling
-- Release identity matching
-- Canonical ordering
-- Intended video count
-- Thumbnail-first playback
-- Privacy-enhanced YouTube playback
+The renderer owns video deduplication, ID/title handling, release identity matching, canonical ordering, thumbnail-first playback, and privacy-enhanced YouTube playback.
 
 > **YouTube supplies video data. The release catalog controls release ordering.**
 
@@ -402,16 +366,7 @@ The old header headphones element was removed. `LS_HEADPHONES.png` now belongs t
 
 ## Special Access regression
 
-The archive player was accidentally removed during shell cleanup, caught during audit, and restored with:
-
-- Track cards
-- Queue
-- Previous / play / next
-- Progress seeking
-- Volume
-- Auto-next-track
-- Load-error handling
-- Enter / Space keyboard activation
+The archive player was accidentally removed during shell cleanup, caught during audit, and restored with track cards, queue, previous/play/next, progress seeking, volume, auto-next-track, load-error handling, and Enter/Space keyboard activation.
 
 ## 404 alignment
 
@@ -419,7 +374,7 @@ The 404 page was brought into the current global shell and cache-versioning arch
 
 ## Global stylesheet duplication
 
-`site-global.js` now recognizes explicitly loaded canonical global CSS and avoids injecting a second copy.
+`site-global.js` recognizes explicitly loaded canonical global CSS and avoids injecting a second copy.
 
 ---
 
@@ -680,25 +635,7 @@ A change that exists only in GitHub is **implemented**, not necessarily **produc
 
 ## Phase 1 — COMPLETE
 
-Phase 1 established the release-experience foundation:
-
-- Dynamic `release.html`
-- Release catalog resolution
-- Archive-to-detail routing
-- Streaming destination CTAs
-- Release artwork resolution
-- Tracklist presentation
-- Global Signal/experience foundation
-- Signal transmissions
-- Signal Oracle
-- Cinematic reveal system
-- Low-power handling
-- Site Doctor
-- Site Doctor GitHub Actions workflow
-- Global shell hardening
-- Observer-loop fixes
-- Asset reference fixes
-- Special Access preservation
+Phase 1 established the release-experience foundation, including dynamic `release.html`, release catalog resolution, archive-to-detail routing, streaming destination CTAs, artwork resolution, tracklist presentation, Signal foundation, Site Doctor, CI workflow, shell hardening, observer-loop fixes, asset corrections, and Special Access preservation.
 
 Phase 1 archive-link commit:
 
@@ -706,31 +643,21 @@ Phase 1 archive-link commit:
 be6237a64c4393c6f1c8172fa8050d08afc8f16d
 ```
 
-Commit message:
+## Phase 2 — COMPLETE
+
+Phase 2 established the discovery and streaming-conversion layer, including release navigation, related recommendations, streaming-first CTAs, dynamic release metadata, Signal transmissions, non-personalized Oracle discovery, direct official-platform pathways, cinematic reveals, and low-power behavior.
+
+Phase 2 completion commit:
 
 ```text
-feat: link release archive cards to detail experiences
+7cd9537f0eae22e5d650f130746cea32446f747f
 ```
 
-## Phase 2 — IN PROGRESS / IMPLEMENTED FOUNDATION
+## Phase 3 — NEXT
 
-Phase 2 currently contains the discovery and conversion foundation:
+Phase 3 is the **Discoverability + Accessibility + Performance hardening** phase.
 
-- Release-to-release navigation
-- Previous / next release routing
-- Related archive recommendations
-- Stronger streaming-first CTAs
-- Dynamic release metadata updates
-- Signal / transmission discovery
-- Non-personalized Oracle discovery
-- Direct Spotify / Apple Music / SoundCloud / YouTube pathways
-- Reduced-motion and low-power discovery behavior
-
-### Phase 2 design law
-
-> **The website should make people want to listen, then send them where the listening happens.**
-
-No personal profiling layer. No chatbot designed to keep visitors away from streaming services. No proprietary player replacing official streaming destinations.
+Its objective is to make the existing experience easier for search engines and assistive technology to understand while reducing unnecessary browser work, without changing the streaming-first strategy.
 
 ---
 
@@ -767,7 +694,8 @@ LILSYNNOFFICIAL/
 │   ├── art.js
 │   ├── latest-youtube-releases.js
 │   ├── spotify-art.js
-│   └── youtube.js
+│   ├── youtube.js
+│   └── ...
 │
 ├── assets/
 │   ├── img/LS.png
