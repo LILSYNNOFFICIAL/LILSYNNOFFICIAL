@@ -47,12 +47,10 @@ jobs:
 
               keep_first(r"<meta\b[^>]*\bname=[\"']description[\"'][^>]*>")
               keep_first(r"<link\b[^>]*\brel=[\"']canonical[\"'][^>]*>")
-
               s = re.sub(r"<link\b[^>]*\bhref=[\"']/site-global\.css(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
               s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*</script>\s*", '', s, flags=re.I)
               s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
-
-              shell = f'<script src="/site-global.js?v={VERSION}" defer></script>'
+              shell = f'<script src="/site-global.js?v={VERSION}"></script>'
               s = re.sub(r'</head>', shell + '</head>', s, count=1, flags=re.I)
               return s
 
