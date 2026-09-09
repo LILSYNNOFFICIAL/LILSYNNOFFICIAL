@@ -101,7 +101,7 @@ jobs:
           test -f release-catalog.json
           test -f sitemap.xml
           test -f assets/mov/index.json
-          test -f assets/mov/LG_BG_STARS.webm
+          test -f assets/mov/LS_BG_STARS.webm
           test -f assets/images/icons/LS_HEADPHONES.png
           test -f assets/images/icons/UP_ARROWS.png
           test -f "assets/images/icons/album_art/Never Known_album_cover.jpg"
