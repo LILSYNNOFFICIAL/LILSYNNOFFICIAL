@@ -27,6 +27,7 @@ jobs:
 
           VERSION = '20260914'
           # Shell transparency refinement: keep the header and footer lighter over the cinematic background.
+          # Discovery polish: keep listening destinations focused on Spotify, Apple Music, and YouTube.
           root = Path('.')
 
           def update(path, transform):
@@ -84,6 +85,11 @@ jobs:
               return re.sub(r'<a href="/special_access\.html">Special Access</a>', '', s, count=1)
           update('site-global.js', footer)
 
+          def release_detail(s):
+              s = s.replace("add('SOUNDCLOUD',group?.soundcloud||catalog.soundcloud?.[title]);", "add('YOUTUBE','https://www.youtube.com/@LILSYNNOFFICIAL');")
+              return s
+          update('release.html', release_detail)
+
       - name: Generate WebM manifest
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
         shell: python
@@ -123,6 +129,8 @@ jobs:
           test -f script.js
           test -f music-random.js
           test -f latest-videos.js
+          test -f latest-releases.js
+          test -f site-polish.js
           test -f release-catalog.json
           test -f assets/mov/LS_BG_STARS.webm
           test -f assets/mov/index.json
