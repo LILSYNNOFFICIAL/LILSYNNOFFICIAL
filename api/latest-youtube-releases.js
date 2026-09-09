@@ -25,9 +25,6 @@ export default async function handler(req,res){
     const channelId=cb.items?.[0]?.id;
     if(!channelId)throw new Error('LIL SYNN YouTube channel was not found');
 
-    // Music artists need the YouTube Releases tab as the source of truth.
-    // Do not replace this with the uploads playlist. The Releases tab contains
-    // the music releases that YouTube Music associates with the artist.
     const browse=await fetch('https://www.youtube.com/youtubei/v1/browse?prettyPrint=false',{
       method:'POST',
       headers:{'Content-Type':'application/json','User-Agent':'Mozilla/5.0','Accept-Language':'en-US,en;q=0.9'},
@@ -40,33 +37,35 @@ export default async function handler(req,res){
     collectReleasePlaylists(data,playlistIds,new Set());
     if(!playlistIds.length)throw new Error('YouTube Releases tab returned no release playlists');
 
-    const items=await Promise.all(playlistIds.slice(0,20).map(async playlistId=>{
-      const q=new URLSearchParams({part:'snippet,contentDetails',playlistId,maxResults:'50',key:API_KEY});
-      const r=await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?${q}`,{cache:'no-store'});
-      const body=await r.json();
-      if(!r.ok||body.error)throw new Error(`Release playlist ${playlistId} failed: ${body.error?.message||r.status}`);
-      return body.items||[];
-    }));
+    // Each YouTube Releases card represents a release playlist. The index page
+    // must mirror that release-card order, not flatten every album track and
+    // then sort the tracks by a publication timestamp.
+    const releases=[];
+    for(const playlistId of playlistIds.slice(0,20)){
+      const pq=new URLSearchParams({part:'snippet',id:playlistId,key:API_KEY});
+      const pr=await fetch(`https://www.googleapis.com/youtube/v3/playlists?${pq}`,{cache:'no-store'});
+      const pb=await pr.json();
+      if(!pr.ok||pb.error)throw new Error(`Release playlist ${playlistId} failed: ${pb.error?.message||pr.status}`);
+      const playlist=pb.items?.[0];
+      if(!playlist)continue;
 
-    // IMPORTANT: Do not sort the resulting music releases by videos.snippet.publishedAt.
-    // YouTube Music/Release playlists can expose refreshed or regenerated publication
-    // metadata for music releases. The Releases tab/playlist ordering is the source
-    // of truth for which release YouTube currently presents as newest.
-    const videos=[];
-    const seenVideos=new Set();
-    for(const list of items){
-      for(const item of list){
-        const id=item?.contentDetails?.videoId;
-        const publishedAt=item?.contentDetails?.videoPublishedAt||item?.snippet?.publishedAt;
-        if(id&&/^[A-Za-z0-9_-]{11}$/.test(id)&&publishedAt&&!seenVideos.has(id)){
-          seenVideos.add(id);
-          videos.push({id,title:item?.snippet?.title||id,publishedAt});
-        }
-      }
+      const iq=new URLSearchParams({part:'snippet,contentDetails',playlistId,maxResults:'1',key:API_KEY});
+      const ir=await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?${iq}`,{cache:'no-store'});
+      const ib=await ir.json();
+      if(!ir.ok||ib.error)throw new Error(`Release playlist ${playlistId} items failed: ${ib.error?.message||ir.status}`);
+      const item=ib.items?.[0];
+      const id=item?.contentDetails?.videoId;
+      if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id))continue;
+      releases.push({
+        id,
+        title:playlist.snippet?.title||item?.snippet?.title||id,
+        publishedAt:item?.contentDetails?.videoPublishedAt||item?.snippet?.publishedAt||null
+      });
+      if(releases.length===9)break;
     }
 
-    if(!videos.length)throw new Error('The YouTube Releases playlists returned no videos');
-    return send(videos.slice(0,9),true);
+    if(!releases.length)throw new Error('The YouTube Releases tab returned no release videos');
+    return send(releases,true);
   }catch(error){
     return send([],false,error.message);
   }
