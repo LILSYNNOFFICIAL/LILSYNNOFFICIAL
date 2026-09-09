@@ -11,7 +11,7 @@ const load=async()=>{
   if(!signal||signal.dataset.signalReady)return;
   signal.dataset.signalReady='1';
   let data;
-  try{const r=await fetch('/transmissions.json',{cache:'no-store'});if(!r.ok)throw Error('transmission fetch failed');data=await r.json()}catch{return}
+  try{const r=await fetch('/transmissions.json',{cache:'default'});if(!r.ok)throw Error('transmission fetch failed');data=await r.json()}catch{return}
   const items=Array.isArray(data?.transmissions)?data.transmissions:[];
   const wrap=document.createElement('div');
   wrap.className='ls-signal-experience';
@@ -29,6 +29,6 @@ const load=async()=>{
   const title=wrap.querySelector('[data-oracle-title]'),body=wrap.querySelector('[data-oracle-body]'),button=wrap.querySelector('[data-oracle-button]');
   button.addEventListener('click',()=>{const choice=oracle[Math.floor(Math.random()*oracle.length)];title.textContent=choice[0];body.innerHTML=choice[1];let link=wrap.querySelector('[data-oracle-link]');if(!link){link=document.createElement('a');link.className='cta-primary';link.dataset.oracleLink='1';button.insertAdjacentElement('afterend',link)}link.href=choice[2];link.textContent=choice[3];if(choice[2].startsWith('http')){link.target='_blank';link.rel='noopener noreferrer'}else{link.removeAttribute('target');link.removeAttribute('rel')} });
 };
-const reveal=()=>{if(lowPower||!('IntersectionObserver'in window))return;const els=document.querySelectorAll('section,.ls-signal-card,.ls-oracle');els.forEach(e=>e.classList.add('ls-reveal'));const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ls-revealed');io.unobserve(e.target)}}),{threshold:.08});els.forEach(e=>io.observe(e))};
+const reveal=()=>{if(lowPower||!('IntersectionObserver'in window))return;const els=document.querySelectorAll('section,.ls-signal-card,.ls-oracle');els.forEach(e=>e.classList.add('ls-reveal'));const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ls-revealed');io.unobserve(e.target)}}),{threshold:.08});els.forEach(e=>io.observe(e));};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{load();reveal()},{once:true});else{load();reveal()}
 })();
