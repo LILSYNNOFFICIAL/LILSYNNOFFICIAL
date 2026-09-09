@@ -47,10 +47,12 @@ jobs:
           s=re.sub(r'<video\b[^>]*\bid=["\']bg["\'][^>]*>.*?</video>','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<div\b[^>]*\bid=["\']ov["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<nav\b[^>]*\bclass=["\'][^"\']*\bnav\b[^"\']*["\'][^>]*>.*?</nav>','',s,count=1,flags=re.I|re.S)
-          s=re.sub(r'<div\b[^>]*\bid=["\']menu["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
+          s=re.sub(r'<div\b[^>]*\bid=["\']menu["\'][^>]*>.*?(?=<header\b[^>]*\bclass=["\'][^"\']*\bhero\b)','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<footer\b[^>]*\bclass=["\'][^"\']*site-footer[^"\']*["\'][^>]*>.*?</footer>','',s,count=1,flags=re.I|re.S)
           s=re.sub(r'<link[^>]+rel=["\']canonical["\'][^>]*>','',s,flags=re.I)
           s=re.sub(r'<meta[^>]+name=["\']description["\'][^>]*>','',s,flags=re.I)
+          s=re.sub(r'<link[^>]+href=["\']/site-global\.css(?:\?[^"\']*)?["\'][^>]*>','',s,flags=re.I)
+          s=re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>','',s,flags=re.I)
           head='<meta name="description" content="LIL SYNN Special Access archive for exclusive recordings, alternate versions, visuals, and unreleased material."><link rel="canonical" href="https://lilsynn.com/special_access.html"><link rel="stylesheet" href="/site-global.css?v=20260911"><script src="/site-global.js?v=20260911"></script>'
           s=s.replace('</head>',head+'</head>',1)
           if s!=original:p.write_text(s,encoding='utf-8')
