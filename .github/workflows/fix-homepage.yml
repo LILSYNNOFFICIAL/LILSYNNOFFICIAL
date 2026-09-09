@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Remove legacy homepage shell
+      - name: Remove legacy homepage shell and normalize background video
         if: github.event_name == 'push'
         shell: python
         run: |
@@ -29,18 +29,11 @@ jobs:
           s = p.read_text(encoding='utf-8')
           original = s
 
-          # Remove the old fixed primary navigation regardless of incidental Tailwind formatting.
-          s = re.sub(
-              r'<nav\b[^>]*\baria-label=["\']Primary navigation["\'][^>]*>.*?</nav>',
-              '', s, count=1, flags=re.I | re.S
-          )
+          # Remove the old fixed primary navigation regardless of incidental formatting.
+          s = re.sub(r'<nav\b[^>]*\baria-label=["\']Primary navigation["\'][^>]*>.*?</nav>', '', s, count=1, flags=re.I | re.S)
 
-          # Remove the complete old side drawer. It contains nested elements, so consume
-          # everything from its opening tag through the closing div immediately before #home.
-          s = re.sub(
-              r'<div\b[^>]*\bid=["\']sideMenu["\'][^>]*>.*?(?=<section\b[^>]*\bid=["\']home["\'])',
-              '', s, count=1, flags=re.I | re.S
-          )
+          # Remove the complete old side drawer before the homepage hero.
+          s = re.sub(r'<div\b[^>]*\bid=["\']sideMenu["\'][^>]*>.*?(?=<section\b[^>]*\bid=["\']home["\'])', '', s, count=1, flags=re.I | re.S)
 
           # Remove any remaining legacy top-level header/footer blocks.
           s = re.sub(r'<header(?![^>]*data-ls-header)[^>]*>.*?</header>', '', s, flags=re.I | re.S)
@@ -49,26 +42,24 @@ jobs:
           # Remove the obsolete homepage fixer loader if a stale copy exists.
           s = re.sub(r'<script[^>]+src=["\'][^"\']*homepage-final-fixes\.js[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
 
-          # Remove legacy homepage shell CSS that depended on the old nav/menu implementation.
+          # Remove the old in-home hero video element. The global motion layer now owns it.
+          s = re.sub(r'<video\b[^>]*\bid=["\']bgVideo["\'][^>]*>.*?</video>', '', s, count=1, flags=re.I | re.S)
+
+          # Remove stale legacy shell CSS that explicitly targeted the old header/menu implementation.
           legacy_css_patterns = [
               r':root\s*\{\s*--nav-height\s*:\s*72px\s*;\s*--nav-gap\s*:\s*0\.5rem\s*;\s*\}',
               r'#home\s*\{[^}]*padding-top:\s*calc\(var\(--nav-height\).*?\}',
               r'#bgVideo\s*\{[^}]*top:\s*var\(--nav-height\)[^}]*\}',
               r'\.video-gradient-overlay\s*\{\s*z-index:\s*5;\s*pointer-events:\s*none;\s*\}',
-              r'\.neon-text\s*\{\s*text-shadow:\s*none\s*!important;\s*filter:\s*none\s*!important;\s*color:\s*#fff\s*!important;\s*\}',
               r'section\s*\{\s*position:\s*relative;\s*z-index:\s*10;\s*\}',
-              r'#sideMenu>nav>div:has\(#socialsDropdown\)\{.*?\}',
-              r'#sideMenu #socialsDropdown\{.*?\}',
-              r'#sideMenu #socialsDropdown::-webkit-scrollbar\{.*?\}',
-              r'#sideMenu #socialsDropdown::-webkit-scrollbar-track\{.*?\}',
-              r'#sideMenu #socialsDropdown::-webkit-scrollbar-thumb\{.*?\}',
-              r'#sideMenu #socialsDropdown::-webkit-scrollbar-thumb:hover\{.*?\}',
+              r'#sideMenu[^}]*\}',
+              r'\.site-headphones[^}]*\}',
               r'@media\(max-width:640px\)\{nav \.flex\.items-center \.text-4xl\{.*?\}\s*nav \.max-w-7xl\{.*?\}\}',
           ]
           for pattern in legacy_css_patterns:
               s = re.sub(pattern, '', s, flags=re.I | re.S)
 
-          # Ensure the canonical universal shell is loaded exactly once.
+          # Ensure exactly one canonical universal shell loader.
           s = re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>', '', s, flags=re.I)
           marker = '<script src="/site-global.js?v=20260911"></script>'
           s = s.replace('</head>', marker + '</head>', 1)
@@ -83,19 +74,29 @@ jobs:
           set -euo pipefail
           rm -f homepage-final-fixes.js
 
-      - name: Commit source cleanup
+      - name: Generate randomized WebM manifest
+        if: github.event_name == 'push'
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          videos=sorted([p.name for p in Path('assets/mov').glob('*.webm') if p.is_file()], key=str.lower)
+          Path('assets/mov/index.json').write_text(json.dumps(videos, indent=2) + '\n', encoding='utf-8')
+          print(f'Indexed {len(videos)} WebM background videos.')
+
+      - name: Commit source cleanup and media manifest
         if: github.event_name == 'push'
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html homepage-final-fixes.js; then
-            echo 'No legacy homepage shell changes needed.'
+          if git diff --quiet -- index.html homepage-final-fixes.js assets/mov/index.json; then
+            echo 'No source cleanup or video manifest changes needed.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A index.html homepage-final-fixes.js
-          git commit -m 'Remove legacy homepage shell from source'
+          git add -A index.html homepage-final-fixes.js assets/mov/index.json
+          git commit -m 'Normalize homepage shell and background video manifest'
           git push
 
       - name: Validate required source and media assets
@@ -110,8 +111,9 @@ jobs:
           test -f latest-videos.js
           test -f release-catalog.json
           test -f sitemap.xml
-          test -f assets/mov/BG_ANI.webm
-          test -f assets/mov/HERO_BG_WEBM.webm
+          test -f assets/mov/index.json
+          test -f "assets/images/icons/LS_HEADPHONES.png"
+          test -f "assets/images/icons/UP_ARROWS.png"
           test -f "assets/images/icons/album_art/Never Known_album_cover.jpg"
           test -f "assets/images/icons/album_art/home_acoustic_version.png"
           test -f "assets/images/icons/album_art/I DID IT AGAIN.jpg"
@@ -125,7 +127,10 @@ jobs:
           ! grep -q 'class="site-headphones"' index.html
           ! grep -q 'assets/img/LS_HEADPHONES.png' index.html
           ! grep -q 'homepage-final-fixes.js' index.html
+          ! grep -q 'id="bgVideo"' index.html
           ! grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .
+          ! grep -Rni --exclude-dir=.git --include='*.html' 'aria-label="Primary navigation"' .
+          ! grep -Rni --exclude-dir=.git --include='*.html' 'id="sideMenu"' .
 
       - name: Validate universal shell reference
         shell: bash
@@ -160,4 +165,4 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -c "import json; from pathlib import Path; data=json.loads(Path('release-catalog.json').read_text(encoding='utf-8')); expected=['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']; assert data.get('order',[])[:3]==expected, data.get('order',[])[:3]; assert all(data.get('spotify',{}).get(t) and data.get('apple',{}).get(t) for t in expected); print('Canonical release catalog validation passed.')"
+          python3 -c "import json; from pathlib import Path; data=json.loads(Path('release-catalog.json').read_text(encoding='utf-8')); expected=['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']; assert data.get('order',[])[:3]==expected, data.get('order',[])[:3]; assert all(data.get('spotify',{}).get(t) and data.get('apple',{}).get(t) for t in expected); assert 'Touching to the North' in data.get('groups',{}); print('Canonical release catalog validation passed.')"
