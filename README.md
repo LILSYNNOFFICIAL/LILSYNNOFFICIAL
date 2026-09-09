@@ -4,756 +4,860 @@
 
 ### THE OFFICIAL DIGITAL HOME OF LIL SYNN
 
-[![Live Site](https://img.shields.io/badge/🌐_Live_Site-lilsynn.com-D4AF37?style=for-the-badge&labelColor=0B0B0B)](https://lilsynn.com)
-[![GitHub](https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
-[![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
+[![Live Site](https://img.shields.io/badge/🌐_LIVE_SITE-lilsynn.com-D4AF37?style=for-the-badge&labelColor=050505)](https://lilsynn.com)
+[![Source](https://img.shields.io/badge/SOURCE-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 [![CI](https://img.shields.io/github/actions/workflow/status/LILSYNNOFFICIAL/LILSYNNOFFICIAL/fix-homepage.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions)
-[![Last Commit](https://img.shields.io/github/last-commit/LILSYNNOFFICIAL/LILSYNNOFFICIAL?style=for-the-badge&label=Last%20Commit)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/commits/main)
+[![Last Commit](https://img.shields.io/github/last-commit/LILSYNNOFFICIAL/LILSYNNOFFICIAL?style=for-the-badge&label=LAST%20COMMIT)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/commits/main)
+[![Repo Size](https://img.shields.io/github/repo-size/LILSYNNOFFICIAL/LILSYNNOFFICIAL?style=for-the-badge&label=REPO%20SIZE)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 
 <br>
 
-**A cinematic, media-driven artist platform engineered as a unified browser-native experience.**
+**A cinematic, browser-native artist platform engineered as one unified digital experience.**
 
-Music · Releases · Videos · About · Merch · Lyrics · Contact
+`MUSIC` · `RELEASES` · `VIDEOS` · `ABOUT` · `MERCH` · `LYRICS` · `CONTACT`
 
 <br>
 
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS3">
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
-<img src="https://img.shields.io/badge/JSON-000000?style=flat-square&logo=json&logoColor=white" alt="JSON">
-<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub">
-<img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/Vanilla_JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=111111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![JSON](https://img.shields.io/badge/JSON-000000?style=flat-square&logo=json&logoColor=white)](https://www.json.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com/)
 
 </div>
 
 ---
 
-## ◈ What This Is
+## ◈ Executive Summary
 
-This repository is the **production source** for the official LIL SYNN website.
+This repository is the **production source of truth** for the official LIL SYNN website.
 
-It is not just a pile of static pages. The site is structured as a small, browser-native publishing platform with explicit ownership for global UI, release metadata, artwork, streaming destinations, video presentation, media manifests, accessibility, and deployment automation.
+It is deliberately engineered as a lightweight publishing platform rather than a collection of unrelated pages. The site combines static HTML, global browser-native JavaScript, a centralized CSS shell, structured JSON data, media manifests, artwork assets, API endpoints, and GitHub automation into one controlled system.
 
-The architecture is built around one principle:
+The architectural doctrine is:
 
-> **Build the system once. Make every page use the system. Keep the data authoritative.**
+> **One shell. One source of truth. Explicit ownership. Deterministic rendering. Production verification.**
 
-That principle prevents the most expensive class of frontend maintenance bugs: multiple implementations of the same feature slowly drifting apart.
+The goal is not maximum framework complexity. The goal is maximum control over a fast, cinematic artist experience.
 
 ---
 
-## ⚡ Production Snapshot
+## ⚡ Production Control Panel
 
-| System | Status | Owner |
+| Domain | State | Canonical Owner |
 |---|:---:|---|
-| Global shell | 🟢 Production | `site-global.js` |
-| Global styling | 🟢 Production | `site-global.css` |
-| Release database | 🟢 Canonical | `release-catalog.json` |
-| Release archive | 🟢 Production | `releases.html` |
-| Music randomizer | 🟢 Production | `music-random.js` |
-| Latest Videos | 🟢 Production | `latest-videos.js` + manifest |
-| Background motion | 🟢 Production | `script.js` + `/assets/mov/` |
-| THE CALM | 🟢 Production | Global shell |
-| Back To Top | 🟢 Production | Global shell |
-| Responsive UI | 🟢 Production | Global CSS |
-| Accessibility | 🟢 Required | Global + page layers |
-| CI / automation | 🟢 Active | GitHub Actions |
-| Deployment | 🟢 Production | Vercel |
+| Global shell | 🟢 | `site-global.js` |
+| Global CSS | 🟢 | `site-global.css` |
+| Release truth | 🟢 | `release-catalog.json` |
+| Release archive | 🟢 | `releases.html` |
+| Music randomization | 🟢 | `music-random.js` |
+| Latest Releases videos | 🟢 | `latest-videos.js` + manifest |
+| Background motion | 🟢 | `script.js` + `assets/mov/` |
+| Ambient audio | 🟢 | THE CALM / global shell |
+| Back To Top | 🟢 | global shell |
+| SEO / metadata | 🟢 | page + global systems |
+| Accessibility | 🟢 | global + page layers |
+| Automation | 🟢 | GitHub Actions |
+| Production delivery | 🟢 | Vercel |
+
+> **Important:** repository state, CI state, deployment state, browser cache state, and runtime DOM state are separate systems. A commit is not visual proof of a production fix.
 
 ---
 
-# ✦ Architecture
+# 🧬 System Architecture
 
-## The Three-Layer Rule
+## The Core Model
 
-The website deliberately separates **data**, **behavior**, and **presentation**.
+The site is organized around three primary concerns:
 
 ```text
-                         ┌─────────────────────────┐
-                         │  release-catalog.json   │
-                         │   ★ CANONICAL TRUTH ★   │
-                         └────────────┬────────────┘
-                                      │
-               ┌──────────────────────┼──────────────────────┐
-               │                      │                      │
-               ▼                      ▼                      ▼
-       RELEASE ARCHIVE          MUSIC RANDOMIZER        VIDEO ORDERING
-               │                      │                      │
-               ▼                      ▼                      ▼
-        releases.html           music-random.js       latest-videos.js
-               │                      │                      │
-               └──────────────────────┼──────────────────────┘
-                                      ▼
-                           ┌─────────────────────┐
-                           │   GLOBAL EXPERIENCE │
-                           │ JS + CSS + MEDIA    │
-                           └──────────┬──────────┘
-                                      ▼
-                                EVERY PAGE
+┌──────────────────────────────────────────────────────────────┐
+│                         DATA LAYER                           │
+│                                                              │
+│                  release-catalog.json                        │
+│                  latest-videos.json                          │
+│                  media manifests                            │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                       BEHAVIOR LAYER                         │
+│                                                              │
+│ site-global.js │ script.js │ music-random.js │ latest-videos │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     PRESENTATION LAYER                       │
+│                                                              │
+│ HTML │ site-global.css │ page CSS │ assets │ media           │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+                    ┌────────────────────┐
+                    │  EVERY PAGE / DOM  │
+                    └────────────────────┘
 ```
 
-### Data
+### Architectural law
 
-`release-catalog.json` is the authoritative source for release identity, ordering, tracks, artwork relationships, and known streaming destinations.
-
-### Behavior
-
-Shared JavaScript owns global interactions and reusable systems. Feature-specific modules own their own deterministic pipelines.
-
-### Presentation
-
-HTML pages render content while consuming the shared systems. Pages must not quietly reinvent global behavior.
+**Presentation may consume data. Behavior may derive views from data. Neither should silently redefine canonical truth.**
 
 ---
 
-# ◇ Repository Map
+# 👑 Global Shell Architecture
 
-```text
-LILSYNNOFFICIAL/
-│
-├── index.html                 # Main artist landing page
-├── releases.html              # Canonical release archive UI
-│
-├── site-global.js             # ★ Global shell owner
-├── site-global.css            # ★ Global visual system
-├── script.js                  # Global media + homepage orchestration
-├── site-polish.js             # Homepage presentation refinements
-├── music-random.js             # Catalog-driven music randomizer
-│
-├── latest-videos.js            # Latest Releases video renderer
-├── latest-videos.json          # Resolved YouTube Releases manifest
-├── release-catalog.json        # ★ CANONICAL RELEASE DATABASE
-│
-├── assets/
-│   ├── img/                    # Artist + release artwork
-│   ├── images/icons/           # Shared interface artwork
-│   ├── mov/                    # Background WebM media
-│   └── other/sound/            # Shared audio assets
-│
-└── .github/
-    └── workflows/
-        └── fix-homepage.yml    # Automation + architecture guardrails
-```
+`site-global.js` is the **single authoritative owner of the shared site shell**.
 
----
+It injects and normalizes the global experience across pages, including:
 
-# 🧠 Global Shell Contract
-
-`site-global.js` is the **single owner of the global site shell**.
-
-It controls the shared experience across pages, including:
-
-- Header
-- Primary navigation
-- Responsive navigation drawer
+- Global header
+- Navigation drawer
+- Navigation groups
 - Social destinations
 - Streaming destinations
 - Footer
-- Special Access
 - THE CALM
 - Back To Top
-- Shared metadata
+- Shared metadata normalization
 - About accordion behavior
 - Keyboard interaction
 - Escape-to-close behavior
 - Body scroll locking
-- Duplicate-shell cleanup
-- Defensive normalization where required
+- Duplicate shell cleanup
+- Global top artwork insertion
+- Global media-loader coordination
 
-### 🚫 No Duplicate Global Systems
-
-There must never be competing implementations of:
+### Shell lifecycle
 
 ```text
-HEADER
-NAVIGATION
-NAVIGATION DRAWER
-FOOTER
-THE CALM
-BACK TO TOP
-GLOBAL SHELL CONTROLS
+PAGE LOAD
+   │
+   ▼
+site-global.js
+   │
+   ├── inject global CSS
+   ├── normalize metadata
+   ├── remove competing legacy shell nodes
+   ├── create global header
+   ├── create global footer
+   ├── attach global top artwork
+   ├── initialize navigation
+   ├── initialize Back To Top
+   ├── bind THE CALM
+   ├── initialize About controls
+   └── load global motion system
 ```
 
-If a global feature needs to change, modify its owner. Do not create another implementation and hope the browser chooses the right one.
+The shell is designed to be **idempotent**: running the initialization path should not produce multiple global headers, multiple footers, or duplicate shared controls.
 
 ---
 
-# 👑 Header Architecture
+# 👑 Header Geometry Contract
 
-The header is a **viewport-level global component**, not a page-specific decoration.
+The header architecture is intentionally simple and precise.
 
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│ SPECIAL ACCESS        ┌──────────────┐              MENU     │
-│                       │  LS_LOGO.png │                       │
-│                       └──────────────┘                       │
-│                                                              │
-│ THE CALM                                                     │
-└──────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│                                                                │
+│                  ┌──────────────────────┐                      │
+│                  │     LS_LOGO.png      │                      │
+│                  │   TRUE CENTER AXIS   │                      │
+│                  └──────────────────────┘                      │
+│                                                                │
+│ THE CALM                                           ☰ MENU      │
+└────────────────────────────────────────────────────────────────┘
                               │
+                              │ EXACT BOUNDARY
                               ▼
-                         LS.png artwork
+                    ┌────────────────────┐
+                    │      LS.png        │
+                    │   GLOBAL TOP ART   │
+                    └────────────────────┘
 ```
+
+### What is actually global
+
+The header contains:
+
+- `LS_LOGO.png` as the centered brand mark
+- `THE CALM` positioned independently at the lower-left area
+- The hamburger navigation control at the right
+
+### What is **NOT** in the header
+
+**Special Access does not belong in the header.**
+
+`LS_HEADPHONES.png` is the Special Access artwork and is currently part of the **footer experience**, where it links to `/special_access.html`.
+
+This distinction is intentional and is now documented as a hard architectural rule.
 
 ### Header invariants
 
-1. Header begins flush with the top of the viewport.
-2. Header spans the full viewport width.
-3. Header has intentional vertical height rather than artificial page offset.
-4. `LS_LOGO.png` is mathematically centered independently of side controls.
-5. Logo scaling must not change the true center position.
-6. Special Access remains independently anchored.
-7. THE CALM remains independently positioned.
-8. `LS.png` begins exactly at the bottom boundary of the global header.
-9. Pages do not add their own header compensation when the shell already owns the geometry.
-10. Responsive rules belong to the global shell, not individual page hacks.
-
-This independent-positioning model prevents one control from pushing another control out of alignment.
+1. The header begins flush at the viewport top.
+2. The header spans the viewport width.
+3. `LS_LOGO.png` remains mathematically centered.
+4. Logo scaling does not allow side controls to push the center axis.
+5. THE CALM is positioned independently from the logo.
+6. The menu control is positioned independently from the logo.
+7. `LS.png` begins directly at the header's bottom boundary.
+8. No page invents a competing header offset.
+9. Mobile geometry is controlled by the global shell.
+10. Header changes must be verified at desktop and mobile widths.
 
 ---
 
-# 🎬 Global Motion System
+# 🎧 Special Access / Footer Identity
 
-Background motion lives under:
-
-```text
-/assets/mov/
-```
-
-The build workflow generates:
+The Special Access entry point uses:
 
 ```text
-/assets/mov/index.json
+/assets/images/icons/LS_HEADPHONES.png
 ```
 
-The global background system:
+Its current architectural home is the **global footer**, not the header.
 
-1. Creates or adopts the document-level background video.
-2. Loads the generated media manifest.
-3. Selects an available WebM.
-4. Plays it muted and inline.
-5. Uses cover-style viewport presentation.
-6. Maintains readable contrast behind foreground content.
-7. Falls back gracefully when media cannot be resolved.
+```text
+GLOBAL FOOTER
+      │
+      ├── LIL
+      │
+      ├── LS_HEADPHONES.png
+      │        │
+      │        └── /special_access.html
+      │
+      └── SYNN
+```
 
-Adding a new `.webm` to `assets/mov/` makes it eligible after the manifest is regenerated.
+The footer artwork is therefore both a visual identity element and a navigation affordance.
 
-**One background system. One owner. No page-specific clones.**
+Do not move `LS_HEADPHONES.png` into the header unless the global shell architecture is intentionally redesigned.
 
 ---
 
-# 🌙 THE CALM
+# 🖼 Global Top Artwork
 
-THE CALM is a global ambient experience control.
+`LS.png` is not treated as ordinary page content.
 
-Audio source:
+The global shell creates a dedicated top-art container immediately after the header:
 
 ```text
-/assets/other/sound/Background.mp3
+<header class="ls-header">
+        │
+        ▼
+<div class="ls-global-top-art">
+        │
+        └── /assets/img/LS.png
+</div>
+        │
+        ▼
+page content
 ```
 
-The controller belongs to the global shell and maintains one authoritative playback state across the site.
+This gives the artwork a predictable relationship to the header across pages.
+
+The intended rule is:
+
+> **Header ends → LS.png begins → page content follows.**
+
+No arbitrary top margin should be required to visually reconnect those pieces.
 
 ---
 
-# ⬆ Back To Top
-
-Global Back To Top uses:
+# 🗺 Repository Topology
 
 ```text
-/assets/images/icons/UP_ARROWS.png
+LILSYNNOFFICIAL/
+│
+├── index.html
+├── releases.html
+├── 404.html
+├── privacy.html
+├── terms.html
+├── special_access.html
+│
+├── site-global.js              ← GLOBAL SHELL
+├── site-global.css             ← GLOBAL VISUAL SYSTEM
+├── script.js                   ← GLOBAL MOTION / HOMEPAGE
+├── site-polish.js              ← HOMEPAGE REFINEMENT
+├── music-random.js             ← MUSIC PRESENTATION ENGINE
+├── latest-videos.js             ← VIDEO PRESENTATION ENGINE
+│
+├── release-catalog.json        ← ★ CANONICAL RELEASE TRUTH
+├── latest-videos.json          ← RESOLVED VIDEO MANIFEST
+│
+├── api/
+│   ├── apple-art.js
+│   ├── art.js
+│   ├── latest-youtube-releases.js
+│   ├── spotify-art.js
+│   └── youtube.js
+│
+├── assets/
+│   ├── img/
+│   │   └── LS.png
+│   ├── images/
+│   │   └── icons/
+│   │       ├── LS_HEADPHONES.png
+│   │       ├── LS_LOGO.png
+│   │       ├── UP_ARROWS.png
+│   │       └── album_art/
+│   ├── mov/
+│   └── other/sound/
+│       └── Background.mp3
+│
+└── .github/
+    └── workflows/
+        ├── fix-homepage.yml
+        └── update-latest-videos.yml
 ```
-
-Pages should not create competing versions of this control.
 
 ---
 
-# 🎵 Music Engine
+# 💿 Canonical Release Data Architecture
 
-## RANDOMIZE
+`release-catalog.json` is the **single source of truth** for release identity and ordering.
 
-The homepage Music section uses a single catalog-driven **RANDOMIZE** feature.
+It currently models:
+
+- Explicit release order
+- Release groups
+- Album / EP / single type information
+- Track arrays
+- Streaming destinations
+- Artwork relationships
+- SoundCloud sets
+- Release-specific restrictions
 
 ```text
-release-catalog.json
-        ↓
-canonical release data
-        ↓
-track pool
-        ↓
-validation + deduplication
-        ↓
-random presentation selection
-        ↓
-music cards
+                    release-catalog.json
+                             │
+          ┌──────────────────┼──────────────────┐
+          ▼                  ▼                  ▼
+       RELEASES            TRACKS          DESTINATIONS
+          │                  │                  │
+          ▼                  ▼                  ▼
+     Archive UI        Music Randomizer    Stream Links
+          │                  │                  │
+          └──────────────────┼──────────────────┘
+                             ▼
+                        PRESENTATION
 ```
 
-`music-random.js` may:
+### Data ownership rule
 
-- Read canonical release data
-- Build a playable track pool
-- Resolve artwork
-- Resolve approved streaming destinations
-- Exclude intentionally restricted releases
-- Deduplicate tracks
-- Randomize presentation
-- Preserve useful session state
+If release order changes, change the catalog.
 
-It must **never become a second release database**.
+If track order changes, change the catalog.
 
-### SoundCloud-only content
+If a streaming destination changes, change the catalog.
+
+If artwork mapping changes, change the authoritative mapping.
+
+Do not bury canonical data inside presentation JavaScript.
+
+---
+
+# 🔐 Release Identity Integrity
+
+Release matching must be identity-aware.
+
+A title string alone is not a safe foreign key because releases can share names or have remastered variants.
+
+### Required behavior
+
+```text
+Exact identity
+     ↓
+Resolve release metadata
+     ↓
+Resolve artwork
+     ↓
+Resolve streaming destinations
+     ↓
+Render presentation
+```
+
+### Signal Light Sermon separation
+
+The `Signal Light Sermon` associated with `Touching to the North` must remain distinct from `Signal Light Sermon (Remastered 2026)`.
+
+They are separate catalog identities and must not inherit one another's artwork or streaming links.
+
+### Touching to the North
 
 `Touching to the North` is intentionally SoundCloud-only.
 
-Generic streaming fallback logic must respect that restriction rather than manufacturing Spotify or Apple Music destinations.
-
----
-
-# 💿 Release Archive
-
-`release-catalog.json` is the **single canonical release database**.
-
-It owns:
-
-- Release order
-- Release types
-- Albums
-- EPs
-- Singles
-- Track order
-- Artwork relationships
-- Spotify destinations
-- Apple Music destinations
-- SoundCloud destinations
-- SoundCloud sets where applicable
-
-`releases.html` is a renderer and presentation layer. It does not redefine catalog truth.
-
-### Track order
-
-Track rows come directly from each catalog `tracks` array.
-
-The renderer must not silently alphabetize, reverse, randomize, or mutate canonical track arrays.
-
-### Archive order
-
-Explicit catalog ordering is authoritative. User-facing sort controls may change presentation without mutating the source data.
-
-Supported presentation filters include:
-
-- All
-- Albums
-- EPs
-- Singles
-
-Ordering views may include:
-
-- Catalog order
-- A → Z
-- Z → A
-
----
-
-# 🔐 Release Identity & Streaming Integrity
-
-A release title alone is not enough to safely infer a streaming destination.
-
-> **Exact release identity wins.**
-
-This prevents similarly named releases from accidentally inheriting one another's links or artwork.
-
-## Signal Light Sermon
-
-The `Signal Light Sermon` entry associated with `Touching to the North` remains a SoundCloud-only catalog identity.
-
-It must not inherit destinations belonging to the separate remastered release.
-
-## Signal Light Sermon (Remastered 2026)
-
-This is a separate standalone release with its own artwork and streaming destinations.
-
-## Touching to the North
-
-| Destination | Allowed |
+| Destination | Policy |
 |---|:---:|
 | SoundCloud track | ✅ |
 | SoundCloud set | ✅ |
 | Spotify | ❌ |
 | Apple Music | ❌ |
 
+Generic fallback logic must respect explicit release restrictions.
+
 ---
 
-# 🖼 Artwork Integrity
+# 🎵 Music Presentation Engine
 
-Artwork is structured release data, not a filename guessing game.
+`music-random.js` owns homepage RANDOMIZE behavior.
 
-When an explicit mapping exists, the renderer should consume that mapping.
-
-If artwork fails:
+It derives a playable presentation pool from canonical release data.
 
 ```text
-1. Verify release identity
-2. Verify catalog mapping
-3. Verify exact filename
-4. Verify asset directory
-5. Verify generated URL/path
-6. Verify renderer behavior
+CANONICAL CATALOG
+       │
+       ▼
+DERIVED TRACK POOL
+       │
+       ▼
+VALIDATE
+       │
+       ▼
+DEDUPLICATE
+       │
+       ▼
+APPLY RELEASE RESTRICTIONS
+       │
+       ▼
+RANDOMIZE PRESENTATION
+       │
+       ▼
+RENDER MUSIC CARDS
 ```
 
-Do not create duplicate assets or random JavaScript patches to hide a broken source mapping.
+The critical distinction is:
+
+> **Random presentation is allowed. Randomized canonical data is not.**
 
 ---
 
-# 📺 Latest Releases Videos
+# 📺 Latest Releases Video Architecture
 
-The homepage Latest Videos system is powered by:
+Latest Videos uses two cooperating sources:
 
 ```text
-latest-videos.json
+YouTube API / resolver
+          │
+          ▼
+ latest-videos.json
+          │
+          ├──────────────┐
+          ▼              ▼
+   video identity    publication data
+          │              │
+          └──────┬───────┘
+                 ▼
+       latest-videos.js
+                 │
+                 ▼
+        release-catalog.json
+                 │
+                 ▼
+       CANONICAL RELEASE ORDER
+                 │
+                 ▼
+          HOMEPAGE VIDEO UI
 ```
 
-The manifest contains resolved YouTube Releases metadata such as:
+### Ownership rule
 
-- Video ID
-- Title
-- Published timestamp
-- Associated release
+> **YouTube provides video source data. The release catalog controls release ordering.**
 
-### Ownership model
-
-> **YouTube provides the video source. The release catalog controls release order.**
-
-`latest-videos.js` is responsible for:
-
-1. Loading canonical release data.
-2. Loading the video manifest.
-3. Avoiding stale cache where appropriate.
-4. Deduplicating by video identity and normalized title.
-5. Matching videos to canonical releases.
-6. Following release-catalog order.
-7. Preventing duplicate release/video selection.
-8. Rendering the intended video count.
-9. Providing thumbnail-first playback.
-10. Switching to a privacy-enhanced YouTube embed when playback is requested.
-
-A source reorder on YouTube must not silently rewrite the site's canonical release presentation.
+The renderer is responsible for deduplication, identity matching, ordering, intended video count, thumbnail-first playback, and privacy-enhanced playback behavior.
 
 ---
 
-# ♿ Accessibility Contract
+# 🎬 Global Motion Pipeline
 
-Accessibility is an architectural requirement.
-
-Preserve:
-
-- Keyboard navigation
-- Visible focus states
-- Meaningful image alt text
-- Correct `aria-expanded` state
-- Correct `aria-controls` relationships
-- Appropriate `aria-hidden` state
-- Accessible button labels
-- Escape-to-close behavior
-- Focus-friendly drawers and dialogs
-- Reduced-motion considerations
-- Responsive layouts without unnecessary horizontal overflow
-
-New interactive components must not depend exclusively on pointer or touch input.
-
----
-
-# 📱 Responsive Engineering
-
-The experience must remain coherent across:
-
-`Desktop` · `Laptop` · `Tablet` · `Mobile` · `Narrow Mobile`
-
-### Golden rule
-
-> **Never solve a responsive problem by creating another version of the global shell.**
-
-Instead:
-
-1. Identify the owning component.
-2. Adjust its responsive rules.
-3. Verify neighboring controls.
-4. Verify mobile overflow.
-5. Verify desktop alignment.
-
-The global header is particularly sensitive because logo geometry, controls, navigation, and top artwork interact spatially.
-
----
-
-# 🤖 GitHub Actions
-
-Automation lives under:
+Background WebM media lives under:
 
 ```text
-.github/workflows/fix-homepage.yml
+/assets/mov/
 ```
 
-The workflow acts as an architectural guardrail and can handle responsibilities such as:
-
-- Removing obsolete homepage shell markup
-- Preventing duplicate navigation implementations
-- Removing stale legacy references
-- Preserving the canonical global loader
-- Generating the WebM media manifest
-- Validating required files and media
-- Checking release data integrity
-- Validating SEO-related files
-- Validating sitemap coverage
-- Committing generated changes when appropriate
-
-Automation should protect the architecture, not conceal failures.
-
-A green workflow is not the same thing as browser-level visual verification.
-
----
-
-# 🚀 Deployment Pipeline
+The generated manifest is:
 
 ```text
-┌──────────────────┐
-│ Developer Change │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│   GitHub / main  │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ GitHub Actions   │
-│ Validation / CI  │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ Generated Assets │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│     Vercel       │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│   lilsynn.com    │
-└──────────────────┘
+/assets/mov/index.json
 ```
 
-`main` is the production source branch.
-
-When diagnosing production behavior, distinguish between:
-
-- Source state
-- Generated asset state
-- GitHub Actions state
-- Vercel deployment state
-- Browser cache state
-- Runtime DOM state
-
-A GitHub commit alone is not proof of production verification.
-
----
-
-# 🧬 Cache Strategy
-
-Shared JavaScript and CSS may use cache-busting query parameters when appropriate.
-
-Example:
-
-```html
-<script src="/site-global.js?v=YYYYMMDD"></script>
-```
-
-When a shared asset changes, ensure production clients can receive the new version without requiring users to manually fight stale browser caches.
-
----
-
-# 🧹 Legacy Code Policy
-
-Legacy code is removed when its responsibility has been absorbed by the canonical system.
-
-Do not preserve obsolete code merely because it once worked.
-
-Do not add another workaround when the existing owner can be fixed correctly.
-
-### Preferred maintenance pattern
+The pipeline is:
 
 ```text
-BUG
- ↓
-Identify owner
- ↓
-Trace data flow
- ↓
-Fix root cause
- ↓
-Remove obsolete workaround
- ↓
-Validate dependent systems
- ↓
-Deploy
- ↓
-Verify real browser behavior
+WebM files
+    ↓
+manifest generation
+    ↓
+index.json
+    ↓
+script.js
+    ↓
+global fixed background video
+    ↓
+contrast overlay
+    ↓
+page content
 ```
 
----
-
-# 🛡 Engineering Principles
-
-### 01 · Single ownership
-Every global feature has one authoritative owner.
-
-### 02 · Canonical data
-Release truth lives in `release-catalog.json`.
-
-### 03 · Deterministic software first
-Use explicit code and structured data for deterministic work. Do not add unnecessary complexity where simple browser logic is sufficient.
-
-### 04 · Presentation does not mutate truth
-UI sorting, filtering, and randomization operate on derived views rather than corrupting canonical data.
-
-### 05 · Fix causes, not symptoms
-A CSS patch that hides a structural problem is not a completed fix.
-
-### 06 · Reuse before duplication
-If the site already has a system for something, extend it instead of creating a second one.
-
-### 07 · Production verification matters
-Source control, CI, deployment, and browser runtime are separate states and must be treated as such.
+The motion system is global. It must not be duplicated per page.
 
 ---
 
-# 🧪 QA Checklist
+# 🌙 THE CALM
 
-Before considering a major change complete:
+THE CALM is a global ambient-audio control.
+
+Primary source:
+
+```text
+/assets/other/sound/Background.mp3
+```
+
+The global shell binds the control to the shared audio element and coordinates it with foreground video playback.
+
+The intended result is one coherent ambient-audio state rather than multiple pages fighting over playback.
+
+---
+
+# ⬆ Back To Top
+
+Back To Top is globally owned and uses:
+
+```text
+/assets/images/icons/UP_ARROWS.png
+```
+
+It appears once and is injected by the shell.
+
+---
+
+# 🧠 Runtime Lifecycle & DOM Ownership
+
+The site uses browser-native DOM orchestration rather than a framework runtime.
+
+That makes **ownership boundaries** especially important.
+
+```text
+HTML PAGE
+   │
+   ├── page content
+   │
+   └── global loader
+           │
+           ▼
+     site-global.js
+           │
+           ├── global shell
+           ├── global top art
+           ├── global controls
+           └── shared behavior
+                    │
+                    ▼
+             feature modules
+                    │
+          ┌─────────┼─────────┐
+          ▼         ▼         ▼
+      Music       Videos    Homepage
+```
+
+### Defensive DOM rules
+
+Shared scripts may normalize the DOM defensively, but defensive cleanup must never become an excuse for unclear ownership.
+
+When a duplicate appears, trace **who created it** before adding another removal rule.
+
+---
+
+# 🧱 Architectural Invariants
+
+These are the rules that should survive future redesigns:
+
+| Invariant | Requirement |
+|---|---|
+| Global shell | One authoritative implementation |
+| Header | Flush to viewport top |
+| Brand logo | Independently centered |
+| `LS.png` | Begins at header boundary |
+| `LS_HEADPHONES.png` | Footer Special Access artwork |
+| THE CALM | Global, single owner |
+| Back To Top | Global, single owner |
+| Release order | Catalog-owned |
+| Track order | Catalog-owned |
+| Streaming identity | Exact-release aware |
+| Randomization | Presentation-only |
+| Video ordering | Catalog-aware |
+| WebM background | Global, single owner |
+| Responsive rules | Global shell owns global geometry |
+| Accessibility | Required, not optional |
+| Production verification | Browser/runtime validation required |
+
+---
+
+# 🧪 Verification Matrix
+
+A serious change is not finished when the code compiles or a commit exists.
 
 ### Global shell
 
-- [ ] Header starts flush at viewport top
-- [ ] Header height is correct
+- [ ] Header starts at viewport `0`
+- [ ] Header height is intentional
 - [ ] `LS_LOGO.png` is correctly sized
-- [ ] Logo remains mathematically centered
-- [ ] `LS.png` begins exactly at the header boundary
-- [ ] Special Access remains aligned
-- [ ] THE CALM remains aligned
-- [ ] Navigation opens and closes correctly
-- [ ] Footer appears once
-- [ ] No duplicate shell exists
+- [ ] Logo center remains stable
+- [ ] THE CALM remains independently anchored
+- [ ] Menu remains independently anchored
+- [ ] `LS.png` begins immediately after header
+- [ ] No duplicate header exists
+- [ ] No duplicate footer exists
+- [ ] Special Access remains in footer
+- [ ] `LS_HEADPHONES.png` links correctly
+
+### Data
+
+- [ ] Catalog JSON parses
+- [ ] Explicit release order is preserved
+- [ ] Track order is preserved
+- [ ] Release identities remain distinct
+- [ ] Streaming restrictions remain intact
+- [ ] Artwork mappings resolve
 
 ### Media
 
-- [ ] Background WebM loads
-- [ ] Manifest resolves correctly
-- [ ] THE CALM audio works
-- [ ] Back To Top works
-- [ ] Latest Videos do not duplicate
+- [ ] WebM manifest resolves
+- [ ] Background motion loads
+- [ ] Contrast overlay remains readable
+- [ ] THE CALM works
+- [ ] Video playback pauses ambient audio appropriately
+- [ ] Latest Videos deduplicate correctly
 - [ ] Latest Videos follow canonical release order
-
-### Releases
-
-- [ ] Catalog order is correct
-- [ ] Track order is correct
-- [ ] Artwork mappings are correct
-- [ ] Streaming links match exact release identity
-- [ ] SoundCloud-only content stays restricted
-- [ ] Remastered releases remain separate identities
 
 ### Responsive
 
-- [ ] Desktop verified
-- [ ] Tablet verified
-- [ ] Mobile verified
-- [ ] Narrow mobile verified
-- [ ] No unintended horizontal overflow
+- [ ] Desktop
+- [ ] Laptop
+- [ ] Tablet
+- [ ] Mobile
+- [ ] Narrow mobile
+- [ ] No horizontal overflow
 - [ ] Header controls do not collide
+- [ ] Logo remains centered
 
 ### Accessibility
 
-- [ ] Keyboard navigation works
-- [ ] Focus states remain visible
-- [ ] Buttons have meaningful labels
-- [ ] ARIA state is accurate
-- [ ] Escape behavior works
-- [ ] Reduced-motion behavior is respected where applicable
+- [ ] Keyboard navigation
+- [ ] Visible focus states
+- [ ] Meaningful labels
+- [ ] Accurate ARIA state
+- [ ] Escape closes navigation
+- [ ] Body scroll locking behaves correctly
+- [ ] Reduced-motion behavior is respected
 
 ### Production
 
-- [ ] GitHub Actions passes
+- [ ] CI passes
 - [ ] Generated assets are current
 - [ ] Deployment completes
-- [ ] Production URL is tested
-- [ ] Browser cache behavior is checked
+- [ ] Production URL responds
+- [ ] Real browser behavior checked
+- [ ] Cache behavior checked
+- [ ] Shared consumers checked for regression
 
 ---
 
-# 📊 System Mental Model
+# 🤖 Automation & CI
 
-The easiest way to reason about the site is:
+GitHub Actions provide repository-level automation and guardrails.
 
-```text
-                  ┌─────────────────────┐
-                  │  CANONICAL DATA     │
-                  │ release-catalog.json│
-                  └──────────┬──────────┘
-                             │
-             ┌───────────────┼───────────────┐
-             ▼               ▼               ▼
-          Music           Releases         Videos
-             │               │               │
-             └───────────────┼───────────────┘
-                             ▼
-                  ┌─────────────────────┐
-                  │  GLOBAL SHELL       │
-                  │ JS + CSS + MEDIA    │
-                  └──────────┬──────────┘
-                             ▼
-                  ┌─────────────────────┐
-                  │     EVERY PAGE      │
-                  └─────────────────────┘
-```
+### `fix-homepage.yml`
 
-When something breaks, ask:
+The workflow supports architectural hygiene tasks such as:
 
-> **Is the problem data, behavior, presentation, generated assets, deployment, or runtime state?**
+- Removing stale homepage shell markup
+- Preventing duplicate navigation implementations
+- Removing legacy references
+- Preserving the canonical global loader
+- Generating media indexes
+- Validating required assets
+- Validating release data
+- Checking SEO-related files
+- Checking sitemap coverage
+- Committing generated changes when appropriate
 
-That question usually identifies the correct layer faster than adding another patch.
+### `update-latest-videos.yml`
+
+The repository also maintains a dedicated workflow for the latest-video data path.
+
+Automation is a guardrail, not a substitute for human browser verification.
 
 ---
 
-# 🔧 Change Workflow
-
-For production changes:
+# 🚀 Deployment Topology
 
 ```text
-1. Inspect the current architecture
-2. Identify the canonical owner
-3. Trace dependencies
-4. Make the smallest correct change
-5. Remove obsolete competing behavior
-6. Run validation / CI
-7. Review generated assets
-8. Deploy
-9. Test the actual production page
-10. Confirm no regression across shared consumers
+┌───────────────────┐
+│   Local Changes   │
+└─────────┬─────────┘
+          ▼
+┌───────────────────┐
+│   GitHub / main   │
+│  Production Source│
+└─────────┬─────────┘
+          ▼
+┌───────────────────┐
+│  GitHub Actions   │
+│ Validation / Data │
+└─────────┬─────────┘
+          ▼
+┌───────────────────┐
+│ Generated Assets  │
+└─────────┬─────────┘
+          ▼
+┌───────────────────┐
+│      Vercel       │
+└─────────┬─────────┘
+          ▼
+┌───────────────────┐
+│   lilsynn.com     │
+└───────────────────┘
 ```
 
-### Never
+### State model
 
-- Create duplicate global shells
-- Hard-code release order in page JavaScript
-- Guess streaming URLs from titles
+```text
+SOURCE
+  ≠
+CI
+  ≠
+DEPLOYMENT
+  ≠
+CACHE
+  ≠
+RUNTIME DOM
+```
+
+When debugging production, identify which state is actually wrong before changing code.
+
+---
+
+# 🧹 Root-Cause Engineering
+
+The preferred debugging sequence is:
+
+```text
+OBSERVE
+   ↓
+REPRODUCE
+   ↓
+IDENTIFY OWNER
+   ↓
+TRACE DATA / DOM FLOW
+   ↓
+FIND ROOT CAUSE
+   ↓
+FIX CANONICAL OWNER
+   ↓
+REMOVE OBSOLETE WORKAROUNDS
+   ↓
+VERIFY DEPENDENTS
+   ↓
+CI
+   ↓
+DEPLOY
+   ↓
+REAL BROWSER CHECK
+```
+
+### Anti-patterns
+
+Do not:
+
+- Add arbitrary offsets to hide structural problems
+- Duplicate global components
+- Hard-code release order in multiple files
+- Guess streaming links from titles
 - Randomize canonical data
-- Hide structural bugs with arbitrary offsets
-- Add page-specific copies of global controls
-- Declare a deployment successful without checking production behavior
+- Add CSS patches without understanding DOM ownership
+- Assume CI proves visual correctness
+- Assume GitHub proves deployment correctness
 
 ---
 
-# ✦ Brand Direction
+# ⚙️ Performance Philosophy
 
-The site intentionally supports the LIL SYNN visual identity:
+The site intentionally favors small deterministic browser modules over unnecessary framework overhead.
+
+Performance priorities include:
+
+- Avoiding duplicate global systems
+- Avoiding redundant network work
+- Lazy-loading expensive media where appropriate
+- Thumbnail-first video playback
+- Muted inline background video
+- Responsive media sizing
+- Cache-aware shared assets
+- Minimal DOM duplication
+- Explicit data manifests
+
+The performance goal is not simply a fast first paint. It is a **fast, stable, predictable experience after the entire shell is active**.
+
+---
+
+# ♿ Accessibility Philosophy
+
+Accessibility is part of the architecture.
+
+Preserve:
+
+- Semantic controls
+- Keyboard navigation
+- Visible focus
+- Meaningful labels
+- Correct `aria-expanded`
+- Correct `aria-controls`
+- Correct `aria-hidden`
+- Escape-to-close behavior
+- Focus-friendly navigation
+- Reduced-motion support
+- Responsive layouts without unnecessary overflow
+
+Every new interactive component should be usable without requiring a pointer.
+
+---
+
+# 🔎 SEO & Discoverability
+
+The production system includes dedicated support for:
+
+- Canonical URLs
+- Meta descriptions
+- Open Graph metadata
+- Structured metadata / JSON-LD where applicable
+- Sitemap coverage
+- Crawlable page structure
+- Dedicated 404 handling
+
+The global shell normalizes missing canonical metadata where appropriate, while page-level metadata remains responsible for page-specific identity.
+
+---
+
+# 🧬 Cache & Versioning
+
+Shared assets may use version query parameters when a deployment requires cache invalidation:
+
+```html
+<script src="/site-global.js?v=YYYYMMDD"></script>
+<link rel="stylesheet" href="/site-global.css?v=YYYYMMDD">
+```
+
+Cache busting should be intentional. Do not increment versions randomly without a changed asset or deployment reason.
+
+---
+
+# 🖤 Visual System
+
+The visual language is intentionally cinematic, dark, premium, and music-first.
 
 ```text
 MATTE BLACK
@@ -764,49 +868,105 @@ WHITE
      ×
 CHROME / METALLIC DETAIL
      ×
-DARK CINEMATIC ATMOSPHERE
+DARK ATMOSPHERE
+     ×
+CINEMATIC MOTION
 ```
 
-The visual system should feel like one premium artist platform rather than a generic template.
+The website should feel like a single artist universe, not a generic template with disconnected pages.
+
+---
+
+# 📋 Production Change Protocol
+
+Before modifying a shared feature:
+
+### 01 · Inspect
+Understand the current implementation before editing it.
+
+### 02 · Identify ownership
+Find the file that actually owns the behavior.
+
+### 03 · Trace dependencies
+Determine which pages and modules consume the system.
+
+### 04 · Change the owner
+Prefer one canonical fix over multiple patches.
+
+### 05 · Remove obsolete behavior
+Delete competing implementations when the canonical owner replaces them.
+
+### 06 · Verify
+Check data, DOM, responsive geometry, accessibility, and media behavior.
+
+### 07 · Deploy
+Move through the production pipeline.
+
+### 08 · Confirm
+Test the actual production runtime.
+
+---
+
+# 🏆 Definition of Done
+
+A production change is **DONE** only when all applicable conditions are true:
+
+```text
+[✓] Correct owner changed
+[✓] Canonical data preserved
+[✓] No competing implementation introduced
+[✓] Responsive behavior checked
+[✓] Accessibility preserved
+[✓] Generated assets current
+[✓] CI / validation passed
+[✓] Deployment completed
+[✓] Production runtime checked
+[✓] No regression in shared consumers
+```
+
+A change that exists only in source control is **implemented**, not necessarily **verified**.
 
 ---
 
 # 🔗 Official Destinations
 
-| Destination | Link |
+| Destination | Purpose |
 |---|---|
-| 🌐 Official Website | [lilsynn.com](https://lilsynn.com) |
-| 💻 Source Repository | [GitHub](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL) |
-| 🎵 TikTok | [@lilsynnofficial](https://www.tiktok.com/@lilsynnofficial) |
+| [🌐 lilsynn.com](https://lilsynn.com) | Official artist website |
+| [💻 GitHub Repository](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL) | Production source |
+| [🎵 TikTok](https://www.tiktok.com/@lilsynnofficial) | Official social presence |
 
 ---
 
-# 👑 Maintainer Rules
+# 👑 Maintainer Doctrine
 
-This repository is production infrastructure for the LIL SYNN digital experience.
+This repository is production infrastructure for the LIL SYNN digital universe.
 
-When contributing, preserve the architecture before adding features.
+The standard is not **"does this patch make the page look right?"**
 
-If a feature appears to require a new global implementation, stop and ask:
+The standard is:
 
-> **Does the site already have an owner for this?**
+> **Does the architecture now express the correct truth cleanly, globally, and predictably?**
 
-If yes, extend that system.
+When in doubt:
 
-If no, define the ownership clearly before implementing it.
+```text
+ONE OWNER
+ONE SOURCE OF TRUTH
+ONE GLOBAL EXPERIENCE
+ZERO DUPLICATE SYSTEMS
+```
 
 ---
 
 <div align="center">
 
-## LIL SYNN
+## ✦ LIL SYNN
 
-**One shell. One source of truth. One experience.**
+**DARK SOUND. RAW EMOTION. NO LIMITS.**
 
-<br>
+[![ENTER THE SITE](https://img.shields.io/badge/ENTER_THE_SITE-D4AF37?style=for-the-badge&labelColor=050505)](https://lilsynn.com)
 
-[![Website](https://img.shields.io/badge/ENTER_THE_SITE-D4AF37?style=for-the-badge&labelColor=0B0B0B)](https://lilsynn.com)
-
-<sub>Built for the LIL SYNN digital universe.</sub>
+<sub>Production source for the LIL SYNN digital universe.</sub>
 
 </div>
