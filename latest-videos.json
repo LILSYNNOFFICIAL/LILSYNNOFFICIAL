@@ -1,16 +1,61 @@
 {
-  "generatedAt": "2026-09-09T06:10:00Z",
+  "generatedAt": "2026-09-09T06:08:48.400244+00:00",
   "source": "https://www.youtube.com/@LILSYNNOFFICIAL/releases",
   "selection": "canonical release-catalog order; YouTube Releases tab used only to resolve video IDs; unmatched catalog entries are skipped",
   "videos": [
-    {"id":"KIAwkxqAqbM","title":"Never Known","publishedAt":"2026-09-03T10:04:26Z","release":"Never Known"},
-    {"id":"tINy0BDH06Y","title":"Home (Acoustic Version)","publishedAt":"2026-09-01T10:01:54Z","release":"HOME (ACOUSTIC VERSION)"},
-    {"id":"0fXE-ABEcBU","title":"I Did It Again","publishedAt":"2026-09-01T10:03:23Z","release":"I DID IT AGAIN"},
-    {"id":"Glh5acZNiFM","title":"Rescue You (Acoustic Version)","publishedAt":"2026-09-01T06:31:28Z","release":"Rescue You (Acoustic Version)"},
-    {"id":"q_EENWIxiUA","title":"Somewhere In-Between","publishedAt":"2026-08-27T10:04:47Z","release":"Somewhere In-Between"},
-    {"id":"vebiWy-RL4Y","title":"Black Glass","publishedAt":"2026-08-11T10:01:50Z","release":"Black Glass"},
-    {"id":"6NEvOd7J-rA","title":"Black Glass (Acoustic Version)","publishedAt":"2026-08-11T10:02:51Z","release":"Black Glass - Acoustic Version"},
-    {"id":"VwDzW1g08oo","title":"Hello Goodbye","publishedAt":"2026-09-09T02:46:12Z","release":"Hello Goodbye Album"},
-    {"id":"JRJswRmhbmA","title":"Static On My Tongue","publishedAt":"2026-07-26T10:04:12Z","release":"Static On My Tongue"}
+    {
+      "id": "KIAwkxqAqbM",
+      "title": "Never Known",
+      "publishedAt": "2026-09-03T10:04:26Z",
+      "release": "Never Known"
+    },
+    {
+      "id": "tINy0BDH06Y",
+      "title": "Home (Acoustic Version)",
+      "publishedAt": "2026-09-01T10:01:54Z",
+      "release": "HOME (ACOUSTIC VERSION)"
+    },
+    {
+      "id": "0fXE-ABEcBU",
+      "title": "I Did It Again",
+      "publishedAt": "2026-09-01T10:03:23Z",
+      "release": "I DID IT AGAIN"
+    },
+    {
+      "id": "Glh5acZNiFM",
+      "title": "Rescue You (Acoustic Version)",
+      "publishedAt": "2026-09-01T06:31:28Z",
+      "release": "Rescue You (Acoustic Version)"
+    },
+    {
+      "id": "q_EENWIxiUA",
+      "title": "Somewhere In-Between",
+      "publishedAt": "2026-08-27T10:04:47Z",
+      "release": "Somewhere In-Between"
+    },
+    {
+      "id": "vebiWy-RL4Y",
+      "title": "Black Glass",
+      "publishedAt": "2026-08-11T10:01:50Z",
+      "release": "Black Glass"
+    },
+    {
+      "id": "VwDzW1g08oo",
+      "title": "Hello Goodbye",
+      "publishedAt": "2026-09-09T02:46:12Z",
+      "release": "Hello Goodbye"
+    },
+    {
+      "id": "JRJswRmhbmA",
+      "title": "Static On My Tongue",
+      "publishedAt": "2026-07-26T10:04:12Z",
+      "release": "Static On My Tongue"
+    },
+    {
+      "id": "NMFONDfJoi8",
+      "title": "It's In Her Eyes",
+      "publishedAt": "2026-06-28T10:01:03Z",
+      "release": "It's In Her Eyes"
+    }
   ]
 }
