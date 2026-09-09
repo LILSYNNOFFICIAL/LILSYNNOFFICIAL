@@ -10,47 +10,103 @@
 
 ---
 
-## Production Source of Truth
+## Production Architecture
 
-- Production branch: `main`
-- Deployment: Vercel
-- Homepage: `index.html`
-- Global shell CSS: `site-global.css`
-- Global shell JavaScript: `site-global.js`
-- Homepage-specific behavior: `site-polish.js`
-- Canonical release database: `release-catalog.json`
-- Release archive: `releases.html`
-- Special Access: `special_access.html`
-- Coming Soon: `coming_soon.html`
+This repository is the production source for the LIL SYNN website. The site is deployed through Vercel from the `main` branch.
 
-The repository is a production website, not a collection of independent page templates. Global behavior must remain centralized so individual pages cannot accidentally create competing navigation, headers, footers, audio controls, or release data systems.
+The website is intentionally organized around a small number of authoritative systems instead of duplicated page-by-page implementations.
 
-## Universal Site Shell
+| System | Responsibility |
+|---|---|
+| `index.html` | Primary homepage and landing experience |
+| `site-global.css` | Canonical global shell styling and responsive behavior |
+| `site-global.js` | Canonical global shell, navigation, controls, metadata, and shared behavior |
+| `site-polish.js` | Homepage-specific presentation/enrichment only |
+| `release-catalog.json` | Canonical release and streaming data source |
+| `releases.html` | Catalog-driven release archive renderer |
+| `special_access.html` | Special Access destination / Easter egg |
+| `coming_soon.html` | Coming Soon page |
 
-`site-global.js` provides the canonical runtime shell across the site's HTML pages. It removes legacy shell markup where necessary and injects one consistent header, navigation drawer, footer, The Calm control, and Back To Top control.
+### Core rule
 
-### Header
+> **One global shell. One release database. One source of truth. No cross-release link leakage.**
 
-The global header uses:
+The repository is not a collection of independent templates. Global behavior must remain centralized so individual pages cannot accidentally create competing headers, menus, footers, audio controls, or release databases.
+
+---
+
+## Universal Global Shell
+
+`site-global.js` is responsible for the site's shared runtime shell.
+
+It provides or manages:
+
+- canonical header
+- canonical primary navigation
+- responsive navigation drawer
+- Socials accordion
+- Stream accordion
+- footer
+- global metadata
+- Special Access headphone link
+- `THE CALM` ambient audio control
+- Back To Top control
+- About-page artist accordion where applicable
+- legacy shell cleanup where legacy markup is present
+- responsive menu behavior
+- keyboard interaction
+- Escape-to-close behavior
+- body scroll locking while the menu is open
+- accessible ARIA state
+
+`site-global.css` provides the shared visual system for those elements.
+
+### Important implementation boundary
+
+The current `site-global.js` is intentionally focused on the **universal shell**. It does not own homepage release normalization or release archive rendering.
+
+Release rendering belongs to `releases.html` and `release-catalog.json`.
+
+Homepage-specific behavior belongs to `site-polish.js` and `index.html`.
+
+Do not reintroduce broad page normalization logic into the global shell merely to fix one page.
+
+---
+
+## Header
+
+The canonical header uses:
 
 ```text
 /assets/images/icons/LS_HEADPHONES.png
 ```
 
-The headphone artwork is the **Special Access Easter egg** and links to `/special_access.html`.
+The headphone artwork is both the primary LIL SYNN header mark and the **Special Access Easter egg**. Clicking it routes to:
 
-Current sizing:
+```text
+/special_access.html
+```
 
-- Desktop header: approximately 90px
-- Mobile header: approximately 82px
-- Desktop headphone artwork: approximately 84px
-- Mobile headphone artwork: approximately 72px
+### Current sizing
 
-The headphone artwork must remain visually prominent. Do not shrink it back to a small icon or create page-specific header replacements.
+`site-global.css` currently targets approximately:
 
-### Navigation
+- Desktop header height: `96px`
+- Mobile header height: `86px`
+- Desktop headphone artwork: `112px × 112px`
+- Mobile headphone artwork: `94px × 94px`
 
-Canonical primary navigation:
+The artwork intentionally extends beyond the nominal header height so it remains visually prominent.
+
+**Do not shrink the headphone artwork back into a small icon.**
+
+Do not create a second page-specific header to compensate for sizing or positioning issues. Fix the shared shell instead.
+
+---
+
+## Canonical Navigation
+
+Primary navigation is:
 
 - Home
 - Music
@@ -61,37 +117,96 @@ Canonical primary navigation:
 - Lyrics
 - Contact
 
-The drawer also contains independent collapsible **Socials** and **Stream** groups. Opening one closes the other.
+The navigation drawer also contains two independent collapsible groups:
 
-The global menu supports keyboard focus, Escape-to-close, internal scrolling, body scroll locking, responsive sizing, and accessible ARIA state.
+### Socials
 
-**Do not add another global hamburger, side menu, header, or footer implementation.**
+- YouTube
+- Spotify
+- Apple Music
+- Instagram
+- X / Twitter
+- SoundCloud
+- TikTok
+- Facebook
 
-## Release Architecture
+### Stream
 
-`release-catalog.json` is the single source of truth for the release archive.
+- Spotify
+- Apple Music
+- YouTube
+- YouTube Music
+- TIDAL
+- Amazon Music
 
-It controls:
+The Socials and Stream groups are mutually exclusive when expanded. Opening one closes the other.
+
+### Menu behavior
+
+The global menu supports:
+
+- responsive sizing
+- internal scrolling for long content
+- keyboard focus
+- Escape-to-close
+- accessible ARIA state
+- body scroll locking while open
+- proper focusable controls
+- no unintended horizontal overflow
+
+**Never add another global hamburger, navigation drawer, header, or footer implementation.**
+
+---
+
+## Legacy Shell Handling
+
+Some historical HTML pages may still contain older header, menu, or footer markup in their source.
+
+The canonical runtime shell is responsible for removing conflicting legacy shell elements when necessary and inserting the current shared shell.
+
+This allows older pages to remain compatible without maintaining multiple active global implementations.
+
+When performing source cleanup, the goal is eventually to remove obsolete markup from the HTML itself, but runtime compatibility must not be broken merely to make source files look cleaner.
+
+---
+
+# Release System
+
+## `release-catalog.json` is the Source of Truth
+
+The release archive must not maintain a second hard-coded release database.
+
+`release-catalog.json` owns the catalog data used by `releases.html`, including:
 
 - canonical release order
+- grouped releases
 - albums
 - EPs
 - standalone singles
 - track listings
-- release-level Spotify links
-- release-level Apple Music links
-- track-level Spotify links
-- track-level SoundCloud links
-- SoundCloud album/set links
-- release grouping
+- release artwork mappings
+- release-level Spotify destinations
+- release-level Apple Music destinations
+- track-level Spotify destinations
+- track-level SoundCloud destinations
+- SoundCloud set destinations
+- release grouping metadata
 
-`releases.html` reads the catalog at runtime rather than maintaining a second hard-coded release database.
+The renderer reads this data at runtime.
 
-### Albums / EPs
+### Why this matters
+
+If release information changes, update the catalog rather than creating another list inside `releases.html`.
+
+The page renderer should determine **how data is displayed**, while the catalog determines **what the releases are**.
+
+---
+
+## Grouped Releases
 
 Grouped releases are represented under `groups` in `release-catalog.json`.
 
-Current grouped releases include:
+The current catalog contains these major grouped releases:
 
 - `Black Glass`
 - `Hello Goodbye`
@@ -100,118 +215,35 @@ Current grouped releases include:
 - `Enough`
 - `Touching to the North`
 
-Grouped releases retain their complete track lists and release-level streaming destinations.
+Grouped releases retain their track lists and release-level metadata.
 
-### Standalone singles
+---
 
-Any title present in the catalog `order` but not represented in `groups` is treated as a standalone release.
+## Standalone Singles
 
-Standalone releases must remain visible in the release archive. They must not disappear simply because the page renderer is focused on albums or EPs.
+Standalone releases are just as important as albums and EPs.
 
-The archive supports sorting that can place singles first or grouped releases first while preserving the canonical catalog as the default ordering.
+Any release title present in the catalog's `order` that is not represented as a grouped release must render as a standalone release card.
 
-## Critical Release Identity Rule
+The archive must therefore support all three release types:
 
-**Titles identify releases. Similar titles do not mean the same release.**
+1. Albums
+2. EPs
+3. Standalone singles
 
-The most important example is `Signal Light Sermon`.
+**Never remove standalone singles when repairing or rewriting album/EP rendering.**
 
-There are two distinct releases:
+The archive can sort or filter these independently, but the catalog remains authoritative.
 
-### 1. Signal Light Sermon on Touching to the North
+---
 
-This is the **album version**.
+## Release Ordering and Sorting
 
-It is **SoundCloud ONLY**.
+`release-catalog.json` owns the canonical order through its `order` array.
 
-```text
-Touching to the North
-└── Signal Light Sermon
-    └── SoundCloud only
-```
+The default archive view must respect that order.
 
-There is:
-
-- NO Spotify URL
-- NO Apple Music URL
-
-The Touching album version must never inherit a Spotify URL from a standalone release with a similar title.
-
-### 2. Signal Light Sermon (Remastered 2026)
-
-This is a **separate standalone single**.
-
-It has its own:
-
-- Spotify destination
-- Apple Music destination
-
-The standalone release must be displayed using its exact title:
-
-```text
-Signal Light Sermon (Remastered 2026)
-```
-
-The Spotify URL associated with this standalone release belongs **only** to this standalone release.
-
-### Implementation requirement
-
-The `Touching to the North` renderer must explicitly suppress Spotify and Apple Music links for every track in that album and render only the corresponding SoundCloud destination.
-
-Do not use generic fallback logic that can accidentally pull `trackSpotify`, `spotify`, or Apple Music data into the Touching album tracks.
-
-This separation is intentional and must be preserved.
-
-## Touching to the North
-
-`Touching to the North` has its own SoundCloud set:
-
-```text
-https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
-```
-
-Its tracks use the catalog's `trackSoundcloud` mappings.
-
-For this release:
-
-- Track buttons: SoundCloud only
-- Album/set button: SoundCloud only
-- Spotify: never render
-- Apple Music: never render
-
-The album artwork is:
-
-```text
-/assets/images/icons/album_art/01 - Astral Signal - LIL SYN-artwork.jpg
-```
-
-## Streaming Link Rules
-
-### Spotify
-
-Use exact catalog URLs when a verified direct destination is known.
-
-Do not substitute a similarly titled release.
-
-### Apple Music
-
-Use exact catalog URLs when a verified direct destination is known.
-
-When an exact direct destination is not known, a search fallback may be used rather than inventing a direct URL.
-
-### SoundCloud
-
-Use exact catalog mappings for releases and tracks where available.
-
-SoundCloud-only releases must not be given artificial Spotify or Apple Music links.
-
-## Release Ordering
-
-`release-catalog.json` owns canonical order through its `order` array.
-
-The archive's default view must respect that order.
-
-The UI may additionally support:
+The UI may additionally expose sorting/filtering such as:
 
 - Catalog order
 - A → Z
@@ -219,120 +251,444 @@ The UI may additionally support:
 - Singles first
 - Albums / EPs first
 
-If the UI exposes filtering, **Singles** must include every standalone catalog entry.
+If a Singles filter is available, it must include every standalone entry represented by the catalog.
 
-## Artwork Rules
+Sorting is a presentation operation. It must never mutate the underlying catalog order.
 
-Artwork is resolved through the release rendering system.
+---
+
+# CRITICAL: Signal Light Sermon Release Separation
+
+There are **two different releases** with similar titles.
+
+They must never share streaming destinations merely because their names are similar.
+
+## 1. `Signal Light Sermon`
+### Touching to the North album version
+
+This is the version included on:
+
+```text
+Touching to the North
+```
+
+This version is:
+
+```text
+SOUNDCLOUD ONLY
+```
+
+It must have:
+
+- SoundCloud: YES
+- Spotify: NO
+- Apple Music: NO
+
+The Touching to the North version must never inherit the Spotify or Apple Music destination belonging to the standalone remastered release.
+
+## 2. `Signal Light Sermon (Remastered 2026)`
+### Standalone single
+
+This is a separate standalone release.
+
+Its exact display title is:
+
+```text
+Signal Light Sermon (Remastered 2026)
+```
+
+This standalone release has its own:
+
+- Spotify destination
+- Apple Music destination
+
+Those destinations belong **only** to the standalone remastered release.
+
+### Renderer rule
+
+When `releases.html` renders `Touching to the North`, it must explicitly suppress Spotify and Apple Music for every track in that album.
+
+The renderer must not use generic fallback logic such as:
+
+```text
+data.trackSpotify[track]
+data.spotify[track]
+data.apple[track]
+```
+
+for Touching tracks.
+
+For Touching to the North, streaming buttons are intentionally SoundCloud-only.
+
+### Non-negotiable rule
+
+> **Never reuse a streaming URL between the Touching album version and the standalone remastered release.**
+
+A similar title does not mean the releases are the same entity.
+
+---
+
+# Touching to the North
+
+`Touching to the North` is a special SoundCloud-only album presentation.
+
+Its SoundCloud set is:
+
+```text
+https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north
+```
+
+The album contains:
+
+- `Astral Signal`
+- `I Saw the Sky Breathe`
+- `Touching to the North`
+- `Shadowboxing the Ego`
+- `Look Up, Look Within`
+- `Signal Light Sermon`
+- `Split Screen Mind`
+- `This Battle Is Mine`
+- `Tomorrow Ain't Promised`
+- `Celestial Flow`
+- `Cipher Echo`
+- `Fragments of Light`
+- `Touching to the North (Radio Edit)`
+
+Track destinations are read from the catalog's `trackSoundcloud` mappings.
+
+### Touching streaming policy
+
+| Destination | Allowed |
+|---|---:|
+| SoundCloud track | Yes |
+| SoundCloud album/set | Yes |
+| Spotify | **No** |
+| Apple Music | **No** |
+
+This policy is intentional and must remain explicit in the renderer.
+
+### Artwork
+
+The album artwork is:
+
+```text
+/assets/images/icons/album_art/01 - Astral Signal - LIL SYN-artwork.jpg
+```
+
+Do not replace a correct artwork mapping with a guessed filename.
+
+---
+
+# Streaming Link Rules
+
+## Spotify
+
+Use the exact catalog destination when a verified direct URL is known.
+
+Never substitute a similarly titled release.
+
+Never use a standalone release URL for an album track unless the catalog explicitly says they are the same release.
+
+## Apple Music
+
+Use the exact catalog destination when a verified direct URL is known.
+
+If an exact direct destination is not known, a search fallback may be used rather than inventing a direct URL.
+
+A search fallback is not equivalent to a verified direct release URL and must not be represented as one.
+
+## SoundCloud
+
+Use exact catalog mappings for releases and tracks where available.
+
+SoundCloud-only releases must remain SoundCloud-only.
+
+Do not add artificial Spotify or Apple Music buttons simply because other releases have them.
+
+---
+
+# `releases.html` Rendering Logic
+
+The release archive is catalog-driven.
+
+Its responsibilities are:
+
+1. Fetch `/release-catalog.json`.
+2. Read the canonical `order` array.
+3. Determine whether each entry is a grouped release or standalone release.
+4. Render grouped albums/EPs with their complete track lists.
+5. Render standalone singles that are not represented under `groups`.
+6. Apply catalog-driven artwork and metadata.
+7. Apply release-specific streaming rules.
+8. Preserve the special SoundCloud-only behavior for `Touching to the North`.
+9. Keep `Signal Light Sermon (Remastered 2026)` separate from the Touching album track.
+10. Provide sorting/filtering without modifying the catalog itself.
+
+### Special title presentation
+
+The catalog historically contains the standalone mapping under the `Signal Light Sermon` identifier while the release archive presents the standalone release as:
+
+```text
+Signal Light Sermon (Remastered 2026)
+```
+
+The renderer must continue to keep the standalone release distinct from the Touching album track.
+
+If the catalog is normalized in the future, preserve the standalone Spotify and Apple Music mappings while changing the catalog identity cleanly. Do not solve the naming issue by attaching those mappings to the Touching track.
+
+---
+
+# Artwork System
+
+Artwork should be resolved through shared release rendering and catalog mappings.
 
 Do not create one-off CSS hacks for individual covers.
 
-Do not rename or duplicate artwork merely to work around a layout problem.
+Do not duplicate artwork files merely to compensate for an incorrect path.
 
-The correct solution is to fix the shared artwork mapping or shared layout system.
+If artwork is missing:
 
-## Homepage
+1. verify the catalog mapping
+2. verify the actual filename and path
+3. fix the shared mapping or renderer
+4. do not invent a replacement asset path
 
-`index.html` remains the primary landing page.
+---
 
-`site-polish.js` handles homepage-specific presentation/enrichment without replacing the universal shell.
+# Homepage
 
-The homepage must not contain a competing global header or menu implementation.
+`index.html` is the primary landing page.
 
-The `THE LATEST SIGNALS` area can reference the canonical release catalog, but release data must remain owned by `release-catalog.json`.
+`site-polish.js` is reserved for homepage-specific presentation and enrichment.
 
-## The Calm
+The homepage must continue to use the canonical global shell.
 
-The site's ambient background audio uses:
+It must not create a competing header, navigation drawer, footer, Back To Top control, or audio controller.
+
+The homepage's release references should use the canonical catalog where release data is required.
+
+---
+
+# THE CALM
+
+The site's ambient background audio is:
 
 ```text
 /assets/other/sound/Background.mp3
 ```
 
-The universal shell supplies the **THE CALM** ON/OFF control.
+The universal shell provides the **THE CALM** ON/OFF control.
 
-The control must remain global rather than being separately implemented on individual pages.
+The control is global and must not be duplicated on individual pages.
 
-Where browser policy permits, the background audio pauses or mutes when YouTube or native HTML5 video playback begins.
+Where browser policy and playback state permit, the shared behavior can pause or mute ambient audio when YouTube or native HTML5 video playback begins.
 
-## Back To Top
+Do not create multiple competing audio controllers.
 
-The universal floating Back To Top control uses:
+---
+
+# Back To Top
+
+The universal Back To Top control uses:
 
 ```text
 /assets/images/icons/UP_ARROWS.png
 ```
 
-It is provided by the global shell and should not be duplicated on individual pages.
+It belongs to the global shell.
 
-## Accessibility
+Individual pages must not create their own duplicate Back To Top system.
 
-Preserve:
+---
 
-- meaningful image alt text
-- keyboard navigation
-- visible focus states
-- `aria-expanded`
-- `aria-controls`
-- `aria-hidden`
-- Escape-to-close behavior
-- reduced-motion behavior
-- accessible labels on icon-only controls
-- internal scrolling for long navigation drawers
-- responsive mobile layouts
-- no unintended horizontal overflow
+# Responsive Design
 
-## Responsive Design
-
-Every global change must be checked at minimum against:
+Global changes must work across:
 
 - desktop
 - tablet
 - mobile
 - narrow mobile
 
-The global header, headphone artwork, menu drawer, release cards, track rows, buttons, and artwork must remain usable without horizontal scrolling.
+Pay particular attention to:
 
-## Change Discipline
+- oversized headphone artwork
+- fixed header positioning
+- navigation drawer width
+- internal menu scrolling
+- release artwork
+- release cards
+- track rows
+- streaming buttons
+- filter controls
+- no unintended horizontal overflow
 
-When fixing a problem:
+The mobile header must remain usable even though the headphone artwork is intentionally larger than a conventional icon.
 
-1. Identify which system owns the behavior.
-2. Fix that system instead of adding another competing implementation.
-3. Preserve existing working behavior outside the requested scope.
-4. Inspect the complete file before replacing it.
-5. Keep canonical data in the canonical data file.
-6. Never infer one release's streaming links from another release's title.
-7. Treat similarly named releases as separate entities unless the catalog explicitly groups them.
-8. Never remove standalone singles while repairing album rendering.
-9. Never add Spotify or Apple Music to a SoundCloud-only release.
-10. Do not claim a deployment or browser test occurred unless it actually did.
+---
 
-## Git / Deployment QA
+# Accessibility Requirements
+
+Preserve:
+
+- meaningful image `alt` text
+- keyboard navigation
+- visible focus states
+- `aria-expanded`
+- `aria-controls`
+- `aria-hidden`
+- Escape-to-close behavior
+- accessible labels for icon-only controls
+- focusable interactive elements
+- reduced-motion behavior
+- internal scrolling for long navigation drawers
+- responsive layouts without horizontal scrolling
+
+Do not sacrifice accessibility to reproduce a visual effect.
+
+---
+
+# Change Discipline
+
+When fixing a website problem:
+
+1. Identify the system that owns the behavior.
+2. Fix the owning system instead of adding another implementation.
+3. Inspect the complete current file before replacing it.
+4. Preserve unrelated working behavior.
+5. Keep canonical data in canonical data files.
+6. Do not duplicate release databases inside page JavaScript.
+7. Never infer streaming destinations from similar titles.
+8. Treat similarly named releases as distinct unless the catalog explicitly groups them.
+9. Never remove standalone singles while repairing album rendering.
+10. Never add Spotify or Apple Music to a SoundCloud-only release.
+11. Never shrink `LS_HEADPHONES.png` simply because another layout element is inconvenient.
+12. Do not move global behavior into page-specific files without a clear ownership reason.
+13. Do not claim a deployment or browser verification occurred unless it actually occurred.
+
+---
+
+# Git / Deployment QA
 
 Before committing a website change:
 
-1. Inspect the current files from `main`.
-2. Review the complete proposed diff.
-3. Confirm unrelated files were not changed.
-4. Validate HTML, CSS, JavaScript, and JSON syntax where applicable.
-5. Check for duplicate global shell implementations.
-6. Confirm exactly one rendered header, menu, and footer.
-7. Confirm `LS_HEADPHONES.png` remains the Special Access Easter egg and is visibly large enough.
-8. Confirm the release archive renders albums, EPs, and standalone singles.
-9. Confirm standalone `Signal Light Sermon (Remastered 2026)` remains separate from the Touching album track.
-10. Confirm `Touching to the North` is SoundCloud-only.
-11. Confirm no Touching track inherits the standalone Spotify URL.
-12. Confirm artwork paths resolve correctly.
-13. Confirm `THE CALM` and Back To Top remain global.
-14. Confirm mobile and narrow-mobile layouts.
-15. Review the actual production URL after deployment when browser verification is available.
-16. Only then report the commit as complete.
+1. Inspect the current state of `main`.
+2. Fetch the complete files relevant to the change.
+3. Confirm the current blob SHA before replacing an existing file.
+4. Review the complete proposed diff.
+5. Confirm unrelated files were not changed.
+6. Validate JSON syntax for `release-catalog.json`.
+7. Validate JavaScript syntax for changed scripts.
+8. Validate HTML structure for changed pages.
+9. Check for duplicate global shell implementations.
+10. Confirm exactly one active rendered header, menu, and footer.
+11. Confirm the headphone artwork remains the Special Access Easter egg.
+12. Confirm the headphone artwork remains approximately `112px` desktop and `94px` mobile.
+13. Confirm albums, EPs, and standalone singles all render.
+14. Confirm catalog order remains the default archive order.
+15. Confirm sorting does not mutate canonical catalog data.
+16. Confirm `Touching to the North` remains SoundCloud-only.
+17. Confirm no Touching track inherits the standalone Spotify URL.
+18. Confirm no Touching track receives Apple Music through a generic fallback.
+19. Confirm `Signal Light Sermon (Remastered 2026)` remains a separate standalone release.
+20. Confirm artwork paths resolve correctly.
+21. Confirm `THE CALM` remains global.
+22. Confirm Back To Top remains global.
+23. Confirm mobile and narrow-mobile layouts.
+24. Verify the actual production URL after deployment when browser verification is available.
+25. Only report a deployment or browser test as verified if it was actually performed.
 
-A successful Vercel build or `READY` deployment status does **not** by itself prove that the visual or functional behavior is correct.
+A successful Vercel build or `READY` deployment status is not proof that visual or functional behavior is correct. Production verification must distinguish between **build success** and **actual site behavior**.
 
-## Core Architecture Principle
+---
 
-> **One global shell. One release database. One source of truth. No cross-release link leakage.**
+# Known Architectural Boundaries
 
-The website should remain simple to maintain: global behavior belongs in the global shell, release data belongs in `release-catalog.json`, and page-specific behavior belongs to the page that owns it.
+### Global shell owns
+
+- header
+- primary navigation
+- menu drawer
+- Socials accordion
+- Stream accordion
+- footer
+- Back To Top
+- THE CALM
+- shared metadata
+- shared responsive shell behavior
+
+### Homepage owns
+
+- homepage-specific presentation
+- homepage-specific content behavior
+- homepage-specific enrichment through `site-polish.js`
+
+### Release catalog owns
+
+- release identity
+- release ordering
+- grouping
+- track identity
+- artwork mapping
+- streaming destinations
+- SoundCloud sets
+- special release distinctions
+
+### Release archive owns
+
+- catalog loading
+- release card rendering
+- track row rendering
+- sorting/filtering
+- applying release-specific link rules
+
+This ownership model prevents one page from silently rewriting another system's data.
+
+---
+
+# Repository Safety Rules
+
+Do not:
+
+- create duplicate headers
+- create duplicate menus
+- create duplicate footers
+- create duplicate audio controls
+- hard-code a second release catalog
+- delete standalone singles to simplify album rendering
+- copy streaming URLs between similarly titled releases
+- add Spotify to the Touching to the North album version of `Signal Light Sermon`
+- add Apple Music to the Touching to the North album version of `Signal Light Sermon`
+- replace exact artwork paths with guesses
+- claim browser verification without actually checking the production page
+- claim deployment success without evidence
+
+Do:
+
+- centralize global behavior
+- keep release data canonical
+- preserve exact release identity
+- use explicit special-case rules where release ownership requires them
+- prefer deterministic rendering over duplicated hard-coded markup
+- make the smallest correct change
+- verify the final Git state before reporting completion
+
+---
+
+# Current Core Principle
+
+> **Global behavior belongs in the global shell.**
+>
+> **Release data belongs in `release-catalog.json`.**
+>
+> **Release presentation belongs in `releases.html`.**
+>
+> **Homepage-specific behavior belongs in the homepage system.**
+>
+> **Similar titles are not interchangeable releases.**
+>
+> **Touching to the North is SoundCloud-only.**
+>
+> **Signal Light Sermon (Remastered 2026) is a separate standalone release.**
+
+This architecture should be preserved whenever the site is repaired, extended, redesigned, or refactored.
