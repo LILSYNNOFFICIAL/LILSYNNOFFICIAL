@@ -18,6 +18,68 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Normalize legacy pages and runtime regressions
+        if: github.event_name == 'push'
+        shell: python
+        run: |
+          import re
+          from pathlib import Path
+
+          def write_if_changed(path, transform):
+              p=Path(path)
+              s=p.read_text(encoding='utf-8')
+              original=s
+              s=transform(s)
+              if s!=original:
+                  p.write_text(s,encoding='utf-8')
+                  print(f'Updated {path}')
+
+          def normalize_legacy_page(s):
+              s=re.sub(r'<video\b[^>]*\bid=["\']bg["\'][^>]*>.*?</video>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<div\b[^>]*\bid=["\']ov["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<nav\b[^>]*\bclass=["\'][^"\']*\bnav\b[^"\']*["\'][^>]*>.*?</nav>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<div\b[^>]*\bid=["\']menu["\'][^>]*>.*?</div>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<header\b[^>]*\bclass=["\'][^"\']*\bhero\b[^"\']*["\'][^>]*>.*?</header>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<footer\b[^>]*\bclass=["\'][^"\']*\bfooter\b[^"\']*["\'][^>]*>.*?</footer>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<script>\s*const h=document\.getElementById\(["\']hamb["\']\).*?</script>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>','',s,flags=re.I)
+              return s
+
+          for path in ('privacy.html','terms.html','special_access.html'):
+              write_if_changed(path, normalize_legacy_page)
+
+          def normalize_coming(s):
+              s=re.sub(r'<video\b[^>]*\bid=["\']bg["\'][^>]*>.*?</video>','',s,count=1,flags=re.I|re.S)
+              s=re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>','',s,flags=re.I)
+              s=s.replace('</head>','<script src="/site-global.js?v=20260911"></script></head>',1)
+              return s
+          write_if_changed('coming_soon.html', normalize_coming)
+
+          p=Path('releases.html'); s=p.read_text(encoding='utf-8'); original=s
+          s=s.replace("'somewhere_in_between.jpg'","'57_lil_synn_somewhere_in_between.jpg'")
+          if s!=original:p.write_text(s,encoding='utf-8');print('Updated releases.html')
+
+          p=Path('site-global.css'); s=p.read_text(encoding='utf-8'); original=s
+          s=s.replace('var(--glow)','var(--ls-glow)')
+          s=re.sub(r'\.ls-brand-stack\{[^}]*\}', '', s)
+          s=re.sub(r'\.ls-brand\{[^}]*\}', '', s)
+          s=re.sub(r'\.ls-brand img\{[^}]*\}', '', s)
+          s=s.replace('.ls-header .ls-brand{display:none!important}','')
+          s=s.replace("background-image:url('/assets/images/icons/LS_HEADPHONES.png');background-repeat:no-repeat;background-position:center;background-size:64px 64px;",'')
+          s=s.replace('min-width:250px;padding:10px 44px;','min-width:0;padding:10px 12px;')
+          s=s.replace('min-width:220px;padding:9px 36px;background-size:56px 56px;','min-width:0;padding:9px 12px;')
+          if s!=original:p.write_text(s,encoding='utf-8');print('Updated site-global.css')
+
+          p=Path('script.js'); s=p.read_text(encoding='utf-8'); original=s
+          pattern=r"const releaseFix=\(\)=>\{.*?\};const videoOrder="
+          replacement="const releaseFix=()=>{const root=document.querySelector('.release-page #releases');if(!root)return;let running=false;let observer;const run=()=>{if(running)return;running=true;observer.disconnect();reorderReleases().finally(()=>{running=false;observer.observe(root,{childList:true})})};observer=new MutationObserver(run);observer.observe(root,{childList:true});run()};const videoOrder="
+          s=re.sub(pattern,replacement,s,count=1,flags=re.S)
+          if s!=original:p.write_text(s,encoding='utf-8');print('Updated script.js')
+
+          p=Path('index.html'); s=p.read_text(encoding='utf-8'); original=s
+          s=s.replace('/site-global.js?v=20260911','/site-global.js?v=20260914')
+          if s!=original:p.write_text(s,encoding='utf-8');print('Updated index.html cache version')
+
       - name: Normalize homepage shell and background
         if: github.event_name == 'push'
         shell: python
