@@ -8,7 +8,6 @@
 [![Source](https://img.shields.io/badge/SOURCE-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 [![CI](https://img.shields.io/github/actions/workflow/status/LILSYNNOFFICIAL/LILSYNNOFFICIAL/fix-homepage.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/LILSYNNOFFICIAL/LILSYNNOFFICIAL?style=for-the-badge&label=LAST%20COMMIT)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/commits/main)
-[![Repo Size](https://img.shields.io/github/repo-size/LILSYNNOFFICIAL/LILSYNNOFFICIAL?style=for-the-badge&label=REPO%20SIZE)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL)
 
 <br>
 
@@ -33,68 +32,40 @@
 
 This repository is the **production source of truth** for the official LIL SYNN website.
 
-It is deliberately engineered as a lightweight publishing platform rather than a collection of unrelated pages. The site combines static HTML, global browser-native JavaScript, a centralized CSS shell, structured JSON data, media manifests, artwork assets, API endpoints, and GitHub automation into one controlled system.
+The site is intentionally built as a lightweight publishing platform instead of a framework-heavy application. Static HTML, browser-native JavaScript, centralized CSS, structured JSON, media assets, API endpoints, and GitHub automation work together as one system.
 
-The architectural doctrine is:
+### Architectural doctrine
 
-> **One shell. One source of truth. Explicit ownership. Deterministic rendering. Production verification.**
+> **One shell. One source of truth. Explicit ownership. Deterministic rendering. Root-cause fixes. Real verification.**
 
-The goal is not maximum framework complexity. The goal is maximum control over a fast, cinematic artist experience.
-
----
-
-## ⚡ Production Control Panel
-
-| Domain | State | Canonical Owner |
-|---|:---:|---|
-| Global shell | 🟢 | `site-global.js` |
-| Global CSS | 🟢 | `site-global.css` |
-| Release truth | 🟢 | `release-catalog.json` |
-| Release archive | 🟢 | `releases.html` |
-| Music randomization | 🟢 | `music-random.js` |
-| Latest Releases videos | 🟢 | `latest-videos.js` + manifest |
-| Background motion | 🟢 | `script.js` + `assets/mov/` |
-| Ambient audio | 🟢 | THE CALM / global shell |
-| Back To Top | 🟢 | global shell |
-| SEO / metadata | 🟢 | page + global systems |
-| Accessibility | 🟢 | global + page layers |
-| Automation | 🟢 | GitHub Actions |
-| Production delivery | 🟢 | Vercel |
-
-> **Important:** repository state, CI state, deployment state, browser cache state, and runtime DOM state are separate systems. A commit is not visual proof of a production fix.
+The objective is not maximum framework complexity. It is maximum control over a fast, cinematic artist experience.
 
 ---
 
 # 🧬 System Architecture
 
-## The Core Model
-
-The site is organized around three primary concerns:
-
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│                         DATA LAYER                           │
-│                                                              │
-│                  release-catalog.json                        │
-│                  latest-videos.json                          │
-│                  media manifests                            │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                       BEHAVIOR LAYER                         │
-│                                                              │
-│ site-global.js │ script.js │ music-random.js │ latest-videos │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                     PRESENTATION LAYER                       │
-│                                                              │
-│ HTML │ site-global.css │ page CSS │ assets │ media           │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                         DATA LAYER                          │
+│                                                             │
+│ release-catalog.json   latest-videos.json   media manifests │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       BEHAVIOR LAYER                        │
+│                                                             │
+│ site-global.js │ script.js │ music-random.js │ latest-videos│
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     PRESENTATION LAYER                      │
+│                                                             │
+│ HTML │ site-global.css │ page CSS │ assets │ media          │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
                     ┌────────────────────┐
                     │  EVERY PAGE / DOM  │
                     └────────────────────┘
@@ -102,7 +73,7 @@ The site is organized around three primary concerns:
 
 ### Architectural law
 
-**Presentation may consume data. Behavior may derive views from data. Neither should silently redefine canonical truth.**
+**Presentation consumes data. Behavior derives views from data. Canonical truth is never silently redefined by presentation code.**
 
 ---
 
@@ -110,14 +81,12 @@ The site is organized around three primary concerns:
 
 `site-global.js` is the **single authoritative owner of the shared site shell**.
 
-It injects and normalizes the global experience across pages, including:
+It is responsible for the shared experience, including:
 
 - Global header
-- Navigation drawer
-- Navigation groups
-- Social destinations
-- Streaming destinations
-- Footer
+- Navigation drawer and menu behavior
+- Navigation groups and destinations
+- Global footer
 - THE CALM
 - Back To Top
 - Shared metadata normalization
@@ -125,98 +94,87 @@ It injects and normalizes the global experience across pages, including:
 - Keyboard interaction
 - Escape-to-close behavior
 - Body scroll locking
-- Duplicate shell cleanup
+- Duplicate legacy-shell cleanup
 - Global top artwork insertion
-- Global media-loader coordination
+- Global motion-loader coordination
+
+The shell is designed to be **idempotent**. Re-running initialization should not create multiple headers, footers, or shared controls.
 
 ### Shell lifecycle
 
 ```text
 PAGE LOAD
-   │
-   ▼
+   ↓
 site-global.js
-   │
-   ├── inject global CSS
-   ├── normalize metadata
-   ├── remove competing legacy shell nodes
-   ├── create global header
-   ├── create global footer
-   ├── attach global top artwork
-   ├── initialize navigation
-   ├── initialize Back To Top
-   ├── bind THE CALM
-   ├── initialize About controls
-   └── load global motion system
+   ├── global CSS
+   ├── metadata normalization
+   ├── legacy shell cleanup
+   ├── header creation
+   ├── footer creation
+   ├── LS.png top-art insertion
+   ├── navigation initialization
+   ├── Back To Top initialization
+   ├── THE CALM binding
+   ├── About controls
+   └── global motion loading
 ```
-
-The shell is designed to be **idempotent**: running the initialization path should not produce multiple global headers, multiple footers, or duplicate shared controls.
 
 ---
 
 # 👑 Header Geometry Contract
 
-The header architecture is intentionally simple and precise.
+The header is a global geometry contract, not page-specific decoration.
 
 ```text
-┌────────────────────────────────────────────────────────────────┐
-│                                                                │
-│                  ┌──────────────────────┐                      │
-│                  │     LS_LOGO.png      │                      │
-│                  │   TRUE CENTER AXIS   │                      │
-│                  └──────────────────────┘                      │
-│                                                                │
-│ THE CALM                                           ☰ MENU      │
-└────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│                                                               │
+│                    ┌──────────────────┐                       │
+│                    │   LS_LOGO.png    │                       │
+│                    │  TRUE CENTER AXIS│                       │
+│                    └──────────────────┘                       │
+│                                                               │
+│ THE CALM                                           ☰ MENU     │
+└───────────────────────────────────────────────────────────────┘
                               │
-                              │ EXACT BOUNDARY
                               ▼
-                    ┌────────────────────┐
-                    │      LS.png        │
-                    │   GLOBAL TOP ART   │
-                    └────────────────────┘
+                    ┌──────────────────┐
+                    │      LS.png      │
+                    │   GLOBAL TOP ART │
+                    └──────────────────┘
 ```
 
-### What is actually global
+### Current global geometry
 
-The header contains:
+- Desktop header height: `150px`
+- Mobile header height: `118px`
+- Desktop `LS_LOGO.png`: approximately `440px × 138px`
+- Mobile `LS_LOGO.png`: approximately `300px × 100px`
+- Header is fixed to the viewport top
+- Logo is independently centered
+- THE CALM is independently anchored at lower-left
+- Menu is independently anchored at right
+- `LS.png` is inserted immediately after the header
+- The top-art relationship uses the global header height rather than page-specific guesswork
 
-- `LS_LOGO.png` as the centered brand mark
-- `THE CALM` positioned independently at the lower-left area
-- The hamburger navigation control at the right
+### Header hard rules
 
-### What is **NOT** in the header
-
-**Special Access does not belong in the header.**
-
-`LS_HEADPHONES.png` is the Special Access artwork and is currently part of the **footer experience**, where it links to `/special_access.html`.
-
-This distinction is intentional and is now documented as a hard architectural rule.
-
-### Header invariants
-
-1. The header begins flush at the viewport top.
-2. The header spans the viewport width.
-3. `LS_LOGO.png` remains mathematically centered.
-4. Logo scaling does not allow side controls to push the center axis.
-5. THE CALM is positioned independently from the logo.
-6. The menu control is positioned independently from the logo.
-7. `LS.png` begins directly at the header's bottom boundary.
-8. No page invents a competing header offset.
-9. Mobile geometry is controlled by the global shell.
-10. Header changes must be verified at desktop and mobile widths.
+1. Header begins at viewport position `0`.
+2. Header spans the viewport width.
+3. `LS_LOGO.png` stays centered independently of side controls.
+4. THE CALM does not determine logo position.
+5. Menu controls do not determine logo position.
+6. `LS.png` begins at the header boundary.
+7. Pages do not invent competing global header offsets.
+8. Mobile geometry is controlled by the global shell.
+9. Global header changes must be checked at desktop and mobile widths.
 
 ---
 
 # 🎧 Special Access / Footer Identity
 
-The Special Access entry point uses:
+`LS_HEADPHONES.png` is **not a header element**.
 
-```text
-/assets/images/icons/LS_HEADPHONES.png
-```
-
-Its current architectural home is the **global footer**, not the header.
+Its canonical location is the global footer, where it acts as both branding and a navigation affordance for Special Access.
 
 ```text
 GLOBAL FOOTER
@@ -224,44 +182,36 @@ GLOBAL FOOTER
       ├── LIL
       │
       ├── LS_HEADPHONES.png
-      │        │
       │        └── /special_access.html
       │
       └── SYNN
 ```
 
-The footer artwork is therefore both a visual identity element and a navigation affordance.
-
-Do not move `LS_HEADPHONES.png` into the header unless the global shell architecture is intentionally redesigned.
+This separation is intentional. Moving the headphones artwork back into the header would violate the current shell contract unless the architecture is deliberately redesigned.
 
 ---
 
 # 🖼 Global Top Artwork
 
-`LS.png` is not treated as ordinary page content.
+`LS.png` is treated as global top artwork rather than ordinary page content.
 
-The global shell creates a dedicated top-art container immediately after the header:
+The shell creates the predictable relationship:
 
 ```text
 <header class="ls-header">
-        │
-        ▼
+        ↓
 <div class="ls-global-top-art">
-        │
         └── /assets/img/LS.png
 </div>
-        │
-        ▼
+        ↓
 page content
 ```
 
-This gives the artwork a predictable relationship to the header across pages.
-
-The intended rule is:
+The visual rule is:
 
 > **Header ends → LS.png begins → page content follows.**
 
-No arbitrary top margin should be required to visually reconnect those pieces.
+This prevents pages from accumulating arbitrary compensating margins.
 
 ---
 
@@ -279,7 +229,7 @@ LILSYNNOFFICIAL/
 │
 ├── site-global.js              ← GLOBAL SHELL
 ├── site-global.css             ← GLOBAL VISUAL SYSTEM
-├── script.js                   ← GLOBAL MOTION / HOMEPAGE
+├── script.js                   ← GLOBAL MOTION / HOMEPAGE SYSTEM
 ├── site-polish.js              ← HOMEPAGE REFINEMENT
 ├── music-random.js             ← MUSIC PRESENTATION ENGINE
 ├── latest-videos.js             ← VIDEO PRESENTATION ENGINE
@@ -315,35 +265,21 @@ LILSYNNOFFICIAL/
 
 ---
 
-# 💿 Canonical Release Data Architecture
+# 💿 Canonical Release Data
 
 `release-catalog.json` is the **single source of truth** for release identity and ordering.
 
-It currently models:
+It defines or participates in:
 
-- Explicit release order
+- Release order
+- Release identity
 - Release groups
-- Album / EP / single type information
-- Track arrays
-- Streaming destinations
+- Album / EP / single classification
+- Track arrays and track order
 - Artwork relationships
+- Streaming destinations
 - SoundCloud sets
 - Release-specific restrictions
-
-```text
-                    release-catalog.json
-                             │
-          ┌──────────────────┼──────────────────┐
-          ▼                  ▼                  ▼
-       RELEASES            TRACKS          DESTINATIONS
-          │                  │                  │
-          ▼                  ▼                  ▼
-     Archive UI        Music Randomizer    Stream Links
-          │                  │                  │
-          └──────────────────┼──────────────────┘
-                             ▼
-                        PRESENTATION
-```
 
 ### Data ownership rule
 
@@ -355,39 +291,35 @@ If a streaming destination changes, change the catalog.
 
 If artwork mapping changes, change the authoritative mapping.
 
-Do not bury canonical data inside presentation JavaScript.
+Do not duplicate canonical release truth inside presentation scripts.
 
 ---
 
 # 🔐 Release Identity Integrity
 
-Release matching must be identity-aware.
-
-A title string alone is not a safe foreign key because releases can share names or have remastered variants.
-
-### Required behavior
+Title-only matching is unsafe when releases share names or have remastered variants.
 
 ```text
-Exact identity
-     ↓
-Resolve release metadata
-     ↓
-Resolve artwork
-     ↓
-Resolve streaming destinations
-     ↓
-Render presentation
+EXACT RELEASE IDENTITY
+        ↓
+RELEASE METADATA
+        ↓
+ARTWORK
+        ↓
+STREAMING DESTINATIONS
+        ↓
+PRESENTATION
 ```
 
 ### Signal Light Sermon separation
 
-The `Signal Light Sermon` associated with `Touching to the North` must remain distinct from `Signal Light Sermon (Remastered 2026)`.
+`Signal Light Sermon` associated with `Touching to the North` and `Signal Light Sermon (Remastered 2026)` are distinct catalog identities.
 
-They are separate catalog identities and must not inherit one another's artwork or streaming links.
+They must never silently inherit one another's artwork, release metadata, or streaming links.
 
 ### Touching to the North
 
-`Touching to the North` is intentionally SoundCloud-only.
+This release is intentionally SoundCloud-only.
 
 | Destination | Policy |
 |---|:---:|
@@ -404,31 +336,23 @@ Generic fallback logic must respect explicit release restrictions.
 
 `music-random.js` owns homepage RANDOMIZE behavior.
 
-It derives a playable presentation pool from canonical release data.
-
 ```text
 CANONICAL CATALOG
-       │
-       ▼
+       ↓
 DERIVED TRACK POOL
-       │
-       ▼
+       ↓
 VALIDATE
-       │
-       ▼
+       ↓
 DEDUPLICATE
-       │
-       ▼
+       ↓
 APPLY RELEASE RESTRICTIONS
-       │
-       ▼
+       ↓
 RANDOMIZE PRESENTATION
-       │
-       ▼
+       ↓
 RENDER MUSIC CARDS
 ```
 
-The critical distinction is:
+### Core rule
 
 > **Random presentation is allowed. Randomized canonical data is not.**
 
@@ -436,37 +360,34 @@ The critical distinction is:
 
 # 📺 Latest Releases Video Architecture
 
-Latest Videos uses two cooperating sources:
+Latest Videos uses the resolved video manifest together with canonical release ordering.
 
 ```text
-YouTube API / resolver
-          │
-          ▼
- latest-videos.json
-          │
-          ├──────────────┐
-          ▼              ▼
-   video identity    publication data
-          │              │
-          └──────┬───────┘
-                 ▼
-       latest-videos.js
-                 │
-                 ▼
-        release-catalog.json
-                 │
-                 ▼
-       CANONICAL RELEASE ORDER
-                 │
-                 ▼
-          HOMEPAGE VIDEO UI
+YouTube source / resolver
+          ↓
+latest-videos.json
+          ↓
+latest-videos.js
+          ↓
+release-catalog.json
+          ↓
+canonical release order
+          ↓
+Latest Videos UI
 ```
 
-### Ownership rule
+The renderer is responsible for:
 
-> **YouTube provides video source data. The release catalog controls release ordering.**
+- Video deduplication
+- ID and title handling
+- Release identity matching
+- Canonical ordering
+- Intended video count
+- Thumbnail-first playback
+- Privacy-enhanced YouTube playback
+- Clear handling when fewer canonical matches exist
 
-The renderer is responsible for deduplication, identity matching, ordering, intended video count, thumbnail-first playback, and privacy-enhanced playback behavior.
+> **YouTube supplies video data. The release catalog controls release ordering.**
 
 ---
 
@@ -484,7 +405,7 @@ The generated manifest is:
 /assets/mov/index.json
 ```
 
-The pipeline is:
+The intended pipeline is:
 
 ```text
 WebM files
@@ -497,12 +418,14 @@ script.js
     ↓
 global fixed background video
     ↓
-contrast overlay
+contrast layer
     ↓
 page content
 ```
 
-The motion system is global. It must not be duplicated per page.
+The active background asset is `LS_BG_STARS.webm`.
+
+A previous reference to `LG_BG_STARS.webm` was identified as invalid and corrected.
 
 ---
 
@@ -516,9 +439,7 @@ Primary source:
 /assets/other/sound/Background.mp3
 ```
 
-The global shell binds the control to the shared audio element and coordinates it with foreground video playback.
-
-The intended result is one coherent ambient-audio state rather than multiple pages fighting over playback.
+The global shell coordinates the shared ambient audio state with foreground video playback so separate pages and media systems do not fight over playback.
 
 ---
 
@@ -530,85 +451,196 @@ Back To Top is globally owned and uses:
 /assets/images/icons/UP_ARROWS.png
 ```
 
-It appears once and is injected by the shell.
+It should exist once and be injected by the shell rather than independently recreated by every page.
 
 ---
 
-# 🧠 Runtime Lifecycle & DOM Ownership
+# 🧠 Runtime DOM Ownership
 
-The site uses browser-native DOM orchestration rather than a framework runtime.
-
-That makes **ownership boundaries** especially important.
+This is a browser-native application, so DOM ownership is critical.
 
 ```text
 HTML PAGE
-   │
-   ├── page content
-   │
-   └── global loader
-           │
-           ▼
-     site-global.js
-           │
-           ├── global shell
-           ├── global top art
-           ├── global controls
-           └── shared behavior
-                    │
-                    ▼
-             feature modules
-                    │
-          ┌─────────┼─────────┐
-          ▼         ▼         ▼
-      Music       Videos    Homepage
+   ↓
+GLOBAL LOADER
+   ↓
+site-global.js
+   ├── shell
+   ├── global top art
+   ├── shared controls
+   └── shared behavior
+            ↓
+       feature modules
+       ├── Music
+       ├── Videos
+       └── Homepage
 ```
 
-### Defensive DOM rules
+### Defensive DOM rule
 
-Shared scripts may normalize the DOM defensively, but defensive cleanup must never become an excuse for unclear ownership.
+When a duplicate appears, determine **who created it** before adding another cleanup rule.
 
-When a duplicate appears, trace **who created it** before adding another removal rule.
+Defensive normalization is useful. Unbounded cleanup logic is not.
 
 ---
 
-# 🧱 Architectural Invariants
+# 🐛 QA Hardening Log
 
-These are the rules that should survive future redesigns:
+The latest source-level audit found and addressed several real defects.
 
-| Invariant | Requirement |
-|---|---|
-| Global shell | One authoritative implementation |
-| Header | Flush to viewport top |
-| Brand logo | Independently centered |
-| `LS.png` | Begins at header boundary |
-| `LS_HEADPHONES.png` | Footer Special Access artwork |
-| THE CALM | Global, single owner |
-| Back To Top | Global, single owner |
-| Release order | Catalog-owned |
-| Track order | Catalog-owned |
-| Streaming identity | Exact-release aware |
-| Randomization | Presentation-only |
-| Video ordering | Catalog-aware |
-| WebM background | Global, single owner |
-| Responsive rules | Global shell owns global geometry |
-| Accessibility | Required, not optional |
-| Production verification | Browser/runtime validation required |
+## 1. Release archive MutationObserver loop
+
+`script.js` previously observed the release archive and then mutated that same DOM inside the observer callback. Reordering releases triggered another mutation, which could trigger another reorder, creating an observer feedback loop.
+
+### Fix
+
+The observer is disconnected while the reorder operation runs and reattached after completion, with a running guard to prevent re-entry.
+
+---
+
+## 2. Latest Videos MutationObserver loop
+
+The YouTube ordering logic had the same structural problem: the observer watched the grid while the fix routine sorted and appended cards into that grid.
+
+### Fix
+
+The video-order observer now disconnects during processing and reconnects after asynchronous work completes. A running guard prevents recursive execution.
+
+---
+
+## 3. Broken Somewhere In-Between artwork
+
+The release archive contained an invalid artwork filename for `Somewhere In-Between`.
+
+Invalid mapping:
+
+```text
+somewhere_in_between.jpg
+```
+
+Correct asset:
+
+```text
+57_lil_synn_somewhere_in_between.jpg
+```
+
+The canonical artwork mapping now resolves to the existing asset.
+
+---
+
+## 4. Invalid background filename
+
+The automation previously referenced:
+
+```text
+assets/mov/LG_BG_STARS.webm
+```
+
+The actual background asset is:
+
+```text
+assets/mov/LS_BG_STARS.webm
+```
+
+The incorrect reference was removed.
+
+---
+
+## 5. Coming Soon background cleanup
+
+`coming_soon.html` previously referenced a nonexistent `BG_ANI.webm` implementation.
+
+The page now relies on the global motion system instead of maintaining a competing background-video implementation.
+
+A stale `#bg` CSS selector remains harmless cleanup debt and should not be treated as an active background system.
+
+---
+
+## 6. Global CSS variable defect
+
+A hover/focus rule referenced an undefined variable:
+
+```text
+var(--glow)
+```
+
+The canonical global variable is:
+
+```text
+var(--ls-glow)
+```
+
+The CSS now uses the defined variable.
+
+---
+
+## 7. Legacy header Special Access duplication
+
+The legacy header implementation contained a Special Access element using `LS_HEADPHONES.png`.
+
+That competed with the intended footer architecture.
+
+The legacy header element was removed. Special Access now belongs to the footer.
+
+---
+
+## 8. Special Access player preservation
+
+During shell cleanup, the Special Access archive player was accidentally removed once during an automated rewrite.
+
+That regression was caught and the full archive player was restored, including:
+
+- Track cards
+- Queue
+- Previous / play / next controls
+- Progress seeking
+- Volume control
+- Automatic next-track behavior
+- Load-error handling
+- Keyboard activation with Enter / Space
+
+This is documented because shared-shell refactors must not destroy feature-specific functionality.
+
+---
+
+## 9. 404 shell alignment
+
+The 404 page was still using an older global-shell version and was updated to align with the current shell architecture, including global header geometry and current shell versioning.
+
+### Important implementation note
+
+If a page explicitly loads `site-global.css`, it should use the canonical stylesheet identifier expected by `site-global.js`, or the explicit stylesheet should be removed in favor of the shell loader. Otherwise the browser can receive duplicate global CSS.
+
+This is an architectural consistency check that should remain part of future QA.
+
+---
+
+## 10. API environment naming
+
+The YouTube API endpoint and automation historically used different environment variable names:
+
+```text
+YOUTUBE_DATA_API_KEY
+YOUTUBE_API_KEY
+```
+
+The API path should support the canonical workflow secret or intentionally preserve both names for compatibility. Environment naming must be verified as part of deployment configuration, not inferred from source alone.
 
 ---
 
 # 🧪 Verification Matrix
 
-A serious change is not finished when the code compiles or a commit exists.
+A change is not finished merely because a commit exists.
 
 ### Global shell
 
 - [ ] Header starts at viewport `0`
 - [ ] Header height is intentional
 - [ ] `LS_LOGO.png` is correctly sized
-- [ ] Logo center remains stable
+- [ ] Logo remains independently centered
 - [ ] THE CALM remains independently anchored
 - [ ] Menu remains independently anchored
-- [ ] `LS.png` begins immediately after header
+- [ ] `LS.png` begins at the header boundary
 - [ ] No duplicate header exists
 - [ ] No duplicate footer exists
 - [ ] Special Access remains in footer
@@ -617,21 +649,32 @@ A serious change is not finished when the code compiles or a commit exists.
 ### Data
 
 - [ ] Catalog JSON parses
-- [ ] Explicit release order is preserved
+- [ ] Release order is preserved
 - [ ] Track order is preserved
 - [ ] Release identities remain distinct
 - [ ] Streaming restrictions remain intact
-- [ ] Artwork mappings resolve
+- [ ] Artwork mappings resolve to real assets
+
+### Runtime
+
+- [ ] Release observer does not recursively trigger itself
+- [ ] Video observer does not recursively trigger itself
+- [ ] Async observers reconnect correctly
+- [ ] Duplicate shell cleanup is idempotent
+- [ ] Global motion has one owner
+- [ ] THE CALM has one owner
+- [ ] Back To Top has one owner
 
 ### Media
 
 - [ ] WebM manifest resolves
 - [ ] Background motion loads
-- [ ] Contrast overlay remains readable
+- [ ] Contrast remains readable
 - [ ] THE CALM works
-- [ ] Video playback pauses ambient audio appropriately
+- [ ] Foreground video playback coordinates with ambient audio
 - [ ] Latest Videos deduplicate correctly
 - [ ] Latest Videos follow canonical release order
+- [ ] YouTube playback uses privacy-enhanced embeds
 
 ### Responsive
 
@@ -646,10 +689,10 @@ A serious change is not finished when the code compiles or a commit exists.
 
 ### Accessibility
 
-- [ ] Keyboard navigation
-- [ ] Visible focus states
-- [ ] Meaningful labels
-- [ ] Accurate ARIA state
+- [ ] Keyboard navigation works
+- [ ] Focus states are visible
+- [ ] Controls have meaningful labels
+- [ ] ARIA state is accurate
 - [ ] Escape closes navigation
 - [ ] Body scroll locking behaves correctly
 - [ ] Reduced-motion behavior is respected
@@ -660,36 +703,40 @@ A serious change is not finished when the code compiles or a commit exists.
 - [ ] Generated assets are current
 - [ ] Deployment completes
 - [ ] Production URL responds
-- [ ] Real browser behavior checked
-- [ ] Cache behavior checked
-- [ ] Shared consumers checked for regression
+- [ ] Real browser behavior is checked
+- [ ] Cache behavior is checked
+- [ ] Shared consumers are checked for regressions
 
 ---
 
 # 🤖 Automation & CI
 
-GitHub Actions provide repository-level automation and guardrails.
+GitHub Actions provide repository-level automation and data-maintenance guardrails.
 
 ### `fix-homepage.yml`
 
-The workflow supports architectural hygiene tasks such as:
+The workflow is intended to support tasks such as:
 
 - Removing stale homepage shell markup
 - Preventing duplicate navigation implementations
-- Removing legacy references
+- Removing obsolete references
 - Preserving the canonical global loader
 - Generating media indexes
 - Validating required assets
 - Validating release data
-- Checking SEO-related files
+- Checking SEO files
 - Checking sitemap coverage
 - Committing generated changes when appropriate
 
 ### `update-latest-videos.yml`
 
-The repository also maintains a dedicated workflow for the latest-video data path.
+Maintains the latest-video data path and its resolved manifest.
 
-Automation is a guardrail, not a substitute for human browser verification.
+### CI philosophy
+
+Automation is a guardrail, not proof of visual correctness.
+
+A successful workflow cannot prove that a browser rendered the intended geometry, spacing, media behavior, or mobile layout.
 
 ---
 
@@ -699,25 +746,25 @@ Automation is a guardrail, not a substitute for human browser verification.
 ┌───────────────────┐
 │   Local Changes   │
 └─────────┬─────────┘
-          ▼
+          ↓
 ┌───────────────────┐
 │   GitHub / main   │
-│  Production Source│
+│ Production Source │
 └─────────┬─────────┘
-          ▼
+          ↓
 ┌───────────────────┐
-│  GitHub Actions   │
+│   GitHub Actions  │
 │ Validation / Data │
 └─────────┬─────────┘
-          ▼
+          ↓
 ┌───────────────────┐
 │ Generated Assets  │
 └─────────┬─────────┘
-          ▼
+          ↓
 ┌───────────────────┐
 │      Vercel       │
 └─────────┬─────────┘
-          ▼
+          ↓
 ┌───────────────────┐
 │   lilsynn.com     │
 └───────────────────┘
@@ -737,13 +784,13 @@ CACHE
 RUNTIME DOM
 ```
 
-When debugging production, identify which state is actually wrong before changing code.
+When debugging production, identify which state is wrong before changing code.
 
 ---
 
 # 🧹 Root-Cause Engineering
 
-The preferred debugging sequence is:
+Preferred debugging sequence:
 
 ```text
 OBSERVE
@@ -781,6 +828,7 @@ Do not:
 - Add CSS patches without understanding DOM ownership
 - Assume CI proves visual correctness
 - Assume GitHub proves deployment correctness
+- Remove feature code during shell refactors without testing the feature owner
 
 ---
 
@@ -788,25 +836,26 @@ Do not:
 
 The site intentionally favors small deterministic browser modules over unnecessary framework overhead.
 
-Performance priorities include:
+Priorities include:
 
-- Avoiding duplicate global systems
-- Avoiding redundant network work
-- Lazy-loading expensive media where appropriate
+- One global shell
+- Minimal duplicate DOM
+- Minimal redundant network work
+- Lazy media where appropriate
 - Thumbnail-first video playback
 - Muted inline background video
 - Responsive media sizing
-- Cache-aware shared assets
-- Minimal DOM duplication
 - Explicit data manifests
+- Cache-aware shared assets
+- Stable runtime behavior
 
-The performance goal is not simply a fast first paint. It is a **fast, stable, predictable experience after the entire shell is active**.
+The goal is a fast and predictable experience after the full shell is active, not merely a fast initial paint.
 
 ---
 
 # ♿ Accessibility Philosophy
 
-Accessibility is part of the architecture.
+Accessibility is architectural, not decorative.
 
 Preserve:
 
@@ -828,7 +877,7 @@ Every new interactive component should be usable without requiring a pointer.
 
 # 🔎 SEO & Discoverability
 
-The production system includes dedicated support for:
+The production system supports:
 
 - Canonical URLs
 - Meta descriptions
@@ -838,26 +887,32 @@ The production system includes dedicated support for:
 - Crawlable page structure
 - Dedicated 404 handling
 
-The global shell normalizes missing canonical metadata where appropriate, while page-level metadata remains responsible for page-specific identity.
+The global shell can normalize missing canonical metadata, while page-level metadata remains responsible for page-specific identity.
 
 ---
 
 # 🧬 Cache & Versioning
 
-Shared assets may use version query parameters when a deployment requires cache invalidation:
+Shared assets may use version query parameters when cache invalidation is required:
 
 ```html
 <script src="/site-global.js?v=YYYYMMDD"></script>
-<link rel="stylesheet" href="/site-global.css?v=YYYYMMDD">
+<link id="site-global-css" rel="stylesheet" href="/site-global.css?v=YYYYMMDD">
 ```
 
-Cache busting should be intentional. Do not increment versions randomly without a changed asset or deployment reason.
+Cache busting should be intentional. Do not increment versions randomly.
+
+### Global CSS ownership rule
+
+If a page explicitly includes the global stylesheet, it should identify it as the canonical global stylesheet so `site-global.js` does not inject a second copy.
+
+This is especially important on pages such as `404.html`, `releases.html`, `special_access.html`, `privacy.html`, `terms.html`, and `coming_soon.html`.
 
 ---
 
 # 🖤 Visual System
 
-The visual language is intentionally cinematic, dark, premium, and music-first.
+The visual language is cinematic, dark, premium, and music-first.
 
 ```text
 MATTE BLACK
@@ -873,13 +928,11 @@ DARK ATMOSPHERE
 CINEMATIC MOTION
 ```
 
-The website should feel like a single artist universe, not a generic template with disconnected pages.
+The website should feel like one artist universe rather than a generic template assembled from unrelated pages.
 
 ---
 
 # 📋 Production Change Protocol
-
-Before modifying a shared feature:
 
 ### 01 · Inspect
 Understand the current implementation before editing it.
@@ -900,10 +953,10 @@ Delete competing implementations when the canonical owner replaces them.
 Check data, DOM, responsive geometry, accessibility, and media behavior.
 
 ### 07 · Deploy
-Move through the production pipeline.
+Move through the actual production pipeline.
 
 ### 08 · Confirm
-Test the actual production runtime.
+Test the real production runtime.
 
 ---
 
@@ -928,6 +981,34 @@ A change that exists only in source control is **implemented**, not necessarily 
 
 ---
 
+# 🍪 Current QA Status
+
+The latest audit was performed primarily at the **source, dependency, DOM-flow, asset, and architecture level**.
+
+### Confirmed hardening completed
+
+- Global header Special Access duplication removed
+- Global header geometry documented
+- Global `LS.png` top-art contract documented
+- Release archive observer feedback loop fixed
+- Latest Videos observer feedback loop fixed
+- `Somewhere In-Between` artwork mapping corrected
+- Invalid `LG_BG_STARS.webm` reference corrected
+- `BG_ANI.webm` competing background implementation removed from Coming Soon
+- Undefined `--glow` CSS variable corrected to `--ls-glow`
+- Special Access archive player restored after refactor regression
+- 404 page aligned with the current global shell
+
+### Verification limitation
+
+Source-level correctness is not the same thing as visual production verification.
+
+The repository should still be checked in a real browser at desktop, tablet, mobile, and narrow-mobile sizes after deployment. Vercel deployment availability or rate limits must also be treated as a separate deployment-state concern.
+
+Do **not** claim a visual production fix is verified solely because GitHub contains the expected code.
+
+---
+
 # 🔗 Official Destinations
 
 | Destination | Purpose |
@@ -942,7 +1023,9 @@ A change that exists only in source control is **implemented**, not necessarily 
 
 This repository is production infrastructure for the LIL SYNN digital universe.
 
-The standard is not **"does this patch make the page look right?"**
+The standard is not:
+
+> "Does this patch make the page look right?"
 
 The standard is:
 
@@ -955,6 +1038,8 @@ ONE OWNER
 ONE SOURCE OF TRUTH
 ONE GLOBAL EXPERIENCE
 ZERO DUPLICATE SYSTEMS
+ROOT CAUSE OVER PATCHES
+VERIFY THE REAL RUNTIME
 ```
 
 ---
