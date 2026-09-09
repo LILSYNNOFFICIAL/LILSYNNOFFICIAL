@@ -44,7 +44,9 @@ if(css.includes('LG_BG_STARS.webm')||css.includes('BG_ANI.webm'))fail('site-glob
 if(!exists('assets/mov/LS_BG_STARS.webm'))fail('assets/mov/LS_BG_STARS.webm missing');
 if(!exists('assets/images/icons/LS_LOGO.png'))fail('LS_LOGO.png missing');
 if(!exists('assets/images/icons/LS_HEADPHONES.png'))fail('LS_HEADPHONES.png missing');
-for(const required of ['archive.html','release.html','gallery.html','universe.html','latest-releases.js','music-random.js'])if(!exists(required))fail(`${required} missing`);
+for(const required of ['archive.html','release.html','gallery.html','universe.html','latest-releases.js','music-random.js','site-polish.js'])if(!exists(required))fail(`${required} missing`);
+if(exists('site-global.js')){const g=fs.readFileSync('site-global.js','utf8');if(!g.includes('site-polish.js'))fail('site-global.js: discovery polish module is not loaded');if(!g.includes("const streams=[['Spotify'"))fail('site-global.js: streaming menu contract missing');if(g.includes("['TIDAL'")||g.includes("['Amazon Music'"))warn('site-global.js: non-core streaming destinations detected outside the focused Spotify / Apple Music / YouTube menu');}
+if(exists('latest-releases.js')){const l=fs.readFileSync('latest-releases.js','utf8');for(const platform of ['SPOTIFY','APPLE MUSIC','YOUTUBE'])if(!l.includes(`stream('${platform}'`))fail(`latest-releases.js: ${platform} CTA missing`);}
 if(exists('transmissions.json')){try{const t=JSON.parse(fs.readFileSync('transmissions.json','utf8'));if(!Array.isArray(t.transmissions))fail('transmissions.json: transmissions array missing')}catch(e){fail(`transmissions.json: invalid JSON (${e.message})`)}}
 
 console.log(`LIL SYNN SITE DOCTOR: ${htmlFiles.length} HTML files, ${jsFiles.length} JS modules scanned.`);
