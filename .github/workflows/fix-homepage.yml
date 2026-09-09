@@ -1,4 +1,4 @@
-name: Validate homepage architecture
+name: Validate and clean homepage architecture
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-homepage:
@@ -15,6 +15,72 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove legacy homepage shell
+        if: github.event_name == 'push'
+        shell: python
+        run: |
+          import re
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          original = s
+
+          # Remove the old fixed primary navigation.
+          s = re.sub(
+              r'<nav\s+class="fixed top-0 z-50 w-full bg-black/60 backdrop-blur-lg border-b border\[#ff008f\]/30"\s+aria-label="Primary navigation">.*?</nav>',
+              '', s, count=1, flags=re.I | re.S
+          )
+
+          # Remove the old side drawer and its nested legacy navigation.
+          s = re.sub(
+              r'<div\s+id="sideMenu"\b[^>]*>.*?</div>\s*(?=<section\b)',
+              '', s, count=1, flags=re.I | re.S
+          )
+
+          # Remove any remaining legacy top-level header/footer blocks.
+          s = re.sub(r'<header(?![^>]*data-ls-header)[^>]*>.*?</header>', '', s, flags=re.I | re.S)
+          s = re.sub(r'<footer(?![^>]*data-ls-footer)[^>]*>.*?</footer>', '', s, flags=re.I | re.S)
+
+          # Remove obsolete legacy shell CSS rules without touching universal shell CSS.
+          obsolete = [
+              r'\s*nav\s*\{\s*height:var\(--nav-height\);\s*\}',
+              r'\s*nav\s*>\s*\.max-w-7xl\s*\{.*?\}',
+              r'\s*#sideMenu\s*\{.*?\}',
+              r'\s*nav\s+\.flex\.items-center\s*\{.*?\}',
+              r'\s*nav\s+\.flex\.items-center\s+span\s*\{.*?\}',
+              r'\s*\.site-headphones\s*\{.*?\}',
+              r'\s*@media\s*\(max-width:640px\)\{nav \.flex\.items-center.*?\.site-headphones\{.*?\}\}',
+              r'\s*@media\s*\(min-width:768px\)\{#sideMenu.*?\}',
+          ]
+          for pattern in obsolete:
+              s = re.sub(pattern, '', s, flags=re.I | re.S)
+
+          # Ensure the canonical universal shell is loaded exactly once.
+          s = re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>', '', s, flags=re.I)
+          marker = '<script src="/site-global.js?v=20260911"></script>'
+          s = s.replace('</head>', marker + '</head>', 1) if '</head>' in s else s
+
+          if s != original:
+              p.write_text(s, encoding='utf-8')
+
+      - name: Commit source cleanup
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo 'No legacy homepage shell changes needed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Remove legacy homepage shell from source'
+          git push
 
       - name: Validate required source and media assets
         shell: bash
@@ -34,16 +100,22 @@ jobs:
           test -f "assets/images/icons/album_art/Never Known_album_cover.jpg"
           test -f "assets/images/icons/album_art/home_acoustic_version.png"
           test -f "assets/images/icons/album_art/I DID IT AGAIN.jpg"
-          echo "Required homepage architecture and canonical media assets are present."
 
-      - name: Reject obsolete BG2 references
+      - name: Reject obsolete shell and media references
         shell: bash
         run: |
           set -euo pipefail
-          if grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .; then
-            echo 'ERROR: BG2.webm is not a repository asset and must not be referenced by source.'
-            exit 1
-          fi
+          ! grep -q 'aria-label="Primary navigation"' index.html
+          ! grep -q 'id="sideMenu"' index.html
+          ! grep -q 'class="site-headphones"' index.html
+          ! grep -q 'assets/img/LS_HEADPHONES.png' index.html
+          ! grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .
+
+      - name: Validate universal shell reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -o '/site-global.js' index.html | wc -l)" -eq 1
 
       - name: Validate releases canonical URL
         shell: bash
