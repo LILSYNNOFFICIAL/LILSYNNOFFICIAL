@@ -24,6 +24,14 @@
       "body": "Music, visuals, animation, and storytelling are being built as one connected universe.",
       "cta": "WATCH",
       "href": "/#videos"
+    },
+    {
+      "id": "archive-explorer",
+      "label": "TRANSMISSION 004",
+      "title": "ARCHIVE EXPLORER",
+      "body": "Search the catalog by release, track, type, or streaming platform and follow any result into its canonical release experience.",
+      "cta": "ENTER ARCHIVE",
+      "href": "/archive.html"
     }
   ]
 }
