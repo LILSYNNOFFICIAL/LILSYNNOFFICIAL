@@ -14,15 +14,13 @@
 
 ## ◈ Executive Summary
 
-This repository is the production source of truth for the official LIL SYNN website.
-
-The site is intentionally lightweight and browser-native. Static HTML, centralized CSS, JavaScript modules, structured JSON, media assets, API endpoints, and GitHub automation work together as one system.
+This repository is the production source of truth for the official LIL SYNN website. The site is intentionally lightweight and browser-native: static HTML, centralized CSS, deterministic JavaScript modules, structured JSON, media assets, API endpoints, and GitHub automation work together as one system.
 
 ### Architectural doctrine
 
 > **One shell. One source of truth. Explicit ownership. Deterministic rendering. Root-cause fixes. Real verification.**
 
-The objective is maximum control over a fast, cinematic, music-first artist experience without unnecessary framework complexity.
+The site is a music-first gateway to official streaming and video destinations, not a replacement for them.
 
 ---
 
@@ -53,38 +51,20 @@ Presentation consumes canonical data. Behavior derives views from that data. Pre
 
 # 👑 Global Shell
 
-`site-global.js` is the single authoritative owner of the shared site shell.
+`site-global.js` is the authoritative owner of the shared shell. It owns the global header, navigation drawer, footer, THE CALM, Back To Top, metadata normalization, About controls, keyboard/Escape behavior, body scroll locking, legacy-shell cleanup, global `LS.png` top artwork, motion coordination, Signal loading, skip navigation, and global MusicGroup structured data.
 
-It owns the global header, navigation drawer, footer, THE CALM, Back To Top, shared metadata normalization, About controls, keyboard/Escape behavior, body scroll locking, legacy-shell cleanup, global `LS.png` top artwork, motion coordination, Signal loading, skip navigation, and global MusicGroup structured data.
-
-The shell is idempotent. Re-running initialization must not create duplicate global components.
+The shell is idempotent and must not create duplicate global components.
 
 ## Header geometry contract
-
-```text
-┌───────────────────────────────────────────────────────────────┐
-│                                                               │
-│                    LS_LOGO.png                                │
-│                    TRUE CENTER AXIS                           │
-│                                                               │
-│ THE CALM                                           ☰ MENU     │
-└───────────────────────────────────────────────────────────────┘
-                              ↓
-                         LS.png
-                              ↓
-                        page content
-```
-
-Current geometry:
 
 - Desktop header: `150px`
 - Mobile header: `118px`
 - Desktop logo: approximately `440px × 138px`
 - Mobile logo: approximately `300px × 100px`
 - Header begins at viewport position `0`
-- Logo is independently centered
-- THE CALM is independently anchored lower-left
-- Menu is independently anchored right
+- `LS_LOGO.png` is independently centered
+- THE CALM is lower-left
+- Menu is right-aligned
 - `LS.png` begins at the header boundary
 - `LS_HEADPHONES.png` is footer-only and links to `/special_access.html`
 
@@ -92,41 +72,39 @@ Current geometry:
 
 # 💿 Canonical Release Architecture
 
-`release-catalog.json` is the single source of truth for release identity and ordering.
-
-It controls release order, release identity, album/EP/single classification, track arrays and order, streaming destinations, release restrictions, and SoundCloud sets.
+`release-catalog.json` is the single source of truth for release identity and ordering. It controls release order, identity, album/EP/single classification, track arrays and order, streaming destinations, restrictions, and SoundCloud sets.
 
 If release order changes, change the catalog. If track order changes, change the catalog. If a streaming destination changes, change the catalog.
 
-Release identity is more important than loose title matching. Remastered variants and overlapping names must remain distinct.
-
-`Touching to the North` is intentionally SoundCloud-only. Generic fallback logic must never invent Spotify or Apple Music destinations for it.
+Release identity is more important than loose title matching. `Touching to the North` is intentionally SoundCloud-only and fallback logic must never invent other destinations.
 
 ---
 
 # 📄 Release Detail Experience
 
-`release.html` is the dynamic release-detail route.
+`release.html` resolves a requested release against `release-catalog.json` and derives artwork, type, tracklist, official streaming destinations, previous/next releases, related archive recommendations, dynamic metadata, canonical identity, Open Graph artwork, and release structured data.
+
+Example:
 
 ```text
 /release.html?id=Hello%20Goodbye
 ```
 
-It resolves the requested release against `release-catalog.json` and derives artwork, release type, tracklist, official streaming destinations, previous/next releases, and related archive recommendations.
+---
 
-Phase 1 established the dynamic release experience. Phase 2 expanded it into a streaming-first discovery path. Phase 3 hardened its SEO and structured-data identity.
+# 🚀 Phase 1 — Dynamic Release Foundation — COMPLETE
+
+Established the dynamic release experience, canonical release data flow, archive-to-detail routing, Signal foundation, Site Doctor foundation, and the global shell architecture.
 
 ---
 
 # 🚀 Phase 2 — Discovery + Streaming Conversion — COMPLETE
 
-Phase 2 established release-to-release discovery and streaming conversion.
-
 Capabilities:
 
 - Previous/next release routing
 - Related archive recommendations
-- Return to the complete release archive
+- Return to the complete archive
 - Music and Latest Videos pathways
 - Strong streaming-first calls to action
 - Dynamic release metadata
@@ -143,8 +121,6 @@ Capabilities:
 DISCOVER → ENGAGE → CHOOSE MUSIC / VIDEO → OFFICIAL PLATFORM → STREAM / WATCH
 ```
 
-The website is a gateway to the streaming ecosystem, not a replacement for it. No personal profiling layer and no proprietary player replacing official streaming destinations.
-
 Completion commit:
 
 ```text
@@ -155,49 +131,30 @@ Completion commit:
 
 # 🚀 Phase 3 — Discoverability + Accessibility + Performance — COMPLETE
 
-Phase 3 made the existing experience easier to discover, navigate, and run.
-
-### Discoverability
+Capabilities:
 
 - Global `MusicGroup` JSON-LD
-- Release-specific `MusicAlbum` / `MusicRelease` structured data
+- Release `MusicAlbum` / `MusicRelease` structured data
 - Dynamic release canonical URLs
 - Release-specific Open Graph artwork
 - Release-specific titles and descriptions
-
-### Accessibility
-
 - Global keyboard-visible Skip to main content
-- Automatic main-content target creation where needed
-- Existing focus, keyboard, Escape, and reduced-motion behavior preserved
+- Automatic main-content target creation
+- Preserved focus, keyboard, Escape, and reduced-motion behavior
+- Normal browser caching for Signal transmissions
+- Low-power and Save-Data handling
+- Lazy media and thumbnail-first strategies
+- No heavy framework dependency
 
-### Performance
-
-- Signal transmissions use normal browser caching
-- Low-power and Save-Data behavior remains active
-- Lazy media and thumbnail-first strategies remain intact
-- No heavy framework dependency introduced
-
-Phase 3 completion commits:
-
-```text
-31fe7ae96e0d0f7c281484c40e947827eb4fac0e  global accessibility + structured data
- a0dbff339edd103298c0c8100f03b9fa87bc2c24  release SEO metadata + structured data
-4ddb5b2555c1b080f158e2b678740aa5251b05d6  signal transmission caching
- ef75807166f8de78b2adc99b3835a0c107b1a30a  skip navigation refinement
-```
-
-Design law:
+### Design law
 
 > **Make the existing experience easier to understand, easier to navigate, and cheaper for the browser to run.**
+
+Note: the historical Phase 3 commit hashes previously recorded in this document were not independently reliable and are intentionally omitted rather than repeated as facts.
 
 ---
 
 # 🚀 Phase 4 — Archive Intelligence + Catalog Exploration — COMPLETE
-
-Phase 4 turns the release archive into an actual exploration surface without creating a second release database.
-
-## Archive Explorer
 
 `archive.html` is a searchable, shareable archive exploration route.
 
@@ -205,24 +162,19 @@ Capabilities:
 
 - Search by release title
 - Search by track title
-- Filter by Album / EP / Single
-- Filter by Spotify / Apple Music / SoundCloud availability
-- Catalog order
-- A → Z order
-- Z → A order
+- Album / EP / Single filters
+- Spotify / Apple Music / SoundCloud filters
+- Catalog, A → Z, and Z → A ordering
 - Live result counts
 - Shareable URL state using `q`, `type`, `platform`, and `sort`
 - Keyboard-friendly native controls
 - Reduced-motion-safe interaction
-- Every result resolves to the canonical `/release.html?id=...` experience
+- Canonical routing into `/release.html?id=...`
+- Signal integration through `TRANSMISSION 004`
 
-The explorer consumes `release-catalog.json` directly. It does not maintain duplicate release metadata.
+The explorer consumes `release-catalog.json` directly and does not maintain duplicate release metadata.
 
-## Signal integration
-
-`transmissions.json` now exposes the Archive Explorer as `TRANSMISSION 004`, making the new discovery layer reachable from the existing Signal system.
-
-### Phase 4 design law
+### Design law
 
 > **Make the archive discoverable without fragmenting the source of truth.**
 
@@ -231,6 +183,47 @@ Completion commits:
 ```text
 fa8b7a45bf626a90bdafc5619851528cbfe3170a  archive explorer
 4d467030d71514fc7d7db9251fc43ad9b1956775  Signal Archive Explorer transmission
+c1f6b05b22961666109fca324e7f3d520bd98aea  Phase 4 README completion record
+```
+
+---
+
+# 🚀 Phase 5 — Production Integrity + QA Guardrails — COMPLETE
+
+Phase 5 strengthens the repository's deterministic verification layer so architectural regressions are caught before they become production problems.
+
+## Site Doctor hardening
+
+`tools/site-doctor.mjs` now checks:
+
+- Missing global shell script
+- Duplicate explicit `site-global.js`
+- Duplicate explicit `site-global.css`
+- Duplicate meta descriptions
+- Duplicate canonical links
+- Missing local assets/references
+- Missing `<main>` landmarks as accessibility warnings
+- Legacy shell markers
+- Release catalog validity
+- Duplicate catalog order entries
+- Catalog order entries without matching groups
+- JavaScript syntax across repository modules
+- Undefined `--glow`
+- Stale background asset references
+- Required global assets
+- Required archive/release routes
+- `transmissions.json` validity
+
+The guardrail remains deterministic and repository-local. It does not pretend to replace real browser verification.
+
+### Phase 5 design law
+
+> **Catch structural regressions at the source before they reach the visitor.**
+
+Completion commit:
+
+```text
+bde5456054e15e59bd05af18a8e893348d9d5984  Site Doctor integrity hardening
 ```
 
 ---
@@ -240,17 +233,7 @@ fa8b7a45bf626a90bdafc5619851528cbfe3170a  archive explorer
 Latest Videos uses resolved YouTube data together with canonical release ordering.
 
 ```text
-YouTube source
-      ↓
-latest-videos.json
-      ↓
-latest-videos.js
-      ↓
-release-catalog.json
-      ↓
-canonical release order
-      ↓
-Latest Videos UI
+YouTube source → latest-videos.json → latest-videos.js → release-catalog.json → Latest Videos UI
 ```
 
 The renderer owns video deduplication, ID/title handling, release identity matching, canonical ordering, thumbnail-first playback, and privacy-enhanced YouTube playback.
@@ -267,13 +250,13 @@ The active global background is:
 /assets/mov/LS_BG_STARS.webm
 ```
 
-The media pipeline is:
+Pipeline:
 
 ```text
-WebM files → /assets/mov/index.json → script.js → global fixed background → contrast layer → page content
+WebM → /assets/mov/index.json → script.js → global fixed background → contrast layer → page content
 ```
 
-Stale `LG_BG_STARS.webm` references and the competing `BG_ANI.webm` implementation were removed from the active architecture.
+Stale `LG_BG_STARS.webm` and competing `BG_ANI.webm` references were removed from the active architecture.
 
 ---
 
@@ -287,7 +270,7 @@ Primary source:
 /assets/other/sound/Background.mp3
 ```
 
-The shell coordinates ambient audio with foreground media so separate pages and media systems do not fight over playback.
+The shell coordinates ambient audio with foreground media so separate page systems do not fight over playback.
 
 ---
 
@@ -310,13 +293,13 @@ site-global.js
        └── Release Detail
 ```
 
-When a duplicate appears, identify who created it before adding another cleanup rule. Defensive normalization is useful. Unbounded cleanup logic is not.
+When a duplicate appears, identify who created it before adding another cleanup rule.
 
 ---
 
 # 🐛 QA Hardening Log
 
-The engineering audit found and fixed real defects including:
+Real defects previously identified and corrected include:
 
 - MutationObserver feedback loops in release and video ordering
 - Incorrect `Somewhere In-Between` artwork mapping
@@ -330,15 +313,9 @@ The engineering audit found and fixed real defects including:
 - Release SEO/structured-data identity
 - Signal caching behavior
 
-The Special Access archive player retains track cards, queue controls, previous/play/next, seeking, volume, auto-next-track, error handling, and keyboard activation.
-
 ---
 
 # 🩺 Site Doctor
-
-`tools/site-doctor.mjs` is the repository-level structural QA tool.
-
-It checks global shell presence, duplicate global CSS, local asset references, legacy shell markers, release catalog validity, duplicate catalog order entries, JavaScript syntax, stale CSS/background references, required assets, and `transmissions.json` validity.
 
 Workflow:
 
@@ -387,16 +364,6 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 - Signal transmissions can use browser caching
 - Archive Explorer resolves through canonical release detail routes
 
-### Responsive
-
-- Desktop
-- Laptop
-- Tablet
-- Mobile
-- Narrow mobile
-- No horizontal overflow
-- Header controls do not collide
-
 ### Accessibility
 
 - Keyboard navigation
@@ -433,7 +400,7 @@ Site Doctor is a structural guardrail. It does not replace real browser verifica
 
 # ⚙️ Performance Philosophy
 
-The site favors small deterministic browser modules over unnecessary framework overhead.
+Prefer small deterministic browser modules over unnecessary framework overhead.
 
 Priorities:
 
@@ -452,19 +419,13 @@ Priorities:
 
 # ♿ Accessibility Philosophy
 
-Accessibility is architectural.
-
-Preserve semantic controls, keyboard navigation, skip navigation, visible focus, meaningful labels, accurate ARIA state, Escape behavior, focus-friendly navigation, reduced-motion support, and responsive layouts without unnecessary overflow.
-
-Every new interactive component should work without requiring a pointer.
+Accessibility is architectural. Every new interactive component should work without requiring a pointer. Preserve semantic controls, keyboard navigation, skip navigation, visible focus, meaningful labels, accurate ARIA state, Escape behavior, reduced-motion support, and responsive layouts without unnecessary overflow.
 
 ---
 
 # 🔎 SEO & Discoverability
 
-The production system supports canonical URLs, meta descriptions, Open Graph metadata, release-specific canonical URLs, release-specific Open Graph artwork, global MusicGroup structured data, release MusicAlbum/MusicRelease structured data, crawlable page structure, sitemap coverage, and dedicated 404 handling.
-
-Page-specific identity remains the responsibility of each page while the global shell handles shared normalization.
+The production system supports canonical URLs, meta descriptions, Open Graph metadata, release-specific canonical URLs, release-specific Open Graph artwork, global MusicGroup structured data, release structured data, crawlable page structure, sitemap coverage, and dedicated 404 handling.
 
 ---
 
@@ -478,8 +439,6 @@ Shared assets may use intentional version query parameters:
 ```
 
 Do not increment versions randomly. Cache invalidation should correspond to meaningful shared-asset changes.
-
-Dynamic Signal transmissions use normal browser caching because the data is small, non-personalized publishing content.
 
 ---
 
@@ -558,8 +517,6 @@ Never solve a structural problem by stacking arbitrary CSS or duplicate systems 
 
 # 🏆 Definition of Done
 
-A production change is DONE only when applicable conditions are satisfied:
-
 ```text
 [✓] Correct owner changed
 [✓] Canonical data preserved
@@ -581,7 +538,6 @@ A change that exists only in GitHub is **implemented**, not necessarily **produc
 
 ```text
 LILSYNNOFFICIAL/
-│
 ├── index.html
 ├── releases.html
 ├── archive.html
@@ -590,7 +546,6 @@ LILSYNNOFFICIAL/
 ├── privacy.html
 ├── terms.html
 ├── special_access.html
-│
 ├── site-global.js
 ├── site-global.css
 ├── script.js
@@ -598,66 +553,19 @@ LILSYNNOFFICIAL/
 ├── site-polish.js
 ├── music-random.js
 ├── latest-videos.js
-│
 ├── release-catalog.json
 ├── latest-videos.json
 ├── transmissions.json
-│
-├── tools/
-│   └── site-doctor.mjs
-│
+├── tools/site-doctor.mjs
 ├── api/
-│   ├── apple-art.js
-│   ├── art.js
-│   ├── latest-youtube-releases.js
-│   ├── spotify-art.js
-│   ├── youtube.js
-│   └── ...
-│
-├── assets/
-│   ├── img/LS.png
-│   ├── images/icons/LS_LOGO.png
-│   ├── images/icons/LS_HEADPHONES.png
-│   ├── images/icons/UP_ARROWS.png
-│   ├── images/icons/album_art/
-│   ├── mov/LS_BG_STARS.webm
-│   └── other/sound/Background.mp3
-│
-└── .github/workflows/
-    ├── fix-homepage.yml
-    ├── update-latest-videos.yml
-    └── site-doctor.yml
+└── assets/
 ```
-
----
-
-# 🏆 Phase Roadmap
-
-```text
-PHASE 1  Dynamic Release Experience                 COMPLETE
-PHASE 2  Discovery + Streaming Conversion           COMPLETE
-PHASE 3  Discoverability + Accessibility + Perf     COMPLETE
-PHASE 4  Archive Intelligence + Exploration         COMPLETE
-PHASE 5  NEXT
-```
-
-Phase 5 should build on the canonical catalog and archive graph rather than introduce another content source.
 
 ---
 
 # 👑 Maintainer Doctrine
 
 This repository is production infrastructure for the LIL SYNN digital universe.
-
-The standard is not:
-
-> "Does this patch make the page look right?"
-
-The standard is:
-
-> **Does the architecture now express the correct truth cleanly, globally, and predictably?**
-
-When in doubt:
 
 ```text
 ONE OWNER
@@ -670,14 +578,10 @@ VERIFY THE REAL RUNTIME
 UPDATE THE README WHEN A PHASE IS DONE
 ```
 
----
-
 <div align="center">
 
 ## ✦ LIL SYNN
 
 **DARK SOUND. RAW EMOTION. NO LIMITS.**
-
-Production source for the LIL SYNN digital universe.
 
 </div>
