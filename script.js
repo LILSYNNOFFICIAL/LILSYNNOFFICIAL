@@ -1,15 +1,15 @@
 if(!window.__lsSiteMotionLoaded){window.__lsSiteMotionLoaded=true;
 (()=>{
 const ensureBackgroundVideo=()=>{
+  document.body.style.isolation='isolate';
   let video=document.getElementById('bgVideo');
   if(!video){video=document.createElement('video');video.id='bgVideo';document.body.prepend(video)}else if(video.parentElement!==document.body){document.body.prepend(video)}
-  video.className='ls-global-bg-video';video.setAttribute('aria-hidden','true');video.autoplay=true;video.muted=true;video.playsInline=true;video.loop=true;video.preload='none';
+  video.className='ls-global-bg-video';video.setAttribute('aria-hidden','true');video.autoplay=true;video.muted=true;video.playsInline=true;video.loop=true;video.preload='auto';
   let overlay=document.querySelector('.ls-global-bg-overlay');
   if(!overlay){overlay=document.createElement('div');overlay.className='ls-global-bg-overlay';document.body.prepend(overlay)}
   if(video.querySelector('source')){video.play().catch(()=>{});return}
   const attach=()=>{if(video.querySelector('source'))return;const source=document.createElement('source');source.src='/assets/mov/LS_BG_STARS.webm';source.type='video/webm';video.appendChild(source);video.load();video.play().catch(()=>{})};
-  const start=()=>setTimeout(attach,1200);
-  if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
+  attach();
 };
 const addHomepageRandomize=()=>{const grid=document.getElementById('music-grid');if(!grid)return;const buttons=[...document.querySelectorAll('.discover-button')];if(buttons.length>1)buttons.slice(1).forEach(b=>b.closest('.homepage-refinement')?.remove());if(document.querySelector('.discover-button'))return;const panel=document.createElement('div');panel.className='homepage-refinement';panel.innerHTML='<button type="button" class="discover-button">RANDOMIZE</button>';grid.parentNode.insertBefore(panel,grid);panel.querySelector('button').addEventListener('click',()=>window.lilSynnRefreshMusic?.())};
 const rhythm=()=>{if(document.getElementById('homepage-rhythm-final'))return;const style=document.createElement('style');style.id='homepage-rhythm-final';style.textContent=`#home,#contact{background:rgba(128,128,128,.18)!important}#presave,#music,#videos,#about,#merch,#signal{background:rgba(8,8,8,.62)!important;border-top:0!important;border-bottom:0!important;box-shadow:none!important;outline:0!important}#presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after{border:0!important;box-shadow:none!important;background:transparent!important}#presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal{border-top:0!important}`;document.head.appendChild(style)};
