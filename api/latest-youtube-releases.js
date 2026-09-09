@@ -1,5 +1,5 @@
 export default async function handler(req,res){
-  const API_KEY=process.env.YOUTUBE_DATA_API_KEY;
+  const API_KEY=process.env.YOUTUBE_API_KEY;
   const source='https://www.youtube.com/@LILSYNNOFFICIAL/releases';
   const send=(videos,live,warning)=>{
     res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate');
@@ -16,15 +16,13 @@ export default async function handler(req,res){
     for(const value of Object.values(node))collectReleasePlaylists(value,ids,seen);
   };
   try{
-    if(!API_KEY)throw new Error('YOUTUBE_DATA_API_KEY is not configured in Vercel');
-
+    if(!API_KEY)throw new Error('YOUTUBE_API_KEY is not configured in Vercel');
     const cq=new URLSearchParams({part:'id',forHandle:'@LILSYNNOFFICIAL',key:API_KEY});
     const cr=await fetch(`https://www.googleapis.com/youtube/v3/channels?${cq}`,{cache:'no-store'});
     const cb=await cr.json();
     if(!cr.ok||cb.error)throw new Error(cb.error?.message||`YouTube channel lookup failed (${cr.status})`);
     const channelId=cb.items?.[0]?.id;
     if(!channelId)throw new Error('LIL SYNN YouTube channel was not found');
-
     const browse=await fetch('https://www.youtube.com/youtubei/v1/browse?prettyPrint=false',{
       method:'POST',
       headers:{'Content-Type':'application/json','User-Agent':'Mozilla/5.0','Accept-Language':'en-US,en;q=0.9'},
@@ -32,14 +30,9 @@ export default async function handler(req,res){
     });
     const data=await browse.json();
     if(!browse.ok||data.error)throw new Error(data.error?.message||`YouTube Releases browse failed (${browse.status})`);
-
     const playlistIds=[];
     collectReleasePlaylists(data,playlistIds,new Set());
     if(!playlistIds.length)throw new Error('YouTube Releases tab returned no release playlists');
-
-    // Each YouTube Releases card represents a release playlist. The index page
-    // must mirror that release-card order, not flatten every album track and
-    // then sort the tracks by a publication timestamp.
     const releases=[];
     for(const playlistId of playlistIds.slice(0,20)){
       const pq=new URLSearchParams({part:'snippet',id:playlistId,key:API_KEY});
@@ -48,7 +41,6 @@ export default async function handler(req,res){
       if(!pr.ok||pb.error)throw new Error(`Release playlist ${playlistId} failed: ${pb.error?.message||pr.status}`);
       const playlist=pb.items?.[0];
       if(!playlist)continue;
-
       const iq=new URLSearchParams({part:'snippet,contentDetails',playlistId,maxResults:'1',key:API_KEY});
       const ir=await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?${iq}`,{cache:'no-store'});
       const ib=await ir.json();
@@ -56,17 +48,10 @@ export default async function handler(req,res){
       const item=ib.items?.[0];
       const id=item?.contentDetails?.videoId;
       if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id))continue;
-      releases.push({
-        id,
-        title:playlist.snippet?.title||item?.snippet?.title||id,
-        publishedAt:item?.contentDetails?.videoPublishedAt||item?.snippet?.publishedAt||null
-      });
+      releases.push({id,title:playlist.snippet?.title||item?.snippet?.title||id,publishedAt:item?.contentDetails?.videoPublishedAt||item?.snippet?.publishedAt||null});
       if(releases.length===9)break;
     }
-
     if(!releases.length)throw new Error('The YouTube Releases tab returned no release videos');
     return send(releases,true);
-  }catch(error){
-    return send([],false,error.message);
-  }
+  }catch(error){return send([],false,error.message)}
 }
