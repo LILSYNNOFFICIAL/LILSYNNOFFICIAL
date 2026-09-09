@@ -1,27 +1,185 @@
-if(!window.__lsSiteMotionLoaded){window.__lsSiteMotionLoaded=true;
-(()=>{
-const ensureBackgroundVideo=()=>{
-  let video=document.getElementById('bgVideo');
-  if(!video){video=document.createElement('video');video.id='bgVideo';document.body.prepend(video)}else if(video.parentElement!==document.body){document.body.prepend(video)}
-  video.className='ls-global-bg-video';video.setAttribute('aria-hidden','true');video.autoplay=true;video.muted=true;video.playsInline=true;video.loop=true;video.preload='metadata';video.setAttribute('disablepictureinpicture','');
-  let overlay=document.querySelector('.ls-global-bg-overlay');
-  if(!overlay){overlay=document.createElement('div');overlay.className='ls-global-bg-overlay';document.body.insertBefore(overlay,video.nextSibling)}
-  if(!video.querySelector('source')){
-    const primary=document.createElement('source');primary.src='/assets/mov/LS_BG_STARS.webm';primary.type='video/webm';
-    const fallback=document.createElement('source');fallback.src='/assets/mov/HERO_BG_WEBM.webm';fallback.type='video/webm';
-    video.append(primary,fallback);video.load();
-  }
-  const play=()=>video.play().catch(()=>{});play();video.addEventListener('canplay',play,{once:true});
-};
-const rhythm=()=>{if(document.getElementById('homepage-rhythm-final'))return;const style=document.createElement('style');style.id='homepage-rhythm-final';style.textContent=`#home,#contact{background:rgba(128,128,128,.18)!important}#presave,#music,#videos,#about,#merch,#signal{background:rgba(8,8,8,.62)!important;border-top:0!important;border-bottom:0!important;box-shadow:none!important;outline:0!important}#presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after{border:0!important;box-shadow:none!important;background:transparent!important}#presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal{border-top:0!important}`;document.head.appendChild(style)};
-const init=()=>{ensureBackgroundVideo();rhythm()};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
+if (!window.__lsSiteMotionLoaded) {
+  window.__lsSiteMotionLoaded = true;
+  (() => {
+    const ensureBackgroundVideo = () => {
+      let video = document.getElementById('bgVideo');
+      if (!video) {
+        video = document.createElement('video');
+        video.id = 'bgVideo';
+        document.body.prepend(video);
+      } else if (video.parentElement !== document.body) {
+        document.body.prepend(video);
+      }
+      video.className = 'ls-global-bg-video';
+      video.setAttribute('aria-hidden', 'true');
+      video.setAttribute('disablepictureinpicture', '');
+      video.autoplay = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.loop = true;
+      video.preload = 'metadata';
 
-(()=>{
-const norm=v=>String(v??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'');
-const singleArt={'neverknown':'Never Known_album_cover.jpg','homeacousticversion':'home_acoustic_version.png','ididitagain':'I DID IT AGAIN.jpg','rescueyouacousticversion':'RESCUE_YOU_A.png','somewhereinbetween':'57_lil_synn_somewhere_in_between.jpg','blackglass':'23_lil_synn_black_glass.jpg','blackglassacousticversion':'24_lil_synn_black_glass___acoustic_version.jpg','staticonmytongue':'25_lil_synn_static_on_my_tongue.jpg','itsinhereyes':'26_lil_synn_it_s_in_her_eyes.jpg','fadeintoyou':'1_lil_synn_fade_into_you.jpg','lover':'27_lil_synn_lover.jpg','everytime':'28_lil_synn_every_time.jpg','rescueyou':'29_lil_synn_rescue_you.jpg','heal':'30_lil_synn_heal.jpg','backfromtheblackout':'31_lil_synn_back_from_the_blackout.jpg','burnitdown':'32_lil_synn_burn_it_down.jpg','hindsight':'33_lil_synn_hindsight.jpg','whentheworldgetsloud':'34_lil_synn_when_the_world_gets_loud.jpg','light':'35_lil_synn_light.jpg','manicside':'36_lil_synn_manic_side.jpg','dontsayitacoustic':'37_lil_synn_don_t_say_it___acoustic.jpg','dontsayit':'38_lil_synn_don_t_say_it.jpg','signallightsermon':'39_lil_synn_signal_light_sermon___remastered_2026.jpg','lostinthefog':'40_lil_synn_lost_in_the_fog.jpg','intheend':'41_lil_synn_in_the_end.jpg','stayhere':'42_lil_synn_stay_here.jpg','home':'43_lil_synn_home.jpg','mylight':'44_lil_synn_my_light.jpg','tiesremain':'45_lil_synn_ties_remain.jpg','gravityandghosts':'46_lil_synn_gravity_and_ghosts.jpg','wordtoword':'47_lil_synn_word_to_word.jpg','shattered':'48_lil_synn_shattered.jpg','mirrors':'49_lil_synn_mirrors.jpg','faith':'50_lil_synn_faith.jpg','throughtheflames':'51_lil_synn_through_the_flames.jpg','wounds':'52_lil_synn_wounds.jpg','discernment':'53_lil_synn_discernment.jpg','dontletmego':'54_lil_synn_don_t_let_me_go.jpg','ifustayded':'55_lil_synn_if_u_stay_ded.jpg','alreadyfamous':'56_lil_synn_already_famous.jpg','hellogoodbye':'11_lil_synn_hello_goodbye.jpg','heavythings':'Heavy Things_album_cover.jpg'};
-window.LIL_SYNN_ART_MAP={...singleArt};
-const videoOrder=()=>{const grid=document.getElementById('youtube-grid');if(!grid||grid.dataset.orderObserver)return;grid.dataset.orderObserver='1';let running=false;let observer;const fix=async()=>{if(running)return;running=true;observer.disconnect();try{const cards=[...grid.children].filter(x=>x.matches('article'));if(cards.length<2)return;const seenIds=new Set(),seenTitles=new Set();cards.forEach(card=>{const id=card.querySelector('[data-video-id]')?.getAttribute('data-video-id')||'',title=norm(card.querySelector('[data-video-title]')?.getAttribute('data-video-title')||card.textContent||'');if(seenIds.has(id)||seenTitles.has(title))card.remove();else{seenIds.add(id);if(title)seenTitles.add(title)}});const remaining=[...grid.children].filter(x=>x.matches('article'));if(remaining.length<2)return;const response=await fetch('/release-catalog.json',{cache:'default'});if(!response.ok)return;const c=await response.json();const order=(c.order||[]).map(norm);remaining.sort((a,b)=>{const at=norm(a.querySelector('[data-video-title]')?.getAttribute('data-video-title')||a.textContent||''),bt=norm(b.querySelector('[data-video-title]')?.getAttribute('data-video-title')||b.textContent||'');const ai=order.indexOf(at),bi=order.indexOf(bt);return(ai<0?9999:ai)-(bi<0?9999:bi)});remaining.forEach(card=>grid.appendChild(card))}catch{}finally{running=false;observer.observe(grid,{childList:true})}};observer=new MutationObserver(fix);observer.observe(grid,{childList:true});fix()};
-const init=()=>{videoOrder()};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
+      let overlay = document.querySelector('.ls-global-bg-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'ls-global-bg-overlay';
+        document.body.insertBefore(overlay, video.nextSibling);
+      }
+
+      if (!video.querySelector('source')) {
+        const primary = document.createElement('source');
+        primary.src = '/assets/mov/LS_BG_STARS.webm';
+        primary.type = 'video/webm';
+        const fallback = document.createElement('source');
+        fallback.src = '/assets/mov/HERO_BG_WEBM.webm';
+        fallback.type = 'video/webm';
+        video.append(primary, fallback);
+        video.load();
+      }
+
+      const play = () => video.play().catch(() => {});
+      play();
+      video.addEventListener('canplay', play, { once: true });
+    };
+
+    const rhythm = () => {
+      if (document.getElementById('homepage-rhythm-final')) return;
+      const style = document.createElement('style');
+      style.id = 'homepage-rhythm-final';
+      style.textContent = `
+        #home,#contact{background:rgba(128,128,128,.18)!important}
+        #presave,#music,#videos,#about,#merch,#signal{background:rgba(8,8,8,.62)!important;border-top:0!important;border-bottom:0!important;box-shadow:none!important;outline:0!important}
+        #presave::before,#presave::after,#music::before,#music::after,#videos::before,#videos::after,#about::before,#about::after,#merch::before,#merch::after,#signal::before,#signal::after{border:0!important;box-shadow:none!important;background:transparent!important}
+        #presave + #music,#music + #videos,#videos + #about,#about + #merch,#merch + #signal{border-top:0!important}
+      `;
+      document.head.appendChild(style);
+    };
+
+    const init = () => {
+      ensureBackgroundVideo();
+      rhythm();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
+  })();
+
+  (() => {
+    const norm = value => String(value ?? '')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[’']/g, '')
+      .replace(/[^a-z0-9]+/g, '');
+
+    const singleArt = {
+      neverknown: 'Never Known_album_cover.jpg',
+      homeacousticversion: 'home_acoustic_version.png',
+      ididitagain: 'I DID IT AGAIN.jpg',
+      rescueyouacousticversion: 'RESCUE_YOU_A.png',
+      somewhereinbetween: '57_lil_synn_somewhere_in_between.jpg',
+      blackglass: '23_lil_synn_black_glass.jpg',
+      blackglassacousticversion: '24_lil_synn_black_glass___acoustic_version.jpg',
+      staticonmytongue: '25_lil_synn_static_on_my_tongue.jpg',
+      itsinhereyes: '26_lil_synn_it_s_in_her_eyes.jpg',
+      fadeintoyou: '1_lil_synn_fade_into_you.jpg',
+      lover: '27_lil_synn_lover.jpg',
+      everytime: '28_lil_synn_every_time.jpg',
+      rescueyou: '29_lil_synn_rescue_you.jpg',
+      heal: '30_lil_synn_heal.jpg',
+      backfromtheblackout: '31_lil_synn_back_from_the_blackout.jpg',
+      burnitdown: '32_lil_synn_burn_it_down.jpg',
+      hindsight: '33_lil_synn_hindsight.jpg',
+      whentheworldgetsloud: '34_lil_synn_when_the_world_gets_loud.jpg',
+      light: '35_lil_synn_light.jpg',
+      manicside: '36_lil_synn_manic_side.jpg',
+      dontsayitacoustic: '37_lil_synn_don_t_say_it___acoustic.jpg',
+      dontsayit: '38_lil_synn_don_t_say_it.jpg',
+      signallightsermon: '39_lil_synn_signal_light_sermon___remastered_2026.jpg',
+      lostinthefog: '40_lil_synn_lost_in_the_fog.jpg',
+      intheend: '41_lil_synn_in_the_end.jpg',
+      stayhere: '42_lil_synn_stay_here.jpg',
+      home: '43_lil_synn_home.jpg',
+      mylight: '44_lil_synn_my_light.jpg',
+      tiesremain: '45_lil_synn_ties_remain.jpg',
+      gravityandghosts: '46_lil_synn_gravity_and_ghosts.jpg',
+      wordtoword: '47_lil_synn_word_to_word.jpg',
+      shattered: '48_lil_synn_shattered.jpg',
+      mirrors: '49_lil_synn_mirrors.jpg',
+      faith: '50_lil_synn_faith.jpg',
+      throughtheflames: '51_lil_synn_through_the_flames.jpg',
+      wounds: '52_lil_synn_wounds.jpg',
+      discernment: '53_lil_synn_discernment.jpg',
+      dontletmego: '54_lil_synn_don_t_let_me_go.jpg',
+      ifustayded: '55_lil_synn_if_u_stay_ded.jpg',
+      alreadyfamous: '56_lil_synn_already_famous.jpg',
+      hellogoodbye: '11_lil_synn_hello_goodbye.jpg',
+      heavythings: 'Heavy Things_album_cover.jpg'
+    };
+
+    window.LIL_SYNN_ART_MAP = { ...singleArt };
+
+    const videoOrder = () => {
+      const grid = document.getElementById('youtube-grid');
+      if (!grid || grid.dataset.orderObserver) return;
+      grid.dataset.orderObserver = '1';
+      let running = false;
+      let observer;
+
+      const fix = async () => {
+        if (running) return;
+        running = true;
+        observer.disconnect();
+        try {
+          const cards = [...grid.children].filter(card => card.matches('article'));
+          if (cards.length < 2) return;
+
+          const seenIds = new Set();
+          const seenTitles = new Set();
+          cards.forEach(card => {
+            const id = card.querySelector('[data-video-id]')?.getAttribute('data-video-id') || '';
+            const title = norm(card.querySelector('[data-video-title]')?.getAttribute('data-video-title') || card.textContent || '');
+            if ((id && seenIds.has(id)) || (title && seenTitles.has(title))) {
+              card.remove();
+              return;
+            }
+            if (id) seenIds.add(id);
+            if (title) seenTitles.add(title);
+          });
+
+          const response = await fetch('/release-catalog.json', { cache: 'default' });
+          if (!response.ok) return;
+          const catalog = await response.json();
+          const order = (catalog.order || []).map(norm);
+          const remaining = [...grid.children].filter(card => card.matches('article'));
+
+          remaining.sort((a, b) => {
+            const at = norm(a.querySelector('[data-video-title]')?.getAttribute('data-video-title') || a.textContent || '');
+            const bt = norm(b.querySelector('[data-video-title]')?.getAttribute('data-video-title') || b.textContent || '');
+            const ai = order.indexOf(at);
+            const bi = order.indexOf(bt);
+            return (ai < 0 ? 9999 : ai) - (bi < 0 ? 9999 : bi);
+          });
+          remaining.forEach(card => grid.appendChild(card));
+        } catch (_) {
+          // Video ordering is enhancement-only.
+        } finally {
+          running = false;
+          observer.observe(grid, { childList: true });
+        }
+      };
+
+      observer = new MutationObserver(fix);
+      observer.observe(grid, { childList: true });
+      fix();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', videoOrder, { once: true });
+    } else {
+      videoOrder();
+    }
+  })();
+}
