@@ -39,28 +39,21 @@ jobs:
                   print('updated', path)
 
           def normalize_html(s):
-              # Keep exactly one canonical description and canonical URL when present.
-              seen = set()
-              def keep_first(pattern, key):
+              def keep_first(pattern):
                   nonlocal s
                   matches = list(re.finditer(pattern, s, flags=re.I))
-                  if len(matches) <= 1:
-                      return
                   for m in reversed(matches[1:]):
                       s = s[:m.start()] + s[m.end():]
-                  seen.add(key)
 
-              keep_first(r'<meta\b[^>]*\bname=["\']description["\'][^>]*>', 'description')
-              keep_first(r'<link\b[^>]*\brel=["\']canonical["\'][^>]*>', 'canonical')
+              keep_first(r"<meta\b[^>]*\bname=[\"']description[\"'][^>]*>")
+              keep_first(r"<link\b[^>]*\brel=[\"']canonical[\"'][^>]*>")
 
-              # Shared shell assets have one canonical version.
-              s = re.sub(r'<link\b[^>]*\bhref=["\']/site-global\.css(?:\?[^"\']*)?["\'][^>]*>\s*', '', s, flags=re.I)
-              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>\s*', '', s, flags=re.I)
-              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-global\.js(?:\?[^"\']*)?["'][^>]*>\s*', '', s, flags=re.I)
+              s = re.sub(r"<link\b[^>]*\bhref=[\"']/site-global\.css(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
+              s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*</script>\s*", '', s, flags=re.I)
+              s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
 
               shell = f'<script src="/site-global.js?v={VERSION}" defer></script>'
-              if '</head>' in s.lower():
-                  s = re.sub(r'</head>', shell + '</head>', s, count=1, flags=re.I)
+              s = re.sub(r'</head>', shell + '</head>', s, count=1, flags=re.I)
               return s
 
           for p in root.glob('*.html'):
