@@ -15,8 +15,16 @@ const headerBanner=()=>{
 const header=document.querySelector('header.ls-header[data-ls-header]');if(!header)return;
 let art=document.querySelector('[data-ls-global-top-art]');
 if(!art)return;
-const img=art.querySelector('img');if(img){img.src=assets.hero;img.alt='';img.loading='eager';}
-art.dataset.lsHeaderBanner='true';art.classList.add('ls-header-banner-art');header.appendChild(art);
+const img=art.querySelector('img');
+if(!img)return;
+const banner=document.createElement('div');
+banner.className='ls-header-banner-art';
+banner.dataset.lsHeaderBanner='true';
+banner.innerHTML=`<img src="${assets.hero}" alt="" loading="eager" decoding="async">`;
+header.insertBefore(banner,header.firstChild);
+img.src='/assets/img/LS.png';img.alt='LIL SYNN';img.loading='eager';img.decoding='async';
+art.classList.remove('ls-header-banner-art');
+art.removeAttribute('data-ls-header-banner');
 };
 const add=(target,html,mode='afterbegin')=>{if(!target||target.querySelector?.('[data-ls-image-concept]'))return;target.insertAdjacentHTML(mode,html)};
 if(path==='/'||path==='/index.html'){
