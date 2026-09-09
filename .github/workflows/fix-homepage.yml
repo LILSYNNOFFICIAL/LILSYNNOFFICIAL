@@ -35,9 +35,10 @@ jobs:
               '', s, count=1, flags=re.I | re.S
           )
 
-          # Remove the old side drawer and its nested legacy navigation.
+          # Remove the complete old side drawer. It contains nested div/nav elements,
+          # so this intentionally uses the final closing div immediately before #home.
           s = re.sub(
-              r'<div\s+id="sideMenu"\b[^>]*>.*?</div>\s*(?=<section\b)',
+              r'<div\s+id="sideMenu"\b[^>]*>.*?</div>\s*(?=<section\s+id="home"\b)',
               '', s, count=1, flags=re.I | re.S
           )
 
@@ -45,24 +46,13 @@ jobs:
           s = re.sub(r'<header(?![^>]*data-ls-header)[^>]*>.*?</header>', '', s, flags=re.I | re.S)
           s = re.sub(r'<footer(?![^>]*data-ls-footer)[^>]*>.*?</footer>', '', s, flags=re.I | re.S)
 
-          # Remove obsolete legacy shell CSS rules without touching universal shell CSS.
-          obsolete = [
-              r'\s*nav\s*\{\s*height:var\(--nav-height\);\s*\}',
-              r'\s*nav\s*>\s*\.max-w-7xl\s*\{.*?\}',
-              r'\s*#sideMenu\s*\{.*?\}',
-              r'\s*nav\s+\.flex\.items-center\s*\{.*?\}',
-              r'\s*nav\s+\.flex\.items-center\s+span\s*\{.*?\}',
-              r'\s*\.site-headphones\s*\{.*?\}',
-              r'\s*@media\s*\(max-width:640px\)\{nav \.flex\.items-center.*?\.site-headphones\{.*?\}\}',
-              r'\s*@media\s*\(min-width:768px\)\{#sideMenu.*?\}',
-          ]
-          for pattern in obsolete:
-              s = re.sub(pattern, '', s, flags=re.I | re.S)
+          # Remove the old homepage-final-fixes loader. site-global.js is now canonical.
+          s = re.sub(r'<script[^>]+src=["\'][^"\']*homepage-final-fixes\.js[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
 
           # Ensure the canonical universal shell is loaded exactly once.
           s = re.sub(r'<script[^>]+src=["\']/site-global\.js(?:\?[^"\']*)?["\'][^>]*>\s*</script>', '', s, flags=re.I)
           marker = '<script src="/site-global.js?v=20260911"></script>'
-          s = s.replace('</head>', marker + '</head>', 1) if '</head>' in s else s
+          s = s.replace('</head>', marker + '</head>', 1)
 
           if s != original:
               p.write_text(s, encoding='utf-8')
@@ -90,7 +80,6 @@ jobs:
           test -f style.css
           test -f script.js
           test -f site-polish.js
-          test -f homepage-final-fixes.js
           test -f music-random.js
           test -f latest-videos.js
           test -f release-catalog.json
@@ -109,6 +98,7 @@ jobs:
           ! grep -q 'id="sideMenu"' index.html
           ! grep -q 'class="site-headphones"' index.html
           ! grep -q 'assets/img/LS_HEADPHONES.png' index.html
+          ! grep -q 'homepage-final-fixes.js' index.html
           ! grep -Rni --exclude-dir=.git --exclude='*.md' 'assets/mov/BG2.webm' .
 
       - name: Validate universal shell reference
