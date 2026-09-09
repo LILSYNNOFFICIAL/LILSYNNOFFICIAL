@@ -14,8 +14,16 @@ walk(root);
 for(const file of htmlFiles){
   const html=fs.readFileSync(path.join(root,file),'utf8');
   if(!/site-global\.js(?:\?|["'])/.test(html)) fail(`${file}: missing global shell script`);
+  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
+  if(globalScripts.length>1) fail(`${file}: duplicate explicit site-global.js scripts`);
   const globalCss=[...html.matchAll(/<link\b[^>]*href=["']\/?site-global\.css[^"']*["'][^>]*>/gi)];
   if(globalCss.length>1) fail(`${file}: duplicate explicit site-global.css links`);
+  const descriptions=[...html.matchAll(/<meta\b[^>]*name=["']description["'][^>]*>/gi)];
+  if(descriptions.length>1) fail(`${file}: duplicate meta description tags`);
+  const canonicals=[...html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi)];
+  if(canonicals.length>1) fail(`${file}: duplicate canonical links`);
+  if(file==='archive.html'&&!exists('release-catalog.json')) fail('archive.html: release catalog dependency missing');
+  if(!/<main\b/i.test(html)) warn(`${file}: no main landmark found; verify accessibility intent`);
   for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){
     const ref=m[1];
     if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;
@@ -33,6 +41,7 @@ if(exists('release-catalog.json')){
     const dup=c.order.filter((x,i,a)=>a.indexOf(x)!==i);
     if(dup.length)fail(`release-catalog.json: duplicate release order entries: ${[...new Set(dup)].join(', ')}`);
     if(!c.groups||typeof c.groups!=='object')warn('release-catalog.json: groups object missing');
+    if(Array.isArray(c.order)&&c.groups){for(const title of c.order){if(!Object.prototype.hasOwnProperty.call(c.groups,title))fail(`release-catalog.json: catalog order references missing group ${title}`)}}
   }catch(e){fail(`release-catalog.json: invalid JSON (${e.message})`)}
 }
 
@@ -44,6 +53,8 @@ if(css.includes('LG_BG_STARS.webm')||css.includes('BG_ANI.webm'))fail('site-glob
 if(!exists('assets/mov/LS_BG_STARS.webm'))fail('assets/mov/LS_BG_STARS.webm missing');
 if(!exists('assets/images/icons/LS_LOGO.png'))fail('LS_LOGO.png missing');
 if(!exists('assets/images/icons/LS_HEADPHONES.png'))fail('LS_HEADPHONES.png missing');
+if(!exists('archive.html'))fail('archive.html missing');
+if(!exists('release.html'))fail('release.html missing');
 if(exists('transmissions.json')){try{const t=JSON.parse(fs.readFileSync('transmissions.json','utf8'));if(!Array.isArray(t.transmissions))fail('transmissions.json: transmissions array missing')}catch(e){fail(`transmissions.json: invalid JSON (${e.message})`)}}
 
 console.log(`LIL SYNN SITE DOCTOR: ${htmlFiles.length} HTML files, ${jsFiles.length} JS modules scanned.`);
