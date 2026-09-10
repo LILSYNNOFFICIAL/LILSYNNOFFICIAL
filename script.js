@@ -112,7 +112,7 @@ if (!window.__lsSiteMotionLoaded) {
       throughtheflames: '51_lil_synn_through_the_flames.jpg',
       wounds: '52_lil_synn_wounds.jpg',
       discernment: '53_lil_synn_discernment.jpg',
-      dontletmego: '54_lil_synn_don_t_let_me_go.jpg',
+      dontletmego: '54_lil_synn_dont_let_me_go.jpg',
       ifustayded: '55_lil_synn_if_u_stay_ded.jpg',
       alreadyfamous: '56_lil_synn_already_famous.jpg',
       hellogoodbye: '11_lil_synn_hello_goodbye.jpg',
@@ -183,3 +183,33 @@ if (!window.__lsSiteMotionLoaded) {
     }
   })();
 }
+
+/* LIL SYNN global header banner using Image 4 */
+(() => {
+  const addHeaderBanner = () => {
+    const header = document.querySelector('header.ls-header[data-ls-header]');
+    if (!header || header.querySelector('[data-ls-header-banner]')) return;
+    const banner = document.createElement('div');
+    banner.className = 'ls-header-banner-art';
+    banner.dataset.lsHeaderBanner = 'true';
+    banner.innerHTML = '<img src="/assets/img/Image%204%20-%20Visual%20Gallery%20header%20artwork.png" alt="" aria-hidden="true" decoding="async">';
+    header.insertBefore(banner, header.firstElementChild);
+
+    const style = document.createElement('style');
+    style.id = 'ls-header-banner-position';
+    style.textContent = `
+      .ls-header{background:rgba(4,4,7,.28)!important;overflow:hidden!important}
+      .ls-header-banner-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;overflow:hidden!important;pointer-events:none!important}
+      .ls-header-banner-art img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important}
+      .ls-header-inner{position:relative!important;z-index:1!important}
+      .ls-header-logo{z-index:2!important}
+    `;
+    document.head.appendChild(style);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addHeaderBanner, { once: true });
+  } else {
+    addHeaderBanner();
+  }
+})();
