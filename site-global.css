@@ -11,3 +11,7 @@
 .ls-global-top-art img{width:min(82vw,560px)!important;max-height:82px!important;height:auto!important;margin:0 auto 0!important;object-fit:contain!important}
 .ls-global-top-art~#home{margin-top:var(--ls-header-height)!important}
 @media(max-width:640px){.ls-header-logo{width:300px!important;height:70px!important;top:0!important}.ls-global-top-art{height:var(--ls-header-height)!important}.ls-global-top-art img{width:min(90vw,460px)!important;max-height:66px!important}.ls-global-top-art~#home{margin-top:var(--ls-header-height)!important}}
+/* FIX: LS.png is a separate element immediately after the fixed header. */
+.ls-global-top-art{position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%!important;height:auto!important;margin:var(--ls-header-height) 0 0!important;padding:0!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;z-index:2!important;pointer-events:none!important;overflow:visible!important;line-height:0!important}
+.ls-global-top-art img{display:block!important;width:min(82vw,560px)!important;max-height:430px!important;height:auto!important;margin:0 auto!important;object-fit:contain!important}
+@media(max-width:640px){.ls-global-top-art{height:auto!important;margin:var(--ls-header-height) 0 0!important}.ls-global-top-art img{width:min(90vw,460px)!important;max-height:350px!important}}
