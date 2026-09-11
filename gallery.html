@@ -52,9 +52,9 @@
       .character-stage{border-radius:16px;margin-bottom:36px}.model-wrap{height:70vh;min-height:470px}.character-heading{top:16px;left:17px}.character-heading p{font-size:11px}.model-help{right:12px;bottom:12px;font-size:9px}.model-progress{bottom:18px}
       .lightbox{padding:16px}.lightbox img{max-width:94vw;max-height:72vh}.lightbox-prev{left:10px}.lightbox-next{right:10px}.lightbox-copy{bottom:18px}.lightbox-copy strong{font-size:16px}
     }
-    @media(prefers-reduced-motion:reduce){.visual{transition:none}.visual:hover{transform:none}model-viewer{--camera-orbit:0deg 75deg 105%}}
   </style>
-  <script src="/site-global.js?v=20260914"></script></head>
+  <script src="/site-global.js?v=20260914"></script>
+</head>
 <body>
   <main class="gallery-page" id="main-content">
     <h1>VISUALS</h1>
@@ -69,8 +69,8 @@
       <div class="model-wrap">
         <model-viewer
           id="lil-synn-model"
-          src="/assets/other/LIL_SYNN_3D_Model_ReferenceBased-4.glb"
-          alt="Interactive 3D model of the LIL SYNN character"
+          src="/assets/other/LIL_SYNN_3D_Model_Realistic-2.glb"
+          alt="Interactive 3D model of the LIL SYNN character, front-facing"
           camera-controls
           touch-action="pan-y"
           interaction-prompt="auto"
@@ -78,6 +78,7 @@
           shadow-softness="1"
           exposure="1"
           environment-image="neutral"
+          orientation="0deg 180deg 0deg"
           camera-orbit="0deg 75deg 105%"
           min-camera-orbit="auto 15deg 70%"
           max-camera-orbit="auto 165deg 150%"
@@ -131,14 +132,8 @@
       const value=Math.max(0,Math.min(1,event.detail.totalProgress||0));
       modelProgressBar.style.width=`${value*100}%`;
     });
-    model.addEventListener('load',()=>{
-      modelProgress.style.opacity='0';
-      modelError.classList.remove('open');
-    });
-    model.addEventListener('error',()=>{
-      modelProgress.style.opacity='0';
-      modelError.classList.add('open');
-    });
+    model.addEventListener('load',()=>{modelProgress.style.opacity='0';modelError.classList.remove('open')});
+    model.addEventListener('error',()=>{modelProgress.style.opacity='0';modelError.classList.add('open')});
 
     function render(filter='all'){
       document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));
