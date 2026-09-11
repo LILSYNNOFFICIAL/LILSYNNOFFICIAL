@@ -1,1 +1,188 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LIL SYNN | Visuals</title><meta name="description" content="Explore the visual world of LIL SYNN through release artwork and connected visual identities."><link rel="canonical" href="https://lilsynn.com/gallery.html"><style>body{background:transparent;color:#fff}.gallery-page{max-width:1220px;margin:0 auto;padding:150px 24px 80px}.gallery-page h1{text-align:center;font:700 clamp(34px,6vw,62px) Orbitron,sans-serif;letter-spacing:.08em;margin:0 0 10px}.intro{text-align:center;color:#aaa;max-width:780px;margin:0 auto 28px;line-height:1.6}.filters{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:26px}.filter{border:1px solid rgba(255,0,143,.35);background:rgba(5,5,8,.72);color:#fff;border-radius:999px;padding:9px 14px;font:700 11px Rajdhani,sans-serif;letter-spacing:.1em;cursor:pointer}.filter.active,.filter:hover,.filter:focus-visible{border-color:var(--ls-pink);background:rgba(255,0,143,.13);color:var(--ls-glow)}.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.visual{border:1px solid rgba(255,0,143,.2);border-radius:16px;overflow:hidden;background:rgba(5,5,8,.82);cursor:pointer;text-align:left;color:#fff;padding:0;transition:transform .2s ease,border-color .2s ease}.visual:hover,.visual:focus-visible{transform:translateY(-3px);border-color:rgba(255,79,216,.7)}.visual img{display:block;width:100%;aspect-ratio:1;object-fit:contain;background:#090909}.visual-copy{padding:12px 14px 14px}.visual-type{color:var(--ls-glow);font:700 10px Rajdhani,sans-serif;letter-spacing:.13em}.visual h2{margin:5px 0 0;font:700 15px Orbitron,sans-serif;line-height:1.25}.visual small{display:block;color:#777;margin-top:5px;font:600 11px Rajdhani,sans-serif}.empty{text-align:center;color:#aaa;padding:60px;border:1px dashed rgba(255,255,255,.15);grid-column:1/-1}.lightbox{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:30px}.lightbox.open{display:flex}.lightbox img{max-width:min(88vw,1000px);max-height:78vh;object-fit:contain}.lightbox-copy{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);text-align:center}.lightbox-copy strong{display:block;font:700 20px Orbitron,sans-serif}.lightbox-copy span{color:#aaa;font:600 12px Rajdhani,sans-serif}.lightbox button{position:absolute;border:1px solid rgba(255,0,143,.4);background:rgba(5,5,8,.8);color:#fff;border-radius:50%;width:48px;height:48px;font-size:22px;cursor:pointer}.lightbox-close{top:20px;right:20px}.lightbox-prev{left:20px;top:50%;transform:translateY(-50%)}.lightbox-next{right:20px;top:50%;transform:translateY(-50%)}@media(max-width:900px){.timeline{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.gallery-page{padding:132px 14px 55px}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}.lightbox{padding:16px}.lightbox img{max-width:94vw;max-height:72vh}.lightbox-prev{left:10px}.lightbox-next{right:10px}.lightbox-copy{bottom:18px}.lightbox-copy strong{font-size:16px}}@media(prefers-reduced-motion:reduce){.visual{transition:none}.visual:hover{transform:none}}</style><script src="/site-global.js?v=20260914"></script></head><body><main class="gallery-page" id="main-content"><h1>VISUALS</h1><p class="intro">A visual timeline of LIL SYNN release identities. Select an artwork to enter the fullscreen visual archive.</p><div class="filters" id="filters"><button class="filter active" data-filter="all">ALL</button><button class="filter" data-filter="album">ALBUMS</button><button class="filter" data-filter="ep">EPS</button><button class="filter" data-filter="single">SINGLES</button></div><section id="gallery" class="timeline" aria-label="LIL SYNN visual gallery"></section></main><div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer"><button class="lightbox-close" id="close" aria-label="Close viewer">×</button><button class="lightbox-prev" id="prev" aria-label="Previous artwork">‹</button><img id="lightbox-image" alt=""><button class="lightbox-next" id="next" aria-label="Next artwork">›</button><div class="lightbox-copy"><strong id="lightbox-title"></strong><span id="lightbox-meta"></span></div></div><script>const gallery=document.getElementById('gallery'),lightbox=document.getElementById('lightbox'),img=document.getElementById('lightbox-image'),lt=document.getElementById('lightbox-title'),lm=document.getElementById('lightbox-meta');const norm=s=>String(s??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const base='/assets/images/icons/album_art/';const fallback={neverknown:'Never Known_album_cover.jpg',homeacousticversion:'home_acoustic_version.png',ididitagain:'I DID IT AGAIN.jpg',rescueyouacousticversion:'RESCUE_YOU_A.png',somewhereinbetween:'57_lil_synn_somewhere_in_between.jpg',hellogoodbye:'11_lil_synn_hello_goodbye.jpg',blackglass:'23_lil_synn_black_glass.jpg',heal:'30_lil_synn_heal.jpg',enough:'15_lil_synn_enough.jpg',dontsayit:'38_lil_synn_don_t_say_it.jpg',touchingtothenorth:'01 - Astral Signal - LIL SYN-artwork.jpg'};let items=[],visible=[],index=0;function render(filter='all'){document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));visible=items.filter(x=>filter==='all'||x.type===filter);gallery.innerHTML=visible.length?visible.map((x,i)=>`<button class="visual" type="button" data-i="${i}"><img src="${x.art}" alt="${esc(x.title)} artwork" loading="lazy" decoding="async"><span class="visual-copy"><span class="visual-type">${esc(x.type.toUpperCase())}</span><h2>${esc(x.title)}</h2><small>${esc(x.indexLabel)}</small></span></button>`).join(''):'<div class="empty">No visuals match this category.</div>';gallery.querySelectorAll('.visual').forEach(b=>b.addEventListener('click',()=>open(Number(b.dataset.i))))}function open(i){index=(i+visible.length)%visible.length;const x=visible[index];img.src=x.art;img.alt=x.title+' artwork';lt.textContent=x.title;lm.textContent=x.type.toUpperCase()+' · '+x.indexLabel;lightbox.classList.add('open');document.body.style.overflow='hidden'}function close(){lightbox.classList.remove('open');document.body.style.overflow=''}function step(n){open(index+n)}document.getElementById('close').onclick=close;document.getElementById('prev').onclick=()=>step(-1);document.getElementById('next').onclick=()=>step(1);document.addEventListener('keydown',e=>{if(!lightbox.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)});let sx=0;lightbox.addEventListener('touchstart',e=>{sx=e.changedTouches[0].clientX},{passive:true});lightbox.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)step(dx<0?1:-1)},{passive:true});document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>render(b.dataset.filter)));fetch('/release-catalog.json',{cache:'default'}).then(r=>r.json()).then(c=>{const artMap=window.LIL_SYNN_ART_MAP||{};items=(c.order||[]).map((title,i)=>{const g=c.groups?.[title],file=artMap[norm(title)]||fallback[norm(title)];return file?{title,type:(g?.type||'single').toLowerCase(),art:base+encodeURIComponent(file),indexLabel:'CATALOG '+String(i+1).padStart(2,'0')}:null}).filter(Boolean);render()}).catch(()=>gallery.innerHTML='<div class="empty">Unable to load the visual catalog.</div>');</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LIL SYNN | Visuals</title>
+  <meta name="description" content="Explore the visual world of LIL SYNN through release artwork, connected visual identities, and an interactive 3D character model.">
+  <link rel="canonical" href="https://lilsynn.com/gallery.html">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"></script>
+  <style>
+    body{background:transparent;color:#fff}
+    .gallery-page{max-width:1220px;margin:0 auto;padding:150px 24px 80px}
+    .gallery-page h1{text-align:center;font:700 clamp(34px,6vw,62px) Orbitron,sans-serif;letter-spacing:.08em;margin:0 0 10px}
+    .intro{text-align:center;color:#aaa;max-width:780px;margin:0 auto 28px;line-height:1.6}
+    .character-stage{position:relative;margin:0 auto 46px;max-width:1080px;border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 40%,rgba(255,0,143,.1),rgba(5,5,8,.96) 58%,#020205 100%);box-shadow:0 0 50px rgba(255,0,143,.08)}
+    .character-heading{position:absolute;z-index:2;top:20px;left:24px;pointer-events:none}
+    .character-kicker{display:block;color:var(--ls-glow);font:700 10px Rajdhani,sans-serif;letter-spacing:.18em;margin-bottom:5px}
+    .character-heading h2{margin:0;font:700 clamp(20px,4vw,34px) Orbitron,sans-serif;letter-spacing:.06em}
+    .character-heading p{margin:5px 0 0;color:#999;font:600 12px Rajdhani,sans-serif;letter-spacing:.08em}
+    .model-wrap{height:min(72vh,760px);min-height:520px;position:relative}
+    model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent;--progress-bar-color:var(--ls-pink);--progress-mask:rgba(255,255,255,.12)}
+    .model-progress{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:min(360px,70%);height:3px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;pointer-events:none;opacity:1;transition:opacity .3s ease}
+    .model-progress-bar{display:block;width:0;height:100%;background:var(--ls-pink);box-shadow:0 0 12px rgba(255,0,143,.65);transition:width .15s ease}
+    .model-help{position:absolute;right:20px;bottom:18px;padding:8px 11px;border:1px solid rgba(255,0,143,.25);border-radius:999px;background:rgba(5,5,8,.72);color:#aaa;font:600 10px Rajdhani,sans-serif;letter-spacing:.1em;pointer-events:none}
+    .model-error{display:none;position:absolute;inset:0;z-index:3;align-items:center;justify-content:center;text-align:center;padding:30px;background:rgba(2,2,5,.9)}
+    .model-error.open{display:flex}
+    .model-error strong{display:block;color:#fff;font:700 16px Orbitron,sans-serif;margin-bottom:7px}
+    .model-error span{display:block;color:#999;font:600 12px Rajdhani,sans-serif}
+    .filters{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+    .filter{border:1px solid rgba(255,0,143,.35);background:rgba(5,5,8,.72);color:#fff;border-radius:999px;padding:9px 14px;font:700 11px Rajdhani,sans-serif;letter-spacing:.1em;cursor:pointer}
+    .filter.active,.filter:hover,.filter:focus-visible{border-color:var(--ls-pink);background:rgba(255,0,143,.13);color:var(--ls-glow)}
+    .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .visual{border:1px solid rgba(255,0,143,.2);border-radius:16px;overflow:hidden;background:rgba(5,5,8,.82);cursor:pointer;text-align:left;color:#fff;padding:0;transition:transform .2s ease,border-color .2s ease}
+    .visual:hover,.visual:focus-visible{transform:translateY(-3px);border-color:rgba(255,79,216,.7)}
+    .visual img{display:block;width:100%;aspect-ratio:1;object-fit:contain;background:#090909}
+    .visual-copy{padding:12px 14px 14px;display:block}
+    .visual-type{color:var(--ls-glow);font:700 10px Rajdhani,sans-serif;letter-spacing:.13em}
+    .visual h2{margin:5px 0 0;font:700 15px Orbitron,sans-serif;line-height:1.25}
+    .visual small{display:block;color:#777;margin-top:5px;font:600 11px Rajdhani,sans-serif}
+    .empty{text-align:center;color:#aaa;padding:60px;border:1px dashed rgba(255,255,255,.15);grid-column:1/-1}
+    .lightbox{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:30px}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:min(88vw,1000px);max-height:78vh;object-fit:contain}
+    .lightbox-copy{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);text-align:center}
+    .lightbox-copy strong{display:block;font:700 20px Orbitron,sans-serif}
+    .lightbox-copy span{color:#aaa;font:600 12px Rajdhani,sans-serif}
+    .lightbox button{position:absolute;border:1px solid rgba(255,0,143,.4);background:rgba(5,5,8,.8);color:#fff;border-radius:50%;width:48px;height:48px;font-size:22px;cursor:pointer}
+    .lightbox-close{top:20px;right:20px}.lightbox-prev{left:20px;top:50%;transform:translateY(-50%)}.lightbox-next{right:20px;top:50%;transform:translateY(-50%)}
+    @media(max-width:900px){.timeline{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:640px){
+      .gallery-page{padding:132px 14px 55px}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .character-stage{border-radius:16px;margin-bottom:36px}.model-wrap{height:70vh;min-height:470px}.character-heading{top:16px;left:17px}.character-heading p{font-size:11px}.model-help{right:12px;bottom:12px;font-size:9px}.model-progress{bottom:18px}
+      .lightbox{padding:16px}.lightbox img{max-width:94vw;max-height:72vh}.lightbox-prev{left:10px}.lightbox-next{right:10px}.lightbox-copy{bottom:18px}.lightbox-copy strong{font-size:16px}
+    }
+    @media(prefers-reduced-motion:reduce){.visual{transition:none}.visual:hover{transform:none}model-viewer{--camera-orbit:0deg 75deg 105%}}
+  </style>
+  <script src="/site-global.js?v=20260914"></script>
+</head>
+<body>
+  <main class="gallery-page" id="main-content">
+    <h1>VISUALS</h1>
+    <p class="intro">Explore the visual world of LIL SYNN through release artwork, connected visual identities, and the interactive character archive.</p>
+
+    <section class="character-stage" aria-labelledby="character-title">
+      <div class="character-heading">
+        <span class="character-kicker">LIL SYNN · CHARACTER ARCHIVE</span>
+        <h2 id="character-title">3D LIL SYNN</h2>
+        <p>ROTATE · INSPECT · EXPLORE</p>
+      </div>
+      <div class="model-wrap">
+        <model-viewer
+          id="lil-synn-model"
+          src="/assets/other/LIL_SYNN_3D_Model-4.glb"
+          alt="Interactive 3D model of the LIL SYNN character"
+          camera-controls
+          touch-action="pan-y"
+          interaction-prompt="auto"
+          shadow-intensity="1"
+          shadow-softness="1"
+          exposure="1"
+          environment-image="neutral"
+          camera-orbit="0deg 75deg 105%"
+          min-camera-orbit="auto 15deg 70%"
+          max-camera-orbit="auto 165deg 150%"
+          interpolation-decay="100"
+          loading="eager"
+          reveal="auto">
+        </model-viewer>
+        <div class="model-progress" id="model-progress" aria-hidden="true"><span class="model-progress-bar" id="model-progress-bar"></span></div>
+        <div class="model-help">DRAG TO ROTATE · PINCH TO ZOOM</div>
+        <div class="model-error" id="model-error" role="status" aria-live="polite">
+          <div><strong>3D MODEL UNAVAILABLE</strong><span>The character archive could not load this model right now.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="filters" id="filters">
+      <button class="filter active" data-filter="all">ALL</button>
+      <button class="filter" data-filter="album">ALBUMS</button>
+      <button class="filter" data-filter="ep">EPS</button>
+      <button class="filter" data-filter="single">SINGLES</button>
+    </div>
+
+    <section id="gallery" class="timeline" aria-label="LIL SYNN visual gallery"></section>
+  </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+    <button class="lightbox-close" id="close" aria-label="Close viewer">×</button>
+    <button class="lightbox-prev" id="prev" aria-label="Previous artwork">‹</button>
+    <img id="lightbox-image" alt="">
+    <button class="lightbox-next" id="next" aria-label="Next artwork">›</button>
+    <div class="lightbox-copy"><strong id="lightbox-title"></strong><span id="lightbox-meta"></span></div>
+  </div>
+
+  <script>
+    const gallery=document.getElementById('gallery');
+    const lightbox=document.getElementById('lightbox');
+    const img=document.getElementById('lightbox-image');
+    const lt=document.getElementById('lightbox-title');
+    const lm=document.getElementById('lightbox-meta');
+    const model=document.getElementById('lil-synn-model');
+    const modelProgress=document.getElementById('model-progress');
+    const modelProgressBar=document.getElementById('model-progress-bar');
+    const modelError=document.getElementById('model-error');
+    const norm=s=>String(s??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
+    const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const base='/assets/images/icons/album_art/';
+    const fallback={neverknown:'Never Known_album_cover.jpg',homeacousticversion:'home_acoustic_version.png',ididitagain:'I DID IT AGAIN.jpg',rescueyouacousticversion:'RESCUE_YOU_A.png',somewhereinbetween:'57_lil_synn_somewhere_in_between.jpg',hellogoodbye:'11_lil_synn_hello_goodbye.jpg',blackglass:'23_lil_synn_black_glass.jpg',heal:'30_lil_synn_heal.jpg',enough:'15_lil_synn_enough.jpg',dontsayit:'38_lil_synn_don_t_say_it.jpg',touchingtothenorth:'01 - Astral Signal - LIL SYN-artwork.jpg'};
+    let items=[],visible=[],index=0;
+
+    model.addEventListener('progress',event=>{
+      const value=Math.max(0,Math.min(1,event.detail.totalProgress||0));
+      modelProgressBar.style.width=`${value*100}%`;
+    });
+    model.addEventListener('load',()=>{
+      modelProgress.style.opacity='0';
+      modelError.classList.remove('open');
+    });
+    model.addEventListener('error',()=>{
+      modelProgress.style.opacity='0';
+      modelError.classList.add('open');
+    });
+
+    function render(filter='all'){
+      document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));
+      visible=items.filter(x=>filter==='all'||x.type===filter);
+      gallery.innerHTML=visible.length?visible.map((x,i)=>`<button class="visual" type="button" data-i="${i}"><img src="${x.art}" alt="${esc(x.title)} artwork" loading="lazy" decoding="async"><span class="visual-copy"><span class="visual-type">${esc(x.type.toUpperCase())}</span><h2>${esc(x.title)}</h2><small>${esc(x.indexLabel)}</small></span></button>`).join(''):'<div class="empty">No visuals match this category.</div>';
+      gallery.querySelectorAll('.visual').forEach(b=>b.addEventListener('click',()=>open(Number(b.dataset.i))));
+    }
+
+    function open(i){
+      if(!visible.length)return;
+      index=(i+visible.length)%visible.length;
+      const x=visible[index];
+      img.src=x.art;img.alt=x.title+' artwork';lt.textContent=x.title;lm.textContent=x.type.toUpperCase()+' · '+x.indexLabel;
+      lightbox.classList.add('open');document.body.style.overflow='hidden';
+    }
+    function close(){lightbox.classList.remove('open');document.body.style.overflow=''}
+    function step(n){open(index+n)}
+
+    document.getElementById('close').onclick=close;
+    document.getElementById('prev').onclick=()=>step(-1);
+    document.getElementById('next').onclick=()=>step(1);
+    document.addEventListener('keydown',e=>{
+      if(!lightbox.classList.contains('open'))return;
+      if(e.key==='Escape')close();
+      if(e.key==='ArrowLeft')step(-1);
+      if(e.key==='ArrowRight')step(1);
+    });
+    let sx=0;
+    lightbox.addEventListener('touchstart',e=>{sx=e.changedTouches[0].clientX},{passive:true});
+    lightbox.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)step(dx<0?1:-1)},{passive:true});
+    document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>render(b.dataset.filter)));
+
+    fetch('/release-catalog.json',{cache:'default'})
+      .then(r=>r.json())
+      .then(c=>{
+        const artMap=window.LIL_SYNN_ART_MAP||{};
+        items=(c.order||[]).map((title,i)=>{
+          const g=c.groups?.[title],file=artMap[norm(title)]||fallback[norm(title)];
+          return file?{title,type:(g?.type||'single').toLowerCase(),art:base+encodeURIComponent(file),indexLabel:'CATALOG '+String(i+1).padStart(2,'0')}:null;
+        }).filter(Boolean);
+        render();
+      })
+      .catch(()=>gallery.innerHTML='<div class="empty">Unable to load the visual catalog.</div>');
+  </script>
+</body>
+</html>
