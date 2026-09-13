@@ -79,3 +79,5 @@
 - [ ] Verify production HTTP 200 for landing, command center, every tool, representative core topics, and complete guide.
 - [ ] Verify search, tool generation, copy/reset, navigation, and mobile behavior with browser automation.
 - [ ] Verify deployment is READY and custom-domain routes resolve correctly.
+
+**QA note:** A previous Vercel deployment built commit `279489b9db1d47df3df1005fd0e736b56e6e12ba` and failed because it did not contain the later interactive command-center/tool asset changes. The current `main` head must be the deployment candidate for final QA.
