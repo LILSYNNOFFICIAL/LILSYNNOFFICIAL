@@ -24,7 +24,7 @@ for(const file of htmlFiles){
   if(!html.includes('src="/js/suno-forum.js"'))failures.push(`${path.relative(root,file)}: missing Forum runtime`);
 }
 const runtime=await fs.readFile(path.join(suno,'js','suno-forum.js'),'utf8');
-for(const marker of [forumUrl,'.nav-forum','target=\'_blank\'','noopener noreferrer']){
+for(const marker of [forumUrl,'.nav-forum','target=\"_blank\"','noopener noreferrer']){
   if(!runtime.includes(marker))failures.push(`suno-forum.js: missing ${marker}`);
 }
 const vercel=JSON.parse(await fs.readFile(path.join(root,'vercel.json'),'utf8'));
