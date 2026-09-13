@@ -24,7 +24,20 @@ function apply(){const q=(input?.value||'').trim().toLowerCase();let shown=0;car
 if(input){input.setAttribute('role','searchbox');input.addEventListener('input',apply);}chips.forEach(chip=>chip.addEventListener('click',()=>{chips.forEach(x=>x.classList.remove('active'));chip.classList.add('active');filter=chip.dataset.filter||'all';apply();}));
 $$('.accordion-trigger').forEach(btn=>btn.addEventListener('click',()=>{const panel=document.getElementById(btn.getAttribute('aria-controls'));const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));if(panel)panel.hidden=open;}));
 const top=$('.back-to-top');if(top)top.addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
-
+function injectDonation(){
+  $$('.site-footer').forEach(footer=>{
+    if(footer.querySelector('.suno-donate'))return;
+    const donate=document.createElement('a');
+    donate.className='suno-donate';
+    donate.href='https://cash.app/$lilsynnofficial';
+    donate.target='_blank';
+    donate.rel='noopener noreferrer';
+    donate.setAttribute('aria-label','Donate to support Suno guide servers and development');
+    donate.textContent='DONATE · SUPPORT THE SERVERS & DEVELOPMENT ↗';
+    footer.appendChild(donate);
+  });
+}
+injectDonation();
 let searchIndex=null;
 const searchBoxStyles='position:fixed;inset:0;z-index:9999;background:rgba(5,5,4,.92);backdrop-filter:blur(12px);display:flex;align-items:flex-start;justify-content:center;padding:10vh 18px 30px;overflow:auto;';
 function openGlobalResults(query){
@@ -39,7 +52,6 @@ function openGlobalResults(query){
 }
 fetch('/suno/search-index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{searchIndex=data;}).catch(()=>{});
 if(input){let timer;input.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>openGlobalResults(input.value),260);});input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();openGlobalResults(input.value);}});}
-
 function injectLivePanel(){
   fetch('/suno/manifest.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(m=>{
     if(!m||$('#suno-live-panel'))return;
