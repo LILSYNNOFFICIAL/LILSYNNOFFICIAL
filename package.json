@@ -1,0 +1,10 @@
+{
+  "name": "lil-synn-suno-guide-site",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/sync-suno-guide.mjs"
+  },
+  "dependencies": {
+    "marked": "^15.0.12"
+  }
+}
