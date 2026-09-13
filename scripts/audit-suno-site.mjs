@@ -42,6 +42,7 @@ const sourceDocs = [
   'SUNO-V6-GAP-CLOSURE-ALL-REMAINING-CURRENT.md',
   'SUNO-V6-ADDITIONAL-CURRENT-DETAILS.md'
 ];
+const topicRoutes = [...requiredRoutes.keys()].filter(route => route.startsWith('/suno/') && !route.includes('/deep-dives/') && route !== '/suno/complete');
 const failures = [];
 const exists = async p => { try { await fs.access(p); return true; } catch { return false; } };
 
@@ -66,6 +67,7 @@ const landing = await fs.readFile(path.join(suno, 'Suno_Guide.html'), 'utf8');
 if (!landing.includes('id="suno-source-status"')) failures.push('landing page is missing live source status marker');
 if (!landing.includes('/suno/complete') || !landing.includes('/suno/v6')) failures.push('landing page is missing primary internal calls-to-action');
 if (!landing.includes('css/suno.css') || !landing.includes('js/suno.js')) failures.push('landing page is missing shared Suno asset references');
+for (const route of topicRoutes) if (!landing.includes(`href="${route}"`)) failures.push(`landing navigation is missing ${route}`);
 
 const guideHtml = await fs.readdir(path.join(suno, 'guides')).then(files => files.filter(file => file.endsWith('.html')));
 if (guideHtml.length < 16) failures.push(`core guide count is ${guideHtml.length}; expected at least 16`);
