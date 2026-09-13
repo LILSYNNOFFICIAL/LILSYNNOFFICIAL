@@ -1,5 +1,5 @@
 {
-  "cleanUrls": true,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "public",
   "rewrites": [
     {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
