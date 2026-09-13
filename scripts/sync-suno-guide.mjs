@@ -32,6 +32,7 @@ const deepLinkMap = {
 const outDir = path.join(root, 'Suno', 'complete');
 await fs.mkdir(outDir, { recursive: true });
 marked.setOptions({ gfm: true, breaks: false });
+const buildDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 function navMenu(items){return items.map(([label,href])=>`<a href="${href}">${label}</a>`).join('');}
 const sharedNav = `<header class="site-header"><div class="header-inner"><a class="brand" href="/suno" aria-label="LIL SYNN Suno V6 Guide home"><span>LIL SYNN</span><b>SUNO V6</b></a><nav class="site-nav" id="site-nav" aria-label="Guide navigation"><div class="nav-group"><button class="nav-trigger" type="button" aria-expanded="false" aria-controls="reader-create">CREATE <span>⌄</span></button><div class="nav-menu" id="reader-create">${navMenu(topics.slice(0,4).concat(topics.slice(7,8)))}</div></div><div class="nav-group"><button class="nav-trigger" type="button" aria-expanded="false" aria-controls="reader-control">CONTROL <span>⌄</span></button><div class="nav-menu" id="reader-control">${navMenu(topics.slice(4,7))}</div></div><div class="nav-group"><button class="nav-trigger" type="button" aria-expanded="false" aria-controls="reader-produce">PRODUCE <span>⌄</span></button><div class="nav-menu" id="reader-produce">${navMenu(topics.slice(8))}</div></div><div class="nav-group"><button class="nav-trigger" type="button" aria-expanded="false" aria-controls="reader-research">RESEARCH <span>⌄</span></button><div class="nav-menu" id="reader-research">${navMenu(deep)}</div></div><a class="nav-complete" href="/suno/complete">COMPLETE GUIDE</a></nav><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><b>MENU</b></button></div></header>`;
 function sanitizeLinks(html) {
@@ -44,12 +45,18 @@ function sanitizeLinks(html) {
   }
   return output;
 }
-for (const [src, file, title, kicker] of docs) {
+function readerTools(index) {
+  const prev = index > 0 ? docs[index - 1] : null;
+  const next = index < docs.length - 1 ? docs[index + 1] : null;
+  const jump = topics.map(([label, href]) => `<a href="${href}">${label}</a>`).join('');
+  return `<aside class="reader-tools"><div class="reader-jump"><span>JUMP TO CORE TOPIC</span><div>${jump}</div></div><div class="reader-sequence"><a href="${prev ? `/suno/complete/${prev[1]}` : '/suno'}"${prev ? '' : ' aria-disabled="true"'}>← ${prev ? 'PREVIOUS DOCUMENT' : 'GUIDE HOME'}</a><a href="${next ? `/suno/complete/${next[1]}` : '/suno'}">${next ? 'NEXT DOCUMENT' : 'GUIDE HOME'} →</a></div></aside>`;
+}
+for (const [index, [src, file, title, kicker]] of docs.entries()) {
   const response = await fetch(sourceBase + encodeURI(src));
   if (!response.ok) throw new Error(`${src}: HTTP ${response.status}`);
   const markdown = await response.text();
   const body = sanitizeLinks(marked.parse(markdown));
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${title} — LIL SYNN's complete Suno V6 knowledge base."><title>${title} — LIL SYNN SUNO V6</title><link rel="stylesheet" href="../css/suno.css"></head><body>${sharedNav}<main class="guide-page complete-reader"><div class="breadcrumbs"><a href="/suno">SUNO GUIDE</a> / ${kicker}</div><div class="meta"><span>${kicker}</span><span>FULL CONTENT</span><span>REFERENCE DATE: SEPTEMBER 13, 2026</span></div><article class="guide-content markdown-content">${body}</article><div class="pager"><a href="/suno">← GUIDE HOME</a><a href="/suno/complete">COMPLETE GUIDE →</a></div></main><footer class="site-footer"><div><strong>LIL SYNN</strong><span> / SUNO V6 COMPLETE GUIDE</span></div><a href="/suno">SUNO GUIDE ↗</a><button class="back-to-top" type="button">↑ TOP</button></footer><script src="../js/suno.js"></script></body></html>`;
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${title} — LIL SYNN's complete Suno V6 knowledge base."><title>${title} — LIL SYNN SUNO V6</title><link rel="stylesheet" href="../css/suno.css"></head><body>${sharedNav}<main class="guide-page complete-reader"><div class="breadcrumbs"><a href="/suno">SUNO GUIDE</a> / ${kicker}</div><div class="meta"><span>${kicker}</span><span>FULL CONTENT</span><span>SYNCED ${buildDate.toUpperCase()}</span></div>${readerTools(index)}<article class="guide-content markdown-content">${body}</article><div class="pager"><a href="/suno">← GUIDE HOME</a><a href="/suno/complete">COMPLETE GUIDE →</a></div></main><footer class="site-footer"><div><strong>LIL SYNN</strong><span> / SUNO V6 COMPLETE GUIDE</span></div><a href="/suno">SUNO GUIDE ↗</a><button class="back-to-top" type="button">↑ TOP</button></footer><script src="../js/suno.js"></script></body></html>`;
   await fs.writeFile(path.join(outDir, file), html, 'utf8');
 }
 
@@ -59,7 +66,8 @@ for (const file of await fs.readdir(guideDir)) {
   const fullPath = path.join(guideDir, file);
   let html = await fs.readFile(fullPath, 'utf8');
   html = html.replace(/href=[\"']https?:\/\/(?:www\.)?github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide[^\"']*[\"']/gi, 'href="/suno"');
+  html = html.replace(/href=[\"']https?:\/\/raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide[^\"']*[\"']/gi, 'href="/suno"');
   html = html.replace(/href=[\"']\.\.\/Suno_Guide\.html(?:#[^\"']*)?[\"']/gi, 'href="/suno"');
   await fs.writeFile(fullPath, html, 'utf8');
 }
-console.log(`Generated ${docs.length} complete Suno knowledge-base pages and sanitized ${await fs.readdir(guideDir).then(files=>files.filter(f=>f.endsWith('.html')).length)} core topic pages.`);
+console.log(`Generated ${docs.length} complete Suno knowledge-base pages and sanitized ${await fs.readdir(guideDir).then(files=>files.filter(f=>f.endsWith('.html')).length)} core topic pages. Sync date: ${buildDate}.`);
