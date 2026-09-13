@@ -3,7 +3,8 @@ import path from 'node:path';
 const root=process.cwd();
 const file=path.join(root,'Suno','Suno_Guide.html');
 let html=await fs.readFile(file,'utf8');
-if(!html.includes('href="command-center.css"')) html=html.replace('</head>','<link rel="stylesheet" href="css/command-center.css"></head>');
+if(!html.includes('href="css/command-center.css"')) html=html.replace('</head>','<link rel="stylesheet" href="css/command-center.css"></head>');
+if(!html.includes('href="css/tools.css"')) html=html.replace('</head>','<link rel="stylesheet" href="css/tools.css"></head>');
 const navNeed='<a class="nav-command" href="/suno/command-center">COMMAND CENTER</a>';
 if(!html.includes(navNeed)) html=html.replace('<a class="nav-complete" href="/suno/complete">COMPLETE GUIDE</a>',`${navNeed}<a class="nav-complete" href="/suno/complete">COMPLETE GUIDE</a>`);
 if(!html.includes('id="command-center"')){
