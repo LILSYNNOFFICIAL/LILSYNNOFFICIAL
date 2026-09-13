@@ -4,6 +4,8 @@ import path from 'node:path';
 const root = process.cwd();
 const suno = path.join(root, 'Suno');
 const requiredRoutes = new Map([
+  ['/css/suno.css', 'Suno/css/suno.css'],
+  ['/js/suno.js', 'Suno/js/suno.js'],
   ['/suno', 'Suno/Suno_Guide.html'],
   ['/suno/complete', 'Suno/complete/complete-guide.html'],
   ['/suno/v6', 'Suno/guides/v6.html'],
@@ -51,10 +53,7 @@ for (const file of ['Suno_Guide.html', 'js/suno.js', 'css/suno.css', 'complete/c
 }
 
 const routeTargets = [...requiredRoutes.values()];
-const htmlFiles = [];
-for (const relative of routeTargets) {
-  if (relative.endsWith('.html')) htmlFiles.push(relative);
-}
+const htmlFiles = routeTargets.filter(relative => relative.endsWith('.html'));
 for (const relative of htmlFiles) {
   const html = await fs.readFile(path.join(root, relative), 'utf8');
   if (/github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(html) || /raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(html)) {
@@ -62,6 +61,11 @@ for (const relative of htmlFiles) {
   }
   if (/href=["'](?:\.\/|\.\.\/)?[^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${relative}: Markdown navigation link remains in HTML`);
 }
+
+const landing = await fs.readFile(path.join(suno, 'Suno_Guide.html'), 'utf8');
+if (!landing.includes('id="suno-source-status"')) failures.push('landing page is missing live source status marker');
+if (!landing.includes('/suno/complete') || !landing.includes('/suno/v6')) failures.push('landing page is missing primary internal calls-to-action');
+if (!landing.includes('css/suno.css') || !landing.includes('js/suno.js')) failures.push('landing page is missing shared Suno asset references');
 
 const guideHtml = await fs.readdir(path.join(suno, 'guides')).then(files => files.filter(file => file.endsWith('.html')));
 if (guideHtml.length < 16) failures.push(`core guide count is ${guideHtml.length}; expected at least 16`);
@@ -86,4 +90,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Suno audit PASS — ${requiredRoutes.size} routes, ${guideHtml.length} core topic pages, ${completeHtml.length} full-source pages, no canonical GitHub leakage.`);
+console.log(`Suno audit PASS — ${requiredRoutes.size} routes/assets, ${guideHtml.length} core topic pages, ${completeHtml.length} full-source pages, no canonical GitHub leakage.`);
