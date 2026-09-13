@@ -1,1 +1,70 @@
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIL SYNN — Complete Suno V6 Guide</title>
+<meta name="description" content="LIL SYNN's premium, current Suno V6 knowledge base: prompting, lyrics, models, sliders, voices, editing, Studio 2.0, MIDI, effects, automation, production and troubleshooting.">
+<meta name="theme-color" content="#080706">
+<link rel="stylesheet" href="css/suno.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="Suno_Guide.html" aria-label="LIL SYNN Suno V6 Guide home"><span>LIL SYNN</span><b>SUNO V6</b></a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">MENU</button>
+  <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
+    <a href="#guides">Guides</a><a href="#deep-dives">Deep Dives</a><a href="#workflow">Workflow</a><a href="#sources">Sources</a>
+    <a class="nav-creator" href="https://lilsynn.com" target="_blank" rel="noopener">LILSYNN.COM ↗</a>
+  </nav>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">THE LIVING REFERENCE • UPDATED SEPTEMBER 13, 2026</p>
+    <h1>THE COMPLETE<br><em>SUNO V6</em> GUIDE</h1>
+    <p class="hero-lede">A serious creator's operating system for Suno: models, prompting, lyrics, control, editing, Studio 2.0, production, testing and release.</p>
+    <div class="hero-actions"><a class="button gold" href="#guides">EXPLORE THE GUIDE</a><a class="button ghost" href="https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide" target="_blank" rel="noopener">SOURCE REPOSITORY ↗</a></div>
+    <div class="status-row"><span><i></i> CURRENT REFERENCE</span><span>V6 • V6-WILD • V6-MINI</span><span>STUDIO 2.0</span></div>
+  </div>
+  <div class="hero-art"><div class="art-frame"><img src="../assets/img/Image 1 - Homepage hero identity artwork.png" alt="LIL SYNN visual identity artwork"></div><div class="art-caption">LIL SYNN / CREATOR • MUSIC • AI</div></div>
+</section>
+<section class="command-strip" aria-label="Guide philosophy"><div><b>IDEA</b><span>→</span><b>DIRECT</b><span>→</span><b>GENERATE</b><span>→</span><b>DIAGNOSE</b><span>→</span><b>EDIT</b><span>→</span><b>PRODUCE</b></div><p>Preserve good information. Repair bad information locally.</p></section>
+<section id="guides" class="section">
+  <div class="section-head"><div><p class="eyebrow">CORE LIBRARY</p><h2>Build with <em>control.</em></h2></div><p>Use the guide by problem, not by hype. Start with the smallest layer capable of solving the problem.</p></div>
+  <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="guide-search" type="search" placeholder="Search the guide…" autocomplete="off"></label><div class="filters" role="group" aria-label="Filter guides"><button class="filter-chip active" data-filter="all">ALL</button><button class="filter-chip" data-filter="create">CREATE</button><button class="filter-chip" data-filter="control">CONTROL</button><button class="filter-chip" data-filter="produce">PRODUCE</button><button class="filter-chip" data-filter="fix">FIX</button></div></div>
+  <div class="card-grid" id="guide-grid">
+    <a class="guide-card" data-category="create" data-search="v6 models model selection wild mini fundamentals" href="guides/v6.html"><span class="card-num">01</span><h3>V6 Fundamentals</h3><p>Models, model selection, generation strategy and the V6 mental model.</p><small>CREATE · MODELS</small></a>
+    <a class="guide-card" data-category="control" data-search="prompt prompting instruction hierarchy negative prompt style box" href="guides/prompting.html"><span class="card-num">02</span><h3>Prompt Engineering</h3><p>Turn creative intent into structured, prioritized instructions.</p><small>CONTROL · PROMPTS</small></a>
+    <a class="guide-card" data-category="create" data-search="lyrics structure tags chorus bridge vocals" href="guides/lyrics.html"><span class="card-num">03</span><h3>Lyrics Engineering</h3><p>Lyrics as words, structure and performance input.</p><small>CREATE · LYRICS</small></a>
+    <a class="guide-card" data-category="create" data-search="style genre arrangement groove vocal mix master" href="guides/styles.html"><span class="card-num">04</span><h3>Style Construction</h3><p>Build styles around audible behavior instead of adjective soup.</p><small>CREATE · STYLE</small></a>
+    <a class="guide-card" data-category="control" data-search="sliders weirdness style influence audio influence" href="guides/sliders.html"><span class="card-num">05</span><h3>Creative Controls</h3><p>Sliders, Advanced Options and Max Mode: what to test and why.</p><small>CONTROL · SLIDERS</small></a>
+    <a class="guide-card" data-category="control" data-search="voices personas custom models my taste inspire" href="guides/voices.html"><span class="card-num">06</span><h3>Voices & Identity</h3><p>Voices, Custom Models, My Taste and identity consistency.</p><small>CONTROL · VOICE</small></a>
+    <a class="guide-card" data-category="control" data-search="extend crop replace remix reuse editor editing" href="guides/editing.html"><span class="card-num">07</span><h3>Surgical Editing</h3><p>Extend, Crop, Replace Section, Remix, Reuse Prompt and local repair.</p><small>CONTROL · EDIT</small></a>
+    <a class="guide-card" data-category="create" data-search="audio upload reference image video multimodal sounds" href="guides/audio.html"><span class="card-num">08</span><h3>Audio & References</h3><p>Uploads, multimodal inputs, references and experimental sound creation.</p><small>CREATE · INPUTS</small></a>
+    <a class="guide-card" data-category="produce" data-search="stems remaster vocals add vocals separation" href="guides/stems.html"><span class="card-num">09</span><h3>Stems & Remaster</h3><p>Separate, rebalance and refine instead of regenerating everything.</p><small>PRODUCE · AUDIO</small></a>
+    <a class="guide-card" data-category="produce" data-search="studio 2 automation effects midi synth chat timeline" href="guides/studio.html"><span class="card-num">10</span><h3>Studio 2.0</h3><p>Move from generation into a full production environment.</p><small>PRODUCE · STUDIO</small></a>
+    <a class="guide-card" data-category="produce" data-search="midi piano roll musical typing controller synth" href="guides/midi.html"><span class="card-num">11</span><h3>MIDI & Wavetable</h3><p>Notes, piano roll, controllers, musical typing and synthesis.</p><small>PRODUCE · MIDI</small></a>
+    <a class="guide-card" data-category="produce" data-search="effects compressor eq reverb delay distortion gate plugins" href="guides/effects.html"><span class="card-num">12</span><h3>Effects & Plugins</h3><p>Real-time processing, effect chains and custom Studio plugins.</p><small>PRODUCE · FX</small></a>
+    <a class="guide-card" data-category="produce" data-search="automation volume pan parameters midi learn" href="guides/automation.html"><span class="card-num">13</span><h3>Automation</h3><p>Shape movement over time with lanes, parameters and MIDI Learn.</p><small>PRODUCE · MOTION</small></a>
+    <a class="guide-card" data-category="produce" data-search="production mastering mix arrangement vocal engineering" href="guides/production.html"><span class="card-num">14</span><h3>Production System</h3><p>Arrangement, vocal engineering, mix thinking, QC and mastering.</p><small>PRODUCE · MIX</small></a>
+    <a class="guide-card" data-category="fix" data-search="troubleshooting failure modes diagnostic rescue testing" href="guides/troubleshooting.html"><span class="card-num">15</span><h3>Diagnostics</h3><p>Failure modes, controlled tests and production rescue workflows.</p><small>FIX · TEST</small></a>
+    <a class="guide-card" data-category="produce" data-search="rights plans credits downloads formats release commercial" href="guides/rights.html"><span class="card-num">16</span><h3>Rights & Release</h3><p>Plans, credits, downloads, formats, rights and release workflow.</p><small>PRODUCE · RELEASE</small></a>
+  </div><p id="no-results" class="no-results" hidden>No guide matches that search.</p>
+</section>
+<section id="deep-dives" class="section dark-section"><div class="section-head"><div><p class="eyebrow">THE EXPANSION ARCHIVE</p><h2>Go <em>deeper.</em></h2></div><p>Seven current expansion documents turned into navigable research-grade reference pages.</p></div>
+<div class="deep-grid">
+<a class="deep-card featured" href="deep-dives/ultimate-control.html"><span>2026 / FLAGSHIP</span><h3>Ultimate Control & Production Addendum</h3><p>Control matrix, testing, Studio 2.0, diagnostics, rights and the Creator's Operating System.</p><b>OPEN DEEP DIVE →</b></a>
+<a class="deep-card" href="deep-dives/everything-expansion.html"><span>EXPANSION 01</span><h3>Everything Expansion</h3><p>Broad V6 controls, prompting, production, testing, rights and workflows.</p></a>
+<a class="deep-card" href="deep-dives/final-current-expansion.html"><span>EXPANSION 02</span><h3>Final Current Expansion</h3><p>Current model, multimodal, Studio, mobile, stems and release coverage.</p></a>
+<a class="deep-card" href="deep-dives/coverage-audit.html"><span>EXPANSION 03</span><h3>Current Coverage Audit</h3><p>Evidence map and coverage analysis for the knowledge base.</p></a>
+<a class="deep-card" href="deep-dives/gaps-closure.html"><span>EXPANSION 04</span><h3>Current Gaps Closure</h3><p>Reference gaps, methodology and operational closure.</p></a>
+<a class="deep-card" href="deep-dives/gap-closure-all-remaining.html"><span>EXPANSION 05</span><h3>All Remaining Current</h3><p>Remaining current ecosystem details identified during the audit.</p></a>
+<a class="deep-card" href="deep-dives/additional-current-details.html"><span>EXPANSION 06</span><h3>Additional Current Details</h3><p>Stems, Song Editor, moderation, Workspaces, Library, Remove FX and Voices.</p></a>
+</div></section>
+<section id="workflow" class="section workflow"><div class="section-head"><div><p class="eyebrow">CREATOR'S OPERATING SYSTEM</p><h2>Don't regenerate<br>what you can <em>repair.</em></h2></div><p>A practical pipeline for preserving good information and applying the smallest effective intervention.</p></div><div class="workflow-line"><article><b>01</b><h3>DEFINE</h3><p>Model, identity, lyrics, structure and reference inputs.</p></article><article><b>02</b><h3>GENERATE</h3><p>Run controlled variants and score the actual result.</p></article><article><b>03</b><h3>DIAGNOSE</h3><p>Name the failure before touching the tool.</p></article><article><b>04</b><h3>REPAIR</h3><p>Use editing, stems or local production before full regeneration.</p></article><article><b>05</b><h3>QC</h3><p>Check timing, vocal, arrangement, mix, export and release state.</p></article></div></section>
+<section id="sources" class="section source-section"><div class="source-panel"><div><p class="eyebrow">SOURCE OF TRUTH</p><h2>LIL SYNN'S<br><em>COMPLETE SUNO V6 GUIDE</em></h2><p>The website is the presentation layer. The canonical repository remains the living knowledge base, with official Suno documentation outranking old tutorials, screenshots and memory.</p></div><div class="source-actions"><a class="button gold" href="https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide" target="_blank" rel="noopener">OPEN GITHUB ↗</a><a class="button ghost" href="https://help.suno.com/en/articles/13924737" target="_blank" rel="noopener">OFFICIAL V6 DOCS ↗</a><a class="button ghost" href="https://help.suno.com/en/articles/13670529" target="_blank" rel="noopener">STUDIO 2.0 ↗</a></div></div></section>
+</main>
+<footer class="site-footer"><div><strong>LIL SYNN</strong><span> / SUNO V6 GUIDE</span></div><a href="https://lilsynn.com" target="_blank" rel="noopener">LILSYNN.COM ↗</a><button class="back-to-top" type="button">↑ TOP</button></footer>
+<script src="js/suno.js"></script>
+</body>
+</html>
