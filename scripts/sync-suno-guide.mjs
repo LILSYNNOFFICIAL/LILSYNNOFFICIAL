@@ -75,6 +75,7 @@ for (const file of await fs.readdir(guideDir)) {
 
 const landingPath = path.join(root, 'Suno', 'Suno_Guide.html');
 let landing = await fs.readFile(landingPath, 'utf8');
+landing = landing.replace(/<header class="site-header">[\s\S]*?<\/header>/i, sharedNav);
 landing = landing.replace(/THE LIVING REFERENCE · UPDATED [^<]+/i, `THE LIVING REFERENCE · UPDATED ${buildDate.toUpperCase()}`);
 if (!landing.includes('id="suno-source-status"')) {
   const status = `<section class="source-status section" id="suno-source-status"><div><p class="eyebrow">LIVE SOURCE STATUS</p><h2>Knowledge base <em>synchronized.</em></h2><p>This site is rebuilt from the canonical Suno V6 source set at build time. The current synchronized source date is <strong>${buildDate}</strong>. Read everything here; no visitor navigation requires the source repository.</p></div><div class="source-status-grid"><div><b>8</b><span>SOURCE DOCUMENTS</span></div><div><b>16</b><span>CORE TOPICS</span></div><div><b>7</b><span>DEEP DIVES</span></div></div></section>`;
