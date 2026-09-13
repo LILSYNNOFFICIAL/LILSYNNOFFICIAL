@@ -8,6 +8,7 @@
     {"source":"/css/tools.css","destination":"/Suno/css/tools.css"},
     {"source":"/js/suno.js","destination":"/Suno/js/suno.js"},
     {"source":"/js/suno-tools.js","destination":"/Suno/js/suno-tools.js"},
+    {"source":"/js/suno-forum.js","destination":"/Suno/js/suno-forum.js"},
     {"source":"/suno","destination":"/Suno/Suno_Guide.html"},
     {"source":"/suno/","destination":"/Suno/Suno_Guide.html"},
     {"source":"/suno/command-center","destination":"/Suno/command-center.html"},
