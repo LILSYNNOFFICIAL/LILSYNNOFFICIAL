@@ -48,8 +48,10 @@ function sanitizeLinks(html) {
 function readerTools(index) {
   const prev = index > 0 ? docs[index - 1] : null;
   const next = index < docs.length - 1 ? docs[index + 1] : null;
+  const prevHref = prev ? (index === 1 ? '/suno/complete' : deep[index - 2][1]) : '/suno';
+  const nextHref = next ? (index === 0 ? deep[0][1] : deep[index][1]) : '/suno';
   const jump = topics.map(([label, href]) => `<a href="${href}">${label}</a>`).join('');
-  return `<aside class="reader-tools"><div class="reader-jump"><span>JUMP TO CORE TOPIC</span><div>${jump}</div></div><div class="reader-sequence"><a href="${prev ? `/suno/complete/${prev[1]}` : '/suno'}"${prev ? '' : ' aria-disabled="true"'}>← ${prev ? 'PREVIOUS DOCUMENT' : 'GUIDE HOME'}</a><a href="${next ? `/suno/complete/${next[1]}` : '/suno'}">${next ? 'NEXT DOCUMENT' : 'GUIDE HOME'} →</a></div></aside>`;
+  return `<aside class="reader-tools"><div class="reader-jump"><span>JUMP TO CORE TOPIC</span><div>${jump}</div></div><div class="reader-sequence"><a href="${prevHref}"${prev ? '' : ' aria-disabled="true"'}>← ${prev ? 'PREVIOUS DOCUMENT' : 'GUIDE HOME'}</a><a href="${nextHref}">${next ? 'NEXT DOCUMENT' : 'GUIDE HOME'} →</a></div></aside>`;
 }
 for (const [index, [src, file, title, kicker]] of docs.entries()) {
   const response = await fetch(sourceBase + encodeURI(src));
@@ -70,4 +72,13 @@ for (const file of await fs.readdir(guideDir)) {
   html = html.replace(/href=[\"']\.\.\/Suno_Guide\.html(?:#[^\"']*)?[\"']/gi, 'href="/suno"');
   await fs.writeFile(fullPath, html, 'utf8');
 }
+
+const landingPath = path.join(root, 'Suno', 'Suno_Guide.html');
+let landing = await fs.readFile(landingPath, 'utf8');
+landing = landing.replace(/THE LIVING REFERENCE · UPDATED [^<]+/i, `THE LIVING REFERENCE · UPDATED ${buildDate.toUpperCase()}`);
+if (!landing.includes('id="suno-source-status"')) {
+  const status = `<section class="source-status section" id="suno-source-status"><div><p class="eyebrow">LIVE SOURCE STATUS</p><h2>Knowledge base <em>synchronized.</em></h2><p>This site is rebuilt from the canonical Suno V6 source set at build time. The current synchronized source date is <strong>${buildDate}</strong>. Read everything here; no visitor navigation requires the source repository.</p></div><div class="source-status-grid"><div><b>8</b><span>SOURCE DOCUMENTS</span></div><div><b>16</b><span>CORE TOPICS</span></div><div><b>7</b><span>DEEP DIVES</span></div></div></section>`;
+  landing = landing.replace('<section class="principle">', `${status}<section class="principle">`);
+}
+await fs.writeFile(landingPath, landing, 'utf8');
 console.log(`Generated ${docs.length} complete Suno knowledge-base pages and sanitized ${await fs.readdir(guideDir).then(files=>files.filter(f=>f.endsWith('.html')).length)} core topic pages. Sync date: ${buildDate}.`);
