@@ -15,18 +15,18 @@
 .hero{position:relative;height:calc(100svh - var(--header));min-height:720px;overflow:hidden;isolation:isolate;background:#030207;border-bottom:1px solid var(--line)}
 .hero-bg,.hero-neb,.hero-ring,.hero-char{position:absolute;pointer-events:none}.hero-bg{inset:0;z-index:-6}.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.48) saturate(.92)}
 .hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,2,5,.94) 0%,rgba(2,2,5,.62) 27%,rgba(2,2,5,.08) 55%,rgba(2,2,5,.62) 100%),linear-gradient(0deg,rgba(2,2,5,.94) 0%,transparent 34%,rgba(2,2,5,.22) 100%)}
-.hero-neb{inset:-10%;z-index:-5;opacity:.10;mix-blend-mode:screen}.hero-neb img{width:100%;height:100%;object-fit:cover}
-.hero-ring{z-index:-2;left:50%;top:53%;width:min(88vw,1160px);height:min(88vw,1160px);transform:translate(-50%,-50%);opacity:.46;mix-blend-mode:screen;filter:drop-shadow(0 0 30px rgba(255,0,143,.25))}.hero-ring img{width:100%;height:100%;object-fit:contain;transform:scale(1.22);animation:signalBreath 10s ease-in-out infinite}@keyframes signalBreath{50%{transform:scale(1.28);opacity:.72}}
+.hero-neb{inset:-10%;z-index:-5;opacity:.08;mix-blend-mode:screen}.hero-neb img{width:100%;height:100%;object-fit:cover}
+.hero-ring{z-index:-2;left:50%;top:53%;width:min(88vw,1160px);height:min(88vw,1160px);transform:translate(-50%,-50%);opacity:.46;mix-blend-mode:screen;filter:drop-shadow(0 0 30px rgba(255,0,143,.25));overflow:hidden;border-radius:50%}.hero-ring img{width:100%;height:100%;object-fit:contain;transform:scale(1.22);animation:signalBreath 10s ease-in-out infinite}@keyframes signalBreath{50%{transform:scale(1.28);opacity:.72}}
 .hero-char{z-index:2;left:50%;top:4%;width:min(58vw,820px);height:94%;transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;mix-blend-mode:screen;filter:drop-shadow(0 28px 48px rgba(0,0,0,.72));-webkit-mask-image:radial-gradient(ellipse 58% 58% at 50% 53%,#000 48%,rgba(0,0,0,.92) 65%,transparent 86%);mask-image:radial-gradient(ellipse 58% 58% at 50% 53%,#000 48%,rgba(0,0,0,.92) 65%,transparent 86%)}.hero-char img{width:100%;height:100%;object-fit:contain;object-position:center bottom}
 .hero-copy{position:absolute;z-index:7;left:5.2%;top:50%;transform:translateY(-45%);width:min(510px,34vw)}.eyebrow{font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#f4f4f4}.hero-logo{display:block;width:min(480px,100%);max-height:175px;object-fit:contain;object-position:left center;margin:20px 0 18px;filter:drop-shadow(0 0 18px rgba(255,0,143,.2))}.hero-meta{font-size:13px;font-weight:600;letter-spacing:.31em;text-transform:uppercase;margin-bottom:26px}.hero-btn{display:inline-flex;align-items:center;gap:22px;border:1px solid var(--pink);padding:12px 23px;text-decoration:none;text-transform:uppercase;font-size:12px;font-weight:600;letter-spacing:.2em;transition:background .2s,color .2s,transform .2s}.hero-btn:hover,.hero-btn:focus-visible{background:var(--pink);color:#050005;transform:translateY(-1px)}
 .hero-side{position:absolute;z-index:8;right:4.2%;top:50%;transform:translateY(-50%);width:min(350px,24vw);display:flex;flex-direction:column;gap:13px}.side-card{height:128px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18);background:rgba(2,2,6,.48);box-shadow:0 14px 34px rgba(0,0,0,.28)}.side-card:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,2,6,.08),rgba(2,2,6,.9) 73%);z-index:1}.side-card[data-ls2-release] img,.side-card[data-ls2-video] img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.52}.side-card[data-ls2-release] .ls2-card-copy,.side-card[data-ls2-video] .ls2-card-copy{position:absolute;z-index:2;left:18px;right:15px;bottom:14px}.ls2-card-copy small{display:block;color:var(--glow);font-size:9px;letter-spacing:.22em;text-transform:uppercase}.ls2-card-copy h2{margin:4px 0 1px;font:600 17px Orbitron,sans-serif;letter-spacing:.03em}.ls2-card-copy p{margin:0;color:#bbb;font-size:10px;letter-spacing:.15em;text-transform:uppercase}.ls2-card-copy a{display:inline-flex;gap:10px;margin-top:9px;color:#fff;text-decoration:none;text-transform:uppercase;font-size:9px;letter-spacing:.16em;border:1px solid rgba(255,0,143,.6);padding:6px 10px}.ls2-card-copy a:hover{background:rgba(255,0,143,.16);border-color:var(--glow)}.ls2-card-copy a span{color:var(--glow)}.ls2-card-media{position:absolute;inset:0}.ls2-card-media img{width:100%;height:100%;object-fit:cover;opacity:.55}.ls2-card-media:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,2,6,.05),rgba(2,2,6,.88) 73%)}.ls2-play{position:absolute;z-index:2;left:18px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:1px solid rgba(255,255,255,.7);border-radius:50%;display:grid;place-items:center;padding-left:2px;font-size:13px;background:rgba(0,0,0,.3)}.side-visual{display:flex;align-items:center;justify-content:flex-end;background:linear-gradient(90deg,rgba(2,2,6,.1),rgba(2,2,6,.88)),url('/assets/2/ws_5.png') center/cover}.side-visual:before{background:linear-gradient(90deg,rgba(2,2,6,.12),rgba(2,2,6,.86) 70%)}.side-visual .side-copy{position:relative;z-index:2;width:66%;padding-right:16px}.side-visual .side-copy h2{font-size:15px}
 .archive{background:#020205;border-bottom:1px solid rgba(255,255,255,.09);padding:24px 0 20px}.archive-in{width:min(1320px,90vw);margin:auto;display:grid;grid-template-columns:28px 1fr 28px;align-items:center;gap:12px}.archive-arrow{border:0;background:none;color:#ddd;font-size:27px;cursor:pointer;opacity:.75}.archive-arrow:hover{color:var(--glow)}.rail{display:grid;grid-template-columns:repeat(7,1fr);gap:13px}.rail a{text-decoration:none;text-align:center;color:#aaa;font-size:9px;letter-spacing:.2em}.rail img{display:block;width:100%;aspect-ratio:1.55;object-fit:cover;border:1px solid rgba(255,255,255,.12);transition:transform .2s,border-color .2s}.rail a:hover img,.rail a:focus-visible img{border-color:var(--pink);transform:translateY(-2px)}.rail-label{margin-top:7px}
-@media(max-width:1100px){.hero-side{width:29vw}.hero-copy{width:39vw}.hero-char{width:64vw}.rail{gap:9px}.ls2-header-inner{grid-template-columns:190px 1fr 235px}}
+@media(max-width:1100px){.hero-side{width:29vw}.hero-copy{width:39vw}.hero-char{width:64vw}.rail{gap:9px}}
 @media(max-width:800px){:root{--header:68px}.hero{height:calc(100svh - var(--header));min-height:690px}.hero-bg img{object-position:center}.hero-ring{top:43%;width:120vw;height:120vw;opacity:.35}.hero-char{left:54%;top:7%;width:94vw;height:68%;opacity:.92}.hero-copy{left:7%;right:7%;top:auto;bottom:8%;transform:none;width:auto;text-align:center}.hero-logo{margin:14px auto;width:min(440px,100%);object-position:center}.hero-meta{font-size:10px;letter-spacing:.2em;margin-bottom:17px}.hero-side{display:none}.archive-in{width:94vw;grid-template-columns:20px 1fr 20px}.rail{display:flex;overflow:auto;scrollbar-width:none}.rail::-webkit-scrollbar{display:none}.rail a{min-width:128px}}
 @media(prefers-reduced-motion:reduce){.hero-ring img{animation:none}}
 </style>
 <script src="/site-global2.js?v=20260914"></script>
-<script src="/site-global.js?v=20260914"></script></head>
+</head>
 <body>
 <div class="page">
 <main>
@@ -35,37 +35,16 @@
   <div class="hero-neb"><img src="/assets/2/ws_4.png" alt=""></div>
   <div class="hero-ring"><img src="/assets/2/ws_3.png" alt=""></div>
   <div class="hero-char"><img src="/assets/2/ws_1.png" alt="LIL SYNN"></div>
-  <div class="hero-copy">
-    <div class="eyebrow">Welcome to the official site of</div>
-    <img class="hero-logo" src="/assets/2/wa_1.png" alt="LIL SYNN">
-    <div class="hero-meta">Music &nbsp; / &nbsp; Visuals &nbsp; / &nbsp; Universe</div>
-    <a class="hero-btn" href="/releases.html">Explore <span>→</span></a>
-  </div>
+  <div class="hero-copy"><div class="eyebrow">Welcome to the official site of</div><img class="hero-logo" src="/assets/2/wa_1.png" alt="LIL SYNN"><div class="hero-meta">Music &nbsp; / &nbsp; Visuals &nbsp; / &nbsp; Universe</div><a class="hero-btn" href="/releases.html">Explore <span>→</span></a></div>
   <aside class="hero-side" aria-label="Latest LIL SYNN content">
     <article class="side-card" data-ls2-release><div class="ls2-card-copy"><small>Latest Release</small><h2>The Signal</h2><p>LIL SYNN</p></div></article>
     <article class="side-card" data-ls2-video><div class="ls2-card-copy"><small>Latest Video</small><h2>The Signal</h2><p>Official Video</p></div></article>
     <a class="side-card side-visual" href="/gallery.html" aria-label="Explore the LIL SYNN visual universe"><div class="side-copy"><small>Visuals</small><h2>Explore the Universe</h2><p>View Gallery <span>→</span></p></div></a>
   </aside>
 </section>
-<section class="archive" aria-label="LIL SYNN visual archive">
-  <div class="archive-in">
-    <button class="archive-arrow" type="button" aria-label="Previous visuals">‹</button>
-    <div class="rail">
-      <a href="/gallery.html"><img src="/assets/2/LS2.png" alt="LS2"><div class="rail-label">LS2</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS3.png" alt="LS3"><div class="rail-label">LS3</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS3_ALT.png" alt="LS3 alternate"><div class="rail-label">LS3 ALT</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS4.png" alt="LS4"><div class="rail-label">LS4</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS5.png" alt="LS5"><div class="rail-label">LS5</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS5_ALT.png" alt="LS5 alternate"><div class="rail-label">LS5 ALT</div></a>
-      <a href="/gallery.html"><img src="/assets/2/LS6.png" alt="LS6"><div class="rail-label">LS6</div></a>
-    </div>
-    <button class="archive-arrow" type="button" aria-label="Next visuals">›</button>
-  </div>
-</section>
-</main>
-</div>
-<script>
-(()=>{const rail=document.querySelector('.rail'),buttons=document.querySelectorAll('.archive-arrow');if(!rail||buttons.length<2)return;buttons[0].addEventListener('click',()=>rail.scrollBy({left:-320,behavior:'smooth'}));buttons[1].addEventListener('click',()=>rail.scrollBy({left:320,behavior:'smooth'}))})();
-</script>
-</body>
-</html>
+<section class="archive" aria-label="LIL SYNN visual archive"><div class="archive-in"><button class="archive-arrow" type="button" aria-label="Previous visuals">‹</button><div class="rail">
+<a href="/gallery.html"><img src="/assets/2/LS2.png" alt="LS2"><div class="rail-label">LS2</div></a><a href="/gallery.html"><img src="/assets/2/LS3.png" alt="LS3"><div class="rail-label">LS3</div></a><a href="/gallery.html"><img src="/assets/2/LS3_ALT.png" alt="LS3 alternate"><div class="rail-label">LS3 ALT</div></a><a href="/gallery.html"><img src="/assets/2/LS4.png" alt="LS4"><div class="rail-label">LS4</div></a><a href="/gallery.html"><img src="/assets/2/LS5.png" alt="LS5"><div class="rail-label">LS5</div></a><a href="/gallery.html"><img src="/assets/2/LS5_ALT.png" alt="LS5 alternate"><div class="rail-label">LS5 ALT</div></a><a href="/gallery.html"><img src="/assets/2/LS6.png" alt="LS6"><div class="rail-label">LS6</div></a>
+</div><button class="archive-arrow" type="button" aria-label="Next visuals">›</button></div></section>
+</main></div>
+<script>(()=>{const rail=document.querySelector('.rail'),buttons=document.querySelectorAll('.archive-arrow');if(!rail||buttons.length<2)return;buttons[0].addEventListener('click',()=>rail.scrollBy({left:-320,behavior:'smooth'}));buttons[1].addEventListener('click',()=>rail.scrollBy({left:320,behavior:'smooth'}))})();</script>
+</body></html>
