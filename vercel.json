@@ -1,41 +1,16 @@
 {
   "cleanUrls": true,
+  "outputDirectory": "public",
   "rewrites": [
-    {
-      "source": "/assets/mov/lv_0_20260718234757.mp4",
-      "destination": "/assets/mov/HERO_BG_WEBM.webm"
-    }
+    {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
+    {"source":"/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide","destination":"/Suno/Suno_Guide.html"},
+    {"source":"/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide/(.*)","destination":"/Suno/$1"}
   ],
   "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/(.*\\.(?:js|css))",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/(.*\\.html)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/index.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    }
+    {"source":"/assets/(.*)","headers":[{"key":"Cache-Control","value":"public, max-age=31536000, immutable"}]},
+    {"source":"/(.*\\.(?:js|css))","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
+    {"source":"/(.*\\.html)","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
+    {"source":"/","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
+    {"source":"/index.html","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]}
   ]
 }
