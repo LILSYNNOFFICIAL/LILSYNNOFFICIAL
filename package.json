@@ -2,7 +2,8 @@
   "name": "lil-synn-suno-guide-site",
   "private": true,
   "scripts": {
-    "build": "node scripts/sync-suno-guide.mjs && rm -rf public && mkdir -p public && cp -R index.html index2.html archive.html gallery.html releases.html coming_soon.html 404.html style.css site-global.js assets Suno public/"
+    "build": "node scripts/sync-suno-guide.mjs && rm -rf public && mkdir -p public && cp -R index.html index2.html archive.html gallery.html releases.html coming_soon.html 404.html style.css site-global.js assets Suno public/",
+    "test:suno": "node scripts/audit-suno-site.mjs"
   },
   "dependencies": {
     "marked": "^15.0.12"
