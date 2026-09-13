@@ -4,7 +4,10 @@
   "rewrites":[
     {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
     {"source":"/css/suno.css","destination":"/Suno/css/suno.css"},
+    {"source":"/css/command-center.css","destination":"/Suno/css/command-center.css"},
+    {"source":"/css/tools.css","destination":"/Suno/css/tools.css"},
     {"source":"/js/suno.js","destination":"/Suno/js/suno.js"},
+    {"source":"/js/suno-tools.js","destination":"/Suno/js/suno-tools.js"},
     {"source":"/suno","destination":"/Suno/Suno_Guide.html"},
     {"source":"/suno/","destination":"/Suno/Suno_Guide.html"},
     {"source":"/suno/command-center","destination":"/Suno/command-center.html"},
