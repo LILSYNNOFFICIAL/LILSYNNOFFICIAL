@@ -90,8 +90,8 @@ assert.ok(sunoManifest.toolCount >= 6, 'Suno manifest must report all guide tool
 const audio = fs.readFileSync(path.join(suno, 'guides', 'audio.html'), 'utf8');
 assert.match(audio, /V6 AUDIO QUALITY ISSUES/);
 assert.match(audio, /Mini V6/);
-assert.match(audio, /Weirdness:\s*<\/strong>\s*0%/);
-assert.match(audio, /Style &amp; Audio Influence:\s*<\/strong>\s*86%/);
+assert.match(audio, /Weirdness:\s*<\/strong>\s*<strong>0%/);
+assert.match(audio, /Style &amp; Audio Influence:\s*<\/strong>\s*<strong>86%/);
 assert.match(audio, /WHOLE TRACK/);
 assert.match(audio, /recreate the original audio exactly as sung and performed/);
 
