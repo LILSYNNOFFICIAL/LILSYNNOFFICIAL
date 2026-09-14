@@ -1,0 +1,54 @@
+name: Optimize index2 WebM assets
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Optimize WebM assets when beneficial
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed=0
+          for src in assets/mov/HERO_BG_WEBM.webm assets/mov/LS_BG_STARS.webm; do
+            [ -f "$src" ] || continue
+            tmp="${src%.webm}.optimized.webm"
+            ffmpeg -y -i "$src" \
+              -map 0:v:0 -an \
+              -vf "scale='min(1280,iw)':-2" \
+              -c:v libvpx-vp9 -b:v 0 -crf 34 -deadline good -cpu-used 4 \
+              "$tmp"
+            old=$(stat -c%s "$src")
+            new=$(stat -c%s "$tmp")
+            echo "$src: $old -> $new bytes"
+            if [ "$new" -lt "$old" ]; then
+              mv "$tmp" "$src"
+              changed=1
+            else
+              rm -f "$tmp"
+            fi
+          done
+          if [ "$changed" -eq 1 ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add assets/mov/*.webm
+            git commit -m "chore: optimize index2 WebM assets [skip ci]"
+            git push
+          else
+            echo "No smaller WebM output produced."
+          fi
