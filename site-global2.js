@@ -23,7 +23,6 @@
     }catch(e){console.warn('LIL SYNN index2 content unavailable',e)}
   };
   const mailing=()=>{const form=document.querySelector('.ls2-mailing-form');if(!form||form.dataset.ready)return;form.dataset.ready='1';form.addEventListener('submit',()=>{const input=form.querySelector('input');if(input?.value)localStorage.setItem('ls2MailingEmail',input.value)})};
-  const loadMotion=()=>{if(document.querySelector('script[src^="/script.js"]'))return;const s=document.createElement('script');s.src='/script.js?v=20260914';s.async=false;document.body.appendChild(s)};
-  const ready=()=>{shell();menuBehavior();mailing();renderData();loadMotion()};
+  const ready=()=>{shell();menuBehavior();mailing();renderData()};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
