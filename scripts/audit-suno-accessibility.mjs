@@ -20,8 +20,10 @@ for(const name of files){
   const labeled=html.match(/<label\b/g)?.length||0;
   const textInputs=controls.filter(x=>/\b(?:input|textarea|select)\b/.test(x)&&!/type="checkbox"/.test(x)).length;
   if(textInputs>labeled)failures.push(`${name}: ${textInputs} form controls but only ${labeled} labels`);
-  if(name==='lyrics-builder'&&!html.includes('aria-label="Remove section"'))failures.push(`${name}: remove-section control lacks accessible label`);
 }
+
+const runtime=await fs.readFile(path.join(suno,'js','suno-tools.js'),'utf8');
+if(!runtime.includes('aria-label="Remove section"'))failures.push('lyrics runtime: dynamic remove-section control lacks accessible label');
 
 const forum=await fs.readFile(path.join(suno,'js','suno-forum.js'),'utf8');
 for(const marker of ["link.target='_blank'","link.rel='noopener noreferrer'","setAttribute('aria-label','Open the LIL SYNN Suno community forum')"]){
@@ -33,4 +35,4 @@ if(failures.length){
   failures.forEach(f=>console.error(`  • ${f}`));
   process.exit(1);
 }
-console.log(`Suno accessibility audit PASS — ${files.length} interactive pages have landmarks, mobile menu state, explicit button types, form labels, and accessible Forum behavior.`);
+console.log(`Suno accessibility audit PASS — ${files.length} interactive pages have landmarks, mobile menu state, explicit button types, form labels, dynamic control labels, and accessible Forum behavior.`);
