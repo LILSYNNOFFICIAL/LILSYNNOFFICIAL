@@ -1,0 +1,29 @@
+name: LIL SYNN Command Center
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'admin/**'
+      - '.github/workflows/command-center.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'admin/**'
+      - '.github/workflows/command-center.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  command-center:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Command Center regression harness
+        run: node admin/admin.test.mjs
