@@ -20,35 +20,52 @@ jobs:
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Optimize WebM assets when beneficial
+      - name: Encode candidates and keep the smallest useful output
         shell: bash
         run: |
           set -euo pipefail
           changed=0
           for src in assets/mov/HERO_BG_WEBM.webm assets/mov/LS_BG_STARS.webm; do
             [ -f "$src" ] || continue
-            tmp="${src%.webm}.optimized.webm"
-            ffmpeg -y -i "$src" \
-              -map 0:v:0 -an \
-              -vf "scale='min(1280,iw)':-2" \
-              -c:v libvpx-vp9 -b:v 0 -crf 34 -deadline good -cpu-used 4 \
-              "$tmp"
+            base="${src%.webm}"
             old=$(stat -c%s "$src")
-            new=$(stat -c%s "$tmp")
-            echo "$src: $old -> $new bytes"
-            if [ "$new" -lt "$old" ]; then
-              mv "$tmp" "$src"
+            best="$src"
+            best_size="$old"
+
+            for profile in "960 40 24" "854 42 24" "720 44 24"; do
+              read -r width crf fps <<< "$profile"
+              tmp="${base}.candidate-${width}-${crf}-${fps}.webm"
+              ffmpeg -y -i "$src" \
+                -map 0:v:0 -an \
+                -vf "scale='min(${width},iw)':-2,fps=${fps}" \
+                -c:v libvpx-vp9 -b:v 0 -crf "$crf" -deadline good -cpu-used 4 \
+                "$tmp" >/dev/null 2>&1
+              size=$(stat -c%s "$tmp")
+              echo "$src candidate ${width}px CRF${crf} ${fps}fps: $size bytes"
+              if [ "$size" -lt "$best_size" ]; then
+                rm -f "$best" 2>/dev/null || true
+                best="$tmp"
+                best_size="$size"
+              else
+                rm -f "$tmp"
+              fi
+            done
+
+            echo "$src: $old -> $best_size bytes"
+            if [ "$best" != "$src" ] && [ "$best_size" -lt "$old" ]; then
+              mv "$best" "$src"
               changed=1
             else
-              rm -f "$tmp"
+              rm -f "$best" 2>/dev/null || true
             fi
           done
+
           if [ "$changed" -eq 1 ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add assets/mov/*.webm
-            git commit -m "chore: optimize index2 WebM assets [skip ci]"
+            git commit -m "chore: aggressively reduce index2 WebM assets [skip ci]"
             git push
           else
-            echo "No smaller WebM output produced."
+            echo "No smaller WebM output produced. Existing files left untouched."
           fi
