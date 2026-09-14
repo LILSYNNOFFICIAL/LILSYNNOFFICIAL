@@ -1,0 +1,52 @@
+name: ADMIN Git Operation
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'revert or restore'
+        required: true
+        type: choice
+        options: [revert, restore]
+      target_sha:
+        description: 'Target commit SHA'
+        required: true
+        type: string
+      branch:
+        description: 'Branch'
+        required: true
+        default: main
+        type: string
+      actor:
+        description: 'Admin audit actor'
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  git-operation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - name: Apply operation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "LIL SYNN ADMIN"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git fetch origin "${{ inputs.branch }}" --prune
+          if [[ "${{ inputs.operation }}" == "revert" ]]; then
+            git revert --no-edit "${{ inputs.target_sha }}"
+          elif [[ "${{ inputs.operation }}" == "restore" ]]; then
+            git reset --hard "${{ inputs.target_sha }}"
+          else
+            echo "Unsupported operation" >&2
+            exit 1
+          fi
+          git push origin "HEAD:${{ inputs.branch }}"
+      - name: Summary
+        run: |
+          echo "ADMIN operation=${{ inputs.operation }} target=${{ inputs.target_sha }} branch=${{ inputs.branch }} actor=${{ inputs.actor }}" >> "$GITHUB_STEP_SUMMARY"
