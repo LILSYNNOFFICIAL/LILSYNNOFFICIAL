@@ -5,6 +5,7 @@
     document.documentElement.classList.add('index2-page');
     document.getElementById('bgVideo')?.remove();
     document.querySelectorAll('.stars-zone>video').forEach(v=>v.remove());
+    document.querySelector('.hero>.hero-stars')?.remove();
   };
   suppressGlobalBackground();
   new MutationObserver(suppressGlobalBackground).observe(document.documentElement,{childList:true,subtree:true});
@@ -58,22 +59,26 @@
   const rebuild=()=>{
     const hero=document.querySelector('.hero');
     const webm=hero?.querySelector('.hero-webm');
-    document.querySelectorAll('.ls2-page-stars').forEach(x=>x.remove());
     if(!hero||!webm)return;
 
     const signal=document.querySelector('#signal')||document.querySelector('.signal');
-    const stars=document.createElement('div');
-    stars.className='ls2-page-stars';
-    stars.setAttribute('aria-hidden','true');
-    const v=document.createElement('video');
+    let stars=document.querySelector('.ls2-page-stars');
+    let v=stars?.querySelector('video');
+    if(!stars){
+      stars=document.createElement('div');
+      stars.className='ls2-page-stars';
+      stars.setAttribute('aria-hidden','true');
+      v=document.createElement('video');
+      stars.appendChild(v);
+      document.body.appendChild(stars);
+    }
+    if(!v)return;
     v.src='/assets/mov/LS_BG_STARS.webm';
     v.autoplay=true;
     v.muted=true;
     v.loop=true;
     v.playsInline=true;
-    v.preload='auto';
-    stars.appendChild(v);
-    document.body.appendChild(stars);
+    v.preload='metadata';
 
     const sync=()=>{
       const signalTop=signal?signal.getBoundingClientRect().top+window.scrollY:hero.getBoundingClientRect().bottom+window.scrollY;
