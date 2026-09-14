@@ -2,13 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "redirects": [
-    {"source":"/suno","destination":"/suno/complete","permanent":false},
-    {"source":"/suno/","destination":"/suno/complete","permanent":false},
     {"source":"/command","destination":"/command/","permanent":false}
   ],
   "rewrites": [
-    {"source":"/suno","destination":"/Suno/complete/complete-guide.html"},
-    {"source":"/suno/","destination":"/Suno/complete/complete-guide.html"},
+    {"source":"/suno","destination":"/Suno/index.html"},
+    {"source":"/suno/","destination":"/Suno/index.html"},
     {"source":"/command","destination":"/command/index.html"},
     {"source":"/command/","destination":"/command/index.html"},
     {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
@@ -24,7 +22,7 @@
     {"source":"/suno/stems","destination":"/Suno/guides/stems.html"},
     {"source":"/suno/studio","destination":"/Suno/guides/studio.html"},
     {"source":"/suno/midi","destination":"/Suno/guides/midi.html"},
-    {"source":"/suno/effects","destination":"/Suno/guides/effects.html"},
+    {"source":"/suno/effects","destination":"/Suno/effects.html"},
     {"source":"/suno/automation","destination":"/Suno/guides/automation.html"},
     {"source":"/suno/production","destination":"/Suno/guides/production.html"},
     {"source":"/suno/troubleshooting","destination":"/Suno/guides/troubleshooting.html"},
