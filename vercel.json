@@ -4,6 +4,18 @@
     {
       "source": "/assets/mov/lv_0_20260718234757.mp4",
       "destination": "/assets/mov/HERO_BG_WEBM.webm"
+    },
+    {
+      "source": "/suno",
+      "destination": "/Suno/Suno_Guide.html"
+    },
+    {
+      "source": "/suno/",
+      "destination": "/Suno/Suno_Guide.html"
+    },
+    {
+      "source": "/suno/:path*",
+      "destination": "/Suno/:path*"
     }
   ],
   "headers": [
