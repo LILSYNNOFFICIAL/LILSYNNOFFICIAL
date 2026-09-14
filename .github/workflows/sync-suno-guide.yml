@@ -8,6 +8,7 @@ on:
       - 'scripts/sync-suno-guide.py'
       - 'scripts/build-suno-routes.py'
       - 'Suno/index.html'
+      - 'Suno/home/index.html'
   workflow_dispatch:
 
 permissions:
