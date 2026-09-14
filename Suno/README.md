@@ -16,8 +16,6 @@ The supported public Suno URL surface is the clean lowercase `/suno/**` namespac
 
 Vercel rewrites map those public URLs to the isolated `/Suno/**` file tree without changing the browser URL. Unknown `/suno/*` paths fall through to the real `/Suno/*` tree so nonexistent content produces the site's real 404 behavior instead of a false guide-page success.
 
-The same behavior follows Vercel's documented rewrite model: rewrites proxy a matching source to a destination while preserving the requested browser URL. citeturn0search0
-
 ## Source of truth
 
 The canonical knowledge base is the separate repository:
