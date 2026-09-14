@@ -20,11 +20,11 @@ for(const name of files){
   const labeled=html.match(/<label\b/g)?.length||0;
   const textInputs=controls.filter(x=>/\b(?:input|textarea|select)\b/.test(x)&&!/type="checkbox"/.test(x)).length;
   if(textInputs>labeled)failures.push(`${name}: ${textInputs} form controls but only ${labeled} labels`);
-  if(name==='lyrics-builder'&&!html.includes('aria-label="Remove section"')&&!html.includes('aria-label="Remove section"'))failures.push(`${name}: remove-section control lacks accessible label`);
+  if(name==='lyrics-builder'&&!html.includes('aria-label="Remove section"'))failures.push(`${name}: remove-section control lacks accessible label`);
 }
 
 const forum=await fs.readFile(path.join(suno,'js','suno-forum.js'),'utf8');
-for(const marker of ["link.target='_blank'","link.rel='noopener noreferrer'","aria-label','Open the LIL SYNN Suno community forum"]){
+for(const marker of ["link.target='_blank'","link.rel='noopener noreferrer'","setAttribute('aria-label','Open the LIL SYNN Suno community forum')"]){
   if(!forum.includes(marker))failures.push(`forum runtime: missing accessibility/security contract ${marker}`);
 }
 
