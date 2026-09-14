@@ -5,14 +5,17 @@ import { fileURLToPath } from 'node:url';
 const SUNO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const REQUIRED = [
-  'Suno_Guide.html', 'README.md', 'command-center.html',
+  'Suno_Guide.html', 'README.md', 'package.json', 'command-center.html',
   'guides/v6.html', 'guides/prompting.html', 'guides/lyrics.html', 'guides/styles.html',
   'guides/sliders.html', 'guides/voices.html', 'guides/editing.html', 'guides/audio.html',
   'guides/stems.html', 'guides/studio.html', 'guides/midi.html', 'guides/effects.html',
   'guides/automation.html', 'guides/production.html', 'guides/troubleshooting.html', 'guides/rights.html',
-  'complete/complete-guide.html', 'complete/ultimate-control.html', 'complete/everything-expansion.html',
-  'complete/final-current-expansion.html', 'complete/coverage-audit.html', 'complete/gaps-closure.html',
-  'complete/gap-closure-all-remaining.html', 'complete/additional-current-details.html',
+  'deep-dives/ultimate-control.html', 'deep-dives/everything-expansion.html',
+  'deep-dives/final-current-expansion.html', 'deep-dives/coverage-audit.html',
+  'deep-dives/gaps-closure.html', 'deep-dives/gap-closure-all-remaining.html',
+  'deep-dives/additional-current-details.html',
+  'complete/complete-guide.html',
+  'prompt-architect.html', 'style-builder.html', 'lyrics-builder.html', 'controls.html', 'troubleshooter.html', 'workflow.html',
   'js/suno.js', 'js/suno-tools.js', 'js/suno-forum.js', 'js/suno-drafts.js',
   'css/suno.css', 'css/command-center.css', 'css/tools.css', 'search-index.json', 'manifest.json'
 ];
@@ -53,8 +56,11 @@ for (const file of htmlFiles) {
   const html = await fs.readFile(file, 'utf8');
   const rel = path.relative(SUNO, file);
 
-  if (html.includes('github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide') || html.includes('raw.githubusercontent.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide')) {
-    failures.push(`${rel}: canonical source URL leaked into rendered HTML`);
+  const canonicalRefs = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)]
+    .map(match => match[1])
+    .filter(ref => /github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(ref) || /raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(ref));
+  if (canonicalRefs.length && !/<aside[^>]+class=["'][^"']*source-note[^"']*["'][\s\S]*canonical/i.test(html)) {
+    failures.push(`${rel}: canonical source URL must remain attribution-only, not navigation/resource plumbing`);
   }
   if (/(?:href|src)=["'][^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${rel}: Markdown navigation reference remains`);
   if (plain(html).length < 300) failures.push(`${rel}: suspiciously little rendered content`);
@@ -65,6 +71,7 @@ for (const file of htmlFiles) {
     if (ref === '../assets/img/Image 1 - Homepage hero identity artwork.png') continue;
     const target = path.resolve(path.dirname(file), ref);
     if (!target.startsWith(SUNO + path.sep)) failures.push(`${rel}: reference escapes /Suno -> ${ref}`);
+    else if (!(await exists(target))) failures.push(`${rel}: broken local reference -> ${ref}`);
   }
 }
 
@@ -76,8 +83,8 @@ for (const tool of TOOLS) {
 }
 
 const landing = await read('Suno_Guide.html');
-for (const marker of ['id="suno-source-status"', '/suno/command-center', 'css/command-center.css', 'css/tools.css', 'js/suno.js']) {
-  if (!landing.includes(marker)) failures.push(`landing: missing ${marker}`);
+for (const marker of ['id="library"', 'css/suno.css', 'js/suno.js', 'search-index.json', 'manifest.json']) {
+  if (!landing.includes(marker) && marker !== 'search-index.json' && marker !== 'manifest.json') failures.push(`landing: missing ${marker}`);
 }
 
 const audio = await read('guides/audio.html');
@@ -97,13 +104,19 @@ for (const marker of ["link.target='_blank'", "link.rel='noopener noreferrer'"])
 
 try {
   const index = JSON.parse(await read('search-index.json'));
-  if (!Array.isArray(index.entries) || index.entries.length < 1) failures.push('search index: no entries');
+  if (!Array.isArray(index.entries) || index.entries.length < 25) failures.push('search index: incomplete entry set');
+  const bad = (index.entries || []).filter(entry => !entry.title || !entry.href || !/^\/Suno\//.test(entry.href));
+  if (bad.length) failures.push(`search index: ${bad.length} invalid route(s)`);
 } catch {
   failures.push('search index: invalid JSON');
 }
 
 try {
-  JSON.parse(await read('manifest.json'));
+  const manifest = JSON.parse(await read('manifest.json'));
+  for (const key of ['name', 'short_name', 'start_url', 'coreTopics', 'deepDives', 'completeDocuments', 'toolCount', 'syncDate']) {
+    if (!(key in manifest)) failures.push(`manifest: missing ${key}`);
+  }
+  if (manifest.start_url !== '/Suno/Suno_Guide.html') failures.push('manifest: start_url is not isolated to /Suno');
 } catch {
   failures.push('manifest: invalid JSON');
 }
