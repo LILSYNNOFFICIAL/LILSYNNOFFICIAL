@@ -23,3 +23,5 @@ jobs:
 
       - name: Run Site Doctor
         run: node tools/site-doctor.mjs
+
+      # Deployment trigger touch: keep Git-integrated Vercel deployment moving.
