@@ -5,8 +5,8 @@
     {"source":"/command","destination":"/command/","permanent":false}
   ],
   "rewrites": [
-    {"source":"/suno","destination":"/Suno/index.html"},
-    {"source":"/suno/","destination":"/Suno/index.html"},
+    {"source":"/suno","destination":"/Suno/"},
+    {"source":"/suno/","destination":"/Suno/"},
     {"source":"/command","destination":"/command/index.html"},
     {"source":"/command/","destination":"/command/index.html"},
     {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
