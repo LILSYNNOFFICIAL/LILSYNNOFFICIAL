@@ -18,7 +18,7 @@ The website is a curated presentation layer over that research corpus. Official 
 - `guides/` — practical workflow pages
 - `deep-dives/` — seven current research/index pages mapped to the canonical expansion corpus
 - `complete/complete-guide.html` — master reading path through the entire website
-- `tools/` and root-level tool pages — interactive creator surfaces
+- root-level tool pages — interactive creator surfaces
 - `scripts/` — Suno-only maintenance and health tooling
 - `package.json` — Suno-only local commands; intentionally separate from the main site's package/configuration
 - `search-index.json` — isolated searchable catalog for guides, research and tools
@@ -48,7 +48,7 @@ npm run doctor
 
 ## Deployment model
 
-The Suno project is intentionally self-contained under `/Suno`. Its canonical public entry point is `/Suno/Suno_Guide.html`; internal runtime navigation and search resolve to `/Suno/**` paths so the project does not depend on root-level Suno rewrites or root build tooling.
+The Suno project is intentionally self-contained under `/Suno`. Its canonical public entry point is `/Suno/Suno_Guide.html`; internal runtime navigation and search resolve to `/Suno/**` paths so the project does not depend on root-level Suno rewrites or root build tooling. Legacy `/suno/...` links are translated client-side when encountered inside the Suno app, but new links should use `/Suno/**` directly.
 
 ## Design rules
 
