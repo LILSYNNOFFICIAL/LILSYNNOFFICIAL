@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+import html, json, re
+from pathlib import Path
+
+SUNO=Path('Suno')
+LIB=SUNO/'library'
+manifest=json.loads((SUNO/'generated-guide-manifest.json').read_text(encoding='utf-8'))
+by_slug={m['slug']:m for m in manifest}
+
+def body(slug):
+    p=LIB/slug/'index.html'
+    if not p.exists(): return f'<div class="missing">Document not generated: {html.escape(slug)}</div>'
+    m=re.search(r'<article>(.*?)</article>',p.read_text(encoding='utf-8'),re.S)
+    return m.group(1) if m else '<div class="missing">Document body unavailable.</div>'
+
+def page(title,slugs):
+    chunks=[]
+    for slug in slugs:
+        m=by_slug.get(slug)
+        if not m: continue
+        chunks.append(f'<section class="source-doc"><div class="source-kicker">{html.escape(m["source"])}</div><h2>{html.escape(m["title"])}</h2>{body(slug)}</section>')
+    content=''.join(chunks) or '<div class="missing">No source documents were generated for this route.</div>'
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)} — LIL SYNN Suno V6</title><meta name="description" content="Complete on-site LIL SYNN Suno V6 reference: {html.escape(title)}."><link rel="stylesheet" href="/suno/css/suno.css"><style>:root{{--bg:#070706;--ink:#f7f3eb;--gold:#f1cf78;--line:rgba(241,207,120,.2)}}*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 85% 0,rgba(241,207,120,.09),transparent 30%),var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}}.sitebar{{position:sticky;top:0;z-index:50;background:rgba(7,7,6,.97);border-bottom:1px solid var(--line);padding:13px 4vw;display:flex;justify-content:space-between;gap:15px}}.sitebar a{{color:var(--gold);text-decoration:none;font:900 9px Rajdhani,sans-serif;letter-spacing:.16em;text-transform:uppercase}}.wrap{{width:min(1220px,92vw);margin:auto;padding:65px 0 100px}}.ey{{font:900 9px Rajdhani,sans-serif;letter-spacing:.28em;color:var(--gold);text-transform:uppercase}}h1{{font:400 clamp(48px,7vw,92px)/.9 Georgia,serif;letter-spacing:-.045em;margin:12px 0 24px}}.intro{{color:#b9b1a6;line-height:1.7;max-width:900px;margin-bottom:35px}}.source-doc{{margin:65px 0 0;padding-top:40px;border-top:1px solid var(--line)}}.source-kicker{{font:800 8px Rajdhani,sans-serif;letter-spacing:.16em;color:#716a60;text-transform:uppercase}}.source-doc>h2{{font:400 clamp(32px,4vw,56px)/1 Georgia,serif;color:var(--gold);margin:10px 0 30px}}article{{font-size:16px;line-height:1.72}}article h1{{font-size:44px}}article h2{{font:400 32px/1.08 Georgia,serif;color:var(--gold);border-top:1px solid var(--line);padding-top:24px;margin-top:55px}}article h3{{font:400 25px Georgia,serif;color:#e7c976;margin-top:38px}}article p,article li{{color:#c4bdb2}}article strong{{color:#fff}}article a{{color:var(--gold)}}article blockquote{{margin:24px 0;padding:18px 22px;border-left:3px solid var(--gold);background:rgba(241,207,120,.05)}}article pre{{overflow:auto;white-space:pre-wrap;background:#0a0907;border:1px solid rgba(255,255,255,.09);padding:18px;color:#eee8de}}article :not(pre)>code{{background:#12110e;padding:2px 5px;color:#f4d98e}}article table{{width:100%;border-collapse:collapse;margin:25px 0;display:block;overflow:auto}}article th,article td{{border:1px solid rgba(255,255,255,.1);padding:10px 12px;text-align:left;vertical-align:top}}article th{{color:var(--gold);background:#100f0c}}article img{{max-width:100%;height:auto}}.missing{{padding:25px;border:1px solid rgba(255,0,143,.3);color:#ff79c8}}@media(max-width:700px){{.wrap{{padding-top:45px}}article{{font-size:15px}}.sitebar{{position:relative;flex-wrap:wrap}}}}</style></head><body><nav class="sitebar"><a href="/suno/">LIL SYNN / SUNO V6</a><span><a href="/suno/library/">ALL DOCUMENTS</a> &nbsp; <a href="/suno/complete/">MASTER REFERENCE</a></span></nav><main class="wrap"><div class="ey">{html.escape(title)}</div><h1>{html.escape(title)}</h1><p class="intro">This route contains the full source material assigned to this subject. Nothing here is a summary or a GitHub handoff; the complete Markdown content is rendered on-site below.</p>{content}</main></body></html>'''
+
+routes={
+'complete':[m['slug'] for m in manifest],
+'prompt-architect':['README','SUNO-V6-EVERYTHING-EXPANSION','SUNO-V6-FINAL-CURRENT-EXPANSION','SUNO-V6-ADDITIONAL-CURRENT-DETAILS','SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDENDUM-2026'],
+'lyrics-builder':['README','SUNO-V6-EVERYTHING-EXPANSION','SUNO-V6-FINAL-CURRENT-EXPANSION'],
+'controls':['README','SUNO-V6-ADDITIONAL-CURRENT-DETAILS','SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDENDUM-2026','SUNO-V6-CURRENT-GAPS-CLOSURE'],
+'style-builder':['README','SUNO-V6-EVERYTHING-EXPANSION','SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDENDUM-2026'],
+'style-photos':['README','SUNO-V6-FINAL-CURRENT-EXPANSION','SUNO-V6-EVERYTHING-EXPANSION'],
+'troubleshooter':['README','SUNO-V6-CURRENT-GAPS-CLOSURE','SUNO-V6-GAP-CLOSURE-ALL-REMAINING-CURRENT','SUNO-V6-ADDITIONAL-CURRENT-DETAILS'],
+'workflow':['README','SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDENDUM-2026','SUNO-V6-FINAL-CURRENT-EXPANSION'],
+'customs/models':['README','SUNO-V6-EVERYTHING-EXPANSION','SUNO-V6-ADDITIONAL-CURRENT-DETAILS','SUNO-V6-FINAL-CURRENT-EXPANSION']}
+for route,slugs in routes.items():
+    d=SUNO/route; d.mkdir(parents=True,exist_ok=True); (d/'index.html').write_text(page(route.replace('-',' ').replace('/',' / ').upper(),slugs),encoding='utf-8')
+print(f'Generated {len(routes)} complete Suno routes.')
