@@ -14,14 +14,14 @@
     html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
     body{position:relative!important}
     html.index2-page #bgVideo{display:none!important}
-    body.index2-refined .hero{position:relative!important;overflow:visible!important;display:block!important;height:auto!important;min-height:0!important;padding-top:0!important;isolation:isolate!important}
+    body.index2-refined .hero{position:relative!important;overflow:hidden!important;display:block!important;height:auto!important;min-height:0!important;padding-top:0!important;isolation:isolate!important}
     body.index2-refined .hero>.hero-stars{display:none!important}
-    body.index2-refined .hero>.hero-webm{position:absolute!important;z-index:0!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:var(--ls2-hero-webm-height,100vh)!important;min-height:0!important;object-fit:cover!important;object-position:center top!important;transform:none!important;pointer-events:none!important}
+    body.index2-refined .hero>.hero-webm{position:absolute!important;z-index:0!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:var(--ls2-hero-webm-height,620px)!important;min-height:0!important;max-height:100vh!important;object-fit:cover!important;object-position:center top!important;transform:none!important;pointer-events:none!important}
     body.index2-refined .hero:before,body.index2-refined .hero:after{z-index:2!important;pointer-events:none!important}
     body.index2-refined .hero-inner{position:relative!important;z-index:5!important;min-height:620px!important;height:620px!important;display:flex!important;align-items:center!important}
     body.index2-refined .hero-ring{z-index:4!important}
     body.index2-refined .hero-readout{z-index:6!important}
-    body.index2-refined .ls2-page-stars{position:absolute!important;z-index:0!important;left:0!important;right:0!important;top:var(--ls2-stars-top,0px)!important;width:100%!important;height:var(--ls2-stars-height,1000px)!important;min-height:0!important;overflow:hidden!important;pointer-events:none!important}
+    body.index2-refined .ls2-page-stars{position:absolute!important;z-index:0!important;left:0!important;right:0!important;top:var(--ls2-stars-top,620px)!important;width:100%!important;height:var(--ls2-stars-height,1000px)!important;min-height:0!important;overflow:hidden!important;pointer-events:none!important}
     body.index2-refined .ls2-page-stars video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center top!important}
     body.index2-refined .ls2-page-stars:after{pointer-events:none!important}
     body.index2-refined .stars-zone>video{display:none!important}
@@ -47,6 +47,7 @@
       body.index2-refined .desktop-nav .ls-vote-link{position:relative!important;left:auto!important;top:auto!important;transform:none!important;z-index:4!important}
       body.index2-refined .desktop-nav a[href="#universe"]{margin-left:0!important}
       body.index2-refined .hero-inner{height:500px!important;min-height:500px!important}
+      body.index2-refined .hero>.hero-webm{height:500px!important;max-height:none!important}
     }
   `;
   const old=document.getElementById('ls2-final-fix-css');
@@ -96,13 +97,15 @@
       }
     }else loadStars();
     const sync=()=>{
-      const signalTop=signal?signal.getBoundingClientRect().top+window.scrollY:hero.getBoundingClientRect().bottom+window.scrollY;
+      const heroBottom=hero.getBoundingClientRect().bottom+window.scrollY;
       const pageHeight=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
-      const starsHeight=Math.max(0,pageHeight-signalTop);
-      document.documentElement.style.setProperty('--ls2-hero-webm-height',signalTop+'px');
-      document.documentElement.style.setProperty('--ls2-stars-top',signalTop+'px');
+      const starsHeight=Math.max(0,pageHeight-heroBottom);
+      const mobileNow=window.matchMedia('(max-width:760px)').matches;
+      const heroHeight=mobileNow?500:Math.min(window.innerHeight,620);
+      document.documentElement.style.setProperty('--ls2-hero-webm-height',heroHeight+'px');
+      document.documentElement.style.setProperty('--ls2-stars-top',heroBottom+'px');
       document.documentElement.style.setProperty('--ls2-stars-height',Math.max(starsHeight,1)+'px');
-      stars.style.top=signalTop+'px';
+      stars.style.top=heroBottom+'px';
       stars.style.height=Math.max(starsHeight,1)+'px';
     };
     sync();
