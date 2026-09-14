@@ -1,11 +1,21 @@
 (()=>{
   if(!/\/index2(?:\.html)?$/.test(location.pathname)) return;
 
+  /* index2 owns its two background layers. Prevent the global background video from competing with them. */
+  const suppressGlobalBackground=()=>{
+    document.documentElement.classList.add('index2-page');
+    document.getElementById('bgVideo')?.remove();
+    document.querySelectorAll('.stars-zone>video').forEach(v=>v.remove());
+  };
+  suppressGlobalBackground();
+  new MutationObserver(suppressGlobalBackground).observe(document.documentElement,{childList:true,subtree:true});
+
   const css=`
     html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
     body{position:relative!important}
+    html.index2-page #bgVideo{display:none!important}
 
-    /* THE TWO WEBM LAYERS: HERO FIRST, STARS SECOND */
+    /* EXACTLY TWO PAGE-WIDE WEBM LAYERS: HERO FIRST, STARS SECOND. */
     body.index2-refined .hero{position:relative!important;overflow:visible!important;display:block!important;height:auto!important;min-height:0!important;padding-top:0!important;isolation:isolate!important}
     body.index2-refined .hero>.hero-stars{display:none!important}
     body.index2-refined .hero>.hero-webm{
@@ -27,7 +37,7 @@
     body.index2-refined .hero-ring{z-index:4!important}
     body.index2-refined .hero-readout{z-index:6!important}
 
-    /* STARS BEGIN EXACTLY WHERE THE SIGNAL SECTION BEGINS AND RUN TO PAGE BOTTOM */
+    /* THE SECOND WEBM STARTS AT THE SIGNAL BOUNDARY AND CONTINUES TO THE BOTTOM. */
     body.index2-refined .ls2-page-stars{
       position:absolute!important;
       z-index:0!important;
@@ -42,21 +52,51 @@
     }
     body.index2-refined .ls2-page-stars video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center top!important}
     body.index2-refined .ls2-page-stars:after{pointer-events:none!important}
+    body.index2-refined .stars-zone>video{display:none!important}
 
-    /* ALL ACTUAL PAGE CONTENT SITS ABOVE BOTH WEBM BACKGROUNDS */
-    body.index2-refined>main,body.index2-refined>.footer,body.index2-refined>.ls2-footer,body.index2-refined>.section,body.index2-refined>section:not(.ls2-page-stars){position:relative!important;z-index:1!important}
+    /* ALL NORMAL CONTENT IS ABOVE BOTH WEBM LAYERS. */
+    body.index2-refined>main,body.index2-refined>.footer,body.index2-refined>.ls2-footer,body.index2-refined>.section,body.index2-refined>section:not(.ls2-page-stars),body.index2-refined .stars-zone{position:relative!important;z-index:1!important}
 
-    /* MENU MUST ALWAYS BE IN FRONT OF THE GRAPHICS */
-    body.index2-refined .topbar{z-index:1000!important}
-    body.index2-refined .nav-stack{z-index:999!important}
-    body.index2-refined .menu-panel{z-index:99999!important;isolation:isolate!important;background:rgba(2,2,4,.985)!important}
+    /* TOP NAV IS CENTERED TO THE VIEWPORT — VOTE IS THE TRUE DEAD-CENTER ITEM. */
+    body.index2-refined .nav-inner{position:relative!important}
+    body.index2-refined .desktop-nav{
+      position:absolute!important;
+      left:50%!important;
+      top:50%!important;
+      transform:translate(-50%,-50%)!important;
+      width:max-content!important;
+      max-width:calc(100vw - 150px)!important;
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      gap:17px!important;
+      flex:none!important;
+    }
+    body.index2-refined .desktop-nav .ls-vote-link{
+      order:0!important;
+      color:#ff4fd8!important;
+      font-weight:900!important;
+      text-shadow:0 0 12px rgba(255,0,143,.28)!important;
+    }
+    @media(min-width:761px){
+      body.index2-refined .desktop-nav .ls-vote-link{transform:none!important}
+      body.index2-refined .desktop-nav a:nth-child(1){order:1!important}
+      body.index2-refined .desktop-nav a:nth-child(2){order:2!important}
+      body.index2-refined .desktop-nav a:nth-child(3){order:3!important}
+      body.index2-refined .desktop-nav a:nth-child(4){order:4!important}
+      body.index2-refined .desktop-nav .ls-vote-link{order:5!important}
+      body.index2-refined .desktop-nav a[href="#universe"]{order:6!important}
+      body.index2-refined .desktop-nav a[href="#contact"]{order:7!important}
+      body.index2-refined .desktop-nav a[href*="suno-forum"]{order:8!important}
+    }
 
-    /* NAV VOTE POSITION: KEEP UNIVERSE, PLACE VOTE BESIDE IT */
-    body.index2-refined .desktop-nav{justify-content:center!important}
-    body.index2-refined .desktop-nav .ls-vote-link{order:0!important}
-    @media(min-width:761px){body.index2-refined .desktop-nav .ls-vote-link{transform:translateX(-8px)!important}}
+    /* MENU OVERLAY IS ABOVE EVERYTHING, INCLUDING CONTENT AND WEBMS. */
+    body.index2-refined .topbar{z-index:100000!important}
+    body.index2-refined .nav-stack{z-index:99999!important}
+    body.index2-refined .menu-panel{z-index:1000000!important;isolation:isolate!important;background:rgba(2,2,4,.985)!important;pointer-events:auto!important}
+    body.index2-refined .menu-panel.open{pointer-events:auto!important}
 
-    /* RESTORE NORMAL DOCUMENT SCROLLING; ONLY MENU LOCKS IT */
+    /* RESTORE NORMAL DOCUMENT SCROLLING; ONLY THE OPEN MENU LOCKS IT. */
     body.index2-refined,body.index2-refined *{scrollbar-width:thin;scrollbar-color:#ff008f #08080c}
     body.index2-refined::-webkit-scrollbar,body.index2-refined body::-webkit-scrollbar{width:8px}
     body.index2-refined::-webkit-scrollbar-track{background:#08080c}
@@ -71,8 +111,7 @@
   const rebuild=()=>{
     const hero=document.querySelector('.hero');
     const webm=hero?.querySelector('.hero-webm');
-    const old=document.querySelectorAll('.ls2-page-stars');
-    old.forEach(x=>x.remove());
+    document.querySelectorAll('.ls2-page-stars').forEach(x=>x.remove());
     if(!hero||!webm)return;
 
     const signal=document.querySelector('#signal')||document.querySelector('.signal');
@@ -96,9 +135,9 @@
       const pageHeight=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
       const starsHeight=Math.max(0,pageHeight-signalTop);
 
-      /* HERO WEBM occupies everything from page top through the Signal boundary. */
-      document.documentElement.style.setProperty('--ls2-hero-webm-height',Math.max(signalTop,hero.offsetHeight)+'px');
-      /* STARS begins exactly where HERO WEBM ends and continues to the bottom. */
+      /* HERO ends exactly where THE SIGNAL begins. */
+      document.documentElement.style.setProperty('--ls2-hero-webm-height',signalTop+'px');
+      /* STARS begins at that same pixel and fills the rest of the document. */
       document.documentElement.style.setProperty('--ls2-stars-top',signalTop+'px');
       document.documentElement.style.setProperty('--ls2-stars-height',Math.max(starsHeight,1)+'px');
       stars.style.top=signalTop+'px';
@@ -124,13 +163,15 @@
       vote.rel='noopener noreferrer';
       vote.textContent='VOTE 4 LIL SYNN';
     }
-    if(universe)universe.insertAdjacentElement('afterend',vote);
+    /* Vote sits immediately before Universe, with the entire nav centered on the viewport. */
+    if(universe)universe.insertAdjacentElement('beforebegin',vote);
+    else desktop.appendChild(vote);
   };
 
   const menu=()=>{
     const panel=document.querySelector('.menu-panel');
     if(!panel)return;
-    panel.style.zIndex='99999';
+    panel.style.zIndex='1000000';
     const open=document.querySelector('#menuOpen');
     const close=document.querySelector('#menuClose');
     const unlock=()=>{document.documentElement.style.overflowY='auto';document.body.style.overflowY='auto';document.body.style.overflowX='hidden'};
@@ -144,6 +185,7 @@
 
   const run=()=>{
     document.body.classList.add('index2-refined');
+    suppressGlobalBackground();
     nav();
     rebuild();
     menu();
