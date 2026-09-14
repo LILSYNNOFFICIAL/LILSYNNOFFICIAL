@@ -39,9 +39,9 @@ jobs:
                   print('updated', path)
 
           def normalize_html(s, path_name):
-              # index2 is intentionally isolated and must never receive the
-              # canonical site-global shell.
-              if path_name.lower() == 'index2.html':
+              # index2 and the 404 page are intentionally isolated and must
+              # never receive the canonical site-global shell.
+              if path_name.lower() in {'index2.html','404.html'}:
                   return re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*</script>\s*", '', s, flags=re.I)
 
               def keep_first(pattern):
@@ -89,8 +89,7 @@ jobs:
           update('site-global.js', footer)
 
           def release_detail(s):
-              s = s.replace("add('SOUNDCLOUD',group?.soundcloud||catalog.soundcloud?.[title]);", "add('YOUTUBE','https://www.youtube.com/@LILSYNNOFFICIAL');")
-              return s
+              return s.replace("add('SOUNDCLOUD',group?.soundcloud||catalog.soundcloud?.[title]);", "add('YOUTUBE','https://www.youtube.com/@LILSYNNOFFICIAL');")
           update('release.html', release_detail)
 
       - name: Generate WebM manifest
@@ -147,7 +146,7 @@ jobs:
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'homepage-final-fixes.js' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'class="nav"' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'site-global.js?v=20260911' .
-          grep -Rni --include='*.html' --exclude='index2.html' '/site-global.js' .
+          grep -Rni --include='*.html' --exclude='index2.html' --exclude='404.html' '/site-global.js' .
           grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
           grep -q 'rel="canonical" href="https://lilsynn.com/special_access.html"' special_access.html
           grep -q 'name="description"' special_access.html
