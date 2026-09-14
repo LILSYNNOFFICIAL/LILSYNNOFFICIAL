@@ -1,0 +1,32 @@
+name: One-time Suno Builder Repair
+on:
+  push:
+    paths:
+      - .github/fix-suno-build.trigger
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair missing rendered-document map
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('suno-build.mjs')
+          s=p.read_text()
+          old="const body=render(md).replace(/https?:\\/\\/(?:www\\.)?github\\.com\\/[^\\s<\"']+/gi,'').replace(/https?:\\/\\/raw\\.githubusercontent\\.com\\/[^\\s<\"']+/gi,'');await fs.writeFile"
+          new="const body=render(md).replace(/https?:\\/\\/(?:www\\.)?github\\.com\\/[^\\s<\"']+/gi,'').replace(/https?:\\/\\/raw\\.githubusercontent\\.com\\/[^\\s<\"']+/gi,'');docs[slug]={title:first,body,text:md};await fs.writeFile"
+          if old not in s:
+              raise SystemExit('expected builder pattern not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+          rm -f .github/fix-suno-build.trigger
+      - name: Commit repair
+        run: |
+          git config user.name "LIL SYNN CI"
+          git config user.email "actions@users.noreply.github.com"
+          git add suno-build.mjs .github/fix-suno-build.trigger
+          git commit -m "fix: repair Suno document render map" || exit 0
+          git push
