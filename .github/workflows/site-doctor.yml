@@ -25,3 +25,4 @@ jobs:
         run: node tools/site-doctor.mjs
 
       # Deployment trigger touch: keep Git-integrated Vercel deployment moving.
+      # WebM optimization workflow is now present on main as well.
