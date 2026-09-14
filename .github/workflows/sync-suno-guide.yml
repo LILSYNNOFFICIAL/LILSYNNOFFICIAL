@@ -1,0 +1,43 @@
+name: Sync complete Suno guide into website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-suno-guide.yml'
+      - 'scripts/sync-suno-guide.py'
+      - 'Suno/index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch guide repository
+        run: git clone --depth 1 https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide.git /tmp/suno-guide
+
+      - name: Install Markdown renderer
+        run: python -m pip install markdown
+
+      - name: Generate complete website library
+        run: python scripts/sync-suno-guide.py /tmp/suno-guide .
+
+      - name: Commit generated guide
+        run: |
+          if git diff --quiet -- Suno/library Suno/library-index.html Suno/generated-guide-manifest.json; then
+            echo 'No generated Suno content changes.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Suno/library Suno/library-index.html Suno/generated-guide-manifest.json
+          git commit -m 'chore: sync complete Suno V6 guide into website [skip ci]'
+          git push
