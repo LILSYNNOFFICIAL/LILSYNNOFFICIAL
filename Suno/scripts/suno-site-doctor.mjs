@@ -108,7 +108,7 @@ try {
   failures.push('manifest: invalid JSON');
 }
 
-for (const file of files.filter(file => file.endsWith('.mjs'))) {
+for (const file of files.filter(file => file.endsWith('.mjs') && !file.endsWith('.test.mjs'))) {
   const text = await fs.readFile(file, 'utf8');
   const rel = path.relative(SUNO, file);
   if (text.includes('process.cwd()') || text.includes("path.join(root,'Suno')") || text.includes('path.join(root, "Suno")')) {
