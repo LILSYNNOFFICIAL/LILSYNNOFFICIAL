@@ -15,11 +15,11 @@
 <div class="eyebrow">LIL SYNN · Browser QA</div>
 <h1>Site Health</h1>
 <p>This page checks what a real deployed browser can verify. It does not pretend to run Node, npm, GitHub Actions, or server-side filesystem tests.</p>
-<div class="health-actions"><button class="health-btn" id="run" type="button">Run checks</button><a class="health-btn" href="/Suno/health.html">Open Suno Health</a><a class="health-btn" href="/SITE-HEALTH.md">Health documentation</a></div>
+<div class="health-actions"><button class="health-btn" id="run" type="button">Run checks</button><a class="health-btn" href="/admin/">Open Command Center</a><a class="health-btn" href="/Suno/health.html">Open Suno Health</a><a class="health-btn" href="/SITE-HEALTH.md">Health documentation</a></div>
 </section>
 <section class="overall" aria-live="polite"><strong id="overall">Ready</strong><small id="summary">Press Run checks.</small></section>
 <section class="checks" id="checks" aria-live="polite"></section>
-<p class="footer-note">Repository-only verification remains handled by <code>tools/site-doctor.mjs</code>. Suno has its own isolated doctor and browser dashboard.</p>
+<p class="footer-note">Repository-only verification remains handled by <code>tools/site-doctor.mjs</code>. Suno has its own isolated doctor and browser dashboard. The Command Center is observation-only and is not required for either system.</p>
 </main>
 <script>
 (() => {
