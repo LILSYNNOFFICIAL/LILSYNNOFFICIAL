@@ -2,18 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/assets/mov/lv_0_20260718234757.mp4",
-      "destination": "/assets/mov/HERO_BG_WEBM.webm"
-    },
-    {
-      "source": "/suno",
-      "destination": "/Suno/Suno_Guide.html"
-    },
-    {
-      "source": "/suno/",
-      "destination": "/Suno/Suno_Guide.html"
-    },
+    { "source": "/assets/mov/lv_0_20260718234757.mp4", "destination": "/assets/mov/HERO_BG_WEBM.webm" },
+    { "source": "/suno", "destination": "/Suno/complete/complete-guide.html" },
+    { "source": "/suno/", "destination": "/Suno/complete/complete-guide.html" },
     { "source": "/suno/v6", "destination": "/Suno/guides/v6.html" },
     { "source": "/suno/prompting", "destination": "/Suno/guides/prompting.html" },
     { "source": "/suno/lyrics", "destination": "/Suno/guides/lyrics.html" },
@@ -45,41 +36,13 @@
     { "source": "/suno/deep-dives/gaps-closure", "destination": "/Suno/deep-dives/gaps-closure.html" },
     { "source": "/suno/deep-dives/gap-closure-all-remaining", "destination": "/Suno/deep-dives/gap-closure-all-remaining.html" },
     { "source": "/suno/deep-dives/additional-current-details", "destination": "/Suno/deep-dives/additional-current-details.html" },
-    {
-      "source": "/suno/:path*",
-      "destination": "/Suno/:path*"
-    }
+    { "source": "/suno/:path*", "destination": "/Suno/:path*" }
   ],
   "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/(.*\\.(?:js|css))",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/(.*\\.html)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/index.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
-      ]
-    }
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/(.*\\.(?:js|css))", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }] },
+    { "source": "/(.*\\.html)", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }] },
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }] },
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }] }
   ]
 }
