@@ -26,8 +26,6 @@ jobs:
           from pathlib import Path
 
           VERSION = '20260914'
-          # Shell transparency refinement: keep the header and footer lighter over the cinematic background.
-          # Discovery polish: keep listening destinations focused on Spotify, Apple Music, and YouTube.
           root = Path('.')
 
           def update(path, transform):
@@ -40,7 +38,12 @@ jobs:
                   p.write_text(after, encoding='utf-8')
                   print('updated', path)
 
-          def normalize_html(s):
+          def normalize_html(s, path_name):
+              # index2 is intentionally isolated and must never receive the
+              # canonical site-global shell.
+              if path_name.lower() == 'index2.html':
+                  return re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*</script>\s*", '', s, flags=re.I)
+
               def keep_first(pattern):
                   nonlocal s
                   matches = list(re.finditer(pattern, s, flags=re.I))
@@ -57,7 +60,7 @@ jobs:
               return s
 
           for p in root.glob('*.html'):
-              update(p.name, normalize_html)
+              update(p.name, lambda s, name=p.name: normalize_html(s, name))
 
           update('releases.html', lambda s: s.replace("'somewhere_in_between.jpg'", "'57_lil_synn_somewhere_in_between.jpg'"))
 
@@ -144,7 +147,7 @@ jobs:
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'homepage-final-fixes.js' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'class="nav"' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'site-global.js?v=20260911' .
-          grep -Rni --include='*.html' '/site-global.js' .
+          grep -Rni --include='*.html' --exclude='index2.html' '/site-global.js' .
           grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
           grep -q 'rel="canonical" href="https://lilsynn.com/special_access.html"' special_access.html
           grep -q 'name="description"' special_access.html
