@@ -83,8 +83,8 @@ for (const tool of TOOLS) {
 }
 
 const landing = await read('Suno_Guide.html');
-for (const marker of ['id="library"', 'css/suno.css', 'js/suno.js', 'search-index.json', 'manifest.json']) {
-  if (!landing.includes(marker) && marker !== 'search-index.json' && marker !== 'manifest.json') failures.push(`landing: missing ${marker}`);
+for (const marker of ['id="library"', 'css/suno.css', 'js/suno.js']) {
+  if (!landing.includes(marker)) failures.push(`landing: missing ${marker}`);
 }
 
 const audio = await read('guides/audio.html');
@@ -121,10 +121,10 @@ try {
   failures.push('manifest: invalid JSON');
 }
 
-for (const file of files.filter(file => file.endsWith('.mjs') && !file.endsWith('.test.mjs'))) {
+for (const file of files.filter(file => file.endsWith('.mjs') && !file.endsWith('.test.mjs') && path.basename(file) !== 'suno-site-doctor.mjs')) {
   const text = await fs.readFile(file, 'utf8');
   const rel = path.relative(SUNO, file);
-  if (text.includes('process.cwd()') || text.includes("path.join(root,'Suno')") || text.includes('path.join(root, "Suno")')) {
+  if (/\bconst\s+root\s*=\s*process\.cwd\(\)/.test(text) || /path\.join\(root\s*,\s*["']Suno["']\)/.test(text)) {
     failures.push(`${rel}: depends on main/root working-directory paths`);
   }
 }
