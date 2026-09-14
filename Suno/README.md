@@ -13,10 +13,26 @@ The website is a curated presentation layer. Official Suno documentation outrank
 ## Structure
 
 - `Suno_Guide.html` — landing page, search and directory
-- `css/suno.css` — shared gold/black visual system
-- `js/suno.js` — navigation, search, filters and interaction behavior
+- `css/` — shared gold/black visual system
+- `js/` — navigation, search, tools, drafts and Forum behavior
 - `guides/` — practical workflow pages
 - `deep-dives/` — seven canonical expansion mappings
+- `complete/` — full-source reader documents
+- `tools/` — interactive creator surfaces
+- `scripts/` — Suno-only maintenance and health tooling
+- `package.json` — Suno-only local commands; it is intentionally separate from the main site's package/configuration
+
+## Suno health check
+
+Run the isolated doctor from this directory:
+
+```bash
+npm run doctor
+```
+
+The authoritative checker is `scripts/suno-site-doctor.mjs`. It resolves `/Suno` from its own file location, so it does not depend on the repository working directory or the main site's scripts.
+
+The main site's Site Doctor performs a **non-blocking** health probe of this checker. A Suno failure is reported as a warning and does not fail the main-site doctor. If that warning appears, run the `/Suno` doctor directly for the detailed failure list.
 
 ## Design rules
 
