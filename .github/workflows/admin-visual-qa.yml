@@ -1,0 +1,68 @@
+name: ADMIN Visual QA
+on:
+  workflow_dispatch:
+    inputs:
+      actor:
+        description: 'Admin actor'
+        required: true
+        type: string
+      route:
+        description: 'Route to inspect'
+        required: true
+        default: /index2
+        type: string
+      viewport:
+        description: 'Viewport preset'
+        required: true
+        default: desktop
+        type: choice
+        options: [desktop, mobile]
+permissions:
+  contents: read
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: npm exec --yes playwright@1.55.0 install --with-deps chromium
+      - name: Start static server
+        run: npx --yes serve . -l 4173 >/tmp/lilsynn-qa.log 2>&1 &
+      - name: Run visual QA
+        env:
+          QA_ROUTE: ${{ inputs.route }}
+          QA_VIEWPORT: ${{ inputs.viewport }}
+        run: |
+          cat > /tmp/qa.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs/promises';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:process.env.QA_VIEWPORT==='mobile'?{width:390,height:844}:{width:1440,height:900},deviceScaleFactor:1});
+          const errors=[];const failed=[];
+          page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+          page.on('requestfailed',r=>failed.push({url:r.url(),error:r.failure()?.errorText||'failed'}));
+          const route=process.env.QA_ROUTE||'/index2';
+          const response=await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'networkidle',timeout:30000});
+          const result=await page.evaluate(()=>{const els=[...document.querySelectorAll('body *')];const vw=innerWidth,vh=innerHeight;const bad=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(r.right< -2||r.left>document.documentElement.scrollWidth+2||r.bottom< -2)}).length;const horizontal=document.documentElement.scrollWidth>innerWidth+2;const visible=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>1&&r.height>1}).length;return {viewport:{width:vw,height:vh},document:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},horizontalOverflow:horizontal,offscreenElements:bad,visibleElements:visible,title:document.title}});
+          const out={route,viewport:process.env.QA_VIEWPORT,status:response?.status(),consoleErrors:errors,failedRequests:failed,layout:result,passed:!!response?.ok()&&!errors.length&&!failed.length&&!result.horizontalOverflow&&!result.offscreenElements};
+          await fs.mkdir('qa-results',{recursive:true});await fs.writeFile('qa-results/result.json',JSON.stringify(out,null,2));await page.screenshot({path:'qa-results/screenshot.png',fullPage:true});await browser.close();
+          if(!out.passed)process.exit(1);
+          EOF
+          node /tmp/qa.mjs
+      - name: Upload QA artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: command-admin-visual-qa-${{ github.run_id }}
+          path: qa-results/
+      - name: Summary
+        if: always()
+        run: |
+          echo "### ADMIN Visual QA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Route: ${{ inputs.route }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Viewport: ${{ inputs.viewport }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Actor: ${{ inputs.actor }}" >> "$GITHUB_STEP_SUMMARY"
+          test -f qa-results/result.json && cat qa-results/result.json >> "$GITHUB_STEP_SUMMARY" || true
