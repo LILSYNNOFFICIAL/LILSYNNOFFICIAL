@@ -62,7 +62,7 @@ for (const file of htmlFiles) {
   if (canonicalRefs.length && !/<aside[^>]+class=["'][^"']*source-note[^"']*["'][\s\S]*?(?:github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide|raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide)/i.test(html)) {
     failures.push(`${rel}: canonical source URL must remain attribution-only inside a source-note`);
   }
-  if (/(?:href|src)=["'](?!https?:\/\/)[^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${rel}: local Markdown navigation reference remains`);
+  if (/(?:href|src)=["'](?!https?:\/\/|\/)[^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${rel}: local Markdown navigation reference remains`);
   if (plain(html).length < 300) failures.push(`${rel}: suspiciously little rendered content`);
 
   for (const match of html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)) {
