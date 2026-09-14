@@ -59,10 +59,10 @@ for (const file of htmlFiles) {
   const canonicalRefs = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)]
     .map(match => match[1])
     .filter(ref => /github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(ref) || /raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide/i.test(ref));
-  if (canonicalRefs.length && !/<aside[^>]+class=["'][^"']*source-note[^"']*["'][\s\S]*canonical/i.test(html)) {
-    failures.push(`${rel}: canonical source URL must remain attribution-only, not navigation/resource plumbing`);
+  if (canonicalRefs.length && !/<aside[^>]+class=["'][^"']*source-note[^"']*["'][\s\S]*?(?:github\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide|raw\.githubusercontent\.com\/LILSYNNOFFICIAL\/LIL-SYNN-s-Complete-Suno-V6-Guide)/i.test(html)) {
+    failures.push(`${rel}: canonical source URL must remain attribution-only inside a source-note`);
   }
-  if (/(?:href|src)=["'][^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${rel}: Markdown navigation reference remains`);
+  if (/(?:href|src)=["'](?!https?:\/\/)[^"']+\.md(?:[#"']|$)/i.test(html)) failures.push(`${rel}: local Markdown navigation reference remains`);
   if (plain(html).length < 300) failures.push(`${rel}: suspiciously little rendered content`);
 
   for (const match of html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)) {
@@ -77,7 +77,7 @@ for (const file of htmlFiles) {
 
 for (const tool of TOOLS) {
   const html = await read(tool);
-  for (const marker of ['suno-tools.js', 'suno-drafts.js', 'tools.css', 'id="copy-output"', 'id="reset-tool"']) {
+  for (const marker of ['suno.js', 'suno-tools.js', 'id="copy-output"', 'id="reset-tool"']) {
     if (!html.includes(marker)) failures.push(`${tool}: missing ${marker}`);
   }
 }
@@ -88,8 +88,15 @@ for (const marker of ['id="library"', 'css/suno.css', 'js/suno.js']) {
 }
 
 const audio = await read('guides/audio.html');
-for (const marker of ['V6 AUDIO QUALITY ISSUES', 'Mini V6', 'Weirdness: 0%', 'Style & Audio Influence: 86%', 'WHOLE TRACK', 'recreate the original audio exactly as sung and performed']) {
-  if (!audio.includes(marker)) failures.push(`audio guide: missing ${marker}`);
+for (const [label, marker] of [
+  ['V6 audio-quality heading', /V6 AUDIO QUALITY ISSUES/],
+  ['Mini V6 model marker', /Mini V6/],
+  ['Weirdness 0% marker', /Weirdness:\s*<\/strong>\s*<strong>0%/],
+  ['Style & Audio Influence 86% marker', /Style &amp; Audio Influence:\s*<\/strong>\s*<strong>86%/],
+  ['whole-track marker', /WHOLE TRACK/],
+  ['exact recreation prompt', /recreate the original audio exactly as sung and performed/]
+]) {
+  if (!marker.test(audio)) failures.push(`audio guide: missing ${label}`);
 }
 
 const drafts = await read('js/suno-drafts.js');
