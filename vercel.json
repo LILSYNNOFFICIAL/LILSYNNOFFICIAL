@@ -1,7 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "redirects": [],
+  "redirects": [
+    {"source":"/suno","destination":"/suno/complete","permanent":false},
+    {"source":"/suno/","destination":"/suno/complete","permanent":false},
+    {"source":"/command","destination":"/command/","permanent":false}
+  ],
   "rewrites": [
     {"source":"/suno","destination":"/Suno/complete/complete-guide.html"},
     {"source":"/suno/","destination":"/Suno/complete/complete-guide.html"},
