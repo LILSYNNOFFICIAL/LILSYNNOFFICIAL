@@ -1,61 +1,41 @@
 {
-  "$schema":"https://openapi.vercel.sh/vercel.json",
-  "outputDirectory":"public",
-  "rewrites":[
-    {"source":"/assets/mov/lv_0_20260718234757.mp4","destination":"/assets/mov/HERO_BG_WEBM.webm"},
-    {"source":"/css/suno.css","destination":"/Suno/css/suno.css"},
-    {"source":"/css/command-center.css","destination":"/Suno/css/command-center.css"},
-    {"source":"/css/tools.css","destination":"/Suno/css/tools.css"},
-    {"source":"/js/suno.js","destination":"/Suno/js/suno.js"},
-    {"source":"/js/suno-tools.js","destination":"/Suno/js/suno-tools.js"},
-    {"source":"/js/suno-forum.js","destination":"/Suno/js/suno-forum.js"},
-    {"source":"/js/suno-drafts.js","destination":"/Suno/js/suno-drafts.js"},
-    {"source":"/suno","destination":"/Suno/Suno_Guide.html"},
-    {"source":"/suno/","destination":"/Suno/Suno_Guide.html"},
-    {"source":"/suno/command-center","destination":"/Suno/command-center.html"},
-    {"source":"/suno/command-center/","destination":"/Suno/command-center.html"},
-    {"source":"/suno/prompt-architect","destination":"/Suno/prompt-architect.html"},
-    {"source":"/suno/style-builder","destination":"/Suno/style-builder.html"},
-    {"source":"/suno/lyrics-builder","destination":"/Suno/lyrics-builder.html"},
-    {"source":"/suno/controls","destination":"/Suno/controls.html"},
-    {"source":"/suno/troubleshooter","destination":"/Suno/troubleshooter.html"},
-    {"source":"/suno/workflow","destination":"/Suno/workflow.html"},
-    {"source":"/suno/tools","destination":"/Suno/command-center.html"},
-    {"source":"/suno/complete","destination":"/Suno/complete/complete-guide.html"},
-    {"source":"/suno/complete/","destination":"/Suno/complete/complete-guide.html"},
-    {"source":"/suno/v6","destination":"/Suno/guides/v6.html"},
-    {"source":"/suno/prompting","destination":"/Suno/guides/prompting.html"},
-    {"source":"/suno/lyrics","destination":"/Suno/guides/lyrics.html"},
-    {"source":"/suno/styles","destination":"/Suno/guides/styles.html"},
-    {"source":"/suno/sliders","destination":"/Suno/guides/sliders.html"},
-    {"source":"/suno/voices","destination":"/Suno/guides/voices.html"},
-    {"source":"/suno/editing","destination":"/Suno/guides/editing.html"},
-    {"source":"/suno/audio","destination":"/Suno/guides/audio.html"},
-    {"source":"/suno/stems","destination":"/Suno/guides/stems.html"},
-    {"source":"/suno/studio","destination":"/Suno/guides/studio.html"},
-    {"source":"/suno/midi","destination":"/Suno/guides/midi.html"},
-    {"source":"/suno/effects","destination":"/Suno/guides/effects.html"},
-    {"source":"/suno/automation","destination":"/Suno/guides/automation.html"},
-    {"source":"/suno/production","destination":"/Suno/guides/production.html"},
-    {"source":"/suno/troubleshooting","destination":"/Suno/guides/troubleshooting.html"},
-    {"source":"/suno/rights","destination":"/Suno/guides/rights.html"},
-    {"source":"/suno/deep-dives/ultimate-control","destination":"/Suno/complete/ultimate-control.html"},
-    {"source":"/suno/deep-dives/everything-expansion","destination":"/Suno/complete/everything-expansion.html"},
-    {"source":"/suno/deep-dives/final-current-expansion","destination":"/Suno/complete/final-current-expansion.html"},
-    {"source":"/suno/deep-dives/coverage-audit","destination":"/Suno/complete/coverage-audit.html"},
-    {"source":"/suno/deep-dives/gaps-closure","destination":"/Suno/complete/gaps-closure.html"},
-    {"source":"/suno/deep-dives/gap-closure-all-remaining","destination":"/Suno/complete/gap-closure-all-remaining.html"},
-    {"source":"/suno/deep-dives/additional-current-details","destination":"/Suno/complete/additional-current-details.html"},
-    {"source":"/Suno","destination":"/Suno/Suno_Guide.html"},
-    {"source":"/Suno/","destination":"/Suno/Suno_Guide.html"},
-    {"source":"/Suno/:path*","destination":"/Suno/:path*"}
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/assets/mov/lv_0_20260718234757.mp4",
+      "destination": "/assets/mov/HERO_BG_WEBM.webm"
+    }
   ],
-  "headers":[
-    {"source":"/assets/(.*)","headers":[{"key":"Cache-Control","value":"public, max-age=31536000, immutable"}]},
-    {"source":"/(.*\\.(?:js|css))","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
-    {"source":"/(.*\\.html)","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
-    {"source":"/","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]},
-    {"source":"/index.html","headers":[{"key":"Cache-Control","value":"no-store, max-age=0, must-revalidate"}]}
-  ],
-  "git":{"deploymentEnabled":true}
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:js|css))",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    }
+  ]
 }
