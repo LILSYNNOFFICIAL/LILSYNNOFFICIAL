@@ -5,11 +5,17 @@ on:
     branches: [main]
     paths:
       - 'admin/**'
+      - 'command/**'
+      - 'Suno/**'
+      - 'vercel.json'
       - '.github/workflows/command-center.yml'
   pull_request:
     branches: [main]
     paths:
       - 'admin/**'
+      - 'command/**'
+      - 'Suno/**'
+      - 'vercel.json'
       - '.github/workflows/command-center.yml'
 
 permissions:
@@ -25,5 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run Command Center regression harness
+      - name: Run Command Center + Suno route/content regression harness
         run: node admin/admin.test.mjs
+      - name: Run isolated Suno test suite
+        run: npm test --prefix Suno
