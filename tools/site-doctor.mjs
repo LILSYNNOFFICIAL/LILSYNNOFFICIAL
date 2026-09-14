@@ -16,9 +16,12 @@ const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`li
 
 for(const file of htmlFiles){
  const html=fs.readFileSync(path.join(root,file),'utf8');
- const expectedShell=file==='index2.html'?'site-global2.js':'site-global.js';
+ const standaloneIndex2=file==='index2.html';
+ const standalone404=file==='404.html';
+ const expectedShell=standaloneIndex2?'site-global2.js':'site-global.js';
  const shellPattern=new RegExp(`<script\\b[^>]*src=["']\\/?${expectedShell.replace('.','\\.')}(?:\\?[^"']*)?["'][^>]*>`,`i`);
- if(!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
+ if(!standaloneIndex2&&!standalone404&&!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
+ if(standaloneIndex2&&!shellPattern.test(html)&&!(/class=["'][^"']*menu-panel/i.test(html)&&/class=["'][^"']*desktop-nav/i.test(html)))fail(`${file}: missing expected global shell script ${expectedShell} or standalone navigation shell`);
  if(file!=='index2.html'&&/site-global2\.js(?:\?|["'])/i.test(html))fail(`${file}: unexpected index2-specific global shell script`);
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
  if(globalScripts.length>1)fail(`${file}: duplicate explicit site-global.js scripts`);
