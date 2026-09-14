@@ -1,0 +1,14 @@
+{
+  "name": "LIL SYNN Suno V6 Guide",
+  "short_name": "Suno V6 Guide",
+  "start_url": "/Suno/Suno_Guide.html",
+  "display": "standalone",
+  "theme_color": "#070706",
+  "background_color": "#070706",
+  "description": "A self-contained LIL SYNN reference for Suno V6 creation, control, editing, production and release.",
+  "coreTopics": 17,
+  "deepDives": 7,
+  "completeDocuments": 1,
+  "toolCount": 6,
+  "syncDate": "September 14, 2026"
+}
