@@ -29,7 +29,7 @@ jobs:
             [ -f "$src" ] || continue
             base="${src%.webm}"
             old=$(stat -c%s "$src")
-            best="$src"
+            best_tmp=""
             best_size="$old"
 
             for profile in "960 40 24" "854 42 24" "720 44 24"; do
@@ -43,8 +43,8 @@ jobs:
               size=$(stat -c%s "$tmp")
               echo "$src candidate ${width}px CRF${crf} ${fps}fps: $size bytes"
               if [ "$size" -lt "$best_size" ]; then
-                rm -f "$best" 2>/dev/null || true
-                best="$tmp"
+                [ -z "$best_tmp" ] || rm -f "$best_tmp"
+                best_tmp="$tmp"
                 best_size="$size"
               else
                 rm -f "$tmp"
@@ -52,11 +52,11 @@ jobs:
             done
 
             echo "$src: $old -> $best_size bytes"
-            if [ "$best" != "$src" ] && [ "$best_size" -lt "$old" ]; then
-              mv "$best" "$src"
+            if [ -n "$best_tmp" ] && [ "$best_size" -lt "$old" ]; then
+              mv "$best_tmp" "$src"
               changed=1
             else
-              rm -f "$best" 2>/dev/null || true
+              [ -z "$best_tmp" ] || rm -f "$best_tmp"
             fi
           done
 
