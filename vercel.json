@@ -22,7 +22,7 @@
     {"source":"/suno/stems","destination":"/Suno/guides/stems.html"},
     {"source":"/suno/studio","destination":"/Suno/guides/studio.html"},
     {"source":"/suno/midi","destination":"/Suno/guides/midi.html"},
-    {"source":"/suno/effects","destination":"/Suno/effects.html"},
+    {"source":"/suno/effects","destination":"/Suno/guides/effects.html"},
     {"source":"/suno/automation","destination":"/Suno/guides/automation.html"},
     {"source":"/suno/production","destination":"/Suno/guides/production.html"},
     {"source":"/suno/troubleshooting","destination":"/Suno/guides/troubleshooting.html"},
