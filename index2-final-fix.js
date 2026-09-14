@@ -41,7 +41,7 @@
     body.index2-refined::-webkit-scrollbar-track{background:#08080c}
     body.index2-refined::-webkit-scrollbar-thumb{background:#ff008f;border-radius:8px;border:2px solid #08080c}
     @media(max-width:760px){
-      body.index2-refined .desktop-nav{left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:100vw!important;height:68px!important;padding:0 62px!important;overflow-x:auto!important;overflow-y:hidden!important;justify-content:flex-start!important;gap:12px!important;scrollbar-width:none!important}
+      body.index2-refined .desktop-nav{left:0!important;right:0!important;top:50%!important;transform:none!important;width:100vw!important;height:68px!important;box-sizing:border-box!important;padding:0 72px!important;overflow-x:auto!important;overflow-y:hidden!important;justify-content:flex-start!important;gap:12px!important;scrollbar-width:none!important}
       body.index2-refined .desktop-nav::-webkit-scrollbar{display:none!important}
       body.index2-refined .desktop-nav a{flex:0 0 auto!important}
       body.index2-refined .desktop-nav .ls-vote-link{position:relative!important;left:auto!important;top:auto!important;transform:none!important;z-index:4!important}
