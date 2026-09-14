@@ -3,6 +3,7 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/assets/mov/lv_0_20260718234757.mp4", "destination": "/assets/mov/HERO_BG_WEBM.webm" },
+    { "source": "/assets/2/LS1.png", "destination": "/assets/2/LS3.png" },
     { "source": "/suno", "destination": "/Suno/complete/complete-guide.html" },
     { "source": "/suno/", "destination": "/Suno/complete/complete-guide.html" },
     { "source": "/suno/v6", "destination": "/Suno/guides/v6.html" },
