@@ -9,17 +9,17 @@ const failures=[];
 for(const name of files){
   const html=await fs.readFile(path.join(suno,name),'utf8');
   const controls=[...html.matchAll(/<(input|select|textarea)\b[^>]*>/g)].map(m=>m[0]);
+  const interactiveControls=controls.filter(x=>!/\breadonly\b/.test(x));
   const buttons=[...html.matchAll(/<button\b[^>]*>/g)].map(m=>m[0]);
   if(!html.includes('aria-expanded="false"')||!html.includes('aria-controls="site-nav"'))failures.push(`${name}: mobile menu lacks expanded/controls state`);
   if(!html.includes('id="site-nav"'))failures.push(`${name}: navigation target missing`);
   if(!html.includes('<main'))failures.push(`${name}: main landmark missing`);
   if(!html.includes('<h1'))failures.push(`${name}: primary heading missing`);
   for(const button of buttons){
-    if(!/\btype="button"\b/.test(button)&&!/\btype='button'\b/.test(button))failures.push(`${name}: button lacks explicit type=button`);
+    if(!/\btype="button"/.test(button)&&!/\btype='button'/.test(button))failures.push(`${name}: button lacks explicit type=button`);
   }
   const labeled=html.match(/<label\b/g)?.length||0;
-  const textInputs=controls.filter(x=>/\b(?:input|textarea|select)\b/.test(x)&&!/type="checkbox"/.test(x)).length;
-  if(textInputs>labeled)failures.push(`${name}: ${textInputs} form controls but only ${labeled} labels`);
+  if(interactiveControls.length>labeled)failures.push(`${name}: ${interactiveControls.length} interactive form controls but only ${labeled} labels`);
 }
 
 const runtime=await fs.readFile(path.join(suno,'js','suno-tools.js'),'utf8');
