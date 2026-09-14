@@ -88,9 +88,11 @@ assert.ok(sunoManifest.deepDives >= 7, 'Suno manifest must report the full resea
 assert.ok(sunoManifest.toolCount >= 6, 'Suno manifest must report all guide tools');
 
 const audio = fs.readFileSync(path.join(suno, 'guides', 'audio.html'), 'utf8');
-for (const marker of ['V6 AUDIO QUALITY ISSUES', 'Mini V6', 'Weirdness: 0%', 'Style & Audio Influence: 86%', 'WHOLE TRACK', 'recreate the original audio exactly as sung and performed']) {
-  const pattern = marker.replace('Style & Audio Influence', 'Style (?:&|&amp;) Audio Influence').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('\\(?:&\\|&amp;\\)', '(?:&|&amp;)');
-  assert.match(audio, new RegExp(pattern), `V6 audio-quality marker missing: ${marker}`);
-}
+assert.match(audio, /V6 AUDIO QUALITY ISSUES/);
+assert.match(audio, /Mini V6/);
+assert.match(audio, /Weirdness:\s*<\/strong>\s*0%/);
+assert.match(audio, /Style &amp; Audio Influence:\s*<\/strong>\s*86%/);
+assert.match(audio, /WHOLE TRACK/);
+assert.match(audio, /recreate the original audio exactly as sung and performed/);
 
 console.log('Command Center + complete Suno route/content audit contract: PASS');
