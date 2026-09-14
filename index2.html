@@ -24,6 +24,58 @@
 @media(max-width:430px){.catalog{grid-template-columns:1fr}.hero2{min-height:700px}.hero-content{min-height:700px}.hero-art{height:54%}.btn{padding:11px 14px}.band-inner{padding:62px 0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero2 video{display:none}.hero2{background:url('/assets/img/LS.png') center/cover no-repeat}.hero-art img,.catalog-card img,.discover-main img,.discover-stack img,.release-art img{transition:none}}
 </style>
+<style id="index2-ux-repair">
+:root{--max:1240px}
+.hero2{min-height:clamp(620px,82svh,820px)}
+.hero-content{min-height:clamp(620px,82svh,820px);padding:96px 0 48px}
+.hero-art{right:0;width:min(48vw,650px);height:88%}
+.hero-copy{width:min(520px,44vw)}
+.hero-logo{width:min(390px,100%);max-height:150px}
+.hero-copy h1{font-size:clamp(16px,1.65vw,24px)}
+.hero-copy p{font-size:15px;max-width:460px;margin-bottom:20px}
+.hero-side{bottom:48px;width:min(290px,23vw)}
+.side-card{min-height:92px;padding:14px}
+.side-copy strong{font-size:13px}
+.band-inner{padding:64px 0}
+.band-head{margin-bottom:22px}
+.band-head h2{font-size:clamp(25px,3vw,40px)}
+.release-feature{grid-template-columns:minmax(240px,350px) 1fr;gap:34px}
+.release-meta h3{font-size:clamp(27px,3.4vw,48px)}
+.discovery{grid-template-columns:1.15fr .85fr}
+.discover-main{min-height:300px}
+.catalog{gap:10px}
+.signal-copy,.signal-art{min-height:330px}
+.about-image{min-height:330px}
+.footer-cta{padding:82px 20px}
+@media(max-width:900px){
+  .hero-art{right:-5vw;width:58vw}
+  .hero-copy{width:52vw}
+  .hero-side{display:none}
+  .release-feature{grid-template-columns:minmax(220px,320px) 1fr}
+}
+@media(max-width:760px){
+  .hero2{min-height:640px}
+  .hero-content{min-height:640px;padding:82px 0 30px}
+  .hero-art{right:-18vw;bottom:19%;width:108vw;height:52%;opacity:.34}
+  .hero-copy{width:100%}
+  .hero-logo{width:min(330px,82vw);max-height:120px}
+  .hero-copy h1{font-size:16px}
+  .hero-copy p{font-size:14px}
+  .band-inner{padding:52px 0}
+  .release-feature{grid-template-columns:1fr;gap:22px}
+  .release-art{max-width:340px}
+  .discover-main{min-height:270px}
+  .signal-copy,.signal-art{min-height:280px}
+  .about-image{min-height:270px}
+  .footer-cta{padding:68px 18px}
+}
+@media(max-width:430px){
+  .hero2{min-height:600px}
+  .hero-content{min-height:600px}
+  .hero-art{height:47%}
+  .band-inner{padding:46px 0}
+}
+</style>
 </head>
 <body>
 <div class="home2">
