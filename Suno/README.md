@@ -24,6 +24,16 @@ The website is a curated presentation layer over that research corpus. Official 
 - `search-index.json` — isolated searchable catalog for guides, research and tools
 - `manifest.json` — isolated web-app metadata and build status
 
+## Suno browser health dashboard
+
+For a mobile-friendly check of the **deployed** Suno site, open:
+
+**`/Suno/health.html`**
+
+The dashboard checks reachable Suno pages, discovered `/Suno/**` links, local resources, search-index integrity, manifest isolation, page landmarks, and important V6 audio-quality markers. It is a browser diagnostic reader and does not replace the repository doctor.
+
+Full documentation is in `Suno/HEALTH.md`.
+
 ## Suno health check
 
 Run the isolated doctor from this directory:
