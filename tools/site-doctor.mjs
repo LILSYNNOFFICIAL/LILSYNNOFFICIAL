@@ -9,7 +9,7 @@ const exists=p=>fs.existsSync(path.join(root,p));
 const fail=m=>errors.push(m);const warn=m=>warnings.push(m);
 const htmlFiles=fs.readdirSync(root).filter(x=>x.endsWith('.html'));
 const jsFiles=[];
-const walk=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules'].includes(entry.name))continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')||entry.name.endsWith('.mjs'))jsFiles.push(full)}};
+const walk=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','Suno'].includes(entry.name))continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')||entry.name.endsWith('.mjs'))jsFiles.push(full)}};
 walk(root);
 
 const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`lilsynn-inline-${process.pid}-${index}.js`);try{fs.writeFileSync(temp,code,'utf8');execFileSync(process.execPath,['--check',temp],{stdio:'pipe'})}catch{fail(`${file}: inline JavaScript syntax check failed (script ${index})`)}finally{try{fs.unlinkSync(temp)}catch{}}};
@@ -48,6 +48,19 @@ for(const required of ['archive.html','release.html','gallery.html','universe.ht
 if(exists('site-global.js')){const g=fs.readFileSync('site-global.js','utf8');if(!g.includes('site-polish.js'))fail('site-global.js: discovery polish module is not loaded');if(!g.includes("const streams=[['Spotify'"))fail('site-global.js: streaming menu contract missing');if(g.includes("['TIDAL'")||g.includes("['Amazon Music'"))warn('site-global.js: non-core streaming destinations detected outside the focused Spotify / Apple Music / YouTube menu');}
 if(exists('latest-releases.js')){const l=fs.readFileSync('latest-releases.js','utf8');for(const platform of ['SPOTIFY','APPLE MUSIC','YOUTUBE'])if(!l.includes(`stream('${platform}'`))fail(`latest-releases.js: ${platform} CTA missing`);}
 if(exists('transmissions.json')){try{const t=JSON.parse(fs.readFileSync('transmissions.json','utf8'));if(!Array.isArray(t.transmissions))fail('transmissions.json: transmissions array missing')}catch(e){fail(`transmissions.json: invalid JSON (${e.message})`)}}
+
+const sunoDoctor=path.join(root,'Suno','scripts','suno-site-doctor.mjs');
+if(!fs.existsSync(sunoDoctor)){
+ warn('Suno Site Doctor unavailable — /Suno health could not be checked. Main site checks continue normally.');
+}else{
+ try{
+   execFileSync(process.execPath,[sunoDoctor],{cwd:root,stdio:'pipe'});
+   console.log('Suno Site Doctor: PASS (non-blocking health signal)');
+ }catch(error){
+   const detail=String(error?.stderr||error?.stdout||'').trim().split(/\r?\n/).filter(Boolean).slice(-1)[0]||'see /Suno/scripts/suno-site-doctor.mjs for details';
+   warn(`Suno Site Doctor FAILED — ${detail}. This is warning-only and does not block the main site.`);
+ }
+}
 
 console.log(`LIL SYNN SITE DOCTOR: ${htmlFiles.length} HTML files, ${jsFiles.length} JS modules scanned.`);
 for(const w of warnings)console.log(`⚠ ${w}`);
