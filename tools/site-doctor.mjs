@@ -16,7 +16,10 @@ const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`li
 
 for(const file of htmlFiles){
  const html=fs.readFileSync(path.join(root,file),'utf8');
- if(!/site-global\.js(?:\?|["'])/.test(html))fail(`${file}: missing global shell script`);
+ const expectedShell=file==='index2.html'?'site-global2.js':'site-global.js';
+ const shellPattern=new RegExp(`<script\\b[^>]*src=["']\\/?${expectedShell.replace('.','\\.')}(?:\\?[^"']*)?["'][^>]*>`,`i`);
+ if(!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
+ if(file!=='index2.html'&&/site-global2\.js(?:\?|["'])/i.test(html))fail(`${file}: unexpected index2-specific global shell script`);
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
  if(globalScripts.length>1)fail(`${file}: duplicate explicit site-global.js scripts`);
  const globalCss=[...html.matchAll(/<link\b[^>]*href=["']\/?site-global\.css[^"']*["'][^>]*>/gi)];
