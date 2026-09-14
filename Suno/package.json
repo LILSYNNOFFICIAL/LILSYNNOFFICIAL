@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {
     "doctor": "node scripts/suno-site-doctor.mjs",
-    "test": "node scripts/suno-isolation.test.mjs"
+    "test": "node scripts/suno-isolation.test.mjs && node scripts/suno-site-doctor.test.mjs"
   }
 }
