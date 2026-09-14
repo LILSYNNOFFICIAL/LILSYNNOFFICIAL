@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/sync-suno-guide.yml'
       - 'scripts/sync-suno-guide.py'
+      - 'scripts/build-suno-routes.py'
       - 'Suno/index.html'
   workflow_dispatch:
 
@@ -30,14 +31,17 @@ jobs:
       - name: Generate complete website library
         run: python scripts/sync-suno-guide.py /tmp/suno-guide .
 
+      - name: Generate complete functional Suno routes
+        run: python scripts/build-suno-routes.py
+
       - name: Commit generated guide
         run: |
-          if git diff --quiet -- Suno/library Suno/library-index.html Suno/generated-guide-manifest.json; then
+          if git diff --quiet -- Suno/library Suno/library-index.html Suno/generated-guide-manifest.json Suno/complete Suno/prompt-architect Suno/lyrics-builder Suno/controls Suno/style-builder Suno/style-photos Suno/troubleshooter Suno/workflow Suno/customs/models; then
             echo 'No generated Suno content changes.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Suno/library Suno/library-index.html Suno/generated-guide-manifest.json
-          git commit -m 'chore: sync complete Suno V6 guide into website [skip ci]'
+          git add Suno/library Suno/library-index.html Suno/generated-guide-manifest.json Suno/complete Suno/prompt-architect Suno/lyrics-builder Suno/controls Suno/style-builder Suno/style-photos Suno/troubleshooter Suno/workflow Suno/customs/models
+          git commit -m 'chore: sync complete Suno V6 guide and functional routes [skip ci]'
           git push
