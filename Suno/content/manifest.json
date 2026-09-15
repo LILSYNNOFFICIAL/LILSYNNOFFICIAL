@@ -2,74 +2,14 @@
   "sourceRepository": "https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide",
   "generatedAt": "2026-09-15T12:26:08.053595+00:00",
   "documents": [
-    {
-      "id": "master-guide",
-      "source": "README.md",
-      "title": "LIL SYNN's Complete Suno V6 Guide",
-      "html": "content/master-guide.html",
-      "markdown": "content/master-guide.md"
-    },
-    {
-      "id": "suno-v6-additional-current-details",
-      "source": "SUNO-V6-ADDITIONAL-CURRENT-DETAILS.md",
-      "title": "ADDITIONAL CURRENT DETAILS",
-      "html": "content/suno-v6-additional-current-details.html",
-      "markdown": "content/suno-v6-additional-current-details.md"
-    },
-    {
-      "id": "suno-v6-audio-quality-rescue",
-      "source": "SUNO-V6-AUDIO-QUALITY-RESCUE.md",
-      "title": "AUDIO QUALITY RESCUE",
-      "html": "content/suno-v6-audio-quality-rescue.html",
-      "markdown": "content/suno-v6-audio-quality-rescue.md"
-    },
-    {
-      "id": "suno-v6-current-coverage-audit",
-      "source": "SUNO-V6-CURRENT-COVERAGE-AUDIT.md",
-      "title": "CURRENT COVERAGE AUDIT",
-      "html": "content/suno-v6-current-coverage-audit.html",
-      "markdown": "content/suno-v6-current-coverage-audit.md"
-    },
-    {
-      "id": "suno-v6-current-gaps-closure",
-      "source": "SUNO-V6-CURRENT-GAPS-CLOSURE.md",
-      "title": "CURRENT GAPS CLOSURE",
-      "html": "content/suno-v6-current-gaps-closure.html",
-      "markdown": "content/suno-v6-current-gaps-closure.md"
-    },
-    {
-      "id": "suno-v6-everything-expansion",
-      "source": "SUNO-V6-EVERYTHING-EXPANSION.md",
-      "title": "EVERYTHING EXPANSION",
-      "html": "content/suno-v6-everything-expansion.html",
-      "markdown": "content/suno-v6-everything-expansion.md"
-    },
-    {
-      "id": "suno-v6-final-current-expansion",
-      "source": "SUNO-V6-FINAL-CURRENT-EXPANSION.md",
-      "title": "FINAL CURRENT EXPANSION",
-      "html": "content/suno-v6-final-current-expansion.html",
-      "markdown": "content/suno-v6-final-current-expansion.md"
-    },
-    {
-      "id": "suno-v6-gap-closure-all-remaining-current",
-      "source": "SUNO-V6-GAP-CLOSURE-ALL-REMAINING-CURRENT.md",
-      "title": "GAP CLOSURE ALL REMAINING CURRENT",
-      "html": "content/suno-v6-gap-closure-all-remaining-current.html",
-      "markdown": "content/suno-v6-gap-closure-all-remaining-current.md"
-    },
-    {
-      "id": "suno-v6-ultimate-control-and-production-addendum-2026",
-      "source": "SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDENDUM-2026.md",
-      "title": "ULTIMATE CONTROL AND PRODUCTION ADDENDUM 2026",
-      "html": "content/suno-v6-ultimate-control-and-production-addendum-2026.html",
-      "markdown": "content/suno-v6-ultimate-control-and-production-addendum-2026.md"
-    },
-    {
-      "id": "suno-v6-experimental",
-      "source": "EXPERIMENTAL",
-      "title": "EXPERIMENTAL",
-      "html": "content/suno-v6-experimental.html"
-    }
+    {"id":"master-guide","source":"README.md","title":"LIL SYNN's Complete Suno V6 Guide","html":"content/master-guide.html","markdown":"content/master-guide.md"},
+    {"id":"suno-v6-additional-current-details","source":"SUNO-V6-ADDITIONAL-CURRENT-DETAILS.md","title":"ADDITIONAL CURRENT DETAILS","html":"content/suno-v6-additional-current-details.html","markdown":"content/suno-v6-additional-current-details.md"},
+    {"id":"suno-v6-audio-quality-rescue","source":"SUNO-V6-AUDIO-QUALITY-RESCUE.md","title":"AUDIO QUALITY RESCUE","html":"content/suno-v6-audio-quality-rescue.html","markdown":"content/suno-v6-audio-quality-rescue.md"},
+    {"id":"suno-v6-current-coverage-audit","source":"SUNO-V6-CURRENT-COVERAGE-AUDIT.md","title":"CURRENT COVERAGE AUDIT","html":"content/suno-v6-current-coverage-audit.html","markdown":"content/suno-v6-current-coverage-audit.md"},
+    {"id":"suno-v6-current-gaps-closure","source":"SUNO-V6-CURRENT-GAPS-CLOSURE.md","title":"CURRENT GAPS CLOSURE","html":"content/suno-v6-current-gaps-closure.html","markdown":"content/suno-v6-current-gaps-closure.md"},
+    {"id":"suno-v6-everything-expansion","source":"SUNO-V6-EVERYTHING-EXPANSION.md","title":"EVERYTHING EXPANSION","html":"content/suno-v6-everything-expansion.html","markdown":"content/suno-v6-everything-expansion.md"},
+    {"id":"suno-v6-final-current-expansion","source":"SUNO-V6-FINAL-CURRENT-EXPANSION.md","title":"FINAL CURRENT EXPANSION","html":"content/suno-v6-final-current-expansion.html","markdown":"content/suno-v6-final-current-expansion.md"},
+    {"id":"suno-v6-gap-closure-all-remaining-current","source":"SUNO-V6-GAP-CLOSURE-ALL-REMAINING-CURRENT.md","title":"GAP CLOSURE ALL REMAINING CURRENT","html":"content/suno-v6-gap-closure-all-remaining-current.html","markdown":"content/suno-v6-gap-closure-all-remaining-current.md"},
+    {"id":"suno-v6-ultimate-control-and-production-addendum-2026","source":"SUNO-V6-ULTIMATE-CONTROL-AND-PRODUCTION-ADDITION-2026.md","title":"ULTIMATE CONTROL AND PRODUCTION ADDENDUM 2026","html":"content/suno-v6-ultimate-control-and-production-addendum-2026.html","markdown":"content/suno-v6-ultimate-control-and-production-addendum-2026.md"}
   ]
 }
