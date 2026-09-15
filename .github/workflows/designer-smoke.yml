@@ -7,6 +7,7 @@ on:
       - 'command/designer.html'
       - 'command/designer.css'
       - 'command/designer.js'
+      - 'command/designer-plus.js'
       - 'command/designer.test.js'
       - 'api/admin.js'
       - '.github/workflows/designer-smoke.yml'
@@ -21,6 +22,6 @@ jobs:
         with:
           node-version: 22
       - name: Syntax check
-        run: node --check command/designer.js && node --check api/admin.js
+        run: node --check command/designer.js && node --check command/designer-plus.js && node --check api/admin.js
       - name: Contract test
         run: node command/designer.test.js
