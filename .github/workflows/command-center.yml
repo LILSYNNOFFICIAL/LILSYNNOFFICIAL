@@ -31,7 +31,42 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run Command Center + Suno route/content regression harness
-        run: node admin/admin.test.mjs
-      - name: Run isolated Suno test suite
-        run: npm test --prefix Suno
+      - name: Run current site regression harness
+        run: node tools/site-doctor.mjs
+      - name: Verify Suno route inventory and locked Audio Fix signature
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const required = [
+            'Suno/index.html',
+            'Suno/create/index.html',
+            'Suno/create/prompt-lab.html',
+            'Suno/create/vocal-engineering.html',
+            'Suno/control/index.html',
+            'Suno/produce/index.html',
+            'Suno/produce/audio-engineering.html',
+            'Suno/fix-test/index.html',
+            'Suno/research/index.html',
+            'Suno/research/v5-to-v6.html',
+            'Suno/research/controlled-experimentation.html',
+            'Suno/master/index.html',
+            'Suno/audio_fix_v6/index.html',
+            'Suno/assets/suno-topic.js',
+            'Suno/assets/suno-master.js',
+            'Suno/assets/suno-overrides.css'
+          ];
+          for (const file of required) {
+            if (!fs.existsSync(file)) throw new Error(`Missing required Suno route/asset: ${file}`);
+          }
+          const audio = fs.readFileSync('Suno/audio_fix_v6/index.html');
+          const sha = crypto.createHash('sha1').update(audio).digest('hex');
+          const locked = 'ead7b8c353814bf5f8d792494a88356110643444';
+          if (sha !== locked) throw new Error(`Audio Fix V6 changed unexpectedly: ${sha}`);
+          const master = fs.readFileSync('Suno/master/index.html', 'utf8');
+          for (const href of ['../create/', '../control/', '../produce/', '../fix-test/', '../research/', '../audio_fix_v6/']) {
+            if (!master.includes(`href="${href}"`)) throw new Error(`Master navigation missing ${href}`);
+          }
+          console.log('Suno route/content regression: PASS');
+          console.log(`Audio Fix V6 SHA locked: ${sha}`);
+          NODE
