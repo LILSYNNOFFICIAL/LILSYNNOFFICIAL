@@ -1,0 +1,180 @@
+name: RERUN ALL JOBS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: rerun-all-jobs
+  cancel-in-progress: false
+
+jobs:
+  process-current-main:
+    name: Process current main state
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Process runnable workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: main
+          CONTROLLER: RERUN ALL JOBS
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo '=========================================='
+          echo '        RERUN ALL JOBS — SAFE MODE'
+          echo '=========================================='
+          echo "Repository: $REPO"
+          echo "Main SHA: $(gh api "repos/$REPO/git/ref/heads/$BRANCH" --jq '.object.sha')"
+          echo
+
+          workflows=$(gh api --paginate "repos/$REPO/actions/workflows?per_page=100" \
+            --jq '.workflows[] | [.id, .name, .path, .state] | @tsv' \
+            | sort -t $'\t' -k3,3)
+
+          total=0
+          dispatched=0
+          succeeded=0
+          failed=0
+          skipped=0
+
+          wait_for_run() {
+            local run_id="$1"
+            local label="$2"
+            local status conclusion
+
+            for attempt in $(seq 1 180); do
+              status=$(gh api "repos/$REPO/actions/runs/$run_id" --jq '.status' 2>/dev/null || echo unknown)
+              conclusion=$(gh api "repos/$REPO/actions/runs/$run_id" --jq '.conclusion // empty' 2>/dev/null || true)
+
+              echo "  $label run=$run_id status=$status conclusion=${conclusion:-pending}"
+
+              if [ "$status" = completed ]; then
+                if [ "$conclusion" = success ]; then
+                  return 0
+                fi
+                return 1
+              fi
+              sleep 5
+            done
+
+            echo "  TIMEOUT: run $run_id"
+            return 1
+          }
+
+          while IFS=$'\t' read -r workflow_id workflow_name workflow_path workflow_state; do
+            [ -z "$workflow_id" ] && continue
+            total=$((total + 1))
+
+            echo
+            echo '------------------------------------------'
+            echo "Workflow: $workflow_name"
+            echo "Path:     $workflow_path"
+            echo "State:    $workflow_state"
+
+            if [ "$workflow_name" = "$CONTROLLER" ]; then
+              echo 'SKIP: controller itself'
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            if [[ "$workflow_state" == disabled_* ]]; then
+              echo 'SKIP: disabled workflow'
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            # Read the workflow from the current main branch. Missing/stale
+            # workflow records must never abort the controller.
+            yaml=$(gh api "repos/$REPO/contents/$workflow_path?ref=$BRANCH" \
+              --jq '.content' 2>/dev/null | tr -d '\n' || true)
+            if [ -z "$yaml" ]; then
+              echo 'SKIP: workflow definition is not present/readable on main'
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            definition=$(printf '%s' "$yaml" | base64 --decode)
+
+            # Required manual inputs are deliberately never guessed.
+            if printf '%s\n' "$definition" | grep -Eq '^[[:space:]]+workflow_dispatch:'; then
+              if printf '%s\n' "$definition" | awk '
+                /^  workflow_dispatch:/ {inside=1; next}
+                inside && /^[^[:space:]]/ {inside=0}
+                inside && /required:[[:space:]]*true/ {found=1}
+                END {exit(found ? 0 : 1)}
+              '; then
+                echo 'SKIP: workflow_dispatch has required manual inputs'
+                skipped=$((skipped + 1))
+                continue
+              fi
+
+              # Dispatch directly through REST. This does not require a local
+              # git checkout and always targets the current main branch.
+              before=$(date +%s)
+              echo 'DISPATCH: current main'
+              if ! gh api --method POST \
+                "repos/$REPO/actions/workflows/$workflow_id/dispatches" \
+                -f ref="$BRANCH" >/dev/null; then
+                echo 'FAIL: dispatch request'
+                failed=$((failed + 1))
+                continue
+              fi
+              dispatched=$((dispatched + 1))
+
+              run_id=''
+              for _ in $(seq 1 30); do
+                runs_json=$(gh api "repos/$REPO/actions/workflows/$workflow_id/runs?branch=$BRANCH&event=workflow_dispatch&per_page=10" 2>/dev/null || echo '{"workflow_runs":[]}')
+                run_id=$(printf '%s' "$runs_json" | jq -r --argjson before "$before" '
+                  [.workflow_runs[] | select((.created_at | fromdateiso8601) >= $before)]
+                  | sort_by(.created_at) | last | .id // empty')
+                [ -n "$run_id" ] && break
+                sleep 2
+              done
+
+              if [ -z "$run_id" ]; then
+                echo 'FAIL: dispatched run could not be located'
+                failed=$((failed + 1))
+                continue
+              fi
+
+              if wait_for_run "$run_id" "$workflow_name"; then
+                succeeded=$((succeeded + 1))
+              else
+                echo "FAIL: $workflow_name"
+                failed=$((failed + 1))
+              fi
+              continue
+            fi
+
+            # A push/schedule-only workflow cannot safely be newly invoked by
+            # this controller. Never replay an old historical run.
+            echo 'SKIP: no workflow_dispatch; never replaying historical run'
+            skipped=$((skipped + 1))
+
+          done <<< "$workflows"
+
+          final_sha=$(gh api "repos/$REPO/git/ref/heads/$BRANCH" --jq '.object.sha')
+
+          echo
+          echo '=========================================='
+          echo '                 SUMMARY'
+          echo '=========================================='
+          echo "Workflows found: $total"
+          echo "Dispatched:      $dispatched"
+          echo "Succeeded:       $succeeded"
+          echo "Failed:          $failed"
+          echo "Skipped:         $skipped"
+          echo "Final main SHA:  $final_sha"
+          echo '=========================================='
+
+          if [ "$failed" -gt 0 ]; then
+            exit 1
+          fi
