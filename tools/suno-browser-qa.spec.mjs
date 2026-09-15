@@ -16,6 +16,8 @@ const ROUTES = [
   '/Suno/research/',
   '/Suno/research/v5-to-v6.html',
   '/Suno/research/controlled-experimentation.html',
+  '/Suno/research/v6-experiment-lab.html',
+  '/Suno/research/current-v6-capabilities.html',
   '/Suno/master/',
   '/Suno/audio_fix_v6/'
 ];
@@ -28,6 +30,12 @@ const isLocalSunoHref = href => {
   } catch {
     return false;
   }
+};
+
+const forbiddenPublicHref = href => {
+  if (!href) return false;
+  const normalized = href.toLowerCase();
+  return normalized.includes('/docs/') || normalized.endsWith('.md') || normalized.includes('github.com/') || normalized.includes('raw.githubusercontent.com/');
 };
 
 async function assertHealthyPage(page, route) {
@@ -70,10 +78,35 @@ test.describe('Suno V6 route and browser regression', () => {
   test('all canonical routes render cleanly on mobile', async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
     const page = await context.newPage();
-    for (const route of ['/Suno/', '/Suno/create/', '/Suno/control/', '/Suno/produce/', '/Suno/fix-test/', '/Suno/research/', '/Suno/master/', '/Suno/audio_fix_v6/']) {
+    for (const route of ['/Suno/', '/Suno/create/', '/Suno/control/', '/Suno/produce/', '/Suno/fix-test/', '/Suno/research/', '/Suno/research/v6-experiment-lab.html', '/Suno/research/current-v6-capabilities.html', '/Suno/master/', '/Suno/audio_fix_v6/']) {
       await assertHealthyPage(page, route);
     }
     await context.close();
+  });
+
+  test('public Suno surface has no repository-document rabbit holes', async ({ page }) => {
+    const queue = [...ROUTES];
+    const visited = new Set();
+    const violations = [];
+
+    while (queue.length) {
+      const route = queue.shift();
+      if (visited.has(route)) continue;
+      visited.add(route);
+      const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
+      if (!response || response.status() >= 400) continue;
+      const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
+      for (const href of hrefs) {
+        if (forbiddenPublicHref(href)) violations.push(`${route} -> ${href}`);
+        if (!isLocalSunoHref(href)) continue;
+        const url = new URL(href, BASE_URL);
+        url.hash = '';
+        url.search = '';
+        if (!visited.has(url.pathname)) queue.push(url.pathname);
+      }
+    }
+
+    expect(violations, `public repository-document links: ${violations.join('; ')}`).toEqual([]);
   });
 
   test('crawled internal Suno links resolve', async ({ page, request }) => {
