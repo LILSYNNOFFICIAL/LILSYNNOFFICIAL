@@ -26,7 +26,7 @@ The `/suno/` index will prominently feature two modules near the top of the expe
 
 ### V6 AUDIO FIX
 
-Use the exact user-supplied rescue recipe and do not shorten, paraphrase, normalize, alter, or truncate the Style-box prompt.
+Use the exact rescue recipe and do not shorten, paraphrase, normalize, alter, or truncate the Style-box prompt.
 
 Exact Style-box prompt:
 
@@ -42,17 +42,18 @@ recreate the original audio exactly as sung and performed, identical vocal timbr
 ```
 
 Exact controlled settings:
-- Model: V6 Mini
-- Operation: use the song as Cover
+- **Model: V6 Mini — REQUIRED. Do not use V6, V6 Wild, or another model for this rescue workflow.**
+- Operation / Mode: Cover
 - Sample/source: select the entire song
 - Weirdness: 0%
-- Style Influence: 86%
-- Audio Influence: 86%
+- Style Influence: **85%**
+- Audio Influence: **85%**
+- Max Mode: **ON**
+- Personalize: **OFF**
 - Other options: nothing else enabled
-- Personalize: OFF
 - Vocal gender: select male/female as required
 
-The front-page feature must be clearly labeled **V6 AUDIO FIX**, include the complete prompt and settings, provide a copy-friendly presentation, and link directly to the complete Audio Quality section.
+The front-page feature must be clearly labeled **V6 AUDIO FIX**, include the complete prompt and settings, provide a copy-friendly presentation, and link directly to the complete Audio Quality section. The page must make the exact placement unmistakable: `[SND]` direction in the **Lyrics box**; the long audio-quality prompt in the **Style box**.
 
 Important evidence boundary: `[SND]` is an operational prompting/structure technique, not presented as an officially documented Suno programming command. Descriptive mastering/audio terms are desired-result instructions, not guaranteed technical export specifications.
 
@@ -209,7 +210,7 @@ The implementation is accepted only when all of the following are true:
 2. `/suno/` visibly advertises **NEW SLIDERS** near the front of the experience.
 3. The exact Style-box prompt is present in full and ends with `stable tonal balance and loudness`.
 4. The exact `[SND]` Lyrics-box direction is present in full.
-5. The exact 0% / 86% / 86% settings are preserved.
+5. The exact rescue settings are preserved: **V6 Mini, Cover, entire song from Sample, Weirdness 0%, Style Influence 85%, Audio Influence 85%, Max Mode ON, Personalize OFF, and no other options enabled.**
 6. The complete guide/addenda source corpus is represented as rendered website content.
 7. The website has clear categories, sections, and subsections rather than only source-document pages.
 8. Detailed source material is displayed directly on relevant pages; it is not summarized away or replaced with “see source” links.
