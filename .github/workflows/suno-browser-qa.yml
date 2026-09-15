@@ -1,0 +1,59 @@
+name: Suno Browser QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Suno/**'
+      - 'tools/suno-browser-qa.spec.mjs'
+      - '.github/workflows/suno-browser-qa.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Suno/**'
+      - 'tools/suno-browser-qa.spec.mjs'
+      - '.github/workflows/suno-browser-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: npx --yes playwright@1.63.0 install --with-deps chromium
+      - name: Start static site server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 &
+          echo $! > /tmp/lilsynn-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/Suno/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/lilsynn-http.log
+          exit 1
+      - name: Run Suno browser crawl
+        env:
+          CI: 'true'
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:4173
+        run: npx --yes playwright@1.63.0 test tools/suno-browser-qa.spec.mjs --workers=1 --reporter=line
+      - name: Upload browser artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: suno-browser-qa-artifacts
+          path: |
+            playwright-report/
+            test-results/
+            /tmp/lilsynn-http.log
+          if-no-files-found: ignore
+          retention-days: 14
