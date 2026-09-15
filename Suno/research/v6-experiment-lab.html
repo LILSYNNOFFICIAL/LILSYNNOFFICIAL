@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIL SYNN — V6 Experiment Lab</title>
+<link rel="stylesheet" href="../assets/suno.css">
+<link rel="stylesheet" href="../assets/suno-overrides.css">
+<style>
+.lab{max-width:1180px;margin:0 auto;padding:105px 22px 70px}.lab h1{font-family:Orbitron,sans-serif;font-size:clamp(44px,8vw,84px);line-height:.9;margin:12px 0 18px}.lab h1 span{color:var(--gold-bright)}.lead{max-width:880px;color:var(--muted);font-size:18px;line-height:1.65}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:30px}.card{border:1px solid var(--line);background:rgba(8,8,6,.92);padding:20px}.card h2{margin:0 0 10px;color:var(--gold-bright);font:700 17px/1.2 Orbitron,sans-serif;letter-spacing:.05em}.card p{color:var(--muted);line-height:1.6}.tag{display:inline-block;border:1px solid var(--line);padding:4px 7px;margin:3px 3px 3px 0;font:700 9px Orbitron,sans-serif;letter-spacing:.08em}.protocol{margin-top:28px;border:1px solid var(--line);background:#050504;padding:20px}.protocol h2{font-family:Orbitron,sans-serif;color:#fff}.protocol pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;background:#020202;border:1px solid var(--line2);padding:16px;color:#f2eee2;line-height:1.55}.notice{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(214,173,69,.07);color:var(--muted);line-height:1.6;margin-top:22px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}@media(max-width:700px){.grid{grid-template-columns:1fr}.lab{padding:82px 14px 50px}.lead{font-size:16px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="nav-wrap"><a class="brand" href="../">LIL <span>SYNN</span> / SUNO</a><nav class="main-nav"><a class="nav-link" href="../create/">Create</a><a class="nav-link" href="../control/">Control</a><a class="nav-link" href="../produce/">Produce</a><a class="nav-link" href="../fix-test/">Fix / Test</a><a class="nav-link active" href="./">Research</a><a class="nav-link" href="../master/">00 Master</a></nav><a class="nav-link nav-home" href="../../">MAIN SITE</a></div></header>
+<main class="lab">
+<div class="eyebrow">PHASE 12 / EVIDENCE GENERATION</div>
+<h1>V6 <span>EXPERIMENT LAB</span></h1>
+<p class="lead">A controlled research bench for Suno V6. The goal is not to collect prompt superstition. The goal is to isolate variables, generate multiple samples, record failures, repeat the test and promote only reproducible findings.</p>
+<div class="actions"><a class="button primary" href="../../">BACK TO SUNO GUIDE</a><a class="button" href="../../docs/research/PHASE12-EVIDENCE-LEDGER.md">OPEN EVIDENCE LEDGER</a></div>
+<div class="notice"><strong>Current baseline:</strong> Suno identifies v6 as its flagship model, v6-wild as the more experimental branch, and v6-mini as the faster v6 option. These are documented product facts; the experiments below test behavior beyond those official descriptions. Official documentation must outrank community claims and one-off results.</div>
+<section class="grid">
+<article class="card"><h2>01 — STYLE HIERARCHY</h2><p>Compare a short genre/mood control against Identity → Groove → Instrument Roles → Vocal Performance → Arrangement Arc → Mix Relationships → Exclude.</p><span class="tag">CONTROLLED</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>02 — LYRICS VS STYLE</h2><p>Hold Style constant while adding local register, breath, intensity, whisper, spoken and sustain cues to selected lyric sections.</p><span class="tag">VOCALS</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>03 — STRUCTURE TAG SWEEP</h2><p>Compare [Chorus], [Chorus — huge, emotional], and a detailed arrangement/performance cue without changing the song.</p><span class="tag">TAGS</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>04 — SYMBOL PAYLOAD</h2><p>No-symbol control versus repeated symbols, Unicode clusters, punctuation runs, and placement changes. Never assign a fixed meaning from one output.</p><span class="tag">EXPERIMENTAL</span><span class="tag">E → C</span></article>
+<article class="card"><h2>05 — GIBBERISH PROBE</h2><p>Test strings such as glitch_matrix.exe and umbrella_milkshake2.dll against length-matched ordinary and nonsense phrases.</p><span class="tag">EXPERIMENTAL</span><span class="tag">TARGET E</span></article>
+<article class="card"><h2>06 — MODEL TRIAD</h2><p>Use the same creative brief on V6, V6-WILD and V6-MINI. Score adherence, vocals, arrangement, dynamics, clarity, novelty and failures.</p><span class="tag">V6</span><span class="tag">V6-WILD</span><span class="tag">V6-MINI</span></article>
+<article class="card"><h2>07 — AUDIO REFERENCE</h2><p>Compare text-only creation against the same text plus a reference. Score timing, articulation, timbral relationships, arrangement feel and performance texture.</p><span class="tag">REFERENCE</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>08 — LOCAL REPAIR</h2><p>When one section fails, compare full regeneration against Edit/Replace-style local repair and measure what useful material survives.</p><span class="tag">EDIT</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>09 — REMASTER BOUNDARY</h2><p>Test dullness, masking, reverb, low-end weakness and unwanted arrangement changes to identify what Remaster can and cannot reliably rescue.</p><span class="tag">AUDIO</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>10 — CHORUS REPEATABILITY</h2><p>Hold Style fixed while changing one lyric-geometry variable: syllable density, line length, punctuation, wording, breaks or cue.</p><span class="tag">LYRICS</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>11 — PROMPT DENSITY</h2><p>Compare identity-only, identity+instrumentation, identity+performance+arrangement, and full producer brief. Find the point where detail stops helping.</p><span class="tag">PROMPTING</span><span class="tag">TARGET C</span></article>
+<article class="card"><h2>12 — CONTRADICTION</h2><p>Introduce one deliberate conflict such as dry vocal + cavernous reverb. Repeat across songs and models before inferring hierarchy.</p><span class="tag">FAILURE MODE</span><span class="tag">D → C</span></article>
+</section>
+<section class="protocol"><h2>REQUIRED EXPERIMENT RECORD</h2><pre>EXPERIMENT ID:
+DATE / TIME:
+SONG / PROJECT ID:
+MODEL AS SHOWN BY SUNO:
+MODEL BRANCH: V6 / V6-WILD / V6-MINI
+WEIRDNESS:
+VARIETY:
+STYLE INFLUENCE:
+AUDIO INFLUENCE:
+MAX MODE:
+PERSONALIZE:
+DURATION:
+VOCAL GENDER:
+
+STYLE:
+LYRICS:
+EXCLUDE:
+STRUCTURE CUES:
+REFERENCE:
+
+VARIABLE CHANGED:
+CONTROL CONDITION:
+TEST CONDITION:
+GENERATION COUNT:
+OBSERVATIONS:
+FAILURES + TIMESTAMPS:
+WHAT IMPROVED:
+WHAT GOT WORSE:
+REPEAT #1:
+REPEAT #2:
+REPEAT #3:
+CROSS-SONG REPLICATION:
+CROSS-MODEL REPLICATION:
+RESULT: UNTESTED / E / D / C
+CONFIDENCE: LOW / MEDIUM / HIGH
+CONCLUSION:
+COMPETING EXPLANATIONS:
+NEXT TEST:</pre></section>
+<section class="protocol"><h2>FAILURE CORPUS</h2><p>Log failures as first-class evidence: buried/distant vocal, unexpected register, timbre drift, chorus inconsistency, unwanted doubles/choir, instrument disappearance, unexpected instrumentation, genre drift, stuttering/repeated fragments, late-song degradation, volume drift, excessive reverb, harshness/hiss, low-end buildup, clipping/artifacts, phase/stereo instability, premature ending, vocal continuation past the musical ending, and ignored section direction.</p></section>
+<section class="protocol"><h2>RESEARCH RULE</h2><p>A better-sounding generation is not automatically proof of causation. A worse generation is not proof that a technique never works. A finding becomes strong evidence only when the variable is isolated, multiple generations agree, the effect survives repetition, conditions are preserved, and plausible competing explanations have been tested.</p></section>
+</main>
+</body>
+</html>
