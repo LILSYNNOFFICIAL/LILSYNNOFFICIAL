@@ -13,16 +13,16 @@
 
 | Surface | Status |
 |---|---|
-| Main | 🔴 **FAIL** |
+| Main | 🟢 **PASS** |
 | Command | 🔴 **FAIL** |
 | Admin | 🔴 **FAIL** |
 | Suno | 🟢 **PASS** |
 
-**Last tested commit:** `8509729`  
-**Last checked:** 2026-09-15 21:55 UTC  
-**Workflow run:** `35028137711`
+**Tested commit:** `d1e97f2`  
+**Checked:** 2026-09-15 23:11 UTC  
+**Workflow run:** `35034468493`
 
-> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run. This block is intentionally preserved when the README is manually rewritten; the next qualifying Main Surface QA run owns the next status update.
+> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
 
 <!-- MAIN-SURFACE-QA:END -->
 
