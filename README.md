@@ -14,6 +14,26 @@
 
 ---
 
+<!-- MAIN-SURFACE-QA:START -->
+## 🩺 MAIN SURFACE QA
+
+**🔴 QA: FAIL**
+
+| Surface | Status |
+|---|---|
+| Main | 🔴 **FAIL** |
+| Command | 🔴 **FAIL** |
+| Admin | 🔴 **FAIL** |
+| Suno | 🟢 **PASS** |
+
+**Tested commit:** `8509729`  
+**Checked:** 2026-09-15 21:55 UTC  
+**Workflow run:** `35028137711`
+
+> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
+
+<!-- MAIN-SURFACE-QA:END -->
+
 ## ◈ Executive Summary
 
 This repository is the production source of truth for the official LIL SYNN website at **lilsynn.com**. It is a browser-native artist platform built from static HTML, centralized CSS, deterministic JavaScript modules, canonical JSON data, media assets, API endpoints, and GitHub automation.
