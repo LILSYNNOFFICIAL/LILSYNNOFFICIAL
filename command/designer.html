@@ -49,7 +49,7 @@
 (() => {
   const dims={desktop:[1440,900],tablet:[900,900],mobile:[390,844]};
   function align(){const ov=document.querySelector('#overlay'),sel=document.querySelector('#viewportSelect'),zoom=document.querySelector('#zoom');if(!ov||!sel||!zoom)return;const d=dims[sel.value]||dims.desktop,z=Number(zoom.value)/100;ov.style.width=d[0]+'px';ov.style.height=d[1]+'px';ov.style.transform=`scale(${z})`;ov.style.transformOrigin='top left'}
-  document.addEventListener('DOMContentLoaded',align);document.querySelector('#zoom')?.addEventListener('input',align);document.querySelector('#viewportSelect')?.addEventListener('change',align);window.addEventListener('resize',align);setTimeout(align,250);
+  document.addEventListener('DOMContentLoaded',align);document.querySelector('#zoom')?.addEventListener('input',align);document.querySelector('#viewportSelect')?.addEventListener('change',()=>setTimeout(()=>{align();const f=document.querySelector('#pageFrame');if(f&&f.src)f.src=f.src},0));window.addEventListener('resize',align);setTimeout(align,250);
 })();
 </script>
 </body>
