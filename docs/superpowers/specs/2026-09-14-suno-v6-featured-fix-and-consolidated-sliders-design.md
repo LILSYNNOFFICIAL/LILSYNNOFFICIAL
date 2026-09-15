@@ -26,7 +26,7 @@ The `/suno/` index will prominently feature two modules near the top of the expe
 
 ### V6 AUDIO FIX
 
-Use the exact rescue recipe and do not shorten, paraphrase, normalize, alter, or truncate the Style-box prompt.
+Use the exact user-supplied rescue recipe and do not shorten, paraphrase, normalize, alter, or truncate the Style-box prompt.
 
 Exact Style-box prompt:
 
@@ -42,18 +42,20 @@ recreate the original audio exactly as sung and performed, identical vocal timbr
 ```
 
 Exact controlled settings:
-- **Model: V6 Mini — REQUIRED. Do not use V6, V6 Wild, or another model for this rescue workflow.**
-- Operation / Mode: Cover
-- Sample/source: select the entire song
-- Weirdness: 0%
-- Style Influence: **85%**
-- Audio Influence: **85%**
-- Max Mode: **ON**
-- Personalize: **OFF**
-- Other options: nothing else enabled
-- Vocal gender: select male/female as required
+- **MODEL: V6 Mini — REQUIRED. Do not use the other models for this workflow.**
+- **MODE: Sample — REQUIRED.**
+- Select the **entire song** as the Sample/source.
+- **WEIRDNESS: 0%.**
+- **STYLE INFLUENCE: 85%.**
+- **AUDIO INFLUENCE: 85%.**
+- **MAX MODE: ON.**
+- **PERSONALIZE: OFF.**
+- **ALL OTHER OPTIONS: OFF / DISABLED.**
+- **VOCAL GENDER:** select male/female as required.
 
-The front-page feature must be clearly labeled **V6 AUDIO FIX**, include the complete prompt and settings, provide a copy-friendly presentation, and link directly to the complete Audio Quality section. The page must make the exact placement unmistakable: `[SND]` direction in the **Lyrics box**; the long audio-quality prompt in the **Style box**.
+The workflow must clearly distinguish **Mode = Sample** from the selected **entire song Sample/source** so users do not confuse the two. Do not describe this workflow as Cover mode.
+
+The front-page feature must be clearly labeled **V6 AUDIO FIX**, include the complete prompt and settings, provide a copy-friendly presentation, and link directly to the complete Audio Quality section.
 
 Important evidence boundary: `[SND]` is an operational prompting/structure technique, not presented as an officially documented Suno programming command. Descriptive mastering/audio terms are desired-result instructions, not guaranteed technical export specifications.
 
@@ -182,7 +184,7 @@ Known evidence labels remain meaningful:
 
 Search must operate across the rendered topic corpus as well as the Source Library.
 
-Search results should identify the relevant category/section so users can jump directly to the actual content. Queries such as `audio influence`, `weirdness`, `style influence`, `SND`, `cover`, `studio`, or `remaster` should lead to useful canonical sections rather than forcing users to open multiple overlapping source documents.
+Search results should identify the relevant category/section so users can jump directly to the actual content. Queries such as `audio influence`, `weirdness`, `style influence`, `SND`, `sample`, `studio`, or `remaster` should lead to useful canonical sections rather than forcing users to open multiple overlapping source documents.
 
 Primary navigation should expose the category hierarchy clearly, with section-level navigation where appropriate.
 
@@ -210,7 +212,7 @@ The implementation is accepted only when all of the following are true:
 2. `/suno/` visibly advertises **NEW SLIDERS** near the front of the experience.
 3. The exact Style-box prompt is present in full and ends with `stable tonal balance and loudness`.
 4. The exact `[SND]` Lyrics-box direction is present in full.
-5. The exact rescue settings are preserved: **V6 Mini, Cover, entire song from Sample, Weirdness 0%, Style Influence 85%, Audio Influence 85%, Max Mode ON, Personalize OFF, and no other options enabled.**
+5. The exact rescue settings are **V6 Mini + Sample mode + entire song selected as Sample + Weirdness 0% + Style Influence 85% + Audio Influence 85% + Max Mode ON + Personalize OFF + all other options OFF**.
 6. The complete guide/addenda source corpus is represented as rendered website content.
 7. The website has clear categories, sections, and subsections rather than only source-document pages.
 8. Detailed source material is displayed directly on relevant pages; it is not summarized away or replaced with “see source” links.
