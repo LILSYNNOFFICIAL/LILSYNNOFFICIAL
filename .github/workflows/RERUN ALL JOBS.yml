@@ -1,0 +1,110 @@
+name: RERUN ALL JOBS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  rerun-all-workflows:
+    name: Rerun every workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Find and rerun latest run of every workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_WORKFLOW: RERUN ALL JOBS
+        shell: bash
+        run: |
+          set +e
+
+          echo "=========================================="
+          echo "        RERUN ALL JOBS"
+          echo "=========================================="
+          echo
+          echo "Repository: $REPO"
+          echo
+
+          workflows=$(gh api \
+            --paginate \
+            "repos/$REPO/actions/workflows?per_page=100" \
+            --jq '.workflows[] | [.id, .name, .path, .state] | @tsv')
+
+          if [ -z "$workflows" ]; then
+            echo "No workflows were found."
+            exit 0
+          fi
+
+          total=0
+          attempted=0
+          successful=0
+          failed=0
+          skipped=0
+
+          while IFS=$'\t' read -r workflow_id workflow_name workflow_path workflow_state; do
+            [ -z "$workflow_id" ] && continue
+
+            total=$((total + 1))
+
+            echo "------------------------------------------"
+            echo "Workflow: $workflow_name"
+            echo "ID:       $workflow_id"
+            echo "Path:     $workflow_path"
+            echo "State:    $workflow_state"
+
+            if [ "$workflow_name" = "$CURRENT_WORKFLOW" ]; then
+              echo "SKIPPED: controller workflow"
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            if [ "$workflow_state" = "disabled_inactivity" ] ||
+               [ "$workflow_state" = "disabled_manually" ]; then
+              echo "SKIPPED: workflow is disabled"
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            run_id=$(gh api \
+              "repos/$REPO/actions/workflows/$workflow_id/runs?per_page=1" \
+              --jq '.workflow_runs[0].id' 2>/dev/null)
+
+            if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+              echo "SKIPPED: no previous run exists"
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            echo "Latest run: $run_id"
+
+            attempted=$((attempted + 1))
+
+            if gh api \
+              --method POST \
+              "repos/$REPO/actions/runs/$run_id/rerun" \
+              >/dev/null 2>&1; then
+              echo "SUCCESS: rerun requested"
+              successful=$((successful + 1))
+            else
+              echo "FAILED: could not request rerun"
+              failed=$((failed + 1))
+            fi
+
+          done <<< "$workflows"
+
+          echo
+          echo "=========================================="
+          echo "             SUMMARY"
+          echo "=========================================="
+          echo "Workflows found:       $total"
+          echo "Reruns attempted:      $attempted"
+          echo "Reruns requested:      $successful"
+          echo "Reruns failed:         $failed"
+          echo "Workflows skipped:     $skipped"
+          echo "=========================================="
+
+          exit 0
