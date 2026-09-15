@@ -104,7 +104,6 @@ jobs:
         uses: actions/deploy-pages@v4
 
   readme-link:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
