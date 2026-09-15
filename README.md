@@ -1,16 +1,8 @@
-# 🌐 [OPEN THE GITHUB PAGES PREVIEW →](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
+# 🌐 LIL SYNN OFFICIAL
 
-<div align="center">
+**The official digital home of LIL SYNN — music, releases, visuals, the LIL SYNN Universe, video, special access, and the complete Suno V6 creator knowledge base.**
 
-# ✦ LIL SYNN
-
-### THE OFFICIAL DIGITAL HOME OF LIL SYNN
-
-**A cinematic, browser-native artist platform engineered as one unified digital experience.**
-
-`MUSIC` · `RELEASES` · `ARCHIVE` · `VISUALS` · `UNIVERSE` · `VIDEOS` · `ABOUT` · `SPECIAL ACCESS`
-
-</div>
+[Open the GitHub Pages preview →](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
 
 ---
 
@@ -26,17 +18,100 @@
 | Admin | 🔴 **FAIL** |
 | Suno | 🟢 **PASS** |
 
-**Tested commit:** `8509729`  
-**Checked:** 2026-09-15 21:55 UTC  
+**Last tested commit:** `8509729`  
+**Last checked:** 2026-09-15 21:55 UTC  
 **Workflow run:** `35028137711`
 
-> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
+> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run. This block is intentionally preserved when the README is manually rewritten; the next qualifying Main Surface QA run owns the next status update.
 
 <!-- MAIN-SURFACE-QA:END -->
 
-## ◈ Executive Summary
+> **Current source-of-truth note:** `main` is the production source tree. The current root homepage is `index.html`, which is the former `index2.html` design. The previous homepage is preserved as `index3.html`. `index2.html` is no longer present.
 
-This repository is the production source of truth for the official LIL SYNN website at **lilsynn.com**. It is a browser-native artist platform built from static HTML, centralized CSS, deterministic JavaScript modules, canonical JSON data, media assets, API endpoints, and GitHub automation.
+---
+
+# 📌 What This Repository Is
+
+This repository is the source of truth for the LIL SYNN website and its supporting creator knowledge systems.
+
+It contains:
+
+- The public LIL SYNN artist website
+- The current production homepage
+- Releases and Archive systems
+- Visual Gallery and LIL SYNN Universe systems
+- Signal/transmission behavior
+- THE CALM ambient layer
+- Shared global navigation and shell
+- Command and Admin surfaces
+- Vercel routing and deployment configuration
+- Automated repository and browser QA
+- The `/Suno/` Suno V6 knowledge base
+- Suno creation, control, production, repair/testing, research, and master-reference material
+- Media, artwork, structured data, JSON catalogs, scripts, and supporting tools
+
+The project is intentionally browser-native and primarily static: HTML + CSS + JavaScript + canonical JSON + media, with GitHub Actions providing automated structural/browser verification and Vercel providing deployment.
+
+---
+
+# 🧭 Current Production State
+
+## Homepage
+
+```text
+/              → index.html
+/index.html    → current NEW homepage design
+/index3.html   → preserved previous homepage design
+/index2.html   → removed
+```
+
+The new design formerly stored as `index2.html` has been promoted to the production root. Do not describe `index2.html` as an existing production file; it is not.
+
+The current homepage includes the established LIL SYNN identity, cinematic hero treatment, background media, navigation, Buttondown signup, PRE-SAVE destination, VOTE 4 LIL SYNN, coming-soon messaging, and mobile-responsive behavior.
+
+Primary homepage media includes:
+
+```text
+/assets/mov/HERO_BG_WEBM.webm
+/assets/mov/LS_BG_STARS.webm
+```
+
+---
+
+# 🏗️ Main Site Architecture
+
+```text
+CANONICAL DATA
+├── release-catalog.json
+├── latest-videos.json
+└── transmissions.json
+        │
+        ▼
+GLOBAL SHELL / BEHAVIOR
+├── site-global.js
+├── site-global.css
+├── script.js
+├── music-random.js
+├── latest-releases.js
+├── latest-videos.js
+└── signal-engine.js
+        │
+        ▼
+EXPERIENCES
+├── Releases
+├── Archive
+├── Release Detail
+├── Gallery
+├── Universe
+├── Videos
+├── Special Access
+├── Command
+└── Admin
+        │
+        ▼
+PRESENTATION
+└── HTML + CSS + JavaScript + media assets
+```
 
 ### Architectural doctrine
 
@@ -46,44 +121,11 @@ Do not create a second system when an existing canonical system already owns the
 
 ---
 
-# 🧬 System Architecture
-
-```text
-DATA
-  release-catalog.json
-  latest-videos.json
-  transmissions.json
-       ↓
-GLOBAL / BEHAVIOR
-  site-global.js
-  site-global.css
-  script.js
-  music-random.js
-  latest-releases.js
-  latest-videos.js
-  signal-engine.js
-       ↓
-EXPERIENCES
-  releases.html
-  archive.html
-  release.html
-  gallery.html
-  universe.html
-  special_access.html
-       ↓
-PRESENTATION
-  HTML + CSS + media assets
-```
-
-`release-catalog.json` is the canonical release identity and ordering layer. Feature pages consume canonical data instead of maintaining competing release lists.
-
----
-
 # 👑 Global Shell
 
-`site-global.js` owns the shared shell and shared behavior.
+`site-global.js` owns shared site behavior wherever the global shell is used.
 
-It provides:
+It provides or coordinates:
 
 - Universal header
 - Universal footer
@@ -91,7 +133,7 @@ It provides:
 - THE CALM control
 - Back To Top
 - About controls
-- Escape and keyboard behavior
+- Escape/keyboard behavior
 - Body scroll locking
 - Global `LS.png` top artwork
 - Skip navigation
@@ -99,24 +141,20 @@ It provides:
 - Signal loading
 - Latest Releases loading
 - Random music discovery
-- Global easter-egg behavior
+- Shared easter-egg behavior
 
 ### Header contract
 
 - Desktop header: `150px`
 - Mobile header: `118px`
-- `LS_LOGO.png` is independently centered
+- `LS_LOGO.png` remains independently centered
 - Header begins at viewport top (`top: 0`)
 - THE CALM remains lower-left
 - Menu remains right-aligned
 - `LS.png` begins at the exact bottom boundary of the header
 - `LS_HEADPHONES.png` remains footer-only and links to Special Access
-- Releases, Archive, Visuals, and Universe are available through the hamburger menu
-- No duplicate page-specific global header is required
-
-### Current maintenance focus
-
-The five-phase architecture is established. Current work is maintenance and refinement of the production shell, content, media, responsive behavior, cache consistency, and real runtime verification.
+- Releases, Archive, Visuals, and Universe remain available through navigation
+- Page-specific duplicate global headers are not the preferred architecture
 
 ### Easter eggs
 
@@ -132,38 +170,20 @@ The five-phase architecture is established. Current work is maintenance and refi
 - Release order
 - Release identity
 - Release type
-- Album and EP track sets
+- Album/EP track sets
 - Track identity
 - Spotify destinations
 - Apple Music destinations
 - SoundCloud destinations
 - Platform availability restrictions
 
-The homepage Latest Releases section derives its three cards from the first three canonical catalog entries. It must never become a manually maintained duplicate release list.
+Latest Releases must derive from canonical catalog data rather than maintaining a competing hand-written release list.
 
-Track URLs resolve to their canonical parent release when applicable.
-
----
-
-# 🚀 Project Status
-
-The original five planned build phases are complete at the architecture level:
-
-```text
-PHASE 1  FOUNDATION                         ✓
-PHASE 2  MUSIC DISCOVERY + CONVERSION      ✓
-PHASE 3  LIL SYNN UNIVERSE                 ✓
-PHASE 4  VISUAL GALLERY                    ✓
-PHASE 5  ABSOLUTE POLISH + INTEGRITY       ✓ BASELINE
-```
-
-There is intentionally no numbered Phase 6. Future work is maintenance, correction, content updates, media updates, refinement, optimization, and optional evolution of existing systems.
+Track URLs should resolve to their canonical parent release where applicable.
 
 ---
 
 # 📚 Releases vs Archive
-
-**Releases = presentation. Archive = exploration.**
 
 ### Releases
 
@@ -171,7 +191,7 @@ There is intentionally no numbered Phase 6. Future work is maintenance, correcti
 /releases.html
 ```
 
-Curated visual release presentation with canonical ordering, artwork, release type, track context, filtering, and direct release experiences.
+Curated presentation of releases, artwork, release type, track context, filtering, and direct release experiences.
 
 ### Archive
 
@@ -179,15 +199,17 @@ Curated visual release presentation with canonical ordering, artwork, release ty
 /archive.html
 ```
 
-Utility discovery layer with release search, track search, release-type filters, platform filters, catalog sorting, A-Z/Z-A sorting, release-set artwork, parent-release context, and shareable query state.
+Discovery-oriented catalog layer with release search, track search, release-type filters, platform filters, sorting, A-Z/Z-A sorting, release-set artwork, parent-release context, and shareable query state.
+
+**Rule:** Releases are presentation. Archive is exploration.
 
 ---
 
 # 🖼️ Visual System
 
-Existing production assets should be reused before creating replacements.
+Reuse existing production assets before creating replacements.
 
-Known existing assets include:
+Known core assets include:
 
 ```text
 /assets/images/icons/LS_LOGO.png
@@ -200,15 +222,17 @@ Known existing assets include:
 /assets/other/sound/Background.mp3
 ```
 
-Existing release artwork already covers the established catalog, including current catalog entries such as `Never Known`, `HOME (ACOUSTIC VERSION)`, `I DID IT AGAIN`, `Rescue You`, `Somewhere In-Between`, `Black Glass`, `Hello Goodbye`, and the established artwork library.
+The repository already contains established release artwork and LIL SYNN visual assets. Audit the repository before requesting or generating a replacement.
 
-**Do not ask the user to recreate or re-upload an asset that already exists in the repository.** Audit the repository first.
+**Do not ask the owner to recreate or re-upload an asset that already exists in the repository.**
 
 ---
 
-# 📡 Transmission / Signal System
+# 📡 Signal / Transmission / Universe
 
-`transmissions.json` is the canonical Signal source for homepage Signal behavior, Universe history, Archive discovery, Oracle behavior, and easter-egg events.
+`transmissions.json` is the canonical source for Signal-related transmission history and Universe narrative data.
+
+It supports the site's Signal/easter-egg layer, Universe history, transmission discovery, and related Oracle behavior.
 
 Transmission copy must not claim that something is the latest release unless the canonical release catalog establishes that ordering.
 
@@ -216,15 +240,15 @@ Transmission copy must not claim that something is the latest release unless the
 
 # 🎧 Music Discovery
 
-The site intentionally does not use the previously proposed persistent personal/native music player.
+The site does not use the previously proposed persistent personal/native music player architecture.
 
-The music journey is:
+The intended journey is:
 
 ```text
 DISCOVER → ENGAGE → OFFICIAL PLATFORM → STREAM / WATCH
 ```
 
-Primary discovery surfaces:
+Primary discovery surfaces include:
 
 - Latest Releases
 - Randomize
@@ -236,7 +260,7 @@ Primary discovery surfaces:
 - SoundCloud
 - YouTube
 
-THE CALM remains a separate ambient/environment layer.
+THE CALM is intentionally separate from foreground music discovery.
 
 ---
 
@@ -260,13 +284,13 @@ Overlay
 Global Shell / Page Content
 ```
 
-Reduced-motion and low-power behavior reduce visual intensity instead of creating duplicate rendering systems.
+Reduced-motion and low-power behavior should reduce visual intensity instead of creating duplicate rendering systems.
 
 ---
 
 # 🌙 THE CALM
 
-THE CALM is globally owned by the shell and remains separate from foreground music discovery.
+THE CALM is a globally owned ambient/environment layer and remains separate from foreground music discovery.
 
 Primary source:
 
@@ -274,16 +298,16 @@ Primary source:
 /assets/other/sound/Background.mp3
 ```
 
-Foreground video playback can pause or mute THE CALM to prevent competing audio ownership.
+Foreground playback may pause or mute THE CALM to avoid competing audio ownership.
 
 ---
 
-# 🧠 DOM Ownership
+# 🧠 DOM / Ownership Rules
 
 ```text
 HTML PAGE
    ↓
-site-global.js
+GLOBAL SHELL
    ├── header
    ├── navigation
    ├── footer
@@ -293,7 +317,7 @@ site-global.js
    ├── random discovery
    └── shared behavior
           ↓
-     feature modules
+     FEATURE MODULES
        ├── Music
        ├── Videos
        ├── Signal
@@ -305,11 +329,15 @@ site-global.js
        └── Special Access
 ```
 
-When a duplicate appears, identify the canonical owner before adding another patch layer.
+When a duplicate or regression appears, identify the canonical owner before adding another patch layer.
 
 ---
 
-# 🩺 Site Doctor
+# 🩺 Automated QA
+
+The repository has multiple QA layers. They are intentionally different.
+
+## Site Doctor
 
 ```text
 .github/workflows/site-doctor.yml
@@ -319,47 +347,731 @@ Node 22
 node tools/site-doctor.mjs
 ```
 
-Site Doctor validates repository structure, standalone JavaScript, inline HTML JavaScript, CSS variables, required assets, release catalog integrity, transmission JSON, discovery modules, and duplicate shell/metadata conditions.
+Site Doctor validates repository structure and source integrity, including JavaScript, HTML inline JavaScript, CSS variables, required assets, release-catalog integrity, transmission JSON, discovery modules, and duplicate shell/metadata conditions.
 
-Site Doctor is repository QA. It does not pretend to replace real browser verification.
+Site Doctor is repository QA. It does **not** pretend to be real browser verification.
+
+## Main Surface QA
+
+```text
+.github/workflows/main-surface-qa.yml
+          ↓
+node tools/main-surface-qa.mjs
+```
+
+The Main Surface QA system checks four major surfaces:
+
+```text
+MAIN     🟢 / 🔴
+COMMAND  🟢 / 🔴
+ADMIN    🟢 / 🔴
+SUNO     🟢 / 🔴
+```
+
+It checks:
+
+- Site Doctor
+- Required source files
+- Important `vercel.json` routing contracts
+- HTTP failures
+- Empty/broken pages
+- Browser console errors
+- Browser page errors
+- Failed same-origin requests
+- Command source existence
+- Admin source existence
+- Suno source existence
+- Core Suno routes
+
+The detailed logs and Playwright results are uploaded as workflow artifacts when the Action runs.
+
+---
+
+# 🔒 Main Surface QA — Anti-Recursion Contract
+
+**This is an intentional architecture. Do not weaken or replace it with a commit-message loophole.**
+
+The workflow trigger is:
+
+```yaml
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+```
+
+Therefore:
+
+```text
+README-only user edit
+        ↓
+       NO QA
+
+QA edits README only
+        ↓
+       NO QA
+
+Code + README edit
+        ↓
+       QA
+
+Code-only edit
+        ↓
+       QA
+```
+
+The Action writes its QA result back to `README.md`, but that README-only commit is excluded from the same push workflow.
+
+### Why this matters
+
+The recursion protection is based on **changed paths**, not a fragile commit-message convention.
+
+Do not remove:
+
+```yaml
+paths-ignore:
+  - 'README.md'
+```
+
+unless the entire recursion design is deliberately redesigned and re-verified.
+
+---
+
+# ☀️ `/Suno` — Complete Suno V6 Knowledge Base
+
+`/Suno/` is a full browser-native knowledge base for Suno music creation and production. It is not merely a pasted README or badge wall. It is organized as a working creator reference with dedicated topic pages, research material, production guidance, testing methodology, and a complete master reference.
+
+**Live entry point:**
+
+```text
+/Suno/
+```
+
+**Legacy aliases:**
+
+```text
+/Suno
+/Suno/Suno_Guide
+/Suno/Suno_Guide/
+```
+
+These aliases are routed to `/Suno/` by `vercel.json`.
+
+The `/Suno/` entry page identifies the knowledge base as:
+
+```text
+THE COMPLETE CURRENT GUIDE
+SUNO V6 GUIDE
+```
+
+and organizes the system into Create, Control, Produce, Fix/Test, Research, 00 Master, and the dedicated Fix Audio Quality module.
+
+---
+
+# 🎛️ Suno Guide Architecture
+
+```text
+/Suno/
+├── create/          → CREATE
+├── control/         → CONTROL
+├── produce/         → PRODUCE
+├── fix-test/        → FIX / TEST
+├── research/        → RESEARCH
+├── master/          → 00 MASTER REFERENCE
+├── audio_fix_v6/    → PRIORITY AUDIO QUALITY MODULE
+├── content/         → canonical guide content
+├── assets/          → Suno-specific presentation assets/scripts
+└── index.html       → guide entry point
+```
+
+### Six major knowledge areas
+
+**01 / CREATE** — Build the song correctly from the beginning.
+
+**02 / CONTROL** — Shape an existing generation without unnecessarily throwing away good information.
+
+**03 / PRODUCE** — Move from generation into production, mixing, automation, editing, workspaces, and export.
+
+**04 / FIX / TEST** — Diagnose failures, test variables, repair surgically, and document evidence.
+
+**05 / RESEARCH** — Rights, ecosystem, official resources, audits, expansions, experiments, and the evidence boundary.
+
+**00 / MASTER REFERENCE** — The complete unbroken reference across the knowledge base.
+
+**PRIORITY / FIX AUDIO QUALITY** — Dedicated audio-quality rescue and diagnosis material.
+
+---
+
+# ✍️ Suno — CREATE
+
+The Create section covers the complete generation pipeline.
+
+Core topics include:
+
+- Current V6 model family
+- V6 fundamentals
+- V6-WILD experimental behavior
+- V6-MINI lighter/faster generation behavior
+- Prompt engineering
+- Lyrics engineering
+- Style-box engineering
+- Creative sliders
+- References and multimodal creation
+- Genre and identity
+- Vocal identity and presentation
+- Tempo and feel
+- Instruments and roles
+- Emotional and energy arcs
+- Mix direction
+- Exclude instructions
+- Section-level control
+- Experimental level
+- Prompt variants
+- LLM-ready prompt rewriting
+
+## Prompt Lab
+
+```text
+/Suno/create/prompt-lab.html
+```
+
+The Prompt Lab provides structured controls for:
+
+- Model selection
+- Genre/identity
+- Vocal definition
+- Tempo/feel
+- Instrument roles
+- Emotional/energy arc
+- Mix direction
+- Exclusions
+- Sections
+- Experimental level
+- Variants
+- Generation/copy workflows
+- LLM-ready rewrite briefs
+
+## Lyrics as a Control Surface
+
+The creation material treats lyrics as more than words. It documents how lyric geometry can influence generation through:
+
+- Structure
+- Phonetics
+- Punctuation
+- Capitalization
+- Whitespace
+- Repetition
+- Performance cues
+- Backing vocals
+- Breaths
+- Chorus architecture
+- Section labels
+- A/B testing
+- Repair versus regeneration
+- Experiment records
+- Evidence rules
+
+The practical principle is to change the smallest control surface that addresses the actual failure instead of destroying a useful generation unnecessarily.
+
+---
+
+# 🎤 Suno — VOCAL ENGINEERING
+
+```text
+/Suno/create/vocal-engineering.html
+```
+
+The vocal-engineering material covers:
+
+- Vocal identity
+- Gender presentation
+- Register and tessitura
+- Chest/head/mix behavior
+- Breathiness
+- Rasp and grit
+- Articulation
+- Vibrato
+- Melisma
+- Sustain
+- Conversational delivery
+- Intimate delivery
+- Aggressive delivery
+- Whispered delivery
+- Spoken delivery
+- Backing-vocal density
+- Harmony density
+- Call-and-response
+- Vocal placement
+- Consistency
+- Late-song drift
+- Ad-lib control
+- Vocal failure taxonomy
+- A/B testing
+
+The goal is to define the desired performance clearly enough to test what changed instead of relying on vague descriptions.
+
+---
+
+# 🎚️ Suno — CONTROL
+
+```text
+/Suno/control/
+```
+
+Control covers ways to work with an existing generation while preserving useful information.
+
+Major areas include:
+
+- Editing
+- Extend
+- Crop
+- Replace
+- Reuse
+- Adjust
+- Song Editor
+- Natural-language editing
+- Remaster
+- Stem separation
+- Studio 2.0
+- MIDI
+
+The control philosophy is surgical: diagnose first, preserve what already works, then make the smallest meaningful intervention.
+
+---
+
+# 🎚️ Suno — PRODUCE
+
+```text
+/Suno/produce/
+```
+
+Produce covers the transition from generation to actual production.
+
+Major areas include:
+
+- Effects
+- Custom plugins
+- Automation
+- Recording
+- Editing
+- Take lanes
+- Library/workspaces
+- Studio export
+- Vocal engineering
+- Mixing considerations
+- Production workflow
+
+The production material distinguishes problems that can be repaired inside the generation/editing environment from problems that belong in conventional post-production.
+
+---
+
+# 🔊 Suno — AUDIO QUALITY / FIX-TEST
+
+```text
+/Suno/audio_fix_v6/
+/Suno/fix-test/
+/Suno/produce/audio-engineering.html
+```
+
+The audio-quality material is a dedicated diagnostic system rather than a generic “make it sound better” checklist.
+
+It covers:
+
+- Low-end problems
+- Mud
+- Midrange congestion
+- Hiss
+- Harshness
+- Dynamics
+- Compression
+- Vocal masking
+- Reverb/depth
+- Stereo width
+- Mono compatibility
+- Phase issues
+- Transients
+- Artifacts
+- Timestamped diagnosis
+- Reference audio
+- Edit / Replace / Remaster decisions
+- Stems
+- Arrangement density
+- Loudness versus quality
+- Post-production boundaries
+
+### Audio rescue decision model
+
+```text
+HEAR THE FAILURE
+      ↓
+DESCRIBE THE FAILURE
+      ↓
+IDENTIFY THE CONTROL SURFACE
+      ↓
+CHANGE THE SMALLEST VARIABLE
+      ↓
+TEST AGAIN
+      ↓
+KEEP / REJECT WITH EVIDENCE
+```
+
+A louder result is not automatically a better result. A cleaner result is not automatically a better musical result. Diagnosis and evidence come before broad destructive changes.
+
+---
+
+# 🔬 Suno — RESEARCH
+
+```text
+/Suno/research/
+```
+
+Research is the evidence and methodology layer of the knowledge base.
+
+It covers:
+
+- Rights
+- Credits
+- Downloads
+- Current Suno ecosystem
+- Mobile/web ecosystem
+- Master workflow
+- Official resources
+- Current documentation audits
+- Deep-dive addenda
+- Coverage audits
+- Gap closure
+- Controlled experimentation
+- Accuracy boundaries
+
+## V5 → V6 Translation
+
+```text
+/Suno/research/v5-to-v6/
+```
+
+This material documents how legacy V5/V4.5-era inputs should be interpreted when working with current models, including:
+
+- Legacy input translation
+- Style translation
+- Lyric translation
+- Vocal translation
+- What should not be blindly ported forward
+- Comparison scorecards
+
+Historical behavior is not automatically treated as current behavior.
+
+## Controlled Experimentation
+
+```text
+/Suno/research/controlled-experimentation/
+```
+
+The experimental framework treats prompt engineering as a testable system.
+
+It covers:
+
+- Control versus test
+- Experiment records
+- Sample size
+- Randomization
+- Scoring
+- Variables
+- Model comparisons
+- Slider sweeps
+- Prompt density
+- Minimalism
+- Lyric geometry
+- Structure tags
+- Symbols and gibberish
+- Reference audio
+- Edit versus regenerate
+- Chorus consistency
+- Failure-first testing
+- Confidence
+- Evidence labels
+- Community prompt research
+
+### Evidence hierarchy
+
+```text
+CURRENT OFFICIAL SOURCE
+        ↓
+DIRECT CURRENT OBSERVATION
+        ↓
+REPRODUCIBLE CONTROLLED TEST
+        ↓
+DOCUMENTED COMMUNITY EXPERIENCE
+        ↓
+OLD TUTORIAL / OLD SCREENSHOT
+        ↓
+MEMORY / ASSUMPTION
+```
+
+Lower levels can be useful clues, but they should not silently outrank current official information or reproducible evidence.
+
+---
+
+# 🧪 Suno Experimental Lab
+
+The experimental material explicitly includes symbol/gibberish experiments, structure-tag experiments, prompt-density experiments, conflict testing, whitespace/punctuation/capitalization tests, randomness/variety/weirdness testing, V6/WILD/MINI A/B comparisons, reference-audio tests, edit-versus-regenerate tests, and chorus-consistency tests.
+
+These are documented as experiments rather than guaranteed commands.
+
+A prompt feature should not be described as deterministic merely because it appeared to influence one generation.
+
+Useful experiment records should capture:
+
+```text
+MODEL
+INPUT
+VARIABLE CHANGED
+CONTROL
+TEST
+GENERATION COUNT
+OBSERVATION
+FAILURE MODE
+RESULT
+CONFIDENCE
+EVIDENCE TYPE
+```
+
+---
+
+# 📖 Suno — 00 MASTER GUIDE
+
+```text
+/Suno/master/
+```
+
+The 00 Master Guide is the unbroken reference layer. It exists so the knowledge base can be consumed as one coherent system rather than forcing the reader to reconstruct the methodology from disconnected pages.
+
+It consolidates:
+
+- Creation
+- Prompting
+- Lyrics
+- Style
+- Vocal engineering
+- Control
+- Production
+- Audio quality
+- Research
+- Experiments
+- Failure modes
+- Evidence rules
+- Current-source boundaries
+- Deep-dive additions
+
+The master reference is not a replacement for the dedicated topic pages; it is the complete reference layer across them.
+
+---
+
+# 📦 Suno Canonical Source Map
+
+Important repository areas include:
+
+```text
+Suno/index.html
+Suno/assets/
+Suno/content/
+Suno/create/
+Suno/control/
+Suno/produce/
+Suno/fix-test/
+Suno/research/
+Suno/master/
+Suno/audio_fix_v6/
+Suno/health.html
+```
+
+Known important content/source files include:
+
+```text
+Suno/assets/suno-topic.js
+Suno/content/manifest.json
+Suno/content/master-guide.html
+```
+
+The Suno site is intentionally maintained as a real website with dedicated pages rather than forcing the entire knowledge base into a single GitHub README.
+
+The **root README is now the unified project reference**, while `/Suno/` remains the actual browser-based knowledge base.
+
+---
+
+# 🔗 Suno Routing Contract
+
+`vercel.json` owns the important Suno entry aliases.
+
+```text
+/Suno                  → /Suno/
+/Suno/Suno_Guide       → /Suno/
+/Suno/Suno_Guide/      → /Suno/
+```
+
+The `/Suno/` entry page also normalizes its own browser history so relative assets and links resolve correctly from the canonical trailing-slash route.
+
+The important distinction is:
+
+```text
+/Suno/                 = canonical guide entry
+/Suno/Suno_Guide       = legacy alias
+/Suno/Suno_Guide/      = legacy alias
+```
+
+Do not create a duplicate `Suno_Guide` website to solve a routing problem that already has a canonical target.
+
+---
+
+# 🚦 Suno Browser QA
+
+The dedicated Suno browser QA system exercises the Suno knowledge base with Playwright and Chromium.
+
+Canonical browser surfaces include:
+
+```text
+/Suno/
+/Suno/create/
+/Suno/create/prompt-lab.html
+/Suno/create/vocal-engineering.html
+/Suno/control/
+/Suno/produce/
+/Suno/produce/audio-engineering.html
+/Suno/fix-test/
+/Suno/research/
+/Suno/research/v5-to-v6/
+/Suno/research/controlled-experimentation/
+/Suno/master/
+/Suno/audio_fix_v6/
+```
+
+The QA system checks HTTP success, meaningful page content, console/page errors, request failures, responsive/mobile behavior, horizontal overflow, internal crawling, and public-surface integrity.
+
+Main Surface QA additionally verifies the Suno source/routing contracts so the top-level repository health signal cannot silently ignore the knowledge base.
+
+---
+
+# 🌐 Vercel Routing / Deployment
+
+The deployment topology is:
+
+```text
+GitHub main
+     ↓
+GitHub Actions
+     ↓
+Vercel
+     ↓
+lilsynn.com
+```
+
+Important source/runtime distinction:
+
+```text
+SOURCE ≠ CI ≠ DEPLOYMENT ≠ CACHE ≠ RUNTIME DOM
+```
+
+A source-code change, a failed CI check, a failed deployment, a stale cached asset, and a runtime browser failure are different classes of problem and should be diagnosed separately.
+
+Important `vercel.json` responsibilities include:
+
+- `/command` normalization
+- `/command/admin` rewrites
+- `/Suno` aliases
+- `/suno` routing compatibility
+- Deep-dive Suno redirects
+- Static media rewrites
+- Long-lived immutable asset caching
+- No-store behavior for HTML/JS/CSS and sensitive Admin/API paths
+- Security headers on Admin/API paths
+
+---
+
+# 🧬 Cache & Versioning
+
+Shared shell assets currently use the intentional cache-busting value:
+
+```html
+<script src="/site-global.js?v=20260914"></script>
+<link id="site-global-css" rel="stylesheet" href="/site-global.css?v=20260914">
+```
+
+`20260914` is a cache-busting identifier currently present in source, not a roadmap date.
+
+Any future shared-shell version change must be synchronized across consumers.
+
+---
+
+# 🧰 Maintenance Rules
+
+## 1. Inspect before creating
+
+Before asking for an asset, link, content block, or replacement file, inspect the repository. Existing source is the authority.
+
+## 2. Fix the owner, not the symptom
+
+If shared behavior is wrong, fix the canonical shared module rather than stacking page-specific overrides.
+
+## 3. Preserve working information
+
+Especially in Suno generation/production work: do not regenerate, replace, or rewrite everything when the actual failure is narrower.
+
+## 4. Separate facts from experiments
+
+A tested observation is not automatically a universal rule. A community claim is not automatically official behavior. Experimental prompt behavior should be labeled accordingly.
+
+## 5. Current information outranks stale information
+
+Current official Suno documentation and current product behavior outrank old screenshots, old tutorials, and remembered behavior.
+
+## 6. QA must be real
+
+Repository inspection is useful, but browser verification is different. Production verification is different again. Do not report one as the other.
+
+## 7. Do not weaken anti-recursion protection
+
+README-only changes must remain excluded from Main Surface QA unless the workflow architecture is deliberately redesigned and tested.
 
 ---
 
 # 🧪 Verification Matrix
 
-### Global shell
+### Main site
 
-- Header begins at viewport `0`
-- Logo remains independently centered
-- Header height is correct on desktop and mobile
+- Homepage root resolves to the current promoted design
+- `index.html` is the current homepage
+- `index3.html` preserves the previous homepage
+- `index2.html` is absent
+- Header begins at viewport top
+- Logo remains centered
+- Mobile/desktop header dimensions remain correct
 - THE CALM remains lower-left
-- Menu remains right-aligned
-- `LS.png` begins exactly at the header boundary
+- Menu remains correctly aligned
+- Global top artwork aligns to the header boundary
 - No duplicate global shell
-- Special Access remains in the footer
-- Skip navigation is keyboard-visible
 
 ### Release system
 
 - Canonical catalog order preserved
 - Album/EP track sets preserved
 - Track URLs resolve to parent release sets
-- Selected track is highlighted when applicable
+- Selected track highlighting works
 - Release artwork resolves
 - Streaming destinations remain canonical
-- Latest Releases uses the catalog's top three entries
+- Latest Releases derives from canonical data
 
-### Releases and Archive
+### Releases / Archive
 
+- Search works
 - Filters work
 - Sorting works
-- Search works
 - Artwork resolves
 - Release-set context is correct
-- Direct release navigation works
+- Direct navigation works
 - Shareable query state works
 
-### Visuals and Universe
+### Visuals / Universe
 
 - Fullscreen viewer works
 - Previous/next works
@@ -368,430 +1080,170 @@ Site Doctor is repository QA. It does not pretend to replace real browser verifi
 - Reduced-motion behavior works
 - Universe timeline works
 - Transmission history works
-- Signal/Oracle layer works
-- Release/Archive/Visual pathways work
+- Signal/Oracle behavior works
+
+### Suno
+
+- `/Suno/` entry loads
+- Legacy aliases route correctly
+- Create pages load
+- Control pages load
+- Produce pages load
+- Fix/Test pages load
+- Research pages load
+- Master Guide loads
+- Audio Quality module loads
+- Internal navigation remains coherent
+- Responsive/mobile behavior remains usable
+- No browser console/page errors on tested surfaces
 
 ### Production
 
 - Site Doctor passes
-- Deployment path is understood
-- Production behavior is checked separately from repository QA
-- Cache behavior is checked
-- Shared consumers are checked for regressions
+- Main Surface QA passes
+- Suno Browser QA passes
+- Deployment status is checked separately
+- Cache behavior is checked separately
+- Authenticated Command/Admin behavior is checked once production credentials are available
 
 ---
 
-# 🧬 Cache & Versioning
+# 🧑‍🎤 Owner Action Queue
 
-Shared shell assets currently use the repository's intentional cache-busting value:
+This is the handoff area for things that genuinely require LIL SYNN's input, approval, source material, or creative direction.
 
-```html
-<script src="/site-global.js?v=20260914"></script>
-<link id="site-global-css" rel="stylesheet" href="/site-global.css?v=20260914">
-```
+The assistant should inspect the repository first.
 
-`20260914` is a cache-busting identifier currently present in source. It is not a roadmap date. Any future shared-shell version change must be synchronized across all consumers.
-
----
-
-# 🚀 Deployment Topology
-
-```text
-GitHub main
-     ↓
-GitHub Actions / Site Doctor
-     ↓
-Vercel
-     ↓
-lilsynn.com
-```
-
-Remember:
-
-```text
-SOURCE ≠ CI ≠ DEPLOYMENT ≠ CACHE ≠ RUNTIME DOM
-```
-
-A deployment failure is not automatically a source-code failure.
-
----
-
-# 🧑‍🎤 OWNER ACTION QUEUE
-
-This section is the handoff list for things that require LIL SYNN's input, approval, source material, or creative direction.
-
-**Important:** The assistant must inspect the repository before asking for anything. If the information or asset already exists in GitHub, use it. Do not ask the user to provide it again.
-
-## 1. Content that actually needs owner input
-
-Provide or confirm only when it has changed or is missing from the repository:
+Owner input may be required for:
 
 - New releases not yet represented in `release-catalog.json`
-- New tracks, album/EP tracklists, release dates, release types, or platform destinations
-- New official streaming links when they are not already present
-- New official video links or video metadata not already present
-- New artist bio/about copy when the existing copy is no longer correct
-- New lyrics or lyric-page content when a release needs it
-- New merch information when merch inventory, URLs, or products change
-- New Special Access content when the secret experience needs new material
-- New Universe/transmission story content when you want the narrative expanded
-- Any legal/business copy that has materially changed
+- New tracks, album/EP tracklists, dates, types, or platform destinations
+- New official streaming/video links that are missing
+- Updated artist bio/about copy
+- New lyrics or release-specific lyric content
+- New merch information
+- New Special Access material
+- New Universe/transmission story material
+- Materially changed legal/business copy
+- Credentials required for authenticated production verification
 
-### Do NOT re-send
-
-The repository already contains the core site architecture, shell, navigation, current social/platform wiring, canonical release system, existing release artwork, background video system, THE CALM, Site Doctor, Universe, Archive, Releases, Gallery, and the current global header implementation.
+Do **not** re-send existing repository assets merely because a task mentions them.
 
 ---
 
-# 🖼️ OWNER IMAGE QUEUE
+# 🎨 LIL SYNN Visual Identity
 
-No routine image re-upload is required right now for assets that already exist.
+The established LIL SYNN persona is a mysterious faceless figure.
 
-The following are the **recommended new visual assets to create next** if the corresponding pages need stronger visual presentation. These are additions, not replacements for existing assets.
+Signature appearance:
 
-## Image 1 - Homepage hero / identity artwork
+- Black long-sleeve hoodie with hood fully up
+- Skin-tight black face covering/balaclava with the face and eyes concealed
+- No exposed facial skin or facial features
+- Reflective pink sunglasses
+- Black leather gloves
+- Dark blue jeans
+- Black and silver belt
+- Black combat boots
+- Small gold cross necklace when applicable to the artwork direction
 
-**Purpose:** A primary LIL SYNN visual for the homepage that can sit behind or beside the opening identity/content without replacing `LS.png` or the global logo.
+Visual language commonly uses:
 
-**Recommended generation prompt:**
+- Black
+- Silver/chrome
+- Hot pink
+- Magenta
+- Cosmic/star-field elements
+- Metallic geometry
+- Cinematic darkness
+- Mysterious rather than generic horror styling
 
-```text
-Create a cinematic vertical-to-wide key art image for the music artist LIL SYNN. A faceless hooded male figure stands alone in a dark cosmic environment. His entire face is covered by smooth thin matte-black cloth with absolutely no visible skin, seams, eyes, nose, mouth, or facial features. The only eye area is a pair of reflective pink and purple galaxy aviator sunglasses, reflecting stars and nebulae. Black hooded streetwear, black gloves, dark gothic cosmic styling, hot-pink and magenta accents, black dominant palette, silver and chrome metallic details, subtle spiked circular halo geometry, distant crescent moon, deep star field, atmospheric depth, emotional and mysterious rather than horror, premium album-art photography, realistic human proportions, restrained cinematic lighting, clean negative space for website copy, no text, no logos, no watermark, no raised hand, no weapons, no gore.
-```
-
-## Image 2 - About page portrait
-
-**Purpose:** A dedicated identity image for About instead of reusing the homepage hero everywhere.
-
-**Recommended generation prompt:**
-
-```text
-Create a premium editorial portrait of the LIL SYNN persona. Faceless hooded male figure, entire face and forehead completely covered by a smooth thin matte-black cloth with no seams or openings. Reflective pink and purple galaxy aviator sunglasses are the only visible facial identifier. Black hood fully raised, black streetwear, black gloves, subtle silver and chrome hardware, dark cosmic atmosphere, hot-pink and magenta accents, faint star field and atmospheric haze, intimate mysterious musician portrait, emotionally intense but controlled, realistic photography, strong silhouette, black background, no text, no logo, no watermark, no exposed skin, no visible facial features, no raised hand.
-```
-
-## Image 3 - Universe key art
-
-**Purpose:** Visual anchor for the Universe page and story/transmission system.
-
-**Recommended generation prompt:**
-
-```text
-Create cinematic key art for the LIL SYNN UNIVERSE. A faceless hooded male figure in black stands inside an impossible cosmic transmission chamber. Entire face covered by smooth thin matte-black cloth, no facial features or skin. Reflective pink and purple galaxy aviator sunglasses glow subtly from reflected stars. Around him are a large spiked circular metallic halo, crescent moon shapes, fragmented chrome geometry, distant galaxies, faint transmission interference, and subtle pink-magenta light. The scene should feel like a mysterious music universe rather than science fiction combat. Premium dark editorial photography, gothic cosmic atmosphere, black, hot pink, magenta, silver and chrome, deep shadows, cinematic depth, no text, no logo, no watermark.
-```
-
-## Image 4 - Visual Gallery header artwork
-
-**Purpose:** A wide visual introduction for the Gallery without replacing the actual release artwork catalog.
-
-**Recommended generation prompt:**
-
-```text
-Create a wide cinematic banner for a dark music visual archive called LIL SYNN. Use the established LIL SYNN visual identity: faceless hooded male figure, entire face covered by smooth matte-black cloth, reflective pink and purple galaxy aviator sunglasses, black hooded streetwear, black gloves, hot-pink and magenta accents, black dominant palette, silver/chrome details, cosmic stars, subtle crescent moon and spiked circular halo. Composition should leave generous negative space for a website heading. Premium editorial album photography, atmospheric, mysterious, emotionally heavy, clean and sophisticated, no text, no logos, no watermark.
-```
-
-## Image 5 - Special Access key art
-
-**Purpose:** A mysterious visual for the existing Special Access experience.
-
-**Recommended generation prompt:**
-
-```text
-Create an extremely dark cinematic secret-room image for LIL SYNN Special Access. A faceless hooded male figure is barely illuminated in a black cosmic chamber. His entire face is covered by smooth thin matte-black cloth with no seams or facial features. Reflective pink and purple galaxy aviator sunglasses catch tiny star reflections. Chrome fragments, faint magenta light, a subtle circular halo, distant crescent moon geometry, and atmospheric particles surround him. The image should feel exclusive, hidden, and discovered rather than frightening. Premium realistic photography, deep blacks, restrained hot-pink/magenta highlights, silver/chrome details, no text, no logo, no watermark.
-```
-
-## Image 6 - 404 / lost-signal artwork
-
-**Purpose:** Give the 404 page a deliberate LIL SYNN identity instead of generic error-page imagery.
-
-**Recommended generation prompt:**
-
-```text
-Create a cinematic LIL SYNN lost-signal scene for a 404 page. Empty dark cosmic space with a distant faceless hooded figure seen from behind, black hood and black streetwear, subtle reflective pink-purple galaxy sunglasses barely visible in profile, fragmented chrome signal rings, faint magenta transmission interference, scattered stars, a small crescent moon, deep black negative space for error-page copy. Premium atmospheric photography, mysterious and emotional, minimal composition, no text, no logo, no watermark.
-```
-
-### Image generation rules
-
-For any new LIL SYNN visual:
-
-- Preserve the established faceless hooded identity
-- Entire face must remain covered
-- Pink/purple galaxy aviators are the key visual identifier
-- Keep black, hot pink/magenta, silver/chrome, and cosmic elements consistent
-- Do not add random hands, exposed facial features, skin, weapons, or generic superhero imagery
-- Do not put website copy inside generated artwork unless specifically requested
-- Do not replace existing release artwork unless explicitly approved
+Existing artwork remains authoritative unless a specific new visual has been requested.
 
 ---
 
-# ✍️ CONTENT QUEUE FOR THE OWNER
-
-When a content update is needed, the assistant should ask for the smallest missing piece only.
-
-### New release
-
-Provide only what is not already in the repo:
+# 🗂️ Repository Working Map
 
 ```text
-Release name:
-Release type: Single / EP / Album
-Release date:
-Tracklist:
-Official Spotify URL:
-Official Apple Music URL:
-Official SoundCloud URL:
-Official YouTube URL:
-Artwork: existing repo asset / new image needed
-```
-
-### New video
-
-```text
-Video title:
-Official YouTube URL:
-Release/track association, if any:
-Thumbnail available? yes/no
-```
-
-### New Universe transmission
-
-```text
-Transmission title:
-Transmission body:
-Associated release/track, if any:
-Placement/order:
-```
-
-### New About copy
-
-Say exactly what changed or provide the new copy. Do not resend existing site information unless it is being replaced.
-
----
-
-# 🛠️ WHAT TO ASK THE ASSISTANT TO DO
-
-These are reusable prompts for future website work. The assistant should inspect the current repository first and should not ask for information already available in GitHub.
-
-## Full site audit
-
-```text
-Audit the current LIL SYNN website repo end to end. Inspect the actual code, data, assets, workflows, and architecture. Tell me what is broken, stale, duplicated, missing, weak, or inconsistent. Separate confirmed defects from recommendations. Do not change anything yet.
-```
-
-## Fix everything confirmed
-
-```text
-Using the current LIL SYNN repo as the source of truth, fix every confirmed defect from your audit. Preserve existing architecture and ownership rules. Do not rewrite working systems unnecessarily. Run Site Doctor and relevant verification after the changes.
-```
-
-## Header audit
-
-```text
-Audit the global LIL SYNN header on desktop and mobile. Check viewport-top alignment, header height, LS_LOGO sizing and centering, THE CALM position, menu position, LS.png boundary alignment, page-content spacing, z-index, responsive behavior, and duplicate shell injection. Fix root causes only.
-```
-
-## Visual audit
-
-```text
-Audit every page of the LIL SYNN site for visual consistency. Check typography, spacing, artwork sizing, image cropping, hierarchy, black/pink/gold/chrome branding, responsive behavior, empty states, and visual repetition. Identify the highest-value improvements first, then implement them without breaking the shared shell.
-```
-
-## Mobile audit
-
-```text
-Perform a mobile-first audit of the current LIL SYNN site. Check the real responsive CSS and JavaScript behavior for navigation, header, logo, LS.png, cards, artwork, buttons, filters, galleries, videos, forms, and overflow. Fix confirmed issues and verify the shared shell afterward.
-```
-
-## Accessibility audit
-
-```text
-Audit the current LIL SYNN website for practical accessibility. Check keyboard navigation, focus states, landmarks, headings, labels, contrast, reduced motion, touch targets, alt text, dialogs, menus, and screen-reader semantics. Fix confirmed issues without flattening the site's visual identity.
-```
-
-## Performance audit
-
-```text
-Audit LIL SYNN for performance without sacrificing the visual experience. Inspect image sizes, lazy loading, video behavior, JavaScript loading, cache strategy, layout shifts, unnecessary observers, duplicate assets, and expensive effects. Make only evidence-backed optimizations and run Site Doctor afterward.
-```
-
-## SEO audit
-
-```text
-Audit every public LIL SYNN page for SEO and sharing metadata. Check titles, descriptions, canonical URLs, Open Graph, structured data, sitemap coverage, indexability, duplicate metadata, and release identity. Fix inconsistencies using the existing canonical architecture.
-```
-
-## Release catalog audit
-
-```text
-Audit release-catalog.json against every release-related page and asset reference. Find missing artwork, stale links, duplicate identities, incorrect ordering, broken parent-track relationships, inconsistent release types, and platform mismatches. Do not invent missing information. Give me the exact owner inputs required, if any.
-```
-
-## Image audit
-
-```text
-Audit all website image usage against the actual repository assets. Tell me which images are already good enough, which are being misused, which are missing, and which new visuals would materially improve the site. Do not ask me to upload anything that already exists. For genuinely missing visuals, give me exact image-generation prompts.
-```
-
-## Content audit
-
-```text
-Audit the site's visible copy and content against the current repository data. Find stale release names, outdated descriptions, placeholder language, duplicate copy, inaccurate claims, broken links, and missing calls to action. Do not rewrite my voice without showing me what needs changing.
-```
-
-## Conversion audit
-
-```text
-Audit the LIL SYNN website as a music-fan conversion funnel. Check whether a first-time visitor can quickly understand who LIL SYNN is, discover music, find the newest release, choose a streaming platform, explore visuals, and move deeper into the site. Recommend and implement only improvements that preserve the site's identity.
-```
-
-## Site Doctor expansion
-
-```text
-Inspect tools/site-doctor.mjs and identify important regressions it currently cannot detect. Add deterministic checks only where they provide real value. Do not turn Site Doctor into a noisy linter. Run it after the changes and report every result.
-```
-
-## Production verification
-
-```text
-Verify the current LIL SYNN repo as production infrastructure. Check source consistency, workflows, cache versions, asset references, JavaScript syntax, HTML inline scripts, canonical data, deployment configuration, and likely runtime failure points. Separate repository evidence from browser/runtime evidence and tell me exactly what still needs real browser verification.
-```
-
-## Cleanup pass
-
-```text
-Perform a conservative architecture cleanup of the LIL SYNN repo. Find dead code, duplicate ownership, stale comments, obsolete scripts, redundant CSS, legacy references, and accidental complexity. Do not remove anything unless you can establish that it is unused or superseded. Verify after cleanup.
-```
-
-## Improve one page
-
-```text
-Take [PAGE NAME] and make it materially better without redesigning the entire website. First inspect how the page currently works and what shared systems it consumes. Identify the top five improvements by user value, implement them in order, and verify that global shell behavior remains unchanged.
-```
-
-## Make it feel more LIL SYNN
-
-```text
-Review the current site through the established LIL SYNN visual identity: faceless hooded figure, black, hot pink/magenta, silver/chrome, cosmic atmosphere, emotional darkness, premium music presentation, and restrained cinematic motion. Find places where the site feels generic or disconnected from the identity. Propose concrete improvements and implement only the strongest ones.
+/
+├── index.html                    # CURRENT homepage / promoted new design
+├── index3.html                   # previous homepage preserved
+├── command/
+│   └── admin/                    # Command/Admin surfaces
+├── Suno/
+│   ├── index.html                # Suno guide entry
+│   ├── create/
+│   ├── control/
+│   ├── produce/
+│   ├── fix-test/
+│   ├── research/
+│   ├── master/
+│   ├── audio_fix_v6/
+│   ├── content/
+│   └── assets/
+├── assets/
+├── tools/
+├── docs/
+├── .github/workflows/
+│   ├── site-doctor.yml
+│   ├── main-surface-qa.yml
+│   └── suno-browser-qa.yml
+└── vercel.json
 ```
 
 ---
 
-# 🧠 MASTER WEBSITE PROMPT
+# 📜 Project Status / History
 
-Use this when you want a full improvement pass without explaining the architecture again:
+The original five major site architecture phases are complete at the architecture level:
 
 ```text
-Work directly from the current LIL SYNN website repository as the source of truth.
-
-Do not ask me for information, assets, links, code, or decisions that already exist in the repository or established project context. Inspect first.
-
-Preserve the existing architecture. Use canonical data and existing owners. Do not create duplicate systems, duplicate global shells, competing release lists, redundant randomizers, or unnecessary abstraction.
-
-Audit the requested area first. Separate confirmed defects from subjective recommendations. Fix root causes rather than stacking patches. Preserve existing working behavior unless the requested improvement requires a change.
-
-For visual work, preserve the LIL SYNN identity: faceless hooded male figure, entire face covered by smooth black cloth, reflective pink/purple galaxy aviator sunglasses, black streetwear, black gloves, hot pink/magenta, silver/chrome, cosmic/gothic atmosphere, emotional cinematic presentation. Do not introduce generic AI-looking imagery, exposed facial features, random hands, weapons, or unrelated aesthetics.
-
-For content, use the repository's canonical data first. Do not invent release dates, links, credits, tracklists, biographies, or other facts.
-
-For images, audit existing assets first. If something is genuinely missing, tell me exactly what image is needed and provide a production-ready generation prompt rather than vaguely asking for an image.
-
-For code, make the smallest coherent change, preserve ownership boundaries, run relevant tests and Site Doctor, inspect the final diff, and report what was changed and what still requires real browser verification.
-
-Do not call work complete just because the code parses. Verify the actual behavior that matters.
+PHASE 1  FOUNDATION                         ✓
+PHASE 2  MUSIC DISCOVERY + CONVERSION      ✓
+PHASE 3  LIL SYNN UNIVERSE                 ✓
+PHASE 4  VISUAL GALLERY                    ✓
+PHASE 5  ABSOLUTE POLISH + INTEGRITY       ✓ BASELINE
 ```
+
+There is intentionally no numbered Phase 6. Future work is maintenance, correction, content/media updates, refinement, optimization, verification, and optional evolution of existing systems.
+
+The Suno knowledge base is a parallel living documentation/creator system rather than a numbered site phase.
 
 ---
 
-# 📋 OWNER HANDOFF ORDER
+# 🧾 Important Recent Repository State
 
-When work is blocked on LIL SYNN, request things in this order and nothing else:
+The Main Surface QA system was added and its detached-HEAD push behavior was corrected before the homepage promotion.
 
-```text
-1. NEW OR CHANGED RELEASE DATA
-   ↓
-2. NEW OR CHANGED OFFICIAL LINKS
-   ↓
-3. NEW OR CHANGED CONTENT/COPY
-   ↓
-4. NEW VISUAL DIRECTION
-   ↓
-5. GENERATE ANY GENUINELY MISSING IMAGES
-   ↓
-6. REAL BROWSER CHECKS THE ASSISTANT CANNOT PROVE FROM SOURCE
-   ↓
-7. FINAL APPROVAL FOR SUBJECTIVE DESIGN CHANGES
-```
+The current homepage promotion was completed on `main` by moving the former `index2.html` design into `index.html` and preserving the old homepage as `index3.html`.
 
-If an item is already known, already stored in GitHub, already generated, or already decided, **do not ask for it again**.
+The QA workflow has already produced an automated README result in an earlier run. The README block above preserves the last generated result until the next qualifying QA execution updates it.
 
 ---
 
-# 🏁 Repository Topology
+# 🧑‍💻 Development / Contribution Rules
 
-```text
-LILSYNNOFFICIAL/
-├── index.html
-├── releases.html
-├── archive.html
-├── release.html
-├── gallery.html
-├── universe.html
-├── 404.html
-├── privacy.html
-├── terms.html
-├── special_access.html
-├── site-global.js
-├── site-global.css
-├── script.js
-├── music-random.js
-├── latest-releases.js
-├── latest-videos.js
-├── signal-engine.js
-├── release-catalog.json
-├── latest-videos.json
-├── transmissions.json
-├── sitemap.xml
-├── tools/site-doctor.mjs
-├── .github/workflows/site-doctor.yml
-├── .github/workflows/fix-homepage.yml
-├── .github/workflows/update-latest-videos.yml
-├── api/
-└── assets/
-```
+When modifying this repository:
+
+1. Read the relevant canonical source first.
+2. Identify the existing owner of the behavior.
+3. Make the smallest correct change.
+4. Preserve existing working functionality.
+5. Run the relevant repository/browser QA.
+6. Check routing separately from source correctness.
+7. Check production separately from CI.
+8. Do not introduce duplicate systems to compensate for an ownership mistake.
+9. Do not weaken the Main Surface QA anti-recursion contract.
+10. Update documentation when the architecture materially changes.
 
 ---
 
-# 👑 Maintainer Doctrine
+# 🖤 LIL SYNN
 
 ```text
-ONE OWNER
-ONE SOURCE OF TRUTH
-ONE GLOBAL EXPERIENCE
-ZERO DUPLICATE SYSTEMS
-ROOT CAUSE OVER PATCHES
-EXISTING ASSETS BEFORE NEW ASSETS
-CANONICAL DATA BEFORE MANUAL COPY
-STREAMING DESTINATIONS STAY PRIMARY
-NO PERSONALIZED CHATBOT REQUIRED
-NO PERSISTENT PERSONAL PLAYER
-VERIFY THE REAL RUNTIME
-DO NOT ASK FOR WHAT ALREADY EXISTS
-UPDATE THIS README WHEN THE OWNER HANDOFF CHANGES
+HEAR MORE.
+SEE MORE.
+KNOW MORE.
 ```
 
-<div align="center">
-
-## ✦ LIL SYNN
-
-**DARK SOUND. RAW EMOTION. NO LIMITS.**
-
-</div>
-
----
-
-## 🌐 GitHub Pages Preview
-
-**Vercel remains the production deployment.** GitHub Pages is a parallel fallback preview for times when Vercel build/deployment capacity is temporarily rate-limited or unavailable.
-
-[**Open the GitHub Pages Preview →**](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
-
-The preview is generated from `main` by GitHub Actions and is kept separate from the production Vercel configuration.
+**Music · Releases · Archive · Visuals · Universe · Videos · Special Access · Suno V6 Knowledge Base**
