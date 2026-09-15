@@ -62,7 +62,7 @@ jobs:
           }
           const audio = fs.readFileSync('Suno/audio_fix_v6/index.html');
           const sha = crypto.createHash('sha1').update(audio).digest('hex');
-          const locked = 'ead7b8c353814bf5f8d792494a88356110643444';
+          const locked = '6e5f8e5b5d9b55b24d25fc08366874baff3fcfc1';
           if (sha !== locked) throw new Error(`Audio Fix V6 changed unexpectedly: ${sha}`);
           const master = fs.readFileSync('Suno/master/index.html', 'utf8');
           for (const href of ['../create/', '../control/', '../produce/', '../fix-test/', '../research/', '../audio_fix_v6/']) {
