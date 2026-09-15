@@ -163,7 +163,7 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add README.md
             git commit -m "chore: update main surface QA status"
-            git push
+            git push origin HEAD:main
           fi
 
       - name: Upload QA artifacts
