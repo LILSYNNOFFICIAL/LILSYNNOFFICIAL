@@ -64,6 +64,12 @@
       "title": "ULTIMATE CONTROL AND PRODUCTION ADDENDUM 2026",
       "html": "content/suno-v6-ultimate-control-and-production-addendum-2026.html",
       "markdown": "content/suno-v6-ultimate-control-and-production-addendum-2026.md"
+    },
+    {
+      "id": "suno-v6-experimental",
+      "source": "EXPERIMENTAL",
+      "title": "EXPERIMENTAL",
+      "html": "content/suno-v6-experimental.html"
     }
   ]
 }
