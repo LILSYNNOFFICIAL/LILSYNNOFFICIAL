@@ -5,10 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/sync-suno-guide.yml'
-      - 'scripts/sync-suno-guide.py'
-      - 'scripts/build-suno-routes.py'
-      - 'Suno/index.html'
-      - 'Suno/home/index.html'
+      - 'scripts/rebuild-suno-central.py'
   workflow_dispatch:
 
 permissions:
@@ -22,27 +19,33 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Fetch guide repository
+      - name: Fetch complete source guide
         run: git clone --depth 1 https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide.git /tmp/suno-guide
-
       - name: Install Markdown renderer
         run: python -m pip install markdown
-
-      - name: Generate complete website library
-        run: python scripts/sync-suno-guide.py /tmp/suno-guide .
-
-      - name: Generate complete functional Suno routes
-        run: python scripts/build-suno-routes.py
-
+      - name: Rebuild central guide from every source document
+        run: python scripts/rebuild-suno-central.py /tmp/suno-guide .
+      - name: Verify central guide output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('Suno')
+          m=json.loads((root/'content/manifest.json').read_text())
+          assert len(m['documents']) >= 9, len(m['documents'])
+          assert 'FIX AUDIO QUALITY' in (root/'index.html').read_text()
+          assert (root/'audio_fix_v6/index.html').exists()
+          for d in m['documents']:
+              assert (root/d['html']).exists(), d['html']
+          idx=Path('index2-final-fix.js').read_text()
+          assert 'top:-170px!important' in idx
+          assert 'LS_BG_STARS.webm' in idx
+          print(f"Verified {len(m['documents'])} complete guide documents")
+          PY
       - name: Commit generated guide
         run: |
-          if git diff --quiet -- Suno/library Suno/library-index.html Suno/generated-guide-manifest.json Suno/complete Suno/prompt-architect Suno/lyrics-builder Suno/controls Suno/style-builder Suno/style-photos Suno/troubleshooter Suno/workflow Suno/customs/models; then
-            echo 'No generated Suno content changes.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Suno/library Suno/library-index.html Suno/generated-guide-manifest.json Suno/complete Suno/prompt-architect Suno/lyrics-builder Suno/controls Suno/style-builder Suno/style-photos Suno/troubleshooter Suno/workflow Suno/customs/models
-          git commit -m 'chore: sync complete Suno V6 guide and functional routes [skip ci]'
+          git add -A Suno index2-final-fix.js
+          git commit -m 'rebuild: centralize complete Suno V6 guide' || exit 0
           git push
