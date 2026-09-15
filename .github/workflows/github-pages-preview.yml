@@ -47,10 +47,6 @@ jobs:
 
           root = Path('_site')
           base = '/LILSYNNOFFICIAL'
-
-          # GitHub Pages project sites live under /REPOSITORY/, while the
-          # production site intentionally uses root-relative URLs. Rewrite
-          # only the preview copy so Vercel/lilsynn.com source remains untouched.
           quoted_root = re.compile(r'(?P<q>["\'])(?P<slash>/)(?!/)(?P<path>[^"\']*)')
           css_root = re.compile(r'url\(\s*(?P<q>["\']?)(?P<slash>/)(?!/)(?P<path>[^"\')\s]+)(?P=q)\s*\)')
 
@@ -71,7 +67,6 @@ jobs:
               path.write_text(text, encoding='utf-8')
           PY
 
-          # Verify that no ordinary quoted root-relative site URLs remain.
           python3 - <<'PY'
           from pathlib import Path
           import re
@@ -109,7 +104,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   readme-link:
-    needs: deploy
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
