@@ -22,6 +22,8 @@ const ROUTES = [
   '/Suno/audio_fix_v6/'
 ];
 
+const ENTRY_ALIASES = ['/Suno', '/Suno/Suno_Guide', '/Suno/Suno_Guide/'];
+
 const isLocalSunoHref = href => {
   if (!href || href.startsWith('#')) return false;
   try {
@@ -41,12 +43,15 @@ const forbiddenPublicHref = href => {
 async function assertHealthyPage(page, route) {
   const consoleErrors = [];
   const pageErrors = [];
+  const failedRequests = [];
   const onConsole = message => {
     if (message.type() === 'error') consoleErrors.push(message.text());
   };
   const onPageError = error => pageErrors.push(error.message);
+  const onRequestFailed = request => failedRequests.push(`${request.url()} -> ${request.failure()?.errorText || 'failed'}`);
   page.on('console', onConsole);
   page.on('pageerror', onPageError);
+  page.on('requestfailed', onRequestFailed);
 
   const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForTimeout(350);
@@ -62,15 +67,24 @@ async function assertHealthyPage(page, route) {
 
   expect(consoleErrors, `${route} browser console errors`).toEqual([]);
   expect(pageErrors, `${route} page errors`).toEqual([]);
+  expect(failedRequests, `${route} failed browser requests`).toEqual([]);
 
   const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(horizontalOverflow, `${route} has unexpected horizontal overflow`).toBeLessThanOrEqual(2);
 
   page.off('console', onConsole);
   page.off('pageerror', onPageError);
+  page.off('requestfailed', onRequestFailed);
 }
 
 test.describe('Suno V6 route and browser regression', () => {
+  test('entry aliases resolve to the canonical Suno GUI', async ({ page }) => {
+    for (const route of ENTRY_ALIASES) {
+      await assertHealthyPage(page, route);
+      expect(new URL(page.url()).pathname, `${route} canonical destination`).toMatch(/^\/Suno\/(?:index\.html)?$/);
+    }
+  });
+
   test('all canonical routes render cleanly on desktop', async ({ page }) => {
     for (const route of ROUTES) await assertHealthyPage(page, route);
   });
@@ -85,7 +99,7 @@ test.describe('Suno V6 route and browser regression', () => {
   });
 
   test('public Suno surface has no repository-document rabbit holes', async ({ page }) => {
-    const queue = [...ROUTES];
+    const queue = [...ENTRY_ALIASES, ...ROUTES];
     const visited = new Set();
     const violations = [];
 
@@ -110,7 +124,7 @@ test.describe('Suno V6 route and browser regression', () => {
   });
 
   test('crawled internal Suno links resolve', async ({ page, request }) => {
-    const queue = [...ROUTES];
+    const queue = [...ENTRY_ALIASES, ...ROUTES];
     const visited = new Set();
     const failures = [];
 
