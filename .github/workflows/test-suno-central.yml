@@ -1,0 +1,14 @@
+name: Test Suno central rebuild
+on:
+  push:
+    paths:
+      - 'tests/suno-central-guide.test.py'
+      - 'Suno/**'
+      - 'index2-final-fix.js'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tests/suno-central-guide.test.py
