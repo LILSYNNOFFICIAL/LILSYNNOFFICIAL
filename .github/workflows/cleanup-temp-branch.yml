@@ -1,0 +1,30 @@
+name: Cleanup Temporary Branch
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete non-main branches and remove this workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/$REPO/branches?per_page=100" --jq '.[].name' | while IFS= read -r branch; do
+            [ "$branch" = "main" ] && continue
+            echo "Deleting $branch"
+            gh api --method DELETE "repos/$REPO/git/refs/heads/$branch"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/cleanup-temp-branch.yml
+          git commit -m 'chore: remove temporary cleanup workflow'
+          git push origin HEAD:main
