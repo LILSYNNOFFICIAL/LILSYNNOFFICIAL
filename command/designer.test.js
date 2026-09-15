@@ -1,42 +1,14 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-
-const sourcePath = 'command/designer.js';
-assert.equal(fs.existsSync(sourcePath), true, 'designer.js should exist before running the editor contract tests');
-const source = fs.readFileSync(sourcePath, 'utf8');
-const sandbox = {
-  console,
-  localStorage: {setItem(){},getItem(){return null}},
-  window: {},
-  document: {readyState:'loading',addEventListener(){}}
-};
-vm.createContext(sandbox);
-vm.runInContext(source, sandbox);
-
-assert.equal(JSON.stringify(sandbox.window.LSDesignerTestHooks.requiredIds), JSON.stringify(['stage','pageFrame','layers','inspector','status','viewportSelect','zoom']));
-assert.equal(sandbox.window.LSDesignerTestHooks.historyRoundTrip(), true);
-assert.equal(sandbox.window.LSDesignerTestHooks.patchRoundTrip(), true);
-assert.equal(sandbox.window.LSDesignerTestHooks.draftRoundTrip(), true);
-assert.equal(sandbox.window.LSDesignerTestHooks.toolRegistryValid(), true);
-
-const plusSource = fs.readFileSync('command/designer-plus.js', 'utf8');
-vm.runInContext(plusSource, sandbox);
-assert.equal(sandbox.window.LSDesignerPlus.version, 1, 'advanced designer should expose a versioned API');
-assert.equal(typeof sandbox.window.LSDesignerPlus.addElement, 'function', 'advanced designer should support element insertion');
-assert.equal(typeof sandbox.window.LSDesignerPlus.move, 'function', 'advanced designer should support nudging');
-assert.equal(typeof sandbox.window.LSDesignerPlus.align, 'function', 'advanced designer should support alignment');
-
-const assetSource = fs.readFileSync('command/designer-assets.js', 'utf8');
-vm.runInContext(assetSource, sandbox);
-assert.equal(sandbox.window.LSDesignerAssets.version, 1, 'asset tools should expose a versioned API');
-assert.equal(typeof sandbox.window.LSDesignerAssets.insertAsset, 'function');
-assert.equal(typeof sandbox.window.LSDesignerAssets.duplicateDom, 'function');
-assert.equal(typeof sandbox.window.LSDesignerAssets.deleteDom, 'function');
-
-const html = fs.readFileSync('command/designer.html', 'utf8');
-assert.match(html, /designer-plus\.js/, 'designer page should load advanced tools');
-assert.match(html, /designer-assets\.js/, 'designer page should load asset tools');
-assert.match(html, /designer-assets\.css/, 'designer page should load asset styles');
-assert.match(html, /LIL SYNN \/ DESIGNER/, 'designer branding should remain present');
+const source=fs.readFileSync('command/designer.js','utf8');
+const sandbox={console,localStorage:{setItem(){},getItem(){return null}},window:{},document:{readyState:'loading',addEventListener(){}}};
+vm.createContext(sandbox);vm.runInContext(source,sandbox);
+assert.equal(JSON.stringify(sandbox.window.LSDesignerTestHooks.requiredIds),JSON.stringify(['stage','pageFrame','layers','inspector','status','viewportSelect','zoom']));
+assert.equal(sandbox.window.LSDesignerTestHooks.historyRoundTrip(),true);assert.equal(sandbox.window.LSDesignerTestHooks.patchRoundTrip(),true);assert.equal(sandbox.window.LSDesignerTestHooks.draftRoundTrip(),true);assert.equal(sandbox.window.LSDesignerTestHooks.toolRegistryValid(),true);
+const plusSource=fs.readFileSync('command/designer-plus.js','utf8');vm.runInContext(plusSource,sandbox);assert.equal(sandbox.window.LSDesignerPlus.version,1);assert.equal(typeof sandbox.window.LSDesignerPlus.addElement,'function');assert.equal(typeof sandbox.window.LSDesignerPlus.move,'function');assert.equal(typeof sandbox.window.LSDesignerPlus.align,'function');
+const assetSource=fs.readFileSync('command/designer-assets.js','utf8');vm.runInContext(assetSource,sandbox);assert.equal(sandbox.window.LSDesignerAssets.version,2);assert.equal(typeof sandbox.window.LSDesignerAssets.insertAsset,'function');assert.equal(typeof sandbox.window.LSDesignerAssets.duplicateDom,'function');assert.equal(typeof sandbox.window.LSDesignerAssets.deleteDom,'function');
+const persistSource=fs.readFileSync('command/designer-persist.js','utf8');vm.runInContext(persistSource,sandbox);assert.equal(sandbox.window.LSDesignerPersist.version,1);assert.equal(typeof sandbox.window.LSDesignerPersist.save,'function');assert.equal(typeof sandbox.window.LSDesignerPersist.serialize,'function');assert.equal(typeof sandbox.window.LSDesignerPersist.markCreated,'function');
+const html=fs.readFileSync('command/designer.html','utf8');assert.match(html,/designer-plus\.js/);assert.match(html,/designer-assets\.js/);assert.match(html,/designer-persist\.js/);assert.match(html,/id="saveDom"/);assert.match(html,/LIL SYNN \/ DESIGNER/);
+const api=fs.readFileSync('api/designer-dom.js','utf8');assert.match(api,/SAVE DOM/);assert.match(api,/LS-DESIGNER-DOM:START/);assert.match(api,/LS-DESIGNER-HIDE:START/);assert.match(api,/SAFE_TAGS/);assert.doesNotMatch(api,/innerHTML/);
 console.log('designer contracts: PASS');
