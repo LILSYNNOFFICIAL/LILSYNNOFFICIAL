@@ -5,7 +5,12 @@ const vm = require('node:vm');
 const sourcePath = 'command/designer.js';
 assert.equal(fs.existsSync(sourcePath), true, 'designer.js should exist before running the editor contract tests');
 const source = fs.readFileSync(sourcePath, 'utf8');
-const sandbox = { console, localStorage: new Map(), window: {}, document: {} };
+const sandbox = {
+  console,
+  localStorage: {setItem(){},getItem(){return null}},
+  window: {},
+  document: {readyState:'loading',addEventListener(){}}
+};
 vm.createContext(sandbox);
 vm.runInContext(source, sandbox);
 
