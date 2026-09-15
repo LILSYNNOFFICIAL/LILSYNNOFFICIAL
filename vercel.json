@@ -12,6 +12,8 @@
   "rewrites": [
     {"source":"/suno","destination":"/Suno/home/"},
     {"source":"/suno/","destination":"/Suno/home/"},
+    {"source":"/command/designer","destination":"/command/designer.html"},
+    {"source":"/command/designer/","destination":"/command/designer.html"},
     {"source":"/command/admin","destination":"/command/admin/index.html"},
     {"source":"/command/admin/","destination":"/command/admin/index.html"},
     {"source":"/command","destination":"/command/index.html"},
