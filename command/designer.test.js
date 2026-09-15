@@ -14,7 +14,7 @@ const sandbox = {
 vm.createContext(sandbox);
 vm.runInContext(source, sandbox);
 
-assert.deepEqual(sandbox.window.LSDesignerTestHooks.requiredIds, ['stage','pageFrame','layers','inspector','status','viewportSelect','zoom']);
+assert.equal(JSON.stringify(sandbox.window.LSDesignerTestHooks.requiredIds), JSON.stringify(['stage','pageFrame','layers','inspector','status','viewportSelect','zoom']));
 assert.equal(sandbox.window.LSDesignerTestHooks.historyRoundTrip(), true);
 assert.equal(sandbox.window.LSDesignerTestHooks.patchRoundTrip(), true);
 assert.equal(sandbox.window.LSDesignerTestHooks.draftRoundTrip(), true);
