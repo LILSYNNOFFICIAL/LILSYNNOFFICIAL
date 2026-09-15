@@ -1,0 +1,38 @@
+(() => {
+  'use strict';
+  const KEY='ls-visual-designer-assets-v1';
+  const $=s=>document.querySelector(s);
+  const frame=()=>$('#pageFrame')?.contentDocument||null;
+  const selected=()=>window.LSDesignerTestHooks?.selected?.() || $('#overlay .selection .label')?.textContent || null;
+  const safeName=n=>String(n||'asset').replace(/[^a-zA-Z0-9._ -]/g,'_').replace(/\s+/g,'-').slice(0,100);
+  function toast(t){const n=document.createElement('div');n.className='asset-toast';n.textContent=t;document.body.append(n);setTimeout(()=>n.remove(),1800)}
+  function panel(){
+    if($('#assetTools'))return;
+    const p=document.createElement('aside');p.id='assetTools';
+    p.innerHTML=`<div class="asset-title">ASSETS / ELEMENT TOOLS</div><div class="asset-row"><button id="assetUpload">＋ UPLOAD</button><button id="assetImage">IMAGE</button></div><div class="asset-row"><button id="assetVideo">VIDEO</button><button id="assetText">TEXT</button></div><div class="asset-row"><button id="assetDup">DUPLICATE DOM</button><button id="assetDelete">DELETE</button></div><input id="assetFile" type="file" accept="image/*,video/*" multiple hidden><div id="assetList" class="asset-list"><div class="asset-muted">Upload an image/video, then insert it into the page.</div></div>`;
+    document.body.append(p);
+    $('#assetUpload').onclick=()=>$('#assetFile').click();
+    $('#assetFile').onchange=async e=>{for(const f of [...e.target.files])await upload(f);e.target.value=''};
+    $('#assetImage').onclick=()=>insertMedia('image');
+    $('#assetVideo').onclick=()=>insertMedia('video');
+    $('#assetText').onclick=()=>insertText();
+    $('#assetDup').onclick=()=>duplicateDom();
+    $('#assetDelete').onclick=()=>deleteDom();
+    renderAssets();
+  }
+  async function upload(file){
+    if(file.size>5*1024*1024){toast('Max asset size is 5 MB');return}
+    const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});
+    try{const r=await fetch('/api/admin?action=upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({files:[{name:safeName(file.name),data}]})});const d=await r.json();if(!r.ok)throw new Error(d.error||'UPLOAD_FAILED');const path=d.files?.[0]?.path||d.uploads?.[0]?.path||('assets/img/'+safeName(file.name));const saved=JSON.parse(localStorage.getItem(KEY)||'[]');saved.unshift({name:file.name,path,type:file.type});localStorage.setItem(KEY,JSON.stringify(saved.slice(0,50)));renderAssets();toast('Uploaded '+file.name)}catch(e){toast(e.message||'Upload failed')}
+  }
+  function renderAssets(){const box=$('#assetList');if(!box)return;let a=[];try{a=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{};box.innerHTML=a.length?a.map((x,i)=>`<button class="asset-item" data-i="${i}"><span>${x.type?.startsWith('video')?'▶':'▣'}</span>${x.name}</button>`).join(''):'<div class="asset-muted">No uploaded assets yet.</div>';box.querySelectorAll('.asset-item').forEach(b=>b.onclick=()=>{const x=a[+b.dataset.i];if(x)insertAsset(x)})}
+  function insertAsset(a){const d=frame();if(!d?.body)return;const el=d.createElement(a.type?.startsWith('video')?'video':'img');el.className='ls-designer-created';el.dataset.lsDesigner='1';el.src='/'+a.path;el.setAttribute('data-designer-asset',a.path);if(el.tagName==='VIDEO'){el.controls=true;el.preload='metadata'}el.style.cssText='position:absolute;left:80px;top:180px;width:320px;max-width:70%;min-height:80px;object-fit:contain;background:#050b14;border:1px solid #ffd21a;z-index:9998;';d.body.append(el);toast('Asset inserted')}
+  function insertMedia(kind){const d=frame();if(!d?.body)return;const el=d.createElement(kind==='video'?'video':'img');el.className='ls-designer-created';el.dataset.lsDesigner='1';if(kind==='video'){el.controls=true;el.textContent='VIDEO'}else{el.alt='New image';el.src='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="640" height="360"%3E%3Crect width="100%25" height="100%25" fill="%2307111f"/%3E%3Ctext x="50%25" y="50%25" fill="%23ffd21a" text-anchor="middle" font-size="26"%3EIMAGE%3C/text%3E%3C/svg%3E'}el.style.cssText='position:absolute;left:70px;top:170px;width:300px;height:180px;object-fit:contain;background:#050b14;border:1px solid #ffd21a;z-index:9998;';d.body.append(el);toast('New '+kind+' inserted')}
+  function insertText(){const d=frame();if(!d?.body)return;const el=d.createElement('div');el.className='ls-designer-created';el.dataset.lsDesigner='1';el.textContent='NEW TEXT';el.style.cssText='position:absolute;left:90px;top:140px;min-width:180px;padding:12px;color:#ffd21a;font:700 24px/1.2 system-ui;background:#050b14;border:1px solid #ffd21a;z-index:9998;';d.body.append(el);toast('Text inserted')}
+  function getSelectedEl(){const d=frame(),label=$('#overlay .selection .label');if(!d||!label)return null;try{return d.querySelector(label.textContent)}catch{return null}}
+  function duplicateDom(){const el=getSelectedEl();if(!el){toast('Select an element first');return}const n=el.cloneNode(true);n.dataset.lsDesigner='1';n.dataset.lsDuplicate='1';n.removeAttribute('id');const old=el.style.transform||'';n.style.transform=(old?old+' ':'')+'translate(20px,20px)';el.parentElement?.appendChild(n);toast('DOM duplicate created in preview')}
+  function deleteDom(){const el=getSelectedEl();if(!el){toast('Select an element first');return}if(el===frame()?.body||el===frame()?.documentElement)return;el.remove();toast('Element deleted from preview')}
+  function init(){panel();window.addEventListener('message',()=>{},false)}
+  window.LSDesignerAssets={version:1,insertAsset,duplicateDom,deleteDom};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
