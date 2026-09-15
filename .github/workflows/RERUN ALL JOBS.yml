@@ -91,17 +91,17 @@ jobs:
               continue
             fi
 
-            # Read the workflow from the current main branch. Missing/stale
-            # workflow records must never abort the controller.
-            yaml=$(gh api "repos/$REPO/contents/$workflow_path?ref=$BRANCH" \
-              --jq '.content' 2>/dev/null | tr -d '\n' || true)
-            if [ -z "$yaml" ]; then
+            # Fetch the workflow definition as raw YAML from current main.
+            # Do not decode the Contents API's base64 payload: raw media
+            # avoids padding/whitespace failures on unusual workflow files.
+            definition=$(gh api \
+              "repos/$REPO/contents/$workflow_path?ref=$BRANCH" \
+              -H 'Accept: application/vnd.github.raw+json' 2>/dev/null || true)
+            if [ -z "$definition" ]; then
               echo 'SKIP: workflow definition is not present/readable on main'
               skipped=$((skipped + 1))
               continue
             fi
-
-            definition=$(printf '%s' "$yaml" | base64 --decode)
 
             # Required manual inputs are deliberately never guessed.
             if printf '%s\n' "$definition" | grep -Eq '^[[:space:]]+workflow_dispatch:'; then
@@ -116,8 +116,6 @@ jobs:
                 continue
               fi
 
-              # Dispatch directly through REST. This does not require a local
-              # git checkout and always targets the current main branch.
               before=$(date +%s)
               echo 'DISPATCH: current main'
               if ! gh api --method POST \
@@ -154,8 +152,6 @@ jobs:
               continue
             fi
 
-            # A push/schedule-only workflow cannot safely be newly invoked by
-            # this controller. Never replay an old historical run.
             echo 'SKIP: no workflow_dispatch; never replaying historical run'
             skipped=$((skipped + 1))
 
