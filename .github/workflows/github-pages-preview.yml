@@ -1,0 +1,150 @@
+name: GitHub Pages Preview
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-preview
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static preview
+        env:
+          PAGES_BASE: /LILSYNNOFFICIAL
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='_site' \
+            --exclude='CNAME' \
+            ./ _site/
+          touch _site/.nojekyll
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('_site')
+          base = '/LILSYNNOFFICIAL'
+
+          # GitHub Pages project sites live under /REPOSITORY/, while the
+          # production site intentionally uses root-relative URLs. Rewrite
+          # only the preview copy so Vercel/lilsynn.com source remains untouched.
+          quoted_root = re.compile(r'(?P<q>["\'])(?P<slash>/)(?!/)(?P<path>[^"\']*)')
+          css_root = re.compile(r'url\(\s*(?P<q>["\']?)(?P<slash>/)(?!/)(?P<path>[^"\')\s]+)(?P=q)\s*\)')
+
+          text_exts = {'.html', '.htm', '.css', '.js', '.mjs', '.json', '.webmanifest'}
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in text_exts:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              text = quoted_root.sub(
+                  lambda m: f'{m.group("q")}{base}/{m.group("path")}',
+                  text,
+              )
+              if path.suffix.lower() == '.css':
+                  text = css_root.sub(
+                      lambda m: f'url({m.group("q")}{base}/{m.group("path")}{m.group("q")})',
+                      text,
+                  )
+              path.write_text(text, encoding='utf-8')
+          PY
+
+          # Verify that no ordinary quoted root-relative site URLs remain.
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('_site')
+          bad = []
+          pattern = re.compile(r'(?P<q>["\'])(?P<slash>/)(?!/)(?P<path>[^"\']*)')
+          for path in root.rglob('*'):
+              if path.is_file() and path.suffix.lower() in {'.html', '.htm', '.css', '.js', '.mjs', '.json', '.webmanifest'}:
+                  text = path.read_text(encoding='utf-8')
+                  for match in pattern.finditer(text):
+                      value = match.group('path')
+                      if value and not value.startswith('LILSYNNOFFICIAL/'):
+                          bad.append(f'{path}: {match.group(0)[:120]}')
+          if bad:
+              print('\n'.join(bad[:100]))
+              raise SystemExit(f'Found {len(bad)} unre-written quoted root-relative URLs')
+          print('GitHub Pages URL rewrite verification passed.')
+          PY
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  readme-link:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Add fallback preview link to README
+        env:
+          PREVIEW_URL: https://lilsynnofficial.github.io/LILSYNNOFFICIAL/
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          marker = '## 🌐 GitHub Pages Preview'
+          if marker not in text:
+              section = (
+                  '\n\n---\n\n'
+                  '## 🌐 GitHub Pages Preview\n\n'
+                  '**Vercel remains the production deployment.** GitHub Pages is a parallel fallback preview for times when Vercel build/deployment capacity is temporarily rate-limited or unavailable.\n\n'
+                  f'[**Open the GitHub Pages Preview →**]({os.environ["PREVIEW_URL"]})\n\n'
+                  'The preview is generated from `main` by GitHub Actions and is kept separate from the production Vercel configuration.\n'
+              )
+              readme.write_text(text.rstrip() + section, encoding='utf-8')
+          PY
+
+      - name: Commit README preview link
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          if git diff --cached --quiet; then
+            echo 'README already contains the GitHub Pages preview link.'
+            exit 0
+          fi
+          git commit -m 'docs: add GitHub Pages fallback preview link'
+          git push
