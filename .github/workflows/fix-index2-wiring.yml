@@ -38,7 +38,7 @@ jobs:
               print('index2-final-fix.js already loaded')
           PY
 
-      - name: Remove trigger
+      - name: Remove trigger if present
         run: rm -f .github/fix-index2-wiring.trigger
 
       - name: Commit patch
@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index2.html .github/fix-index2-wiring.trigger
+          git add -A
           if git diff --cached --quiet; then
             echo 'No changes to commit.'
             exit 0
