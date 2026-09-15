@@ -15,17 +15,18 @@
 <main class="health">
 <div class="kicker">LIL SYNN · SUNO QA</div>
 <h1>SUNO HEALTH</h1>
-<p>Browser-level checks for the isolated Suno guide. This dashboard verifies that the guide entry points and critical local assets are reachable without modifying the Audio Fix V6 module.</p>
+<p>Browser-level checks for the isolated Suno guide. This dashboard verifies guide entry points, research modules, critical local assets and the locked Audio Fix V6 prompt without modifying the Audio Fix module.</p>
 <div class="actions"><a class="btn" href="index.html">Suno Guide</a><a class="btn" href="audio_fix_v6/">Audio Fix V6</a><a class="btn" href="research/">Research</a><button class="btn" id="run" type="button">Run checks</button></div>
 <section class="status" aria-live="polite"><strong id="overall">Running…</strong><div id="summary">Checking Suno files.</div></section>
 <section class="checks" id="checks" aria-live="polite"></section>
 </main>
 <script>
 (()=>{
-const targets=['index.html','create/index.html','create/prompt-lab.html','control/index.html','produce/index.html','fix-test/index.html','research/index.html','master/index.html','audio_fix_v6/index.html','assets/suno.css','assets/suno-overrides.css','assets/suno-topic.js'];
+const targets=['index.html','create/index.html','create/prompt-lab.html','create/vocal-engineering.html','control/index.html','produce/index.html','produce/audio-engineering.html','fix-test/index.html','research/index.html','research/v5-to-v6.html','research/controlled-experimentation.html','master/index.html','audio_fix_v6/index.html','content/manifest.json','assets/suno.css','assets/suno-overrides.css','assets/suno-topic.js','assets/suno-master.js'];
 const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function check(){const out=[];for(const path of targets){try{const r=await fetch(path,{cache:'no-store'});out.push([path,r.ok?'PASS':'FAIL',r.ok?'Reachable.':`HTTP ${r.status}`])}catch(e){out.push([path,'FAIL',e.message])}}
 const audio=await fetch('audio_fix_v6/index.html',{cache:'no-store'}).then(r=>r.text()).catch(()=>''), prompt='recreate the original audio exactly as sung and performed';out.push(['Audio Fix V6 lock',audio.includes(prompt)?'PASS':'FAIL',audio.includes(prompt)?'Locked prompt is present.':'Locked prompt was not found.']);
+const master=await fetch('assets/suno-master.js',{cache:'no-store'}).then(r=>r.text()).catch(()=>''), pathFix="replace(/^content\\//,'')";out.push(['Master Guide path fix',master.includes(pathFix)?'PASS':'FAIL',master.includes(pathFix)?'Manifest content paths resolve correctly.':'Expected content-path normalization is missing.']);
 render(out)}
 function render(out){$('checks').innerHTML=out.map(x=>`<article class="check ${x[1].toLowerCase()}"><strong>${esc(x[0])} · ${x[1]}</strong><span>${esc(x[2])}</span></article>`).join('');const f=out.filter(x=>x[1]==='FAIL').length;$('overall').textContent=f?'FAIL':'PASS';$('summary').textContent=`${out.length-f} checks passed · ${f} failed · ${new Date().toLocaleString()}`}
 $('run').addEventListener('click',check);check();
