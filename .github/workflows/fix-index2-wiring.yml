@@ -1,0 +1,56 @@
+name: Fix index2 wiring
+
+on:
+  push:
+    paths:
+      - '.github/fix-index2-wiring.trigger'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add index2 final-fix script
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index2.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="/index2-final-fix.js" defer></script>'
+          if tag not in s:
+              marker = '<script src="/latest-videos.js"></script>'
+              if marker not in s:
+                  raise SystemExit('Could not find insertion marker in index2.html')
+              s = s.replace(marker, tag + '\n' + marker, 1)
+              p.write_text(s, encoding='utf-8')
+              print('Inserted index2-final-fix.js')
+          else:
+              print('index2-final-fix.js already loaded')
+          PY
+
+      - name: Remove trigger
+        run: rm -f .github/fix-index2-wiring.trigger
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index2.html .github/fix-index2-wiring.trigger
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: load index2 final visual patch'
+          git push
