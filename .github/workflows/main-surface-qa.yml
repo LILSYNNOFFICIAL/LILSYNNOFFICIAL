@@ -1,0 +1,185 @@
+name: Main Surface QA
+
+on:
+  push:
+    branches: [main]
+    # README-only commits never trigger this workflow. This prevents the
+    # QA status commit from feeding itself back into an infinite loop.
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-surface-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: npm install --no-save --no-package-lock @playwright/test@1.63.0
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Site Doctor
+        id: site_doctor
+        shell: bash
+        run: |
+          set +e
+          node tools/site-doctor.mjs 2>&1 | tee /tmp/site-doctor.log
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Start static site server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 &
+          echo $! > /tmp/lilsynn-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/lilsynn-http.log
+          exit 1
+
+      - name: Run Main / Command / Admin / Suno browser QA
+        id: browser_qa
+        shell: bash
+        env:
+          CI: 'true'
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+          QA_BASE_URL: http://127.0.0.1:4173
+        run: |
+          set +e
+          node tools/main-surface-qa.mjs 2>&1 | tee /tmp/main-surface-qa.log
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Determine QA status
+        id: status
+        shell: bash
+        run: |
+          site_doctor='${{ steps.site_doctor.outputs.status }}'
+          browser_qa='${{ steps.browser_qa.outputs.status }}'
+          if [ "$site_doctor" = "0" ] && [ "$browser_qa" = "0" ]; then
+            overall=PASS
+          else
+            overall=FAIL
+          fi
+
+          extract_status() {
+            local key="$1"
+            local value
+            value=$(grep -E "^${key}=(PASS|FAIL)$" /tmp/main-surface-qa.log | tail -1 | cut -d= -f2)
+            printf '%s' "${value:-FAIL}"
+          }
+
+          main_status=$(extract_status QA_MAIN)
+          command_status=$(extract_status QA_COMMAND)
+          admin_status=$(extract_status QA_ADMIN)
+          suno_status=$(extract_status QA_SUNO)
+
+          # Site Doctor is the repository-level MAIN gate.
+          if [ "$site_doctor" != "0" ]; then main_status=FAIL; fi
+
+          {
+            echo "overall=$overall"
+            echo "main=$main_status"
+            echo "command=$command_status"
+            echo "admin=$admin_status"
+            echo "suno=$suno_status"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update README QA status
+        if: ${{ always() }}
+        env:
+          QA_OVERALL: ${{ steps.status.outputs.overall || 'FAIL' }}
+          QA_MAIN: ${{ steps.status.outputs.main || 'FAIL' }}
+          QA_COMMAND: ${{ steps.status.outputs.command || 'FAIL' }}
+          QA_ADMIN: ${{ steps.status.outputs.admin || 'FAIL' }}
+          QA_SUNO: ${{ steps.status.outputs.suno || 'FAIL' }}
+          QA_COMMIT: ${{ github.sha }}
+          QA_RUN: ${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          path = Path('README.md')
+          text = path.read_text(encoding='utf-8')
+          start = '<!-- MAIN-SURFACE-QA:START -->'
+          end = '<!-- MAIN-SURFACE-QA:END -->'
+
+          def icon(value):
+              return '🟢' if value == 'PASS' else '🔴'
+
+          overall = os.environ['QA_OVERALL']
+          main = os.environ['QA_MAIN']
+          command = os.environ['QA_COMMAND']
+          admin = os.environ['QA_ADMIN']
+          suno = os.environ['QA_SUNO']
+          commit = os.environ['QA_COMMIT'][:7]
+          run = os.environ['QA_RUN']
+          checked = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+
+          block = f'''{start}\n## 🩺 MAIN SURFACE QA\n\n**{icon(overall)} QA: {overall}**\n\n| Surface | Status |\n|---|---|\n| Main | {icon(main)} **{main}** |\n| Command | {icon(command)} **{command}** |\n| Admin | {icon(admin)} **{admin}** |\n| Suno | {icon(suno)} **{suno}** |\n\n**Tested commit:** `{commit}`  \n**Checked:** {checked}  \n**Workflow run:** `{run}`\n\n> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.\n\n{end}'''
+
+          if start in text and end in text:
+              before = text.split(start, 1)[0]
+              after = text.split(end, 1)[1]
+              new_text = before + block + after
+          else:
+              marker = '\n---\n'
+              insert_at = text.find(marker)
+              if insert_at == -1:
+                  new_text = block + '\n\n' + text
+              else:
+                  insert_at += len(marker)
+                  new_text = text[:insert_at] + '\n' + block + '\n' + text[insert_at:]
+
+          path.write_text(new_text, encoding='utf-8')
+          PY
+
+          if git diff --quiet -- README.md; then
+            echo 'README QA status unchanged; no commit needed.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add README.md
+            git commit -m "chore: update main surface QA status"
+            git push
+          fi
+
+      - name: Upload QA artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-surface-qa-${{ github.sha }}
+          path: |
+            /tmp/main-surface-qa.log
+            /tmp/site-doctor.log
+            /tmp/lilsynn-http.log
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Fail workflow when QA fails
+        if: ${{ steps.status.outputs.overall == 'FAIL' }}
+        run: exit 1
