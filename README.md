@@ -763,3 +763,13 @@ UPDATE THIS README WHEN THE OWNER HANDOFF CHANGES
 **DARK SOUND. RAW EMOTION. NO LIMITS.**
 
 </div>
+
+---
+
+## 🌐 GitHub Pages Preview
+
+**Vercel remains the production deployment.** GitHub Pages is a parallel fallback preview for times when Vercel build/deployment capacity is temporarily rate-limited or unavailable.
+
+[**Open the GitHub Pages Preview →**](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
+
+The preview is generated from `main` by GitHub Actions and is kept separate from the production Vercel configuration.
