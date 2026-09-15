@@ -1,0 +1,857 @@
+<h1 id="suno-v6-current-coverage-audit-september-2026">🎵 SUNO V6 CURRENT COVERAGE AUDIT — SEPTEMBER 2026</h1>
+<blockquote>
+<p>Living extension of <strong>LIL SYNN's Complete Suno V6 Guide</strong>.</p>
+<p>This audit captures additional current Suno information that must be considered part of the guide's <strong>ALL / EVERYTHING</strong> scope. It is intentionally evidence-labeled so current official behavior is not mixed with historical or speculative behavior.</p>
+</blockquote>
+<hr />
+<h1 id="1-all-everything-final-operating-definition">1. ALL / EVERYTHING — FINAL OPERATING DEFINITION</h1>
+<h2 id="all">ALL</h2>
+<p><strong>ALL</strong> means every currently available, documented, materially useful, and reasonably verifiable Suno V6-family capability relevant to creating, editing, producing, exporting, organizing, publishing, or troubleshooting music: models, creation modes, controls, sliders, inputs, outputs, editing functions, personalization, voices, references, samples, stems, Studio, MIDI, effects, automation, licensing/usage information, plan restrictions, credits, downloads, mobile/web workflows, and established creation techniques.</p>
+<h2 id="everything">EVERYTHING</h2>
+<p><strong>EVERYTHING</strong> means ALL of that <strong>plus the surrounding evidence and boundaries</strong>: official documentation, release notes, current UI behavior, reproducible techniques, community techniques when useful, migration/history, plan dependencies, compatibility, limitations, known failure modes, unknowns, deprecated behavior, and explicit distinctions between what Suno guarantees and what creators merely observe.</p>
+<p>Everything does <strong>not</strong> mean inventing undocumented features, secret syntax, model internals, guaranteed prompt commands, or future functionality. Unknown remains unknown.</p>
+<h2 id="evidence-labels">Evidence labels</h2>
+<ul>
+<li><strong>OFFICIAL</strong> — current Suno Help documentation.</li>
+<li><strong>RELEASE NOTE</strong> — current Suno release/update documentation.</li>
+<li><strong>REPRODUCIBLE</strong> — repeatedly observed under controlled testing.</li>
+<li><strong>COMMUNITY</strong> — reported by creators but not guaranteed by Suno.</li>
+<li><strong>EXPERIMENTAL</strong> — useful hypothesis requiring testing.</li>
+<li><strong>HISTORICAL</strong> — previously documented behavior that may no longer apply.</li>
+<li><strong>UNKNOWN</strong> — insufficient evidence.</li>
+</ul>
+<hr />
+<h1 id="2-current-v6-model-baseline">2. CURRENT V6 MODEL BASELINE</h1>
+<p>Suno currently documents three V6-family models:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Best use</th>
+<th>Availability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v6</strong></td>
+<td>Control, precision, polished intentional creation</td>
+<td>Pro / Premier</td>
+</tr>
+<tr>
+<td><strong>v6-wild</strong></td>
+<td>Exploration, surprise, unusual ideas</td>
+<td>Pro / Premier</td>
+</tr>
+<tr>
+<td><strong>v6-mini</strong></td>
+<td>Fast/light creation and iteration</td>
+<td>All users</td>
+</tr>
+<tr>
+<td><strong>Custom Models</strong></td>
+<td>Personalized creation from the creator's own music</td>
+<td>Pro / Premier</td>
+</tr>
+</tbody>
+</table>
+<p>Suno's current documentation says the V6 family supports generations of up to <strong>8 minutes</strong>. <strong>OFFICIAL.</strong></p>
+<p>The model picker is in the Create form. Model selection persists until changed. Suno specifically warns that Voices, Custom Models, and My Taste should be used with a compatible model. <strong>OFFICIAL.</strong></p>
+<h3 id="recommended-model-workflow">Recommended model workflow</h3>
+<pre><code class="language-text">v6-mini → rapid concept testing
+       ↓
+v6-wild → unexpected discovery
+       ↓
+v6 → controlled reconstruction/refinement
+       ↓
+Editor / Remaster / Stems
+       ↓
+Studio / external DAW
+</code></pre>
+<hr />
+<h1 id="3-v6s-natural-language-workflow-is-itself-a-major-feature">3. V6'S NATURAL-LANGUAGE WORKFLOW IS ITSELF A MAJOR FEATURE</h1>
+<p>V6 is not merely a new audio model. Suno explicitly describes V6 as understanding more of the language and building blocks musicians use, including vocals, instrumentation, structure, mood, references, and overall feel.</p>
+<p>In Simple Mode, V6 can infer the appropriate creation workflow rather than requiring the creator to know whether to use a specific tool such as Cover, Remix, or Extend. <strong>OFFICIAL.</strong></p>
+<h3 id="practical-implication">Practical implication</h3>
+<p>Instead of thinking:</p>
+<pre><code class="language-text">Which button do I need?
+</code></pre>
+<p>think:</p>
+<pre><code class="language-text">What musical transformation do I actually want?
+</code></pre>
+<p>Then describe that transformation clearly.</p>
+<p>Example:</p>
+<pre><code class="language-text">Keep the verse, melody and vocal character intact, but make the chorus much larger with gospel-style backing vocals, wider synths and a stronger emotional lift.
+</code></pre>
+<p>The model may select the appropriate supported workflow.</p>
+<hr />
+<h1 id="4-multi-input-creation">4. MULTI-INPUT CREATION</h1>
+<p>V6 can accept multiple supported references in a single creative request, including:</p>
+<ul>
+<li>Suno songs</li>
+<li>playlists</li>
+<li>audio uploads</li>
+<li>images</li>
+<li>video</li>
+<li>written instructions</li>
+</ul>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="reference-role-method">Reference-role method</h3>
+<p>When combining inputs, explicitly assign their roles:</p>
+<pre><code class="language-text">SOURCE A → vocal character
+SOURCE B → drum groove
+SOURCE C → harmonic atmosphere
+IMAGE → visual mood
+VIDEO → movement / pacing inspiration
+TEXT → story and lyrical concept
+</code></pre>
+<p>Then specify what must remain original.</p>
+<p>This is safer and more controllable than providing several references without explaining their function.</p>
+<hr />
+<h1 id="5-mashup-sample-isolation">5. MASHUP / SAMPLE / ISOLATION</h1>
+<p>V6 officially supports new workflows for combining elements from multiple sources and for sampling/isolation.</p>
+<p>Examples documented by Suno include:</p>
+<pre><code class="language-text">Take vocals from source A.
+Take drums from source B.
+Add new lyrics.
+Rebuild the result as 80s synthwave.
+</code></pre>
+<p>and:</p>
+<pre><code class="language-text">Sample the riff at 0:45.
+Isolate the guitar.
+Build a new beat around it.
+</code></pre>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="creative-rule">Creative rule</h3>
+<p>Describe the <strong>role</strong> of the extracted material, not only the fact that it exists:</p>
+<pre><code class="language-text">Use the isolated guitar as the recurring hook.
+Keep it recognizable but build a new rhythm section around it.
+</code></pre>
+<hr />
+<h1 id="6-single-lyric-editing">6. SINGLE-LYRIC EDITING</h1>
+<p>V6 can update a single lyric without rebuilding the entire song.</p>
+<p>Example:</p>
+<pre><code class="language-text">Change the lyric from “love” to “light.”
+</code></pre>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="use-this-when">Use this when</h3>
+<ul>
+<li>one word is wrong</li>
+<li>one line needs a correction</li>
+<li>a rhyme needs replacement</li>
+<li>a name needs changing</li>
+<li>a clean/radio edit is required</li>
+<li>the song is already strong and a full regeneration would be wasteful</li>
+</ul>
+<h3 id="do-not-use-full-regeneration-when-the-requested-change-is-genuinely-local">Do not use full regeneration when the requested change is genuinely local.</h3>
+<p>This is one of the most important V6 efficiency principles:</p>
+<pre><code class="language-text">LOCAL PROBLEM → LOCAL EDIT
+GLOBAL PROBLEM → GLOBAL REGENERATION
+</code></pre>
+<hr />
+<h1 id="7-lyricist-natural-language-lyric-editing">7. LYRICIST + NATURAL-LANGUAGE LYRIC EDITING</h1>
+<p>Suno's July 2026 lyric improvements introduced a more complete writing environment.</p>
+<p>Current documented capabilities include:</p>
+<ul>
+<li><strong>Lyricist</strong> — save examples of lyrics to guide future lyric creation with a similar vibe.</li>
+<li><strong>Natural-language lyric editing</strong> — ask for changes conversationally.</li>
+<li><strong>Variations</strong> — generate alternatives around highlighted text.</li>
+<li><strong>References</strong> — use highlighted text as inspiration for something new.</li>
+<li><strong>Full-screen editor</strong>.</li>
+<li><strong>Song structure labels</strong>.</li>
+<li><strong>Autosave</strong>.</li>
+</ul>
+<p><strong>RELEASE NOTE / OFFICIAL.</strong></p>
+<h3 id="lyric-revision-workflow">Lyric revision workflow</h3>
+<pre><code class="language-text">Draft
+ ↓
+Identify weak line
+ ↓
+Request several alternatives
+ ↓
+Compare rhyme / meter / meaning
+ ↓
+Choose one
+ ↓
+Regenerate only what is necessary
+</code></pre>
+<hr />
+<h1 id="8-vocal-gender">8. VOCAL GENDER</h1>
+<p>Suno's current help documentation says creators can guide a song toward a male or female voice style. In Simple Mode, the terms <strong>male</strong> or <strong>female</strong> can be used in the description.</p>
+<p><strong>OFFICIAL.</strong></p>
+<p>This should be treated as <strong>voice-style guidance</strong>, not as a guarantee of a specific human identity.</p>
+<p>Useful direction can combine gender guidance with audible characteristics:</p>
+<pre><code class="language-text">female alto vocal, intimate delivery, breathy upper register
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">male low-register vocal, restrained conversational delivery, warm chest resonance
+</code></pre>
+<hr />
+<h1 id="9-voices-current-position-in-the-system">9. VOICES — CURRENT POSITION IN THE SYSTEM</h1>
+<p>Voices lets creators record/use their own voice in Suno songs. Suno announced Voices on iOS and Android in August 2026 and said it was available to try on free plans with additional paid-plan functionality.</p>
+<p><strong>RELEASE NOTE / OFFICIAL.</strong></p>
+<h3 id="voice-preparation">Voice preparation</h3>
+<p>Best-practice guidance:</p>
+<ul>
+<li>quiet recording environment</li>
+<li>minimal room reflection</li>
+<li>no clipping</li>
+<li>clear pronunciation</li>
+<li>clean vocal source where possible</li>
+<li>consistent microphone technique</li>
+</ul>
+<p>Suno's Voice workflow can work with background music and can isolate the vocal when needed, but a clean vocal/acapella source is preferable when available.</p>
+<h3 id="rights">Rights</h3>
+<p>Only use voices you have permission to use. A technical ability to reproduce a voice does not itself establish legal permission.</p>
+<hr />
+<h1 id="10-my-taste">10. MY TASTE</h1>
+<p>Suno documents <strong>My Taste</strong> as a personalization system that learns from what the user enjoys on Suno and uses that information to provide a more personalized experience.</p>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="practical-consequence">Practical consequence</h3>
+<p>When comparing generations, remember that personalization can become another variable.</p>
+<p>For controlled experiments:</p>
+<pre><code class="language-text">Keep model fixed.
+Keep prompt fixed.
+Keep sliders fixed.
+Keep references fixed.
+Record whether personalization features are active.
+</code></pre>
+<p>Do not attribute every output difference to prompt wording if another personalization layer may have changed.</p>
+<hr />
+<h1 id="11-inspire">11. INSPIRE</h1>
+<p>Suno documents <strong>Inspire</strong> as a way to create a new song based on the style of a playlist.</p>
+<p><strong>OFFICIAL.</strong></p>
+<p>Conceptually:</p>
+<pre><code class="language-text">playlist identity
+      ↓
+Inspire
+      ↓
+new song
+</code></pre>
+<p>Treat playlist-level influence as inspiration rather than assuming it reproduces a particular source song.</p>
+<hr />
+<h1 id="12-suno-sounds">12. SUNO SOUNDS</h1>
+<p>Suno Sounds is documented as an <strong>experimental</strong> feature for generating individual audio materials such as:</p>
+<ul>
+<li>one-shots</li>
+<li>loops</li>
+<li>sound effects</li>
+<li>instrument samples</li>
+<li>ambient noises</li>
+</ul>
+<p>For loops, BPM can be specified.</p>
+<p><strong>OFFICIAL / EXPERIMENTAL.</strong></p>
+<h3 id="sounds-studio-workflow">Sounds → Studio workflow</h3>
+<pre><code class="language-text">Generate sound
+ ↓
+Select useful one-shot/loop
+ ↓
+Bring into production workflow
+ ↓
+Layer / process / automate
+ ↓
+Export
+</code></pre>
+<p>Do not confuse Sounds with a full song generator. It is a sound-material generation tool.</p>
+<hr />
+<h1 id="13-stem-separation-current-costtype-matrix">13. STEM SEPARATION — CURRENT COST/TYPE MATRIX</h1>
+<p>Suno currently documents three stem-separation modes:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Result</th>
+<th>Availability</th>
+<th>Current documented cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto Split</strong></td>
+<td>Up to 12 stem categories</td>
+<td>Pro / Premier</td>
+<td>50 credits/extraction</td>
+</tr>
+<tr>
+<td><strong>Split from Mix</strong></td>
+<td>Selected instrument/voice + complement</td>
+<td>Pro / Premier</td>
+<td>10 credits/stem</td>
+</tr>
+<tr>
+<td><strong>Advanced Split</strong></td>
+<td>Nearly 100 selectable instruments</td>
+<td>Premier</td>
+<td>10 credits/stem</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OFFICIAL.</strong></p>
+<p>Examples of use:</p>
+<pre><code class="language-text">Need quick broad stems → Auto Split
+Need one vocal/instrument isolated → Split from Mix
+Need surgical instrument extraction → Advanced Split
+</code></pre>
+<h3 id="important-distinction">Important distinction</h3>
+<p>Stem separation is not the same as recovering the original multitrack recording. It is source separation and can contain artifacts.</p>
+<hr />
+<h1 id="14-remaster">14. REMASTER</h1>
+<p>Suno's current documentation describes Remaster as a way to create subtle variations of an existing clip and provides control over the final sound.</p>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="remaster-decision-rule">Remaster decision rule</h3>
+<p>Use Remaster when:</p>
+<ul>
+<li>composition is already good</li>
+<li>performance is already good</li>
+<li>the overall result is close</li>
+<li>the problem is primarily sonic/presentation-related</li>
+</ul>
+<p>Do not use Remaster as the first solution when the composition itself is wrong.</p>
+<pre><code class="language-text">Bad composition → regenerate/edit
+Good composition + weak presentation → consider Remaster
+</code></pre>
+<hr />
+<h1 id="15-studio-20-current-production-scope">15. STUDIO 2.0 — CURRENT PRODUCTION SCOPE</h1>
+<p>Studio 2.0 is a browser-based generative DAW and is available to <strong>Premier</strong> subscribers.</p>
+<p>Current documented feature areas include:</p>
+<ul>
+<li>MIDI import</li>
+<li>MIDI recording</li>
+<li>MIDI editing</li>
+<li>musical typing</li>
+<li>MIDI controller support</li>
+<li>Chat Bar</li>
+<li>generated instruments/vocals</li>
+<li>custom plugins</li>
+<li>synth presets</li>
+<li>audio effects</li>
+<li>sidechain compression</li>
+<li>convolution reverb</li>
+<li>wavetable synth</li>
+<li>automation</li>
+<li>advanced stem separation</li>
+<li>clip editing</li>
+<li>Take Lanes</li>
+<li>recording</li>
+<li>Remove FX / Get Dry</li>
+<li>project/library access</li>
+<li>export</li>
+</ul>
+<p><strong>OFFICIAL / RELEASE NOTE.</strong></p>
+<h3 id="studio-mental-model">Studio mental model</h3>
+<pre><code class="language-text">Suno generation
+      ↓
+Studio editing
+      ↓
+MIDI / synth / effects
+      ↓
+automation
+      ↓
+stems / multitrack
+      ↓
+export
+</code></pre>
+<hr />
+<h1 id="16-studio-midi">16. STUDIO MIDI</h1>
+<p>Studio supports importing, recording, editing, and playing MIDI. Musical typing allows a computer keyboard to act as an input device. External MIDI/Web MIDI can also be used where supported.</p>
+<p>Suno has also documented audio-to-MIDI and MIDI-to-audio workflows.</p>
+<h3 id="practical-midi-workflow">Practical MIDI workflow</h3>
+<pre><code class="language-text">Create / import MIDI
+ ↓
+Edit notes in piano roll
+ ↓
+Use MIDI as musical material
+ ↓
+Generate/assign audio
+ ↓
+Mix and automate
+</code></pre>
+<p>MIDI is fundamentally different from rendered audio: notes remain editable rather than being fixed waveform material.</p>
+<hr />
+<h1 id="17-studio-wavetable-synth">17. STUDIO WAVETABLE SYNTH</h1>
+<p>Studio 2.0 includes a wavetable synth intended for:</p>
+<ul>
+<li>basses</li>
+<li>leads</li>
+<li>pads</li>
+<li>chords</li>
+<li>additional synth layers</li>
+</ul>
+<p>Suno documents Chat Bar support for designing synth presets.</p>
+<h3 id="layering-strategy">Layering strategy</h3>
+<p>Use the synth to fill a specific missing role rather than automatically adding more sound:</p>
+<pre><code class="language-text">Song lacks sub support → add controlled bass
+Song lacks chorus width → add pad layer
+Song lacks hook reinforcement → add lead
+Song lacks harmonic movement → add chord layer
+</code></pre>
+<hr />
+<h1 id="18-studio-audio-effects">18. STUDIO AUDIO EFFECTS</h1>
+<p>Current Studio documentation/release material identifies effect families including:</p>
+<ul>
+<li>Compressor</li>
+<li>Convolution</li>
+<li>Delay</li>
+<li>Distortion</li>
+<li>EQ</li>
+<li>Gate</li>
+<li>Reverb</li>
+</ul>
+<p>Studio 2.0 also documents sidechain compression and custom effect creation through Chat Bar.</p>
+<h3 id="production-principle">Production principle</h3>
+<p>Effects should solve a purpose:</p>
+<pre><code class="language-text">EQ → spectral balance
+Compression → dynamics control
+Gate → unwanted low-level material control
+Delay → rhythmic/spatial repetition
+Reverb → acoustic/spatial depth
+Distortion → harmonic density/character
+Convolution → modeled space/impulse response character
+</code></pre>
+<hr />
+<h1 id="19-studio-automation">19. STUDIO AUTOMATION</h1>
+<p>Automation allows effect parameters to change over time.</p>
+<p>Useful automation targets include:</p>
+<ul>
+<li>effect amount</li>
+<li>filter movement</li>
+<li>reverb send</li>
+<li>delay level</li>
+<li>dynamics behavior</li>
+<li>transitions</li>
+<li>build/drop intensity</li>
+</ul>
+<h3 id="musical-automation-principle">Musical automation principle</h3>
+<pre><code class="language-text">Static sound = stable identity
+Automation = movement
+
+Movement should support arrangement, not merely demonstrate a plugin.
+</code></pre>
+<hr />
+<h1 id="20-studio-chat-bar">20. STUDIO CHAT BAR</h1>
+<p>Studio Chat Bar can be used to:</p>
+<ul>
+<li>generate instruments and vocals</li>
+<li>create custom plugins</li>
+<li>design synth presets</li>
+<li>help with sessions</li>
+<li>make production changes through natural-language interaction</li>
+</ul>
+<p>The September 2026 Studio update also added understanding of BPM/tempo changes, undo for prompt edits, plugin copy/duplicate improvements, improved wavetable fidelity, and faster playback/project loading.</p>
+<p><strong>RELEASE NOTE.</strong></p>
+<h3 id="chat-bar-principle">Chat Bar principle</h3>
+<p>Describe the musical outcome first:</p>
+<pre><code class="language-text">Make the bass tighter and leave more space for the kick.
+</code></pre>
+<p>rather than relying solely on implementation vocabulary:</p>
+<pre><code class="language-text">Change compressor threshold.
+</code></pre>
+<p>Use implementation terms when you already know the technical target.</p>
+<hr />
+<h1 id="21-studio-recording-take-lanes-clip-workflow">21. STUDIO RECORDING / TAKE LANES / CLIP WORKFLOW</h1>
+<p>Current Studio help materials include dedicated workflows for recording, editing clips, Take Lanes, and removing effects/getting dry material.</p>
+<h3 id="general-recording-workflow">General recording workflow</h3>
+<pre><code class="language-text">Record
+ ↓
+Review take
+ ↓
+Compare takes
+ ↓
+Choose/comp takes where appropriate
+ ↓
+Edit timing/content
+ ↓
+Process
+ ↓
+Automate
+ ↓
+Export
+</code></pre>
+<p>Take Lanes should be treated as a performance-selection workflow rather than a replacement for the entire arrangement system.</p>
+<hr />
+<h1 id="22-export-matrix">22. EXPORT MATRIX</h1>
+<p>Current Suno documentation says available download formats depend on plan and location/workflow.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Current documented availability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MP3</strong></td>
+<td>Song downloads on all plans; web and mobile</td>
+</tr>
+<tr>
+<td><strong>WAV</strong></td>
+<td>Pro/Premier; web</td>
+</tr>
+<tr>
+<td><strong>Video</strong></td>
+<td>Songs can be downloaded as video files</td>
+</tr>
+<tr>
+<td><strong>Stems</strong></td>
+<td>Individual stem files when available</td>
+</tr>
+<tr>
+<td><strong>MIDI</strong></td>
+<td>Songs created in Suno Studio; Premier</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OFFICIAL.</strong></p>
+<p>Studio provides additional production-oriented export options, including high-quality multitrack/stem workflows for eligible users.</p>
+<h3 id="rule">Rule</h3>
+<p>Do not assume every format appears on every device, plan, song, or feature. Suno explicitly notes that available options can vary.</p>
+<hr />
+<h1 id="23-download-limits-current-numbers">23. DOWNLOAD LIMITS — CURRENT NUMBERS</h1>
+<p>Suno currently documents:</p>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th style="text-align: right;">Download allowance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Free</strong></td>
+<td style="text-align: right;">Up to 7 lifetime trial downloads</td>
+</tr>
+<tr>
+<td><strong>Pro</strong></td>
+<td style="text-align: right;">20/month</td>
+</tr>
+<tr>
+<td><strong>Premier</strong></td>
+<td style="text-align: right;">60/month</td>
+</tr>
+</tbody>
+</table>
+<p>Pro/Premier allowances reset on the billing date and do not roll over.</p>
+<p>Additional documented rules:</p>
+<ul>
+<li>re-downloading the same song does not consume another download</li>
+<li>multiple formats for the same song count as one song download</li>
+<li>stems are included with that song's download</li>
+<li>failed/interrupted downloads do not count</li>
+<li>additional downloads can be purchased</li>
+<li>Studio workflows are not affected by these download limits</li>
+</ul>
+<p><strong>OFFICIAL.</strong></p>
+<hr />
+<h1 id="24-v6-generation-credit-economics">24. V6 GENERATION CREDIT ECONOMICS</h1>
+<p>Suno's current V6 FAQ states that V6 generations retain the same basic generation cost as prior models: <strong>two songs for 10 credits</strong>.</p>
+<p>The FAQ also warns that providing many images/videos in prompts can increase credit cost.</p>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="efficiency-rule">Efficiency rule</h3>
+<p>Use cheap iteration for discovery and reserve expensive/credit-intensive operations for decisions that survived testing.</p>
+<pre><code class="language-text">Explore → select → refine → edit → export
+</code></pre>
+<p>Do not repeatedly spend credits solving a problem that could have been diagnosed with one controlled test.</p>
+<hr />
+<h1 id="25-song-duration">25. SONG DURATION</h1>
+<p>Current V6-family documentation states that v6, v6-wild, and v6-mini can generate up to <strong>8 minutes in one generation</strong>.</p>
+<p>Extend remains the tool for continuing a song beyond the generated material.</p>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="duration-strategy">Duration strategy</h3>
+<pre><code class="language-text">Short idea → generate normally
+Long complete arrangement → use duration intentionally
+Song needs more material → Extend
+Song has unwanted material → Crop/edit
+</code></pre>
+<hr />
+<h1 id="26-cover-art-visual-creation">26. COVER ART / VISUAL CREATION</h1>
+<p>Suno's July 2026 release notes documented image iteration using text prompts. An image can be dropped into Suno and modified with text, producing either an image or a video.</p>
+<p>Supported visual contexts include:</p>
+<ul>
+<li>songs</li>
+<li>playlists</li>
+<li>profile images</li>
+<li>profile banners</li>
+</ul>
+<p><strong>RELEASE NOTE.</strong></p>
+<h3 id="visual-prompt-principle">Visual prompt principle</h3>
+<p>Treat visual editing like musical editing:</p>
+<pre><code class="language-text">LOCK what must remain.
+CHANGE only what needs changing.
+STATE prohibited changes when necessary.
+</code></pre>
+<p>For iterative artwork, explicitly identify:</p>
+<pre><code class="language-text">SUBJECT LOCK
+CLOTHING LOCK
+POSE LOCK
+BACKGROUND LOCK
+ACCESSORY LOCK
+COLOR LOCK
+CAMERA LOCK
+ONLY CHANGE: [specific requested change]
+</code></pre>
+<hr />
+<h1 id="27-playlists-and-offline-mobile-listening">27. PLAYLISTS AND OFFLINE MOBILE LISTENING</h1>
+<p>Suno's August 2026 updates added playlist improvements and offline playlist listening on mobile.</p>
+<p>Documented playlist improvements include:</p>
+<ul>
+<li>shuffle on web</li>
+<li>quick add to library</li>
+<li>filters for playlists made by you, Suno, or another creator</li>
+<li>adding/reordering songs</li>
+<li>grid/list library views</li>
+<li>playlist search</li>
+<li>pinning playlists on web</li>
+<li>playlist cover art generation</li>
+</ul>
+<p>Offline playlists on mobile allow saved playlists to be listened to without network connectivity.</p>
+<p><strong>RELEASE NOTE.</strong></p>
+<p>These are library/discovery capabilities, but they belong in an exhaustive Suno guide because they affect how finished work is organized and reviewed.</p>
+<hr />
+<h1 id="28-mobile-creation-imessage">28. MOBILE CREATION / iMESSAGE</h1>
+<p>Suno added an iMessage keyboard integration for iOS in July 2026.</p>
+<p>The documented workflow allows users to:</p>
+<ol>
+<li>update the Suno app</li>
+<li>add/find Suno in iMessage extensions</li>
+<li>record using voice or type lyrics</li>
+<li>select styles</li>
+<li>create a song</li>
+<li>send the resulting song through iMessage</li>
+</ol>
+<p><strong>RELEASE NOTE.</strong></p>
+<p>This is platform-specific and should not be treated as a universal web/Android workflow.</p>
+<hr />
+<h1 id="29-specialized-mobile-creation">29. SPECIALIZED MOBILE CREATION</h1>
+<p>Suno introduced a mobile soccer-anthem creation flow in July 2026.</p>
+<p>The documented workflow asks four questions about a team and creates a song around those answers.</p>
+<p><strong>RELEASE NOTE.</strong></p>
+<p>This demonstrates an important principle for the guide: Suno includes specialized guided creation experiences that may not appear as generic Create-mode controls.</p>
+<hr />
+<h1 id="30-copyright-rights-safeguards">30. COPYRIGHT / RIGHTS / SAFEGUARDS</h1>
+<p>Suno states that V6 development includes safeguards around uploaded audio and lyrics, including screening intended to address unauthorized use and abuse.</p>
+<p><strong>OFFICIAL / RELEASE NOTE.</strong></p>
+<h3 id="creator-rule">Creator rule</h3>
+<p>Before uploading material, verify that you have the necessary rights or permissions.</p>
+<p>This applies particularly to:</p>
+<ul>
+<li>audio uploads</li>
+<li>lyrics</li>
+<li>samples</li>
+<li>reference recordings</li>
+<li>voices</li>
+<li>Custom Model training material</li>
+</ul>
+<p>Do not interpret a technical feature's availability as a license to use someone else's copyrighted material.</p>
+<hr />
+<h1 id="31-custom-model-rights-requirement">31. CUSTOM MODEL RIGHTS REQUIREMENT</h1>
+<p>Suno's current documentation says Custom Models require songs for which the creator owns the rights. The current documented limit is up to <strong>three private Custom Models</strong>, built from at least <strong>six songs</strong>.</p>
+<p>Custom Models are private and cannot be shared between users.</p>
+<p><strong>OFFICIAL.</strong></p>
+<h3 id="dataset-principle">Dataset principle</h3>
+<p>For a useful personal model, dataset consistency generally matters more than random variety.</p>
+<pre><code class="language-text">coherent identity
++ consistent production
++ representative examples
+= more useful personalized model
+</code></pre>
+<hr />
+<h1 id="32-ab-testing-complete-v6-protocol">32. A/B TESTING — COMPLETE V6 PROTOCOL</h1>
+<p>For serious experimentation:</p>
+<h3 id="lock">Lock</h3>
+<ul>
+<li>model</li>
+<li>lyrics</li>
+<li>Style</li>
+<li>references</li>
+<li>duration</li>
+<li>input audio</li>
+<li>Variety</li>
+<li>Weirdness</li>
+<li>Style Influence</li>
+<li>Audio Influence</li>
+<li>Max Mode status</li>
+</ul>
+<h3 id="change-exactly-one-variable">Change exactly one variable</h3>
+<p>Example:</p>
+<pre><code class="language-text">Trial A → Weirdness 35%
+Trial B → Weirdness 50%
+</code></pre>
+<p>Do not simultaneously change:</p>
+<pre><code class="language-text">Weirdness + Style Influence + lyrics + genre + reference
+</code></pre>
+<p>because the experiment becomes uninterpretable.</p>
+<h3 id="score">Score</h3>
+<p>Use a fixed rubric:</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th style="text-align: right;">Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vocal identity</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Melody</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Lyrics delivery</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Arrangement</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Groove</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Sound design</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Mix</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Emotional impact</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Hook</td>
+<td style="text-align: right;">/10</td>
+</tr>
+<tr>
+<td>Overall</td>
+<td style="text-align: right;">/10</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="33-rescue-workflow">33. RESCUE WORKFLOW</h1>
+<p>When a generation contains one excellent section and several weak sections:</p>
+<pre><code class="language-text">DO NOT immediately throw away the entire song.
+
+1. Identify the strongest section.
+2. Preserve it.
+3. Crop/extend/edit as appropriate.
+4. Replace the weakest section.
+5. Use stems if separation is useful.
+6. Move to Studio for production fixes.
+7. Remaster only after the musical structure is correct.
+</code></pre>
+<h3 id="decision-hierarchy">Decision hierarchy</h3>
+<pre><code class="language-text">Composition problem → Edit/regenerate
+Performance problem → Vocal/edit workflow
+Arrangement problem → Replace/Extend/Edit
+Balance problem → Stems/Studio
+Sonic polish problem → Remaster/Studio
+Final mastering problem → Studio/external DAW
+</code></pre>
+<hr />
+<h1 id="34-what-not-to-assume">34. WHAT NOT TO ASSUME</h1>
+<p>Never automatically assume:</p>
+<ul>
+<li>a bracketed tag is a deterministic command</li>
+<li>a prompt adjective has a fixed technical meaning</li>
+<li>an old V5/V5.5 trick remains identical in V6</li>
+<li>a community workaround is official</li>
+<li>a feature exists on every plan</li>
+<li>a feature is identical on web and mobile</li>
+<li>a voice result is guaranteed to match a particular person</li>
+<li>stem separation recreates original multitracks</li>
+<li>Remaster fixes composition</li>
+<li>higher Weirdness is always better</li>
+<li>higher Style Influence is always better</li>
+<li>more prompt text means more control</li>
+<li>more references automatically mean better results</li>
+<li>a successful one-off generation proves causality</li>
+</ul>
+<hr />
+<h1 id="35-current-release-tracking-rule">35. CURRENT RELEASE-TRACKING RULE</h1>
+<p>Because Suno changes rapidly, this guide should be audited against official sources whenever a major model, Studio, Create, Voices, licensing, download, or plan change occurs.</p>
+<h3 id="audit-checklist">Audit checklist</h3>
+<pre><code class="language-text">1. Check Current Models.
+2. Check v6 FAQ.
+3. Check Making Music help category.
+4. Check Studio 2.0 help category.
+5. Check Release Notes.
+6. Check downloads/terms.
+7. Search for changed feature names.
+8. Mark historical behavior.
+9. Add new controls.
+10. Retest community techniques.
+11. Update reference date.
+12. Remove claims that are no longer supported.
+</code></pre>
+<hr />
+<h1 id="36-master-v6-principle">36. MASTER V6 PRINCIPLE</h1>
+<p>The complete Suno workflow is not:</p>
+<pre><code class="language-text">Prompt → Generate → Done
+</code></pre>
+<p>It is:</p>
+<pre><code class="language-text">IDEA
+ ↓
+LYRICS / CONCEPT
+ ↓
+STYLE IDENTITY
+ ↓
+MODEL SELECTION
+ ↓
+REFERENCES / INPUTS
+ ↓
+CREATIVE CONTROLS
+ ↓
+GENERATION
+ ↓
+LISTEN
+ ↓
+SCORE
+ ↓
+EDIT
+ ↓
+REPLACE / EXTEND / CROP
+ ↓
+REMASTER
+ ↓
+STEM SEPARATION
+ ↓
+STUDIO PRODUCTION
+ ↓
+MIDI / SYNTH / EFFECTS / AUTOMATION
+ ↓
+MIX REVIEW
+ ↓
+EXPORT
+ ↓
+ORGANIZE / PLAYLIST / PUBLISH
+</code></pre>
+<p>The purpose of the guide is therefore not merely to teach prompts. It is to document the <strong>entire current Suno creation and production system</strong>, including its capabilities, limits, evidence, and changing behavior.</p>
+<hr />
+<h1 id="37-official-current-reference-set">37. OFFICIAL CURRENT REFERENCE SET</h1>
+<ul>
+<li>Current Models — <code>https://help.suno.com/en/articles/13924737</code></li>
+<li>v6 FAQ — <code>https://help.suno.com/en/articles/13924481</code></li>
+<li>Model switching — <code>https://help.suno.com/en/articles/13924993</code></li>
+<li>Song duration — <code>https://help.suno.com/en/articles/13924929</code></li>
+<li>Making Music — <code>https://help.suno.com/en/categories/550017</code></li>
+<li>Release Notes — <code>https://suno.com/release-notes</code></li>
+<li>Introducing v6 — <code>https://suno.com/release-notes/introducing-v6</code></li>
+<li>V6 announcement — <code>https://suno.com/blog/introducing-v6</code></li>
+<li>Downloads — <code>https://help.suno.com/en/articles/13926209</code></li>
+<li>Download types — <code>https://help.suno.com/en/articles/13926081</code></li>
+<li>Stems — <code>https://help.suno.com/en/articles/13925185</code></li>
+</ul>
+<hr />
+<h1 id="38-final-scope-statement">38. FINAL SCOPE STATEMENT</h1>
+<p><strong>This audit is part of LIL SYNN's Complete Suno V6 Guide.</strong></p>
+<p>Whenever a future update says <strong>ALL</strong> or <strong>EVERYTHING</strong>, interpret those words using the definitions at the top of this document:</p>
+<blockquote>
+<p><strong>ALL = every currently available and materially useful Suno V6-family capability and knowledge that can be responsibly documented.</strong></p>
+<p><strong>EVERYTHING = ALL of that, plus the evidence, limitations, compatibility, history, uncertainty, testing methodology, and boundaries necessary to understand what is actually known.</strong></p>
+</blockquote>
+<p>The guide should expand when new verified information appears and should contract when obsolete or unsupported claims are discovered.</p>
