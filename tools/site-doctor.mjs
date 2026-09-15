@@ -3,8 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const root=process.cwd();
-const errors=[];const warnings=[];
+const root=process.cwd();const errors=[];const warnings=[];
 const exists=p=>fs.existsSync(path.join(root,p));
 const fail=m=>errors.push(m);const warn=m=>warnings.push(m);
 const htmlFiles=fs.readdirSync(root).filter(x=>x.endsWith('.html'));
@@ -35,7 +34,7 @@ for(const file of htmlFiles){
  if(!/<main\b/i.test(html))warn(`${file}: no main landmark found; verify accessibility intent`);
  let inlineIndex=0;
  for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(/\bsrc\s*=/.test(match[1]))continue;const code=match[2].trim();if(code)checkInlineScript(file,code,++inlineIndex)}
- for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
+ for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;if(ref==='/_vercel/insights/script.js')continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
  if(/id=["']sideMenu["']|aria-label=["']Primary navigation["']|homepage-final-fixes\.js/i.test(html))fail(`${file}: legacy shell marker detected`);
 }
 
