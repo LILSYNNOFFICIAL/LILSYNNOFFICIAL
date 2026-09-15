@@ -2,6 +2,11 @@ name: RERUN ALL JOBS
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/RERUN ALL JOBS.yml'
 
 permissions:
   actions: write
@@ -91,9 +96,6 @@ jobs:
               continue
             fi
 
-            # Fetch the workflow definition as raw YAML from current main.
-            # Do not decode the Contents API's base64 payload: raw media
-            # avoids padding/whitespace failures on unusual workflow files.
             definition=$(gh api \
               "repos/$REPO/contents/$workflow_path?ref=$BRANCH" \
               -H 'Accept: application/vnd.github.raw+json' 2>/dev/null || true)
@@ -103,7 +105,6 @@ jobs:
               continue
             fi
 
-            # Required manual inputs are deliberately never guessed.
             if printf '%s\n' "$definition" | grep -Eq '^[[:space:]]+workflow_dispatch:'; then
               if printf '%s\n' "$definition" | awk '
                 /^  workflow_dispatch:/ {inside=1; next}
