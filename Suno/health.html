@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Suno Health — LIL SYNN</title>
+<meta name="description" content="Browser-based health checks for the LIL SYNN Suno guide.">
+<link rel="stylesheet" href="assets/suno.css">
+<link rel="stylesheet" href="assets/suno-overrides.css">
+<style>
+:root{color-scheme:dark}body{background:#030302;color:#f2eee2;font-family:system-ui,sans-serif}.health{width:min(1100px,100%);margin:auto;padding:110px 18px 70px}.kicker{color:#f2cf68;font-weight:800;letter-spacing:.16em;font-size:.72rem}.health h1{font-size:clamp(2rem,7vw,4.5rem);margin:.35rem 0}.health p{color:#b7b09f;line-height:1.6}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.btn{display:inline-block;border:1px solid rgba(214,173,69,.35);border-radius:10px;padding:10px 14px;color:#f2eee2;text-decoration:none;background:#090907}.btn:hover{border-color:#f2cf68;color:#f2cf68}.status{margin:20px 0;padding:16px;border:1px solid rgba(214,173,69,.2);border-radius:14px;background:#080806}.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.check{padding:15px;border:1px solid #242118;border-radius:12px;background:#090907}.pass{border-color:rgba(110,220,150,.35)}.warn{border-color:rgba(255,196,92,.35)}.fail{border-color:rgba(255,90,110,.45)}.check strong{display:block;margin-bottom:6px}.check span{color:#aaa;line-height:1.45}.pass strong{color:#72e2a8}.warn strong{color:#ffc45c}.fail strong{color:#ff6c88}
+</style>
+</head>
+<body>
+<main class="health">
+<div class="kicker">LIL SYNN · SUNO QA</div>
+<h1>SUNO HEALTH</h1>
+<p>Browser-level checks for the isolated Suno guide. This dashboard verifies that the guide entry points and critical local assets are reachable without modifying the Audio Fix V6 module.</p>
+<div class="actions"><a class="btn" href="index.html">Suno Guide</a><a class="btn" href="audio_fix_v6/">Audio Fix V6</a><a class="btn" href="research/">Research</a><button class="btn" id="run" type="button">Run checks</button></div>
+<section class="status" aria-live="polite"><strong id="overall">Running…</strong><div id="summary">Checking Suno files.</div></section>
+<section class="checks" id="checks" aria-live="polite"></section>
+</main>
+<script>
+(()=>{
+const targets=['index.html','create/index.html','create/prompt-lab.html','control/index.html','produce/index.html','fix-test/index.html','research/index.html','master/index.html','audio_fix_v6/index.html','assets/suno.css','assets/suno-overrides.css','assets/suno-topic.js'];
+const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function check(){const out=[];for(const path of targets){try{const r=await fetch(path,{cache:'no-store'});out.push([path,r.ok?'PASS':'FAIL',r.ok?'Reachable.':`HTTP ${r.status}`])}catch(e){out.push([path,'FAIL',e.message])}}
+const audio=await fetch('audio_fix_v6/index.html',{cache:'no-store'}).then(r=>r.text()).catch(()=>''), prompt='recreate the original audio exactly as sung and performed';out.push(['Audio Fix V6 lock',audio.includes(prompt)?'PASS':'FAIL',audio.includes(prompt)?'Locked prompt is present.':'Locked prompt was not found.']);
+render(out)}
+function render(out){$('checks').innerHTML=out.map(x=>`<article class="check ${x[1].toLowerCase()}"><strong>${esc(x[0])} · ${x[1]}</strong><span>${esc(x[2])}</span></article>`).join('');const f=out.filter(x=>x[1]==='FAIL').length;$('overall').textContent=f?'FAIL':'PASS';$('summary').textContent=`${out.length-f} checks passed · ${f} failed · ${new Date().toLocaleString()}`}
+$('run').addEventListener('click',check);check();
+})();
+</script>
+</body>
+</html>
