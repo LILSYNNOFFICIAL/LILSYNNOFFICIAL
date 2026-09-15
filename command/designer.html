@@ -10,7 +10,7 @@
 <section id="login" class="login">
   <form id="loginForm" class="login-card">
     <h1>VISUAL EDITOR</h1>
-    <p>LIL SYNN front-page design control. Sign in with your existing Command Center credentials.</p>
+    <p>LIL SYNN front-page design control. Sign in with your existing Command Center admin credentials.</p>
     <label>Email<input id="email" type="email" autocomplete="username" required></label>
     <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
     <button type="submit">ENTER DESIGNER</button>
@@ -45,5 +45,12 @@
   <footer class="statusbar"><span id="status"><strong>Ready</strong></span><span>Drag elements · Resize handles · Arrow keys nudge</span><span>Zoom <input id="zoom" type="range" min="30" max="100" value="60" aria-label="Zoom"></span></footer>
 </div>
 <script src="/command/designer.js?v=20260915"></script>
+<script>
+(() => {
+  const dims={desktop:[1440,900],tablet:[900,900],mobile:[390,844]};
+  function align(){const ov=document.querySelector('#overlay'),sel=document.querySelector('#viewportSelect'),zoom=document.querySelector('#zoom');if(!ov||!sel||!zoom)return;const d=dims[sel.value]||dims.desktop,z=Number(zoom.value)/100;ov.style.width=d[0]+'px';ov.style.height=d[1]+'px';ov.style.transform=`scale(${z})`;ov.style.transformOrigin='top left'}
+  document.addEventListener('DOMContentLoaded',align);document.querySelector('#zoom')?.addEventListener('input',align);document.querySelector('#viewportSelect')?.addEventListener('change',align);window.addEventListener('resize',align);setTimeout(align,250);
+})();
+</script>
 </body>
 </html>
