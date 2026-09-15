@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://127.0.0.1:4173';
+const absolute = route => new URL(route, BASE_URL).toString();
+
 const ROUTES = [
   '/Suno/',
   '/Suno/create/',
@@ -19,8 +22,8 @@ const ROUTES = [
 const isLocalSunoHref = href => {
   if (!href || href.startsWith('#')) return false;
   try {
-    const url = new URL(href, 'http://127.0.0.1:4173');
-    return url.origin === 'http://127.0.0.1:4173' && url.pathname.startsWith('/Suno/');
+    const url = new URL(href, BASE_URL);
+    return url.origin === new URL(BASE_URL).origin && url.pathname.startsWith('/Suno/');
   } catch {
     return false;
   }
@@ -36,7 +39,7 @@ async function assertHealthyPage(page, route) {
   page.on('console', onConsole);
   page.on('pageerror', onPageError);
 
-  const response = await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForTimeout(350);
 
   expect(response, `${route} returned no response`).not.toBeNull();
@@ -81,7 +84,7 @@ test.describe('Suno V6 route and browser regression', () => {
       const route = queue.shift();
       if (visited.has(route)) continue;
       visited.add(route);
-      const response = await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
       if (!response || response.status() >= 400) {
         failures.push(`${route} -> ${response?.status() ?? 'NO_RESPONSE'}`);
         continue;
@@ -90,7 +93,7 @@ test.describe('Suno V6 route and browser regression', () => {
       const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
       for (const href of hrefs) {
         if (!isLocalSunoHref(href)) continue;
-        const url = new URL(href, 'http://127.0.0.1:4173');
+        const url = new URL(href, BASE_URL);
         url.hash = '';
         url.search = '';
         const normalized = url.pathname;
@@ -99,7 +102,7 @@ test.describe('Suno V6 route and browser regression', () => {
     }
 
     for (const route of visited) {
-      const response = await request.get(route);
+      const response = await request.get(absolute(route));
       if (response.status() >= 400) failures.push(`${route} -> ${response.status()}`);
     }
 
