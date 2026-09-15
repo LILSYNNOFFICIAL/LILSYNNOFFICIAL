@@ -2,6 +2,10 @@ name: RERUN ALL JOBS
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/RERUN ALL JOBS.yml'
 
 permissions:
   actions: write
@@ -9,50 +13,48 @@ permissions:
 
 jobs:
   rerun-all-workflows:
-    name: Rerun every workflow
+    name: Process current main state
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     steps:
-      - name: Find and rerun latest run of every workflow
+      - name: Process every runnable workflow against current main
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           CURRENT_WORKFLOW: RERUN ALL JOBS
+          BRANCH: main
         shell: bash
         run: |
-          set +e
+          set -euo pipefail
 
           echo "=========================================="
           echo "        RERUN ALL JOBS"
           echo "=========================================="
-          echo
           echo "Repository: $REPO"
+          echo "Starting SHA: $GITHUB_SHA"
           echo
 
+          # Never replay an old run merely because it is the latest historical run.
+          # Each dispatch below runs the workflow against the current main branch.
           workflows=$(gh api \
             --paginate \
             "repos/$REPO/actions/workflows?per_page=100" \
-            --jq '.workflows[] | [.id, .name, .path, .state] | @tsv')
-
-          if [ -z "$workflows" ]; then
-            echo "No workflows were found."
-            exit 0
-          fi
+            --jq '.workflows[] | [.id, .name, .path, .state] | @tsv' | sort -t $'\t' -k3,3)
 
           total=0
-          attempted=0
-          successful=0
+          dispatched=0
+          completed=0
           failed=0
           skipped=0
 
           while IFS=$'\t' read -r workflow_id workflow_name workflow_path workflow_state; do
             [ -z "$workflow_id" ] && continue
-
             total=$((total + 1))
 
+            echo
             echo "------------------------------------------"
             echo "Workflow: $workflow_name"
-            echo "ID:       $workflow_id"
             echo "Path:     $workflow_path"
             echo "State:    $workflow_state"
 
@@ -62,49 +64,116 @@ jobs:
               continue
             fi
 
-            if [ "$workflow_state" = "disabled_inactivity" ] ||
-               [ "$workflow_state" = "disabled_manually" ]; then
+            if [[ "$workflow_state" == disabled_* ]]; then
               echo "SKIPPED: workflow is disabled"
               skipped=$((skipped + 1))
               continue
             fi
 
-            run_id=$(gh api \
-              "repos/$REPO/actions/workflows/$workflow_id/runs?per_page=1" \
-              --jq '.workflow_runs[0].id' 2>/dev/null)
+            # Read the workflow definition from the current main branch so that
+            # we never make decisions from an obsolete local copy.
+            encoded=$(gh api \
+              "repos/$REPO/contents/$workflow_path?ref=$BRANCH" \
+              --jq '.content' | tr -d '\n')
+            workflow_yaml=$(printf '%s' "$encoded" | base64 --decode)
 
-            if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
-              echo "SKIPPED: no previous run exists"
-              skipped=$((skipped + 1))
+            # Dispatch is the preferred path because it executes the workflow
+            # against today's main state rather than replaying an old commit.
+            if printf '%s\n' "$workflow_yaml" | grep -Eq '^[[:space:]]+workflow_dispatch:'; then
+              # Workflows with required manual inputs are deliberately not guessed.
+              # Supplying arbitrary admin values could be destructive.
+              if printf '%s\n' "$workflow_yaml" | awk '
+                /^  workflow_dispatch:/ {inside=1; next}
+                inside && /^[^[:space:]]/ {inside=0}
+                inside && /required:[[:space:]]*true/ {found=1}
+                END {exit(found ? 0 : 1)}
+              '; then
+                echo "SKIPPED: workflow_dispatch requires manual inputs"
+                skipped=$((skipped + 1))
+                continue
+              fi
+
+              echo "DISPATCH: current main"
+
+              if ! gh workflow run "$workflow_id" --ref "$BRANCH"; then
+                echo "FAILED: workflow_dispatch request"
+                failed=$((failed + 1))
+                continue
+              fi
+
+              dispatched=$((dispatched + 1))
+
+              # Find the newly created run, then wait for it to finish before
+              # moving on. This makes later workflows consume any commits made
+              # by earlier workflows instead of racing them.
+              run_id=""
+              for _ in $(seq 1 30); do
+                run_id=$(gh run list \
+                  --workflow "$workflow_id" \
+                  --branch "$BRANCH" \
+                  --event workflow_dispatch \
+                  --limit 1 \
+                  --json databaseId \
+                  --jq '.[0].databaseId // empty')
+                [ -n "$run_id" ] && break
+                sleep 2
+              done
+
+              if [ -z "$run_id" ]; then
+                echo "FAILED: could not locate dispatched run"
+                failed=$((failed + 1))
+                continue
+              fi
+
+              echo "RUN: $run_id"
+              if gh run watch "$run_id" --exit-status; then
+                echo "SUCCESS: workflow completed"
+                completed=$((completed + 1))
+              else
+                echo "FAILED: workflow run $run_id"
+                failed=$((failed + 1))
+              fi
               continue
             fi
 
-            echo "Latest run: $run_id"
+            # For workflows that cannot be manually dispatched, only rerun a
+            # run that already exists for the CURRENT main SHA. This prevents
+            # the old-stale-run problem the original controller had.
+            current_run=$(gh api \
+              "repos/$REPO/actions/workflows/$workflow_id/runs?branch=$BRANCH&head_sha=$GITHUB_SHA&per_page=1" \
+              --jq '.workflow_runs[0].id // empty')
 
-            attempted=$((attempted + 1))
-
-            if gh api \
-              --method POST \
-              "repos/$REPO/actions/runs/$run_id/rerun" \
-              >/dev/null 2>&1; then
-              echo "SUCCESS: rerun requested"
-              successful=$((successful + 1))
+            if [ -n "$current_run" ]; then
+              echo "RERUN: existing run for current SHA $GITHUB_SHA ($current_run)"
+              if gh api --method POST "repos/$REPO/actions/runs/$current_run/rerun" >/dev/null; then
+                if gh run watch "$current_run" --exit-status; then
+                  completed=$((completed + 1))
+                else
+                  failed=$((failed + 1))
+                fi
+              else
+                failed=$((failed + 1))
+              fi
             else
-              echo "FAILED: could not request rerun"
-              failed=$((failed + 1))
+              echo "SKIPPED: no runnable current-SHA invocation exists"
+              skipped=$((skipped + 1))
             fi
 
           done <<< "$workflows"
 
           echo
           echo "=========================================="
-          echo "             SUMMARY"
+          echo "                 SUMMARY"
           echo "=========================================="
           echo "Workflows found:       $total"
-          echo "Reruns attempted:      $attempted"
-          echo "Reruns requested:      $successful"
-          echo "Reruns failed:         $failed"
-          echo "Workflows skipped:     $skipped"
+          echo "Dispatched:            $dispatched"
+          echo "Completed:             $completed"
+          echo "Failed:                $failed"
+          echo "Skipped:               $skipped"
+          echo "Final main SHA:        $(gh api "repos/$REPO/git/ref/heads/$BRANCH" --jq '.object.sha')"
           echo "=========================================="
 
-          exit 0
+          # Do not hide failures behind a green controller run.
+          if [ "$failed" -gt 0 ]; then
+            exit 1
+          fi
