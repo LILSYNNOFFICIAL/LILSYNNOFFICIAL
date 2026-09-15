@@ -28,8 +28,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Playwright
-        run: npx --yes playwright@1.63.0 install --with-deps chromium
+      - name: Install Playwright test runner
+        run: npm install --no-save --no-package-lock @playwright/test@1.63.0
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
       - name: Start static site server
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 &
@@ -45,7 +47,7 @@ jobs:
           CI: 'true'
           PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
           PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:4173
-        run: npx --yes playwright@1.63.0 test tools/suno-browser-qa.spec.mjs --workers=1 --reporter=line
+        run: npx playwright test tools/suno-browser-qa.spec.mjs --workers=1 --reporter=line
       - name: Upload browser artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
