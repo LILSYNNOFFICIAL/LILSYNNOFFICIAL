@@ -1,0 +1,43 @@
+name: Restore Homepage Analytics
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix-index-analytics:
+    if: ${{ !contains(github.event.head_commit.message, 'restore Vercel analytics on homepage') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Add Vercel Analytics snippet
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -q '/_vercel/insights/script.js' index.html; then
+            exit 0
+          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          marker = '<script src="/site-global.js?v=20260914"></script>'
+          snippet = '<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>\n<script defer src="/_vercel/insights/script.js"></script>\n'
+          if marker not in s:
+              raise SystemExit('site-global.js marker not found')
+          s = s.replace(marker, snippet + marker, 1)
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'restore Vercel analytics on homepage'
+          git push origin HEAD:main
