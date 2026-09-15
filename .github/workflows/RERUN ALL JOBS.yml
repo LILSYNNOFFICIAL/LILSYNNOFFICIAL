@@ -29,6 +29,28 @@ jobs:
         run: |
           set -euo pipefail
 
+          wait_for_run() {
+            local run_id="$1"
+            local label="$2"
+            local status=""
+            local conclusion=""
+
+            for _ in $(seq 1 180); do
+              status=$(gh api "repos/$REPO/actions/runs/$run_id" --jq '.status' 2>/dev/null || true)
+              conclusion=$(gh api "repos/$REPO/actions/runs/$run_id" --jq '.conclusion // empty' 2>/dev/null || true)
+              echo "[$label] run=$run_id status=${status:-unknown} conclusion=${conclusion:-pending}"
+
+              if [ "$status" = "completed" ]; then
+                [ "$conclusion" = "success" ]
+                return
+              fi
+              sleep 10
+            done
+
+            echo "[$label] timed out waiting for run $run_id"
+            return 1
+          }
+
           echo "=========================================="
           echo "        RERUN ALL JOBS"
           echo "=========================================="
@@ -36,8 +58,7 @@ jobs:
           echo "Starting SHA: $START_SHA"
           echo
 
-          workflows=$(gh api \
-            --paginate \
+          workflows=$(gh api --paginate \
             "repos/$REPO/actions/workflows?per_page=100" \
             --jq '.workflows[] | [.id, .name, .path, .state] | @tsv' | sort -t $'\t' -k3,3)
 
@@ -82,7 +103,6 @@ jobs:
             workflow_yaml=$(printf '%s' "$encoded" | base64 --decode)
 
             if printf '%s\n' "$workflow_yaml" | grep -Eq '^[[:space:]]+workflow_dispatch:'; then
-              # Never invent values for workflows that require user-supplied inputs.
               if printf '%s\n' "$workflow_yaml" | awk '
                 /^  workflow_dispatch:/ {inside=1; next}
                 inside && /^[^[:space:]]/ {inside=0}
@@ -95,10 +115,6 @@ jobs:
               fi
 
               echo "DISPATCH: current main"
-
-              # Use the REST dispatch endpoint directly. `gh workflow run` can
-              # depend on a local git checkout and therefore is not reliable
-              # inside this controller's runner.
               if ! gh api --method POST \
                 "repos/$REPO/actions/workflows/$workflow_id/dispatches" \
                 -f ref="$BRANCH" >/dev/null; then
@@ -108,15 +124,15 @@ jobs:
               fi
 
               dispatched=$((dispatched + 1))
-
-              # Identify the newly dispatched run by workflow + branch + event,
-              # then wait for it. Do not accidentally attach to an older run.
               run_id=""
+
+              # GitHub's dispatch endpoint returns no run ID. Because this
+              # controller dispatches sequentially, the newest workflow_dispatch
+              # run for this workflow/branch is the run just created.
               for _ in $(seq 1 30); do
                 run_id=$(gh api \
                   "repos/$REPO/actions/workflows/$workflow_id/runs?branch=$BRANCH&event=workflow_dispatch&per_page=10" \
-                  --jq --argjson start_time "$(date +%s)" \
-                  '.workflow_runs | map(select((.created_at | fromdateiso8601) >= ($start_time - 30))) | .[0].id // empty' 2>/dev/null || true)
+                  --jq '.workflow_runs | sort_by(.created_at) | reverse | .[0].id // empty' 2>/dev/null || true)
                 [ -n "$run_id" ] && break
                 sleep 2
               done
@@ -128,7 +144,7 @@ jobs:
               fi
 
               echo "RUN: $run_id"
-              if gh run watch "$run_id" --exit-status; then
+              if wait_for_run "$run_id" "$workflow_name"; then
                 echo "SUCCESS: workflow completed"
                 completed=$((completed + 1))
               else
@@ -138,13 +154,9 @@ jobs:
               continue
             fi
 
-            # Push/schedule-only workflows cannot be newly dispatched. If the
-            # current main SHA already has a run, wait for it when active and
-            # only rerun it when it has actually finished. Never fight a run
-            # that is already in progress.
             current_run=$(gh api \
-              "repos/$REPO/actions/workflows/$workflow_id/runs?branch=$BRANCH&head_sha=$START_SHA&per_page=1" \
-              --jq '.workflow_runs[0].id // empty' 2>/dev/null || true)
+              "repos/$REPO/actions/workflows/$workflow_id/runs?branch=$BRANCH&head_sha=$START_SHA&per_page=10" \
+              --jq '.workflow_runs | .[0].id // empty' 2>/dev/null || true)
 
             if [ -z "$current_run" ]; then
               echo "SKIPPED: no invocation for current main SHA"
@@ -152,15 +164,12 @@ jobs:
               continue
             fi
 
-            run_status=$(gh api \
-              "repos/$REPO/actions/runs/$current_run" \
-              --jq '.status' 2>/dev/null || true)
-
+            run_status=$(gh api "repos/$REPO/actions/runs/$current_run" --jq '.status' 2>/dev/null || true)
             echo "CURRENT RUN: $current_run ($run_status)"
 
             if [ "$run_status" != "completed" ]; then
               echo "WAIT: current-SHA workflow is already running"
-              if gh run watch "$current_run" --exit-status; then
+              if wait_for_run "$current_run" "$workflow_name"; then
                 completed=$((completed + 1))
               else
                 failed=$((failed + 1))
@@ -168,9 +177,7 @@ jobs:
               continue
             fi
 
-            run_conclusion=$(gh api \
-              "repos/$REPO/actions/runs/$current_run" \
-              --jq '.conclusion' 2>/dev/null || true)
+            run_conclusion=$(gh api "repos/$REPO/actions/runs/$current_run" --jq '.conclusion // empty' 2>/dev/null || true)
 
             if [ "$run_conclusion" = "success" ]; then
               echo "SUCCESS: current-SHA workflow already completed successfully"
@@ -180,7 +187,7 @@ jobs:
 
             echo "RERUN: completed current-SHA run $current_run ($run_conclusion)"
             if gh api --method POST "repos/$REPO/actions/runs/$current_run/rerun" >/dev/null; then
-              if gh run watch "$current_run" --exit-status; then
+              if wait_for_run "$current_run" "$workflow_name"; then
                 completed=$((completed + 1))
               else
                 failed=$((failed + 1))
