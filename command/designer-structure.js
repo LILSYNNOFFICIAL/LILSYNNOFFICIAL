@@ -1,0 +1,115 @@
+(() => {
+  'use strict';
+  const frame = () => document.querySelector('#pageFrame')?.contentDocument || null;
+  const modelApi = () => window.LSDesignerDomModel;
+  const state = { drag: null, pending: [], created: new Set(), hidden: new Set() };
+  const $ = s => document.querySelector(s);
+  const toast = text => { const old = $('.toast'); if (old) old.remove(); const n = document.createElement('div'); n.className = 'toast'; n.textContent = text; document.body.append(n); setTimeout(() => n.remove(), 1800); };
+  const safeId = () => 'el_' + Math.random().toString(36).slice(2, 10);
+  const cssEscape = value => (window.CSS?.escape ? CSS.escape(value) : String(value).replace(/[^a-zA-Z0-9_-]/g, '-'));
+  function selector(el) {
+    const d = frame();
+    if (!el || !d || el === d.body) return 'body';
+    if (el.id && /^[A-Za-z][\w-]*$/.test(el.id)) return '#' + cssEscape(el.id);
+    const parts = [];
+    let n = el;
+    while (n && n !== d.body) {
+      const p = n.parentElement;
+      if (!p) break;
+      const same = [...p.children].filter(x => x.tagName === n.tagName);
+      let part = n.tagName.toLowerCase();
+      if (same.length > 1) part += `:nth-of-type(${same.indexOf(n) + 1})`;
+      parts.unshift(part);
+      n = p;
+    }
+    return 'body>' + parts.join('>');
+  }
+  function ensureId(el) { if (!el.dataset.lsId) el.dataset.lsId = safeId(); return el.dataset.lsId; }
+  function editable(el) { const d = frame(); return !!(el && d && el.nodeType === 1 && el !== d.documentElement && el !== d.body); }
+  function semanticDrop(target, clientY) {
+    if (!editable(target)) return null;
+    const r = target.getBoundingClientRect();
+    const ratio = r.height ? (clientY - r.top) / r.height : 0.5;
+    if (ratio < 0.25) return { mode: 'before', target };
+    if (ratio > 0.75) return { mode: 'after', target };
+    return { mode: 'inside', target };
+  }
+  function cycle(source, target) { return source === target || source.contains(target); }
+  function cloneTree(source) {
+    const clone = source.cloneNode(true);
+    clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+    clone.removeAttribute('id');
+    clone.querySelectorAll('[data-ls-id]').forEach(n => n.removeAttribute('data-ls-id'));
+    clone.removeAttribute('data-ls-id');
+    clone.querySelectorAll('[data-ls-designer]').forEach(n => n.dataset.lsDesigner = '1');
+    clone.dataset.lsDesigner = '1';
+    clone.dataset.lsId = safeId();
+    clone.querySelectorAll('*').forEach(n => { n.dataset.lsDesigner = '1'; n.dataset.lsId = safeId(); });
+    return clone;
+  }
+  function markCreatedTree(root) { if (!root) return; root.dataset.lsDesigner = '1'; ensureId(root); root.querySelectorAll('*').forEach(ensureId); root.querySelectorAll('*').forEach(n => n.dataset.lsDesigner = '1'); state.created.add(root); }
+  function hideSource(source) { const sel = selector(source); source.dataset.lsDesignerSource = '1'; source.style.setProperty('display', 'none', 'important'); state.hidden.add(sel); }
+  function insertClone(clone, drop) {
+    if (drop.mode === 'inside') drop.target.appendChild(clone);
+    else if (drop.mode === 'before') drop.target.parentElement?.insertBefore(clone, drop.target);
+    else if (drop.mode === 'after') drop.target.parentElement?.insertBefore(clone, drop.target.nextSibling);
+  }
+  function serializeNode(el, parentSelector = null, index = 0) {
+    const attrs = {};
+    for (const a of ['class','title','alt','href','src','target','rel','controls','autoplay','muted','loop','poster','type','aria-label','role']) if (el.hasAttribute(a)) attrs[a] = el.getAttribute(a);
+    const style = {};
+    for (const k of ['position','top','right','bottom','left','width','height','min-width','max-width','min-height','max-height','margin','padding','display','flex','flex-direction','flex-wrap','flex-grow','flex-shrink','flex-basis','justify-content','align-items','gap','font-family','font-size','font-weight','line-height','letter-spacing','text-align','text-transform','color','background','background-color','border','border-width','border-style','border-color','border-radius','box-shadow','opacity','z-index','overflow','object-fit']) if (el.style[k]) style[k] = el.style[k];
+    return { id: ensureId(el), tag: el.tagName.toLowerCase(), attrs, style, text: ['img','video','hr'].includes(el.tagName.toLowerCase()) ? '' : (el.childElementCount ? '' : (el.textContent || '').slice(0, 10000)), parentSelector, index };
+  }
+  function collectCreated() {
+    const d = frame(); if (!d) return [];
+    const roots = [...d.querySelectorAll('[data-ls-designer="1"]')].filter(el => !el.parentElement?.closest('[data-ls-designer="1"]'));
+    const out = [];
+    const walk = (el, parentSelector, index) => {
+      out.push(serializeNode(el, parentSelector, index));
+      [...el.children].forEach((child, i) => { if (child.dataset.lsDesigner === '1') walk(child, el.dataset.lsId ? null : selector(el), i); });
+    };
+    roots.forEach((root, i) => walk(root, null, i));
+    return out;
+  }
+  function begin(e) {
+    const d = frame(); if (!d || !editable(e.target)) return;
+    state.drag = { source: e.target, x: e.clientX, y: e.clientY, moved: false };
+  }
+  function move(e) { if (state.drag && Math.hypot(e.clientX - state.drag.x, e.clientY - state.drag.y) > 6) state.drag.moved = true; }
+  function end(e) {
+    const d = frame(); const op = state.drag; state.drag = null;
+    if (!d || !op?.moved || !editable(op.source)) return;
+    const target = d.elementFromPoint(e.clientX, e.clientY);
+    if (!editable(target) || target === op.source) return;
+    const drop = semanticDrop(target, e.clientY);
+    if (!drop || cycle(op.source, drop.target)) { toast('INVALID NEST — element cannot contain itself'); return; }
+    const wasCreated = op.source.dataset.lsDesigner === '1';
+    if (wasCreated) {
+      const before = selector(op.source);
+      if (drop.mode === 'inside') drop.target.appendChild(op.source);
+      else if (drop.mode === 'before') drop.target.parentElement?.insertBefore(op.source, drop.target);
+      else drop.target.parentElement?.insertBefore(op.source, drop.target.nextSibling);
+      ensureId(op.source);
+      state.pending.push({ op: 'move', element: op.source.dataset.lsId, from: before, target: selector(drop.target), position: drop.mode });
+    } else {
+      const clone = cloneTree(op.source);
+      insertClone(clone, drop);
+      markCreatedTree(clone);
+      hideSource(op.source);
+      state.pending.push({ op: 'materialize-move', source: selector(op.source), target: selector(drop.target), position: drop.mode });
+    }
+    toast(drop.mode.toUpperCase() + ' — structural change pending');
+    document.querySelector('#status')?.replaceChildren(Object.assign(document.createElement('strong'), { textContent: 'Unsaved structural changes' }));
+  }
+  function wire() {
+    const d = frame(); if (!d || d.__lsStructureWired) return;
+    d.__lsStructureWired = true;
+    d.addEventListener('pointerdown', begin, true);
+    d.addEventListener('pointermove', move, true);
+    d.addEventListener('pointerup', end, true);
+    window.LSDesignerStructure = { version: 1, semanticDrop, collectCreated, pending: () => state.pending.slice(), markCreatedTree, ensureId };
+  }
+  document.querySelector('#pageFrame')?.addEventListener('load', () => setTimeout(wire, 0));
+  setTimeout(wire, 250);
+})();
