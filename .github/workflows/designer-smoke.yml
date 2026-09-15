@@ -2,13 +2,16 @@ name: Designer Smoke
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'feat/**']
     paths:
       - 'command/designer.html'
       - 'command/designer.css'
       - 'command/designer.js'
       - 'command/designer-plus.js'
       - 'command/designer-assets.js'
+      - 'command/designer-structure.js'
+      - 'command/designer-dom-model.js'
+      - 'command/designer-dom-model.test.js'
       - 'command/designer-persist.js'
       - 'command/designer.test.js'
       - 'api/admin.js'
@@ -25,6 +28,8 @@ jobs:
         with:
           node-version: 22
       - name: Syntax check
-        run: node --check command/designer.js && node --check command/designer-plus.js && node --check command/designer-assets.js && node --check command/designer-persist.js && node --check api/admin.js && node --check api/designer-dom.js
-      - name: Contract test
+        run: node --check command/designer.js && node --check command/designer-plus.js && node --check command/designer-assets.js && node --check command/designer-structure.js && node --check command/designer-dom-model.js && node --check command/designer-persist.js && node --check api/admin.js && node --check api/designer-dom.js
+      - name: Structural model test
+        run: node command/designer-dom-model.test.js
+      - name: Designer contract test
         run: node command/designer.test.js
