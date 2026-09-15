@@ -3,7 +3,12 @@
   "buildCommand": "node suno-build.mjs",
   "outputDirectory": ".",
   "cleanUrls": true,
-  "redirects": [{"source":"/command","destination":"/command/","permanent":false}],
+  "redirects": [
+    {"source":"/command","destination":"/command/","permanent":false},
+    {"source":"/Suno","destination":"/Suno/","permanent":true},
+    {"source":"/Suno/Suno_Guide","destination":"/Suno/","permanent":true},
+    {"source":"/Suno/Suno_Guide/","destination":"/Suno/","permanent":true}
+  ],
   "rewrites": [
     {"source":"/suno","destination":"/Suno/home/"},
     {"source":"/suno/","destination":"/Suno/home/"},
