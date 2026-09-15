@@ -1,1 +1,99 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LIL SYNN — 00 Master Guide</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/suno.css"></head><body><header class="site-header"><div class="nav-wrap"><a class="brand" href="../">LIL <span>SYNN</span> / SUNO</a><nav class="main-nav"><a class="nav-link" href="../create/">Create</a><a class="nav-link" href="../control/">Control</a><a class="nav-link" href="../produce/">Produce</a><a class="nav-link" href="../fix-test/">Fix / Test</a><a class="nav-link" href="../research/">Research</a><a class="nav-link active" href="../master/">00 Master</a></nav><a class="nav-link nav-home" href="../../">MAIN SITE</a></div></header><main class="page"><section class="topic-hero"><div class="eyebrow">00 / COMPLETE REFERENCE</div><h1>MASTER <em>GUIDE</em></h1><p>The complete Suno V6 reference library in one place. This page keeps the full source material and deep-dive addenda intact, but removes the GitHub badge wall and presents the material inside the LIL SYNN website UI.</p><div class="hero-actions"><a class="button primary" href="../">BACK TO SUNO HOME</a><a class="button" href="../audio_fix_v6/">FIX AUDIO QUALITY →</a></div></section><section class="master-content" id="masterContent"></section></main><footer class="site-footer"><div class="page footer-grid"><div><div class="footer-brand">LIL SYNN / 00 MASTER</div><div>Complete source material. No badge wall. No GitHub presentation layer.</div></div><div class="footer-col"><strong>Guide</strong><a href="../">Suno Home</a><a href="../create/">Create</a><a href="../control/">Control</a><a href="../produce/">Produce</a></div><div class="footer-col"><strong>More</strong><a href="../fix-test/">Fix / Test</a><a href="../research/">Research</a><a href="../audio_fix_v6/">Fix Audio Quality</a></div><div class="footer-col"><strong>Outside</strong><a href="https://suno.com" target="_blank" rel="noopener">Suno ↗</a><a href="../../">LIL SYNN main site ↗</a><a class="donate" href="https://cash.app/$lilsynnofficial" target="_blank" rel="noopener">Donate via Cash App ↗</a></div></div></footer><script src="../assets/suno-master.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIL SYNN — Suno V6 Master Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/suno.css">
+</head>
+<body>
+<header class="site-header"><div class="nav-wrap">
+<a class="brand" href="../">LIL <span>SYNN</span> / SUNO</a>
+<nav class="main-nav">
+<a class="nav-link" href="../create/">Create</a><a class="nav-link" href="../control/">Control</a><a class="nav-link" href="../produce/">Produce</a><a class="nav-link" href="../fix-test/">Fix / Test</a><a class="nav-link" href="../research/">Research</a><a class="nav-link active" href="../master/">00 Master</a>
+</nav><a class="nav-link nav-home" href="../../">MAIN SITE</a>
+</div></header>
+<main class="page">
+<section class="topic-hero">
+<div class="eyebrow">00 / CANONICAL SYNTHESIS</div>
+<h1>SUNO V6 <em>MASTER GUIDE</em></h1>
+<p>The canonical workflow for creating, controlling, producing, diagnosing, testing and researching Suno V6. Use this page as the map; use the linked category labs for deep work and the source library below for the underlying corpus.</p>
+<div class="hero-actions"><a class="button primary" href="../">BACK TO SUNO HOME</a><a class="button" href="../audio_fix_v6/">FIX AUDIO QUALITY →</a></div>
+</section>
+<section class="guide-section" id="master-synthesis">
+<h2>THE V6 OPERATING MODEL</h2>
+<p>Suno's current model family is v6, v6-wild and v6-mini. Official documentation positions v6 around control and precision, v6-wild around experimentation and less predictable results, and v6-mini around faster iteration. Treat model choice as part of the experiment, not as an afterthought.</p>
+<div class="master-grid">
+<article><h3>CREATE</h3><p>Build the musical identity first: genre, rhythm, instrument roles, vocal identity, performance, arrangement arc, production intent and constraints. Keep Style prompts prioritized rather than turning them into word soup.</p><p><a href="../create/">Open Create →</a> · <a href="../create/prompt-lab.html">Prompt Lab →</a> · <a href="../create/vocal-engineering.html">Vocal Engineering →</a></p></article>
+<article><h3>CONTROL</h3><p>When the song already has useful material, edit locally before regenerating everything. Use Extend, Replace/Edit Section, references, remix/edit workflows and other model-supported controls according to the task.</p><p><a href="../control/">Open Control →</a></p></article>
+<article><h3>PRODUCE</h3><p>Move from generation to production: Studio, arrangement, stems, MIDI, effects, automation, recording/editing and export. Separate generative decisions from downstream mixing decisions.</p><p><a href="../produce/">Open Produce →</a> · <a href="../produce/audio-engineering.html">Audio Engineering →</a></p></article>
+<article><h3>FIX / TEST</h3><p>Diagnose the actual failure before changing the prompt. Log timestamps, isolate variables, compare alternatives and use local repair when it is more appropriate than full regeneration.</p><p><a href="../fix-test/">Open Fix / Test →</a> · <a href="../research/controlled-experimentation.html">Controlled Experiments →</a></p></article>
+<article><h3>RESEARCH</h3><p>Separate official behavior from repeated community observations, individual reproducible results, hypotheses and deliberately weird experiments. Undocumented syntax is never presented as a guaranteed API.</p><p><a href="../research/">Open Research →</a> · <a href="../research/v5-to-v6.html">V5 → V6 Translation →</a></p></article>
+<article><h3>EXPERIMENTAL</h3><p>Use symbols, punctuation, gibberish, invented syntax, contradictory descriptors and other unusual inputs as controlled variables. Weirdness belongs in the lab with evidence labels, not in the guide as fake certainty.</p><p><a href="../research/">Open Experimental Lab →</a></p></article>
+</div>
+</section>
+<section class="guide-section">
+<h2>PROMPT ARCHITECTURE</h2>
+<p><strong>Identity → Rhythm → Instrument Roles → Vocal Performance → Arrangement Arc → Production → Constraints.</strong> This is a practical organizing framework, not an official Suno command language. Start with the highest-value information and remove instructions that compete with the result you actually want.</p>
+<div class="master-grid">
+<article><h3>STYLE</h3><p>Describe the global musical identity and production target: genre, era, tempo/feel, instrumentation, vocal identity, performance character, arrangement and sonic direction.</p></article>
+<article><h3>LYRICS</h3><p>Lyrics are more than semantic text. Line length, syllable density, repetition, punctuation, spacing, phonetic shape and section geometry can be tested as possible controls on phrasing and rhythm.</p></article>
+<article><h3>STRUCTURE</h3><p>Use recognizable section labels and descriptive cues as soft conditioning. Treat undocumented tag behavior as experimental and test it across multiple generations.</p></article>
+<article><h3>EXCLUDE</h3><p>Use exclusions to state what you do not want, then verify whether the result actually changes. An exclusion is not proof that the model will obey it deterministically.</p></article>
+</div>
+</section>
+<section class="guide-section">
+<h2>THE RESEARCH RULE</h2>
+<p><strong>Change one variable → generate multiple samples → compare → repeat → record failures.</strong></p>
+<p>Every serious claim should carry an evidence level: <strong>A</strong> official/confirmed, <strong>B</strong> repeated community evidence, <strong>C</strong> individual reproducible experiment, <strong>D</strong> interesting but unverified hypothesis, or <strong>E</strong> intentionally experimental/novel behavior.</p>
+<p>A successful generation is not automatically a rule. A failed generation is not automatically proof that a technique never works. Record model, version, settings, prompt, lyrics, structure, reference audio, variable, control, test, repeat count, observations and confidence.</p>
+</section>
+<section class="guide-section">
+<h2>MODEL SELECTION</h2>
+<div class="master-grid">
+<article><h3>V6</h3><p>Default starting point when you want the strongest combination of control, precision and polished output.</p></article>
+<article><h3>V6-WILD</h3><p>Use when the goal is discovery, variation, unusual combinations or deliberate departure from the prompt. Capture useful surprises and bring the idea back into a more controlled workflow when appropriate.</p></article>
+<article><h3>V6-MINI</h3><p>Use for fast iteration, high-volume exploration and inexpensive concept testing before committing to a full generation.</p></article>
+</div>
+</section>
+<section class="guide-section">
+<h2>CONTROL BEFORE REGENERATION</h2>
+<p>If a song already contains a strong chorus, vocal, riff, arrangement idea or performance, do not automatically throw the entire generation away. First ask whether a local operation can solve the problem: edit/replace a section, extend from a useful point, use a reference, remix/sample, or move into Studio for production work.</p>
+<p>This is especially important for repeatability research: changing a single section is a different experiment from regenerating the entire song.</p>
+</section>
+<section class="guide-section">
+<h2>AUDIO QUALITY DECISION TREE</h2>
+<div class="master-grid">
+<article><h3>GENERATION PROBLEM</h3><p>First determine whether the problem is arrangement, vocal performance, frequency balance, dynamics, artifacts, stereo behavior or something else. Fix the correct layer.</p></article>
+<article><h3>LOCAL REPAIR</h3><p>Prefer section-level editing when the rest of the song is already valuable and the defect is localized.</p></article>
+<article><h3>PRODUCTION</h3><p>Use stems, Studio, effects, automation, MIDI or external production tools when the generated material is good but needs engineering work.</p></article>
+<article><h3>AUDIO FIX V6</h3><p>The dedicated Audio Fix V6 module remains a locked workflow. Do not casually modify its settings or prompt while auditing or expanding the guide.</p><p><a href="../audio_fix_v6/">Open Audio Fix V6 →</a></p></article>
+</div>
+</section>
+<section class="guide-section">
+<h2>LEGACY KNOWLEDGE</h2>
+<p>V4.5/V5 techniques are retained when they provide useful intent or historical context, but they are not silently promoted to V6 rules. Translate the desired behavior, establish a V6 baseline, isolate variables and compare.</p>
+<p><a href="../research/v5-to-v6.html">Open the V5 → V6 Translation Lab →</a></p>
+</section>
+<section class="guide-section">
+<h2>LIVE RESEARCH MAP</h2>
+<div class="master-grid">
+<article><h3>LYRICS AS CONTROL</h3><p>Syllable density, line geometry, punctuation, spacing, repetition, phonetics, breaths, pauses, ad-libs and performance cues.</p><p><a href="../create/">Create →</a></p></article>
+<article><h3>VOCAL ENGINEERING</h3><p>Register, tessitura, tone, articulation, vibrato, grit, breathiness, delivery, harmony density, placement and consistency.</p><p><a href="../create/vocal-engineering.html">Vocal Engineering →</a></p></article>
+<article><h3>AUDIO ENGINEERING</h3><p>Mud, masking, harshness, dynamics, stereo, phase, reverb, depth, artifacts, loudness and post-production boundaries.</p><p><a href="../produce/audio-engineering.html">Audio Engineering →</a></p></article>
+<article><h3>CONTROLLED LAB</h3><p>Experiment records, controls, variables, sample counts, model comparisons, scoring and confidence.</p><p><a href="../research/controlled-experimentation.html">Controlled Experimentation →</a></p></article>
+</div>
+</section>
+<section class="guide-section">
+<h2>CANONICAL SOURCE LIBRARY</h2>
+<p>The source corpus below is preserved for deep reference. The sections above are the operational synthesis; the loaded documents provide the underlying detailed material and addenda.</p>
+<div id="masterContent"></div>
+</section>
+</main>
+<footer class="site-footer"><div class="page footer-grid"><div><div class="footer-brand">LIL SYNN / 00 MASTER</div><div>Canonical synthesis plus the complete source corpus.</div></div><div class="footer-col"><strong>Guide</strong><a href="../">Suno Home</a><a href="../create/">Create</a><a href="../control/">Control</a><a href="../produce/">Produce</a></div><div class="footer-col"><strong>More</strong><a href="../fix-test/">Fix / Test</a><a href="../research/">Research</a><a href="../audio_fix_v6/">Fix Audio Quality</a></div><div class="footer-col"><strong>Outside</strong><a href="https://suno.com" target="_blank" rel="noopener">Suno ↗</a><a href="../../">LIL SYNN main site ↗</a><a class="donate" href="https://cash.app/$lilsynnofficial" target="_blank" rel="noopener">Donate via Cash App ↗</a></div></div></footer>
+<script src="../assets/suno-master.js" defer></script>
+</body>
+</html>
