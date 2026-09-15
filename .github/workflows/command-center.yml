@@ -32,6 +32,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verify visual designer JavaScript
+        run: |
+          node --check command/designer.js
+          node --check api/admin.js
+          node command/designer.test.js
       - name: Run current site regression harness
         run: node tools/site-doctor.mjs
       - name: Verify Suno route inventory and locked Audio Fix signature
