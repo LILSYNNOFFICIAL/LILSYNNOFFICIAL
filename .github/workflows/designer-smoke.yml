@@ -13,6 +13,7 @@ on:
       - 'command/designer-dom-model.js'
       - 'command/designer-dom-model.test.js'
       - 'command/designer-persist.js'
+      - 'command/designer-advanced.js'
       - 'command/designer.test.js'
       - 'api/admin.js'
       - 'api/designer-dom.js'
@@ -28,7 +29,7 @@ jobs:
         with:
           node-version: 22
       - name: Syntax check
-        run: node --check command/designer.js && node --check command/designer-plus.js && node --check command/designer-assets.js && node --check command/designer-structure.js && node --check command/designer-dom-model.js && node --check command/designer-persist.js && node --check api/admin.js && node --check api/designer-dom.js
+        run: node --check command/designer.js && node --check command/designer-plus.js && node --check command/designer-assets.js && node --check command/designer-structure.js && node --check command/designer-dom-model.js && node --check command/designer-persist.js && node --check command/designer-advanced.js && node --check api/admin.js && node --check api/designer-dom.js
       - name: Structural model test
         run: node command/designer-dom-model.test.js
       - name: Designer contract test
