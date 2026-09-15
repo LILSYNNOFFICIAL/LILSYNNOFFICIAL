@@ -1,28 +1,44 @@
-# Suno V6 Featured Fix and Consolidated Sliders Design
+# Suno V6 Guide Website — Rendered Guide + Addenda Design
 
 ## Goal
-Make `/suno/` immediately surface the V6 Audio Fix and New Sliders, while consolidating the complete slider/control knowledge from the master guide, addenda, expansions, audits, and gap-closure material into topic-first sections so visitors never need to hunt across overlapping source documents.
+Turn `/suno/` into a complete website version of the Suno V6 guide and its addendums, expansions, audits, and gap-closure material. The source Markdown is the content. The website is the rendered, organized presentation of that content.
 
-## Scope
-This change covers the public Suno knowledge experience under `/Suno`, its generated content pipeline, and the source-to-topic organization needed to keep the content complete. The existing raw Markdown source library remains intact as an archive/evidence layer; the primary experience becomes topic/workflow oriented.
+The experience should feel like a polished Suno V6 documentation/reference website with categories, sections, subsections, search, navigation, and readable Markdown-style formatting—not like a homepage that summarizes a collection of documents.
+
+## Core rule: source content becomes the website
+
+**The guide and addendums are not merely references for generating summaries. They are the actual body of knowledge that `/suno/` presents.**
+
+The implementation must:
+- Copy/render the substantive content of the complete source corpus into the website.
+- Preserve the source Markdown's headings, subheadings, paragraphs, lists, tables, emphasis, links, blockquotes, code/preformatted material, examples, warnings, recipes, evidence labels, and other meaningful details.
+- Organize that content into sensible website categories and sections based on topic and user intent.
+- Allow content to be moved or repeated into logical sections when necessary for usability, but never discard unique information merely because it appears in an addendum or audit.
+- Never replace a detailed source section with a short summary such as “see the guide,” “see the addendum,” or a link to another giant document.
+- Never silently shorten operational instructions, examples, prompts, recipes, tables, or troubleshooting material.
+- Keep the complete original source documents available in the Source Library as a preservation/provenance layer.
+
+This is a **rendering and information-architecture project**, not a rewrite of the guide.
 
 ## 1. Front-page featured content
 
-The `/suno/` index will contain two prominent feature modules near the top of the page:
+The `/suno/` index will prominently feature two modules near the top of the experience.
 
 ### V6 AUDIO FIX
 
-Use the exact user-supplied rescue recipe and do not shorten, paraphrase, normalize, or truncate the Style-box prompt.
+Use the exact user-supplied rescue recipe and do not shorten, paraphrase, normalize, alter, or truncate the Style-box prompt.
 
 Exact Style-box prompt:
 
-> recreate the original audio exactly as sung and performed, identical vocal timbre phrasing dynamics intensity and emotion, identical instrument playing style technique feel and arrangement, identical overall musical energy and mood, ultra-professional studio mastering, lossless hi-fi, reference-grade mix, 24-bit digital clean, dynamic range 12dB+, wide cinematic stereo imaging, crystal-clear highs, high quality bass, perfectly balanced mids, zero mud, zero muddiness, zero low-end buildup, zero artifacts, zero compression artifacts, zero digital hiss, zero clipping, no frequency pollution, no resonance, no phase issues, fully transparent final master, radio broadcast quality, concert hall clarity, warm analog depth + razor-sharp digital precision, present lead vocals, wide and airy soundstage, high-fidelity studio production, crisp transients, layered instruments with clear separation, stable tonal balance and loudness
+```text
+recreate the original audio exactly as sung and performed, identical vocal timbre phrasing dynamics intensity and emotion, identical instrument playing style technique feel and arrangement, identical overall musical energy and mood, ultra-professional studio mastering, lossless hi-fi, reference-grade mix, 24-bit digital clean, dynamic range 12dB+, wide cinematic stereo imaging, crystal-clear highs, high quality bass, perfectly balanced mids, zero mud, zero muddiness, zero low-end buildup, zero artifacts, zero compression artifacts, zero digital hiss, zero clipping, no frequency pollution, no resonance, no phase issues, fully transparent final master, radio broadcast quality, concert hall clarity, warm analog depth + razor-sharp digital precision, present lead vocals, wide and airy soundstage, high-fidelity studio production, crisp transients, layered instruments with clear separation, stable tonal balance and loudness
+```
 
 Exact Lyrics-box direction:
 
 ```text
 [SND]
-recreate the original audio exactly as sung and performed, identical vocal timbre phrasing dynamics intensity and emotion, identical instrument playing style technique feel and arrangement, identical overall musical energy and mood
+recreate the original audio exactly as sung and performed, identical vocal timbre phrasing dynamics intensity and emotion, identical instrument playing style technique feel and arrangement
 ```
 
 Exact controlled settings:
@@ -36,17 +52,19 @@ Exact controlled settings:
 - Personalize: OFF
 - Vocal gender: select male/female as required
 
-The front-page feature must visibly identify this as the V6 Audio Fix and provide a direct route to the detailed audio-quality section. It must warn users not to shorten the preservation prompt.
+The front-page feature must be clearly labeled **V6 AUDIO FIX**, include the complete prompt and settings, provide a copy-friendly presentation, and link directly to the complete Audio Quality section.
 
 Important evidence boundary: `[SND]` is an operational prompting/structure technique, not presented as an officially documented Suno programming command. Descriptive mastering/audio terms are desired-result instructions, not guaranteed technical export specifications.
 
 ### NEW SLIDERS
 
-A second equally prominent front-page feature will advertise the current/new slider and control knowledge. It links directly to the consolidated Controls/Sliders area, where all applicable information from the complete source corpus is merged.
+A second prominent front-page feature must be labeled **NEW SLIDERS** and link directly to the Controls/Sliders section.
 
-## 2. Topic-first information architecture
+The destination must contain the **actual detailed slider/control material from the guide and addendums**, rendered on-site. It must not be a short marketing summary or a page that merely says to consult another document.
 
-The primary navigation will organize information by what the visitor is trying to accomplish, not by which source Markdown file originally contained it.
+## 2. Website information architecture
+
+The website organizes the source material by topic and user goal while retaining the underlying source content.
 
 Top-level sections:
 
@@ -64,26 +82,77 @@ Top-level sections:
 12. WORKFLOWS
 13. SOURCE LIBRARY
 
-Representative subsections:
+Representative subsections include, but are not limited to:
 
-- CREATE: Simple Mode, Custom Mode, model selection, references, Voices, vocal gender.
-- PROMPTS: Style prompts, prompt architecture, advanced prompting, constraints, examples.
-- LYRICS: lyric writing, structure, structure tags, `[SND]`, Lyricist, natural-language editing, variations.
-- CONTROLS: every current slider/control, Advanced Options, Max Mode, Variety, generation recipes, interactions.
-- AUDIO QUALITY: rescue, preservation, diagnosis, A/B testing, limits and failure boundaries.
-- EDITING: Edit Lyrics, Replace Section, Extend, Crop, Remaster, Cover, Remix, localized repairs.
-- PRODUCTION: stems, Studio, MIDI, instruments, effects, automation, Chat Bar, export.
-- MULTIMODAL: audio/image/video references, sampling, isolation, mashups and reference behavior.
-- CUSTOM MODELS: Custom Models, My Taste, Personalization, Voices, Style Personas.
-- TROUBLESHOOTING: issue-first paths that route directly to the relevant fix.
-- WORKFLOWS: step-by-step recipes such as making a song, preserving/recreating audio, fixing V6 audio, repairing one lyric, replacing one section, building a custom model, working from references, mashups, Studio production and final export.
-- SOURCE LIBRARY: every original Markdown source document rendered on-site and retained for completeness/auditability.
+- **START HERE:** V6 overview, current model family, evidence/status system, quick-start paths, important limitations.
+- **CREATE:** Simple Mode, Custom Mode, model selection, references, Voices, vocal gender, generation basics.
+- **PROMPTS:** Style prompts, prompt architecture, advanced prompting, constraints, examples, style engineering.
+- **LYRICS:** lyric writing, structure, structure tags, `[SND]`, Lyricist, natural-language lyric editing, variations.
+- **CONTROLS:** every current slider/control, Advanced Options, Max Mode, Variety, new sliders, interactions, practical recipes.
+- **AUDIO QUALITY:** V6 Audio Fix, preservation, diagnosis, A/B testing, audio-quality failure modes, limitations and evidence boundaries.
+- **EDITING:** Edit Lyrics, Replace Section, Extend, Crop, Remaster, Cover, Remix, localized repairs.
+- **PRODUCTION:** stems, Studio, MIDI, instruments, effects, automation, Chat Bar, recording/Take Lanes, export.
+- **MULTIMODAL:** audio/image/video references, sampling, isolation, mashups and reference behavior.
+- **CUSTOM MODELS:** Custom Models, My Taste, Personalization, Voices, Style Personas.
+- **TROUBLESHOOTING:** issue-first paths with the actual source troubleshooting procedures rendered directly on the page.
+- **WORKFLOWS:** complete step-by-step recipes assembled from the source corpus, while retaining the underlying operational detail.
+- **SOURCE LIBRARY:** every original Markdown source document rendered on-site and retained for completeness/auditability.
 
-## 3. Consolidated slider/control content
+The final information architecture may add deeper categories/subsections when the source corpus requires them. Do not force unrelated material into an artificial category just to keep the list short.
 
-Every slider/control topic must merge relevant material across the complete guide and all addenda/expansions/audits/gap-closure documents. A visitor must be able to understand the control without opening another source document.
+## 3. Rendering the source Markdown
 
-Each control topic should include, where source material supports it:
+The site should visually behave like a polished Markdown documentation system.
+
+Source Markdown constructs must map to appropriate website components:
+- `#`, `##`, `###`, etc. → hierarchical headings.
+- Paragraphs → readable documentation copy.
+- Ordered/unordered lists → styled lists.
+- Tables → responsive/styled tables.
+- Fenced code blocks → copyable, readable preformatted panels.
+- Inline code → distinct inline code treatment.
+- Bold/italic → preserved emphasis.
+- Blockquotes → callout/quote treatment.
+- Links → functional links where appropriate.
+- Evidence labels → visible badges/labels without changing their meaning.
+- Long prompts → full-width copyable prompt blocks with wrapping or controlled horizontal scrolling so no text is clipped.
+
+Do not flatten rich Markdown into plain text.
+
+## 4. Complete source corpus
+
+The build pipeline must ingest the complete Markdown source tree from `LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide`.
+
+The corpus includes the master guide plus addendums, expansions, audits, additional-current-details material, current-gaps/gap-closure material, and any other Markdown documents present in the source tree.
+
+The pipeline must:
+1. Fetch every Markdown source file.
+2. Preserve every source document in the raw Source Library.
+3. Parse documents into sections/content blocks.
+4. Classify sections by topic without deleting source text.
+5. Assemble canonical topic pages from those actual source sections.
+6. Preserve unique details from addendums, audits, expansions, and gap closures.
+7. Preserve evidence/status labels attached to claims.
+8. Keep source-document provenance available from canonical sections where practical.
+9. Generate the website routes from the resulting topic structure.
+10. Generate search/index data from the rendered topic corpus.
+11. Validate that all source documents and substantive sections are represented somewhere in the website or explicitly retained in Source Library.
+
+### Duplication policy
+
+The source corpus may intentionally repeat information. The website can avoid unnecessary repetition by linking or reusing canonical rendered sections, but **deduplication must never cause unique details to disappear**.
+
+When two source sections conflict:
+- Prefer the most current/highest-authority evidence.
+- Preserve the evidence/status label.
+- Do not silently convert community/experimental/unknown behavior into official product behavior.
+- Retain important historical/retired information where it provides useful context, clearly marked as such.
+
+## 5. Controls / New Sliders
+
+The Controls section is a first-class website area, not merely a link to an addendum.
+
+Every slider/control topic should present all relevant source information available, including where supported:
 - Definition and purpose
 - What increasing the value does
 - What decreasing the value does
@@ -97,7 +166,9 @@ Each control topic should include, where source material supports it:
 - Related controls and workflows
 - Evidence/status label
 
-Known evidence labels must remain attached to claims:
+The page must include the current/new slider details found in the source guide and addendums. Do not invent slider names, ranges, behavior, or recommendations that are not in the corpus.
+
+Known evidence labels remain meaningful:
 - OFFICIAL
 - RELEASE NOTE
 - REPRODUCIBLE
@@ -106,72 +177,67 @@ Known evidence labels must remain attached to claims:
 - UNKNOWN
 - HISTORICAL/RETIRED
 
-Do not silently upgrade community or experimental behavior into official product behavior. When source documents conflict, resolve the conflict in favor of the most current/highest-authority evidence and preserve the evidence status.
+## 6. Search and navigation
 
-## 4. Content ingestion and organization
+Search must operate across the rendered topic corpus as well as the Source Library.
 
-The existing `suno-build.mjs` currently fetches the complete Markdown source tree and renders source-document pages. The new design keeps that source synchronization but adds a topic/content layer so route pages are assembled from classified source material rather than simply pointing at one large overlapping Markdown document.
+Search results should identify the relevant category/section so users can jump directly to the actual content. Queries such as `audio influence`, `weirdness`, `style influence`, `SND`, `cover`, `studio`, or `remaster` should lead to useful canonical sections rather than forcing users to open multiple overlapping source documents.
 
-The build must:
-1. Fetch all Markdown source files from the complete guide repository.
-2. Preserve the complete raw source library.
-3. Identify relevant sections/content blocks by topic.
-4. Merge duplicate coverage into canonical topic sections.
-5. Preserve unique details from addenda and audits.
-6. Attach evidence labels to claims where available.
-7. Generate topic pages/routes and a combined search index.
-8. Keep source-document provenance available from each topic where practical.
-9. Prevent accidental truncation of long prompts or code/preformatted content.
+Primary navigation should expose the category hierarchy clearly, with section-level navigation where appropriate.
 
-The raw source library is secondary navigation. Topic pages are the primary user experience.
-
-## 5. Search
-
-Search should operate across the consolidated topic corpus and return categorized results. For a query such as `audio influence`, the visitor should see the canonical Audio Influence topic with its definition, behavior, recipes, interactions, troubleshooting, and related workflows rather than several duplicate source documents.
-
-Search result categories should correspond to the major topic areas: Prompts, Lyrics, Controls, Audio, Editing, Production/Studio, Multimodal, Troubleshooting, Workflows, and Source Library.
-
-## 6. UI and interaction requirements
+## 7. UI and interaction requirements
 
 - Preserve the existing LIL SYNN/Suno visual language.
-- Featured V6 Audio Fix must be visually dominant and unmistakable.
-- New Sliders must receive a separate prominent feature treatment.
-- Long prompts must remain readable in scrollable/preformatted containers without clipping or horizontal page overflow.
+- Make the site feel like a real documentation/reference product, not a raw GitHub Markdown mirror.
+- Keep the source wording/content intact while improving presentation.
+- Make **V6 AUDIO FIX** visually dominant near the front of `/suno/`.
+- Give **NEW SLIDERS** a separate prominent feature treatment.
+- Provide copy controls for important prompts and code/preformatted material where useful.
+- Long prompts must remain fully readable and copyable.
+- No prompt or source section may be clipped by fixed-height containers.
 - Mobile layout must remain usable.
-- Primary navigation should make the topic hierarchy obvious.
-- Avoid forcing users through multiple giant documents to find one answer.
-- Do not replace detailed content with summaries when the source contains operational detail.
+- Avoid page-wide horizontal overflow.
+- Make category → section → subsection hierarchy obvious.
+- Provide breadcrumbs or equivalent context on deeper pages.
+- Avoid forcing users through giant documents to find one answer.
 
-## 7. Testing and acceptance criteria
+## 8. Acceptance criteria
 
 The implementation is accepted only when all of the following are true:
 
-1. `/suno/` visibly advertises `V6 AUDIO FIX` near the front of the experience.
-2. `/suno/` visibly advertises `NEW SLIDERS` near the front of the experience.
-3. The exact Style-box prompt above is present in full, ending with `stable tonal balance and loudness`.
+1. `/suno/` visibly advertises **V6 AUDIO FIX** near the front of the experience.
+2. `/suno/` visibly advertises **NEW SLIDERS** near the front of the experience.
+3. The exact Style-box prompt is present in full and ends with `stable tonal balance and loudness`.
 4. The exact `[SND]` Lyrics-box direction is present in full.
 5. The exact 0% / 86% / 86% settings are preserved.
-6. Slider/control information from the guide and addenda is consolidated into canonical topic sections.
-7. Unique addendum/audit details are not lost during consolidation.
-8. Raw source documents remain available in the Source Library.
-9. Search returns consolidated topic results rather than only source-document duplicates.
-10. Long prompt blocks do not visually truncate or break the page.
-11. Mobile and desktop layouts have no horizontal overflow caused by the new content.
-12. Build output completes successfully and generated indexes/routes remain internally consistent.
+6. The complete guide/addenda source corpus is represented as rendered website content.
+7. The website has clear categories, sections, and subsections rather than only source-document pages.
+8. Detailed source material is displayed directly on relevant pages; it is not summarized away or replaced with “see source” links.
+9. Unique addendum/audit/expansion/gap-closure details are not lost.
+10. Raw source documents remain available in Source Library.
+11. Search can find and route to rendered topic content.
+12. Markdown formatting is visibly rendered as website UI rather than flattened text.
+13. Long prompt/code blocks do not visually truncate or break the page.
+14. Mobile and desktop layouts have no horizontal overflow caused by the new content.
+15. Build output completes successfully.
+16. Generated indexes/routes are internally consistent.
+17. Automated browser QA verifies key Suno routes, no console errors, no failed requests, no horizontal overflow, and visibility of the two featured modules.
+18. The final implementation is verified from the actual built/deployed output before claiming completion.
 
 ## Files/components expected to participate
 
-- `Suno/index.html` — front-page featured V6 Audio Fix and New Sliders modules and primary topic navigation.
-- `suno-build.mjs` — source ingestion, topic classification/assembly, search index and route generation.
-- `Suno/` topic route/content files as needed for canonical sections.
-- `Suno/library/` — preserved/generated raw source library.
-- `Suno/search-index.json` and `Suno/manifest.json` — regenerated from the consolidated corpus.
-- Supporting Suno CSS/JS only where needed for featured modules, long-prompt presentation, search, or responsive behavior.
+- `Suno/index.html` — homepage, featured V6 Audio Fix/New Sliders modules, category navigation.
+- `suno-build.mjs` — complete source ingestion, Markdown parsing/rendering, topic assembly, search/index generation.
+- `Suno/` topic/category routes and supporting generated content as needed.
+- `Suno/library/` — complete rendered raw source library.
+- `Suno/search-index.json` and `Suno/manifest.json` — regenerated from the complete rendered corpus.
+- Supporting Suno CSS/JS only where required for navigation, rendering, search, copy controls, featured modules, and responsive behavior.
 
 ## Non-goals
 
 - Do not delete or hide source documents.
-- Do not invent Suno functionality that is not supported by the source corpus/evidence.
+- Do not invent Suno functionality, controls, settings, or claims absent from the source corpus/evidence.
 - Do not turn `[SND]` into a claim of official Suno syntax.
 - Do not alter the exact V6 Audio Fix prompt or settings.
 - Do not perform unrelated redesign work outside the Suno knowledge experience.
+- Do not reduce the source corpus to a summary or abstract knowledge base.
