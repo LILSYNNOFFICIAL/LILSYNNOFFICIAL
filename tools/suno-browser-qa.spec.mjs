@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://127.0.0.1:4173';
+const BASE_ORIGIN = new URL(BASE_URL).origin;
 const absolute = route => new URL(route, BASE_URL).toString();
 
 const ROUTES = [
@@ -23,7 +24,7 @@ const isLocalSunoHref = href => {
   if (!href || href.startsWith('#')) return false;
   try {
     const url = new URL(href, BASE_URL);
-    return url.origin === new URL(BASE_URL).origin && url.pathname.startsWith('/Suno/');
+    return url.origin === BASE_ORIGIN && url.pathname.startsWith('/Suno/');
   } catch {
     return false;
   }
@@ -76,7 +77,7 @@ test.describe('Suno V6 route and browser regression', () => {
   });
 
   test('crawled internal Suno links resolve', async ({ page, request }) => {
-    const queue = ['/Suno/'];
+    const queue = [...ROUTES];
     const visited = new Set();
     const failures = [];
 
