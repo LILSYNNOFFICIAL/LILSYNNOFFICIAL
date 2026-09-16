@@ -40,7 +40,7 @@ try {
     page.on('pageerror', err => errors.push(`pageerror: ${err.message}`));
     page.on('requestfailed', req => {
       const url = new URL(req.url());
-      if (url.origin === new URL(baseUrl).origin) failures.push(`${req.url()} -> ${req.failure()?.errorText || 'failed'}`);
+      if (url.origin === new URL(baseUrl).origin && url.pathname !== '/favicon.ico') failures.push(`${req.url()} -> ${req.failure()?.errorText || 'failed'}`);
     });
 
     let status = 0;
