@@ -42,7 +42,9 @@ jobs:
               # index.html is now the promoted THE SIGNAL homepage. It owns
               # its navigation and homepage-final-fix.js and must not be
               # rewritten by this legacy shared-shell normalizer.
-              if path_name.lower() in {'index.html','index2.html','404.html'}:
+              # vote.html is a dedicated page with the same local menu/footer
+              # shell as index.html and must remain self-contained.
+              if path_name.lower() in {'index.html','index2.html','404.html','vote.html'}:
                   return s
 
               def keep_first(pattern):
@@ -148,6 +150,7 @@ jobs:
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'class="nav"' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'site-global.js?v=20260911' .
           ! grep -Rni --include='*.html' --exclude='index2.html' --exclude='404.html' 'site-global.js' index.html
+          ! grep -n 'site-global.js' vote.html
           grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
           grep -q 'rel="canonical" href="https://lilsynn.com/special_access.html"' special_access.html
           grep -q 'name="description"' special_access.html
