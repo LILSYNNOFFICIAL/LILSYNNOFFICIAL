@@ -2,11 +2,6 @@ name: RERUN ALL JOBS
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/RERUN ALL JOBS.yml'
 
 permissions:
   actions: write
