@@ -1,1 +1,0 @@
-Temporary deployment trigger for the /vote shell correction. Remove after production verification.
