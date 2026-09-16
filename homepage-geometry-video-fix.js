@@ -10,7 +10,8 @@
       @media(max-width:800px){#signal-geometry-layer{opacity:.67!important}}
       @media(max-width:480px){#signal-geometry-layer{opacity:.60!important}}
       #videos{margin-top:0!important}
-      .ls-vote4{display:flex!important;flex:0 0 100%!important;width:max-content!important;margin-top:9px!important;border-color:rgba(255,0,143,.82)!important;background:rgba(255,0,143,.08)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,0,143,.12)!important}
+      .ls-music-vote-stack{display:inline-flex!important;flex-direction:column!important;align-items:flex-start!important;gap:9px!important;flex:0 0 auto!important}
+      .ls-music-vote-stack .ls-vote4{display:flex!important;width:max-content!important;margin:0!important;border-color:rgba(255,0,143,.82)!important;background:rgba(255,0,143,.08)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,0,143,.12)!important}
       .ls-vote4:hover{background:#ff008f!important;color:#030005!important;box-shadow:0 0 24px rgba(255,0,143,.35)!important}
       .ls-releases-label{margin-top:20px!important;font:600 clamp(28px,4vw,52px)/.94 Orbitron,sans-serif!important;letter-spacing:-.045em!important;color:#f8f8fb!important;text-transform:lowercase!important}
       .ls-releases-label em{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.65)}
@@ -27,20 +28,29 @@
     return true;
   };
   const findMusicLink=()=>[...document.querySelectorAll('a[href]')].find(a=>{
-    try{return new URL(a.href,location.href).href===MUSIC_LINK}
-    catch{return false}
+    try{
+      if(new URL(a.href,location.href).href!==MUSIC_LINK)return false;
+      return !!a.closest('.hero');
+    }catch{return false}
   });
   const addVoteButton=()=>{
-    const existing=document.querySelector('.ls-vote4');
     const target=findMusicLink();
     if(!target)return false;
-    if(existing){
-      if(existing.previousElementSibling!==target)target.insertAdjacentElement('afterend',existing);
+    let stack=target.closest('.ls-music-vote-stack');
+    let existing=document.querySelector('.ls-vote4');
+    if(stack){
+      if(existing&&existing.parentElement!==stack)stack.appendChild(existing);
       return true;
     }
-    const a=document.createElement('a');
-    a.className='btn ls-vote4';a.href=VOTE_URL;a.target='_blank';a.rel='noopener noreferrer';a.textContent='VOTE 4 LIL SYNN';
-    target.insertAdjacentElement('afterend',a);
+    stack=document.createElement('span');
+    stack.className='ls-music-vote-stack';
+    target.parentNode.insertBefore(stack,target);
+    stack.appendChild(target);
+    if(!existing){
+      existing=document.createElement('a');
+      existing.className='btn ls-vote4';existing.href=VOTE_URL;existing.target='_blank';existing.rel='noopener noreferrer';existing.textContent='VOTE 4 LIL SYNN';
+    }
+    stack.appendChild(existing);
     return true;
   };
   const addReleasesLabel=()=>{
