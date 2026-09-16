@@ -87,6 +87,14 @@ jobs:
               return re.sub(pattern, replacement, s, count=1, flags=re.S)
           update('script.js', script)
 
+          def homepage_fix(s):
+              s = s.replace(
+                  '.nav-stack .menu-row:last-child{overflow:visible!important;position:relative!important;z-index:20!important}',
+                  '.nav-stack{overflow:visible!important}.nav-stack .menu-row{overflow:visible!important;position:relative!important;z-index:20!important}'
+              )
+              return s
+          update('homepage-final-fix.js', homepage_fix)
+
           def footer(s):
               return re.sub(r'<a href="/special_access\.html">Special Access</a>', '', s, count=1)
           update('site-global.js', footer)
