@@ -70,7 +70,7 @@
   const menuAndContentFixes=()=>{
     const style=document.createElement('style');style.id='homepage-menu-content-fix';
     style.textContent=`
-      .nav-stack .menu-row:last-child{overflow:visible!important;position:relative!important;z-index:20!important}
+      .nav-stack{overflow:visible!important}.nav-stack .menu-row{overflow:visible!important;position:relative!important;z-index:20!important}
       .nav-stack .dropdown{z-index:30!important}
       .nav-stack .dropdown-menu{z-index:2147483000!important;position:absolute!important;top:31px!important;left:50%!important;transform:translateX(-50%)!important;display:none!important}
       .nav-stack .dropdown.open .dropdown-menu{display:block!important}
