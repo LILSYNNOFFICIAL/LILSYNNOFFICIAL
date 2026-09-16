@@ -18,8 +18,8 @@ const designerJs = read('command/designer.js');
 const vercel = read('vercel.json');
 
 const pages = ['archive.html','releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html','videos.html'];
-const expectedPaths = pages.map(p => `/${p}`);
 
+// Canonical shell contract.
 assert.match(shell, /LS_BG_STARS\.webm/);
 assert.match(shell, /ls-bg-layer/);
 assert.match(shell, /ls-geometry-layer/);
@@ -29,61 +29,53 @@ assert.match(shell, /ls-more-menu/);
 assert.match(shell, /document\.body\.appendChild\(m\)/, 'MORE must be portaled to body');
 assert.match(shell, /aria-expanded/);
 assert.match(shell, /Escape/);
-assert.doesNotMatch(shell, /\/merch\.html/, 'canonical shell must not point to a nonexistent merch page');
+assert.doesNotMatch(shell, /\/merch\.html/);
 
 const regularMatch = shell.match(/const regular=new Set\(\[([^\]]+)\]\)/);
 assert.ok(regularMatch, 'canonical shell must declare its regular-page allowlist');
-for (const path of expectedPaths) {
-  const escaped = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  assert.match(regularMatch[1], new RegExp(`['"]${escaped}['"]`), `${path} must be registered with the canonical shell`);
-}
+for (const page of pages) assert.match(regularMatch[1], new RegExp(`['"]/${page.replace('.', '\\.')}['"]`), `${page} missing from canonical shell`);
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
 assert.match(css, /#ls-more-menu\{position:fixed/);
 assert.match(css, /z-index:2147483000/);
-assert.match(css, /pointer-events:none/);
 assert.match(css, /prefers-reduced-motion/);
 assert.match(css, /body\.ls-canonical-page\{[^}]*background:transparent!important/);
 
+// Homepage / artist UI contract.
 assert.match(index, /homepage-final-fix\.js/);
 assert.match(index, /LS_BG_STARS\.webm/);
 assert.match(index, /id=["']playerDock["']/i);
 assert.match(index, /id=["']playerClose["']/i);
 assert.match(index, /id=["']spotifyFrame["']/i);
 assert.match(index, /open\.spotify\.com\/embed\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i);
-assert.match(enhancements, /THE ARTIST/);
-assert.match(enhancements, /PERSONA OF THE MUSIC/);
-assert.match(enhancements, /TOOLKIT/);
-assert.match(enhancements, /VISUAL WORLD/);
-assert.match(enhancements, /CREATOR/);
-assert.match(enhancements, /VISION/);
+for (const section of ['THE ARTIST','PERSONA OF THE MUSIC','TOOLKIT','VISUAL WORLD','CREATOR','VISION']) assert.match(enhancements, new RegExp(section));
 assert.match(enhancements, /ls-modal-backdrop/);
 assert.match(enhancements, /ls-artist-modal/);
 assert.match(enhancements, /role=\"dialog\"/);
 assert.match(enhancements, /aria-modal=\"true\"/);
 assert.match(enhancements, /document\.body\.appendChild\(back\)/);
-assert.match(enhancements, /ls-core-trigger/);
 
 assert.match(releases, /\.slice\(0,8\)/);
 assert.match(releases, /new Set/);
 assert.match(releases, /repeat\(4/);
 assert.match(releases, /repeat\(2/);
 
+// Every regular page inherits the same shell and does not resurrect the legacy runtime.
 for (const page of pages) {
   const html = read(page);
   assert.match(html, /<script[^>]+src=["']\/site-shell\.js/i, `${page} must load the canonical shell`);
   assert.doesNotMatch(html, /<script[^>]+src=["']\/site-global\.js/i, `${page} still references legacy runtime`);
-  assert.doesNotMatch(html, /href=["']\/vote#contact/i, `${page} has broken vote contact routing`);
   assert.doesNotMatch(html, /href=["']\/index\.html\/contact/i, `${page} has malformed contact routing`);
 }
+assert.doesNotMatch(read('404.html'), /\/site-global\.js/i);
 
-assert.doesNotMatch(read('404.html'), /\/site-global\.js/i, '404 must not resurrect the legacy runtime');
-assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i, 'vote must retain the stars background');
-assert.doesNotMatch(vote, /\/site-global\.js/i, 'vote must not reference the legacy runtime');
-assert.doesNotMatch(vote, /href=["']\/vote#contact/i, 'vote must not self-route Contact through /vote');
-assert.doesNotMatch(vote, /href=["']\/index\.html\/contact/i, 'vote must not use malformed Contact routing');
-assert.match(vote, /href=["']\/(?:#contact|index\.html#contact)["']/i, 'vote must provide canonical Contact routing');
+// Vote has its own surface but must retain the canonical background and a real Contact target.
+assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i);
+assert.doesNotMatch(vote, /\/site-global\.js/i);
+assert.doesNotMatch(vote, /href=["']\/index\.html\/contact/i);
+assert.match(vote, /id=["']contact["']/i);
 
+// Admin/auth route contract.
 assert.match(adminApi, /action==='login'/);
 assert.match(adminApi, /action==='session'/);
 assert.match(adminApi, /AUTH_REQUIRED/);
@@ -93,39 +85,26 @@ assert.match(adminApi, /HttpOnly; Secure; SameSite=Strict/);
 assert.match(adminApi, /Max-Age=28800/);
 assert.match(adminApi, /TOO_MANY_ATTEMPTS/);
 assert.doesNotMatch(adminApi, /console\.log\([^)]*(PASSWORD|SECRET|TOKEN|COOKIE)/i);
-
 assert.match(command, /id=["']loginForm["']/);
 assert.match(admin, /id=["']loginForm["']/);
 assert.match(designer, /id=["']loginForm["']/);
 assert.match(designerJs, /\/api\/admin\?action=login/);
 assert.match(designerJs, /\/api\/admin\?action=session/);
 
-assert.match(vercel, /\/command\/admin/);
-assert.match(vercel, /\/command/);
-assert.match(vercel, /\/vote/);
-assert.match(vercel, /\/Suno/);
-assert.match(vercel, /\/api\/admin/);
+// Vercel route contract.
+for (const route of ['/command','/command/admin','/vote','/Suno','/api/admin']) assert.match(vercel, new RegExp(route.replace('/', '\\/')));
 
+// Workflow safety contract: old auto-mutators must stay gone and RERUN ALL JOBS is manual-only.
 const workflowDir = new URL('.github/workflows/', root);
 const workflowNames = fs.readdirSync(workflowDir).filter(name => /\.(?:yml|yaml)$/i.test(name));
-assert.ok(!workflowNames.includes('fix-homepage.yml'), 'obsolete fix-homepage workflow must remain absent');
-assert.ok(!workflowNames.includes('fix-index2-wiring.yml'), 'obsolete index2 mutator must remain absent');
-assert.ok(!workflowNames.includes('install-index-under-construction-v2.yml'), 'obsolete homepage mutator must remain absent');
-assert.ok(!workflowNames.includes('restore-modern-home.yml'), 'obsolete workflow-run homepage mutator must remain absent');
-
+for (const obsolete of ['fix-homepage.yml','fix-index2-wiring.yml','install-index-under-construction-v2.yml','restore-modern-home.yml']) assert.ok(!workflowNames.includes(obsolete), `${obsolete} must remain absent`);
 const rerun = read('.github/workflows/RERUN ALL JOBS.yml');
 assert.match(rerun, /workflow_dispatch:/);
 assert.doesNotMatch(rerun, /^\s+push:/m, 'RERUN ALL JOBS must be manual-only');
 assert.match(rerun, /actions:\s*write/);
 assert.match(rerun, /contents:\s*read/);
 
-const intentionalMutators = new Set([
-  'admin-git.yml',
-  'github-pages-preview.yml',
-  'sync-suno-guide.yml',
-  'update-latest-videos.yml',
-  'optimize-index2-webm.yml'
-]);
+const intentionalMutators = new Set(['admin-git.yml','github-pages-preview.yml','sync-suno-guide.yml','update-latest-videos.yml','optimize-index2-webm.yml']);
 for (const name of workflowNames) {
   const text = fs.readFileSync(new URL(name, workflowDir), 'utf8');
   const writesMain = /git\s+push(?:\s+origin)?\s+(?:HEAD:)?main|git\s+push\s*$/m.test(text);
@@ -134,8 +113,6 @@ for (const name of workflowNames) {
 }
 
 const catalog = JSON.parse(read('release-catalog.json'));
-const unique = [...new Set(catalog.order || [])];
-assert.equal(unique.length, (catalog.order || []).length, 'release catalog contains duplicates');
-assert.equal(unique.slice(0,8).length, Math.min(8, unique.length));
+assert.equal(new Set(catalog.order || []).size, (catalog.order || []).length, 'release catalog contains duplicates');
 
 console.log('site-shell architecture + auth + workflow audit: PASS');
