@@ -13,14 +13,14 @@
 
 | Surface | Status |
 |---|---|
-| Main | 🟢 **PASS** |
+| Main | 🔴 **FAIL** |
 | Command | 🔴 **FAIL** |
 | Admin | 🔴 **FAIL** |
 | Suno | 🟢 **PASS** |
 
-**Tested commit:** `4ce944a`  
-**Checked:** 2026-09-16 04:53 UTC  
-**Workflow run:** `35057312819`
+**Tested commit:** `bb35966`  
+**Checked:** 2026-09-16 19:26 UTC  
+**Workflow run:** `35140433903`
 
 > This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
 
