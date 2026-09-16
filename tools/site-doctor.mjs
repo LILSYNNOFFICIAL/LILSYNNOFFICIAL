@@ -11,22 +11,26 @@ const jsFiles=[];
 const walk=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','Suno'].includes(entry.name))continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')||entry.name.endsWith('.mjs'))jsFiles.push(full)}};
 walk(root);
 
+const canonicalPages=new Set(['/archive.html','/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html']);
+const backgroundOnlyPages=new Set(['/vote.html']);
 const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`lilsynn-inline-${process.pid}-${index}.js`);try{fs.writeFileSync(temp,code,'utf8');execFileSync(process.execPath,['--check',temp],{stdio:'pipe'})}catch{fail(`${file}: inline JavaScript syntax check failed (script ${index})`)}finally{try{fs.unlinkSync(temp)}catch{}}};
 
 for(const file of htmlFiles){
  const html=fs.readFileSync(path.join(root,file),'utf8');
- const standaloneIndex2=file==='index2.html';
+ const route=`/${file}`;
+ const isCanonicalPage=canonicalPages.has(route);
+ const isBackgroundOnly=backgroundOnlyPages.has(route);
  const standaloneHome=file==='index.html'&&/LIL SYNN — THE SIGNAL/i.test(html)&&/homepage-final-fix\.js/i.test(html);
  const standalone404=file==='404.html';
- const expectedShell=standaloneIndex2?'site-global2.js':'site-global.js';
- const shellPattern=new RegExp(`<script\\b[^>]*src=["']\\/?${expectedShell.replace('.','\\.')}(?:\\?[^"']*)?["'][^>]*>`,`i`);
- if(!standaloneIndex2&&!standaloneHome&&!standalone404&&!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
- if((standaloneIndex2||standaloneHome)&&!shellPattern.test(html)&&!(/class=["'][^"']*menu-panel/i.test(html)&&/class=["'][^"']*desktop-nav/i.test(html)))fail(`${file}: missing expected standalone navigation shell`);
- if(!standaloneIndex2&&!standaloneHome&&/site-global2\.js(?:\?|["'])/i.test(html))fail(`${file}: unexpected index2-specific global shell script`);
+
+ if(isCanonicalPage&&!/<script\b[^>]*src=["']\/?site-shell\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: missing canonical site-shell.js`);
+ if(isBackgroundOnly&&!/<script\b[^>]*src=["']\/?site-shell\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: vote background shell missing site-shell.js`);
+ if(!standaloneHome&&!standalone404&&/site-global(?:\.js|\.css)/i.test(html))fail(`${file}: legacy site-global shell reference detected`);
+
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
- if(globalScripts.length>1)fail(`${file}: duplicate explicit site-global.js scripts`);
+ if(globalScripts.length)fail(`${file}: legacy site-global.js reference detected`);
  const globalCss=[...html.matchAll(/<link\b[^>]*href=["']\/?site-global\.css[^"']*["'][^>]*>/gi)];
- if(globalCss.length>1)fail(`${file}: duplicate explicit site-global.css links`);
+ if(globalCss.length)fail(`${file}: legacy site-global.css reference detected`);
  const descriptions=[...html.matchAll(/<meta\b[^>]*name=["']description["'][^>]*>/gi)];
  if(descriptions.length>1)fail(`${file}: duplicate meta description tags`);
  const canonicals=[...html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi)];
@@ -44,14 +48,14 @@ if(exists('release-catalog.json')){try{const c=JSON.parse(fs.readFileSync('relea
 
 for(const file of jsFiles){try{execFileSync(process.execPath,['--check',file],{stdio:'pipe'})}catch{fail(`${path.relative(root,file)}: JavaScript syntax check failed`)}}
 
-const css=exists('site-global.css')?fs.readFileSync('site-global.css','utf8'):'';
-if(css.includes('var(--glow)'))fail('site-global.css: undefined --glow variable');
-if(css.includes('LG_BG_STARS.webm')||css.includes('BG_ANI.webm'))fail('site-global.css: stale background asset reference detected');
+if(!exists('site-shell.js'))fail('site-shell.js missing');
+if(!exists('site-shell.css'))fail('site-shell.css missing');
 if(!exists('assets/mov/LS_BG_STARS.webm'))fail('assets/mov/LS_BG_STARS.webm missing');
 if(!exists('assets/images/icons/LS_LOGO.png'))fail('LS_LOGO.png missing');
 if(!exists('assets/images/icons/LS_HEADPHONES.png'))fail('LS_HEADPHONES.png missing');
 for(const required of ['archive.html','release.html','gallery.html','universe.html','latest-releases.js','music-random.js','site-polish.js'])if(!exists(required))fail(`${required} missing`);
-if(exists('site-global.js')){const g=fs.readFileSync('site-global.js','utf8');if(!g.includes('site-polish.js'))fail('site-global.js: discovery polish module is not loaded');if(!g.includes("const streams=[['Spotify'"))fail('site-global.js: streaming menu contract missing');if(g.includes("['TIDAL'")||g.includes("['Amazon Music'"))warn('site-global.js: non-core streaming destinations detected outside the focused Spotify / Apple Music / YouTube menu');}
+if(exists('site-global.js'))fail('site-global.js must remain removed; canonical shell is site-shell.js');
+if(exists('site-global.css'))fail('site-global.css must remain removed; canonical shell is site-shell.css');
 if(exists('latest-releases.js')){const l=fs.readFileSync('latest-releases.js','utf8');for(const platform of ['SPOTIFY','APPLE MUSIC','YOUTUBE'])if(!l.includes(`stream('${platform}'`))fail(`latest-releases.js: ${platform} CTA missing`);}
 if(exists('transmissions.json')){try{const t=JSON.parse(fs.readFileSync('transmissions.json','utf8'));if(!Array.isArray(t.transmissions))fail('transmissions.json: transmissions array missing')}catch(e){fail(`transmissions.json: invalid JSON (${e.message})`)}}
 
