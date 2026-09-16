@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 
 const root = new URL('../', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root), 'utf8');
-const exists = name => fs.existsSync(new URL(name, root));
 
 const shell = read('site-shell.js');
 const css = read('site-shell.css');
@@ -27,7 +26,7 @@ assert.match(shell, /ls-geometry-layer/);
 assert.match(shell, /ls-canonical-topbar/);
 assert.match(shell, /ls-mobile-menu/);
 assert.match(shell, /ls-more-menu/);
-assert.match(shell, /document\.body\.appendChild\(moreMenu\)/, 'MORE must be portaled to body');
+assert.match(shell, /document\.body\.appendChild\(m\)/, 'MORE must be portaled to body');
 assert.match(shell, /aria-expanded/);
 assert.match(shell, /Escape/);
 assert.doesNotMatch(shell, /\/merch\.html/, 'canonical shell must not point to a nonexistent merch page');
