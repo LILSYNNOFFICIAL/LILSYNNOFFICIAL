@@ -43,12 +43,12 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Start static site server
+      - name: Start production-routing QA server
         run: |
-          nohup python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 </dev/null &
+          nohup node tools/qa-server.mjs > /tmp/lilsynn-http.log 2>&1 </dev/null &
           echo $! > /tmp/lilsynn-http.pid
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null && curl -fsS http://127.0.0.1:4173/command/ >/dev/null && curl -fsS http://127.0.0.1:4173/command/admin/ >/dev/null; then exit 0; fi
             sleep 1
           done
           cat /tmp/lilsynn-http.log
