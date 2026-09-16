@@ -9,6 +9,12 @@ const index = read('index.html');
 const enhancements = read('index-enhancements.js');
 const releases = read('latest-releases.js');
 const workflow = read('.github/workflows/fix-homepage.yml');
+const vote = read('vote.html');
+const adminApi = read('api/admin.js');
+const command = read('command/index.html');
+const admin = read('command/admin/index.html');
+const designer = read('command/designer.html');
+const designerJs = read('command/designer.js');
 
 assert.match(shell, /LS_BG_STARS\.webm/);
 assert.match(shell, /ls-bg-layer/);
@@ -60,9 +66,31 @@ for (const page of pages) {
   assert.doesNotMatch(html, /href=["']\/index\.html\/contact/i, `${page} has malformed contact routing`);
 }
 
+assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i, 'vote must retain the stars background');
+assert.doesNotMatch(vote, /\/site-global\.js/i, 'vote must not reference the legacy runtime');
+assert.doesNotMatch(vote, /href=["']\/vote#contact/i, 'vote must not self-route Contact through /vote');
+assert.doesNotMatch(vote, /href=["']\/index\.html\/contact/i, 'vote must not use malformed Contact routing');
+assert.match(vote, /href=["']\/(?:#contact|index\.html#contact)["']/i, 'vote must provide canonical Contact routing');
+
+assert.match(adminApi, /action==='login'/, 'admin API must expose the login action');
+assert.match(adminApi, /action==='session'/, 'admin API must expose session validation');
+assert.match(adminApi, /AUTH_REQUIRED/, 'admin API must use a safe auth-required response');
+assert.match(adminApi, /ADMIN_PASSWORD_HASH/, 'admin API must verify the configured password hash');
+assert.match(adminApi, /ADMIN_SESSION_SECRET/, 'admin API must sign sessions with the configured secret');
+assert.match(adminApi, /HttpOnly; Secure; SameSite=Strict/, 'admin session cookie must remain protected');
+assert.match(adminApi, /Max-Age=28800/, 'admin session must have an explicit lifetime');
+assert.match(adminApi, /TOO_MANY_ATTEMPTS/, 'admin API must enforce rate limiting');
+assert.doesNotMatch(adminApi, /console\.log\([^)]*(PASSWORD|SECRET|TOKEN|COOKIE)/i, 'admin API must not log secrets');
+
+assert.match(command, /id=["']loginForm["']/);
+assert.match(admin, /id=["']loginForm["']/);
+assert.match(designer, /id=["']loginForm["']/);
+assert.match(designerJs, /\/api\/admin\?action=login/);
+assert.match(designerJs, /\/api\/admin\?action=session/);
+
 const catalog = JSON.parse(read('release-catalog.json'));
 const unique = [...new Set(catalog.order || [])];
 assert.equal(unique.length, (catalog.order || []).length, 'release catalog contains duplicates');
 assert.equal(unique.slice(0,8).length, Math.min(8, unique.length));
 
-console.log('site-shell architecture assertions: PASS');
+console.log('site-shell architecture + auth assertions: PASS');
