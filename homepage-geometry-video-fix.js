@@ -10,7 +10,7 @@
       @media(max-width:800px){#signal-geometry-layer{opacity:.67!important}}
       @media(max-width:480px){#signal-geometry-layer{opacity:.60!important}}
       #videos{margin-top:0!important}
-      .ls-music-vote-stack{display:inline-flex!important;flex-direction:column!important;align-items:flex-start!important;gap:9px!important;flex:0 0 auto!important}
+      .ls-music-vote-stack{display:inline-flex!important;flex-direction:column!important;align-items:center!important;gap:9px!important;flex:0 0 auto!important}
       .ls-music-vote-stack .ls-vote4{display:flex!important;width:max-content!important;margin:0!important;border-color:rgba(255,0,143,.82)!important;background:rgba(255,0,143,.08)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,0,143,.12)!important}
       .ls-vote4:hover{background:#ff008f!important;color:#030005!important;box-shadow:0 0 24px rgba(255,0,143,.35)!important}
       .ls-releases-label{margin-top:20px!important;font:600 clamp(28px,4vw,52px)/.94 Orbitron,sans-serif!important;letter-spacing:-.045em!important;color:#f8f8fb!important;text-transform:lowercase!important}
