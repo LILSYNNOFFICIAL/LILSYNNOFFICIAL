@@ -16,6 +16,9 @@ const admin = read('command/admin/index.html');
 const designer = read('command/designer.html');
 const designerJs = read('command/designer.js');
 
+const pages = ['archive.html','releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html'];
+const expectedPaths = pages.map(p => `/${p}`);
+
 assert.match(shell, /LS_BG_STARS\.webm/);
 assert.match(shell, /ls-bg-layer/);
 assert.match(shell, /ls-geometry-layer/);
@@ -27,6 +30,13 @@ assert.match(shell, /aria-expanded/);
 assert.match(shell, /Escape/);
 assert.match(shell, /\/\#contact/);
 assert.doesNotMatch(shell, /\/merch\.html/, 'canonical shell must not point to a nonexistent merch page');
+
+const regularMatch = shell.match(/const regular=new Set\(\[([^\]]+)\]\)/);
+assert.ok(regularMatch, 'canonical shell must declare its regular-page allowlist');
+for (const path of expectedPaths) {
+  const escaped = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  assert.match(regularMatch[1], new RegExp(`['"]${escaped}['"]`), `${path} must be registered with the canonical shell`);
+}
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
 assert.match(css, /#ls-more-menu\{position:fixed/);
@@ -58,13 +68,15 @@ assert.match(workflow, /site-shell\.js/);
 assert.match(workflow, /site-shell\.css/);
 assert.match(workflow, /index-enhancements\.js/);
 
-const pages = ['archive.html','releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html'];
 for (const page of pages) {
   const html = read(page);
+  assert.match(html, /<script[^>]+src=["']\/site-shell\.js/i, `${page} must load the canonical shell`);
   assert.doesNotMatch(html, /<script[^>]+src=["']\/site-global\.js/i, `${page} still references legacy runtime`);
   assert.doesNotMatch(html, /href=["']\/vote#contact/i, `${page} has broken vote contact routing`);
   assert.doesNotMatch(html, /href=["']\/index\.html\/contact/i, `${page} has malformed contact routing`);
 }
+
+assert.doesNotMatch(read('404.html'), /\/site-global\.js/i, '404 must not resurrect the legacy runtime');
 
 assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i, 'vote must retain the stars background');
 assert.doesNotMatch(vote, /\/site-global\.js/i, 'vote must not reference the legacy runtime');
