@@ -18,9 +18,9 @@
 | Admin | 🔴 **FAIL** |
 | Suno | 🟢 **PASS** |
 
-**Tested commit:** `1a72f33`  
-**Checked:** 2026-09-16 20:43 UTC  
-**Workflow run:** `35148135562`
+**Tested commit:** `bdf3be0`  
+**Checked:** 2026-09-16 20:51 UTC  
+**Workflow run:** `35148891764`
 
 > This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
 
