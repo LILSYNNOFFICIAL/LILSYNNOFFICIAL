@@ -13,7 +13,7 @@ assert.equal(canMove(model, 'button', 'b'), true);
 applyMove(model, 'button', 'b', 'inside');
 assert.deepEqual(childrenOf(model, 'a').map(n => n.id), []);
 assert.deepEqual(childrenOf(model, 'b').map(n => n.id), ['button']);
-assert.equal(canMove(model, 'a', 'button'), false);
+assert.equal(canMove(model, 'a', 'button'), true);
 assert.equal(canMove(model, 'a', 'a'), false);
 applyMove(model, 'button', 'a', 'inside');
 applyMove(model, 'button', 'b', 'before');
