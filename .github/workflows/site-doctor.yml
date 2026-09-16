@@ -24,5 +24,8 @@ jobs:
       - name: Run Site Doctor
         run: node tools/site-doctor.mjs
 
+      - name: Run canonical site shell regression
+        run: node scripts/test-site-shell.mjs
+
       # Deployment trigger touch: keep Git-integrated Vercel deployment moving.
       # WebM optimization workflow is now present on main as well.
