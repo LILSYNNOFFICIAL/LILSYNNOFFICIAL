@@ -84,6 +84,7 @@ jobs:
           test -f assets/mov/LS_BG_STARS.webm
           test -f assets/mov/index.json
           ! test -f site-global.js
+          ! test -f site-global.css
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --exclude='*.md' 'site-global.js' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --exclude='*.md' 'site-global.css' .
           ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --include='*.html' 'id="sideMenu"' .
@@ -107,3 +108,11 @@ jobs:
           assert data['order'][:3] == ['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']
           print('Release catalog validation passed.')
           PY
+
+      - name: Run JavaScript regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/test-homepage-final-fix.mjs
+          node scripts/test-vote-page.mjs
+          node scripts/test-site-shell.mjs
