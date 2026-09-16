@@ -16,12 +16,13 @@ const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`li
 for(const file of htmlFiles){
  const html=fs.readFileSync(path.join(root,file),'utf8');
  const standaloneIndex2=file==='index2.html';
+ const standaloneHome=file==='index.html'&&/LIL SYNN — THE SIGNAL/i.test(html)&&/homepage-final-fix\.js/i.test(html);
  const standalone404=file==='404.html';
  const expectedShell=standaloneIndex2?'site-global2.js':'site-global.js';
  const shellPattern=new RegExp(`<script\\b[^>]*src=["']\\/?${expectedShell.replace('.','\\.')}(?:\\?[^"']*)?["'][^>]*>`,`i`);
- if(!standaloneIndex2&&!standalone404&&!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
- if(standaloneIndex2&&!shellPattern.test(html)&&!(/class=["'][^"']*menu-panel/i.test(html)&&/class=["'][^"']*desktop-nav/i.test(html)))fail(`${file}: missing expected global shell script ${expectedShell} or standalone navigation shell`);
- if(file!=='index2.html'&&/site-global2\.js(?:\?|["'])/i.test(html))fail(`${file}: unexpected index2-specific global shell script`);
+ if(!standaloneIndex2&&!standaloneHome&&!standalone404&&!shellPattern.test(html))fail(`${file}: missing expected global shell script ${expectedShell}`);
+ if((standaloneIndex2||standaloneHome)&&!shellPattern.test(html)&&!(/class=["'][^"']*menu-panel/i.test(html)&&/class=["'][^"']*desktop-nav/i.test(html)))fail(`${file}: missing expected standalone navigation shell`);
+ if(!standaloneIndex2&&!standaloneHome&&/site-global2\.js(?:\?|["'])/i.test(html))fail(`${file}: unexpected index2-specific global shell script`);
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
  if(globalScripts.length>1)fail(`${file}: duplicate explicit site-global.js scripts`);
  const globalCss=[...html.matchAll(/<link\b[^>]*href=["']\/?site-global\.css[^"']*["'][^>]*>/gi)];
@@ -55,17 +56,8 @@ if(exists('latest-releases.js')){const l=fs.readFileSync('latest-releases.js','u
 if(exists('transmissions.json')){try{const t=JSON.parse(fs.readFileSync('transmissions.json','utf8'));if(!Array.isArray(t.transmissions))fail('transmissions.json: transmissions array missing')}catch(e){fail(`transmissions.json: invalid JSON (${e.message})`)}}
 
 const sunoDoctor=path.join(root,'Suno','scripts','suno-site-doctor.mjs');
-if(!fs.existsSync(sunoDoctor)){
- warn('Suno Site Doctor unavailable — /Suno health could not be checked. Main site checks continue normally.');
-}else{
- try{
-   execFileSync(process.execPath,[sunoDoctor],{cwd:root,stdio:'pipe'});
-   console.log('Suno Site Doctor: PASS (non-blocking health signal)');
- }catch(error){
-   const detail=String(error?.stderr||error?.stdout||'').trim().split(/\r?\n/).filter(Boolean).slice(-1)[0]||'see /Suno/scripts/suno-site-doctor.mjs for details';
-   warn(`Suno Site Doctor FAILED — ${detail}. This is warning-only and does not block the main site.`);
- }
-}
+if(!fs.existsSync(sunoDoctor))warn('Suno Site Doctor unavailable — /Suno health could not be checked. Main site checks continue normally.');
+else{try{execFileSync(process.execPath,[sunoDoctor],{cwd:root,stdio:'pipe'});console.log('Suno Site Doctor: PASS (non-blocking health signal)')}catch(error){const detail=String(error?.stderr||error?.stdout||'').trim().split(/\r?\n/).filter(Boolean).slice(-1)[0]||'see /Suno/scripts/suno-site-doctor.mjs for details';warn(`Suno Site Doctor FAILED — ${detail}. This is warning-only and does not block the main site.`)}}
 
 console.log(`LIL SYNN SITE DOCTOR: ${htmlFiles.length} HTML files, ${jsFiles.length} JS modules scanned.`);
 for(const w of warnings)console.log(`⚠ ${w}`);
