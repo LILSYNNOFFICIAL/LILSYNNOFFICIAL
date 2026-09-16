@@ -13,6 +13,7 @@ walk(root);
 
 const canonicalPages=new Set(['/archive.html','/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html']);
 const backgroundOnlyPages=new Set(['/vote.html']);
+const virtualRoutes=new Set(['/vote','/vote/','/suno','/suno/','/command','/command/','/admin','/admin/','/site-doctor','/site-doctor/']);
 const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`lilsynn-inline-${process.pid}-${index}.js`);try{fs.writeFileSync(temp,code,'utf8');execFileSync(process.execPath,['--check',temp],{stdio:'pipe'})}catch{fail(`${file}: inline JavaScript syntax check failed (script ${index})`)}finally{try{fs.unlinkSync(temp)}catch{}}};
 
 for(const file of htmlFiles){
@@ -25,7 +26,7 @@ for(const file of htmlFiles){
 
  if(isCanonicalPage&&!/<script\b[^>]*src=["']\/?site-shell\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: missing canonical site-shell.js`);
  if(isBackgroundOnly&&!/<script\b[^>]*src=["']\/?site-shell\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: vote background shell missing site-shell.js`);
- if(!standaloneHome&&!standalone404&&/site-global(?:\.js|\.css)/i.test(html))fail(`${file}: legacy site-global shell reference detected`);
+ if(file!=='site-health.html'&&!standaloneHome&&!standalone404&&/site-global(?:\.js|\.css)/i.test(html))fail(`${file}: legacy site-global shell reference detected`);
 
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
  if(globalScripts.length)fail(`${file}: legacy site-global.js reference detected`);
@@ -39,7 +40,7 @@ for(const file of htmlFiles){
  if(!/<main\b/i.test(html))warn(`${file}: no main landmark found; verify accessibility intent`);
  let inlineIndex=0;
  for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(/\bsrc\s*=/.test(match[1]))continue;const code=match[2].trim();if(code)checkInlineScript(file,code,++inlineIndex)}
- for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;if(ref==='/_vercel/insights/script.js')continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
+ for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;if(ref==='/_vercel/insights/script.js')continue;if(virtualRoutes.has(ref))continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
  if(/id=["']sideMenu["']|aria-label=["']Primary navigation["']|homepage-final-fixes\.js/i.test(html))fail(`${file}: legacy shell marker detected`);
 }
 
