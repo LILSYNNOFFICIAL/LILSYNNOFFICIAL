@@ -5,6 +5,9 @@ const root = new URL('../', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root), 'utf8');
 const shell = read('site-shell.js');
 const css = read('site-shell.css');
+const index = read('index.html');
+const enhancements = read('index-enhancements.js');
+const releases = read('latest-releases.js');
 const workflow = read('.github/workflows/fix-homepage.yml');
 
 assert.match(shell, /LS_BG_STARS\.webm/);
@@ -26,10 +29,28 @@ assert.match(css, /pointer-events:none/);
 assert.match(css, /prefers-reduced-motion/);
 assert.match(css, /body\.ls-canonical-page\{[^}]*background:transparent!important/);
 
-assert.doesNotMatch(workflow, /site-global\.js.*inject|inject.*site-global\.js/s, 'workflow must never inject the legacy shell');
+assert.match(index, /homepage-final-fix\.js/);
+assert.match(index, /LS_BG_STARS\.webm/);
+assert.match(enhancements, /signal-form/);
+assert.match(enhancements, /THE ARTIST/);
+assert.match(enhancements, /PERSONA OF THE MUSIC/);
+assert.match(enhancements, /TOOLKIT/);
+assert.match(enhancements, /VISUAL WORLD/);
+assert.match(enhancements, /CREATOR/);
+assert.match(enhancements, /VISION/);
+assert.match(enhancements, /document\.body\.appendChild\(p\)/, 'index MORE must use a body-level portal');
+assert.match(enhancements, /ls-core-trigger/);
+assert.match(enhancements, /playerDock/);
+
+assert.match(releases, /\.slice\(0,8\)/);
+assert.match(releases, /new Set/);
+assert.match(releases, /repeat\(4/);
+assert.match(releases, /repeat\(2/);
+
+assert.doesNotMatch(workflow, /site-global\.js[^\n]*inject|inject[^\n]*site-global\.js/i, 'workflow must never inject the legacy shell');
 assert.match(workflow, /site-shell\.js/);
 assert.match(workflow, /site-shell\.css/);
-assert.match(workflow, /site-global\.js/);
+assert.match(workflow, /index-enhancements\.js/);
 
 const pages = ['archive.html','releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html'];
 for (const page of pages) {
