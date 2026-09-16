@@ -28,15 +28,18 @@ jobs:
 
           root = Path('.')
           excluded = {'index.html','index2.html','404.html','vote.html'}
+          legacy_js = re.compile(r'''<script\b[^>]*\bsrc=["']\/site-global\.js(?:\?[^"']*)?["'][^>]*>\s*</script>\s*''', re.I)
+          legacy_css = re.compile(r'''<link\b[^>]*\bhref=["']\/site-global\.css(?:\?[^"']*)?["'][^>]*>\s*''', re.I)
+          shell_js = re.compile(r'''<script\b[^>]*\bsrc=["']\/site-shell\.js(?:\?[^"']*)?["'][^>]*>\s*</script>\s*''', re.I)
 
           for p in root.glob('*.html'):
               if p.name.lower() in excluded:
                   continue
               s = p.read_text(encoding='utf-8')
               before = s
-              s = re.sub(r'<link\b[^>]*\bhref=["\']/site-global\.css(?:\?[^"\']*)?["\'][^>]*>\s*', '', s, flags=re.I)
-              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-global\.js(?:\?[^"\']*)?["'][^>]*>\s*</script>\s*', '', s, flags=re.I)
-              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-shell\.js(?:\?[^"\']*)?["'][^>]*>\s*</script>\s*', '', s, flags=re.I)
+              s = legacy_css.sub('', s)
+              s = legacy_js.sub('', s)
+              s = shell_js.sub('', s)
               s = re.sub(r'</head>', '<script src="/site-shell.js?v=20260917"></script></head>', s, count=1, flags=re.I)
               if s != before:
                   p.write_text(s, encoding='utf-8')
