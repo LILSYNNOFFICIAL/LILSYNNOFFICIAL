@@ -17,14 +17,11 @@
       .orbit-stage .n5{right:17%!important;bottom:5%!important}
       .orbit-stage .n6{left:17%!important;bottom:5%!important}
       .orbit-stage .node:hover{transform:scale(1.08)!important}
-      /* The More row used horizontal overflow, which clipped the dropdown. */
       .nav-stack .menu-row:last-child{overflow:visible!important;position:relative!important;z-index:50!important}
       .nav-stack .dropdown{z-index:60!important}
       .nav-stack .dropdown-menu{z-index:2147483000!important;position:absolute!important;top:31px!important;left:50%!important;transform:translateX(-50%)!important}
-      /* Geometry stays luminous but much fainter than the stars/background. */
       #signal-geometry-layer{opacity:.48!important;filter:saturate(1.55) brightness(1.18) contrast(1.01)!important}
       .sg-symbol{filter:drop-shadow(0 0 2px rgba(255,255,255,.10))!important}
-      /* One release section only: videos immediately follow New Releases. */
       #catalog{display:none!important}
       .release-feed+.buttons{display:none!important}
       @media(max-width:800px){
@@ -47,30 +44,25 @@
     `;
     document.head.appendChild(style);
 
-    // Keep the homepage sequence focused: New Releases -> Videos -> Archive.
     const music=document.getElementById('music'),videos=document.getElementById('videos');
     if(music&&videos)music.insertAdjacentElement('afterend',videos);
     document.getElementById('catalog')?.remove();
     if(music){const h=music.querySelector('.section-head h2');if(h)h.innerHTML='New <em>releases.</em>';const p=music.querySelector('.section-head>p');if(p)p.textContent='New music, videos and streaming links — the latest LIL SYNN transmissions in one place.'}
 
-    // Restore the sixth orbit button as a public New Releases link; nothing points to Command Center.
     const stage=document.querySelector('.orbit-stage');
     if(stage){
       let n6=stage.querySelector('.n6');
-      if(!n6){
-        n6=document.createElement('a');n6.className='node n6';n6.href='#music';n6.innerHTML='<img src="/assets/heal2.png" alt="New Releases">';stage.appendChild(n6)
-      }else{n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/heal2.png');n6.querySelector('img')?.setAttribute('alt','New Releases')}
+      if(!n6){n6=document.createElement('a');n6.className='node n6';n6.href='#music';n6.innerHTML='<img src="/assets/heal2.png" alt="New Releases">';stage.appendChild(n6)}
+      else{n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/heal2.png');n6.querySelector('img')?.setAttribute('alt','New Releases')}
       stage.querySelectorAll('.node').forEach((node,i)=>{if(!node.getAttribute('href')||/\/command\/?$/i.test(node.getAttribute('href')))node.href=i===5?'#music':'#home';node.style.pointerEvents='auto';node.setAttribute('aria-label',node.querySelector('img')?.alt||`Transmission ${i+1}`)})
     }
 
-    // Take control of MORE in capture phase so the older inline handler cannot cancel it.
     const more=document.getElementById('utilityDropdown'),moreButton=more?.querySelector('button');
     if(more&&moreButton&&!more.dataset.captureFix){
       more.dataset.captureFix='1';
       moreButton.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const open=!more.classList.contains('open');more.classList.toggle('open',open);moreButton.setAttribute('aria-expanded',String(open))},{capture:true});
     }
 
-    // Harden the full-screen hamburger menu against stacking/overflow interference.
     const menuButton=document.getElementById('menuOpen'),panel=document.getElementById('menuPanel'),close=document.getElementById('menuClose');
     if(menuButton&&panel&&!menuButton.dataset.captureFix){
       menuButton.dataset.captureFix='1';
@@ -78,6 +70,8 @@
       menuButton.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();set(true)},{capture:true});
       close?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();set(false)},{capture:true});
     }
+
+    const limit=document.createElement('script');limit.src='/index-release-limit.js?v=20260917';limit.defer=true;document.body.appendChild(limit);
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
