@@ -1,5 +1,6 @@
 (()=>{
   const VOTE_URL='https://orbiiit.com/en/participants/8fd990f6-54eb-4a0c-9b6e-851526c04c41?contestId=f85717be-ba9b-4857-b885-ccbbb9a45757';
+  const MUSIC_LINK='https://lilsynnofficial.github.io/LILSYNNOFFICIAL/#music';
   const geometryVisibility=()=>{
     const s=document.getElementById('signal-geometry-visibility-fix')||document.createElement('style');
     s.id='signal-geometry-visibility-fix';
@@ -9,7 +10,7 @@
       @media(max-width:800px){#signal-geometry-layer{opacity:.67!important}}
       @media(max-width:480px){#signal-geometry-layer{opacity:.60!important}}
       #videos{margin-top:0!important}
-      .ls-vote4{display:flex!important;width:max-content!important;margin-top:9px!important;border-color:rgba(255,0,143,.82)!important;background:rgba(255,0,143,.08)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,0,143,.12)!important}
+      .ls-vote4{display:flex!important;flex:0 0 100%!important;width:max-content!important;margin-top:9px!important;border-color:rgba(255,0,143,.82)!important;background:rgba(255,0,143,.08)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,0,143,.12)!important}
       .ls-vote4:hover{background:#ff008f!important;color:#030005!important;box-shadow:0 0 24px rgba(255,0,143,.35)!important}
       .ls-releases-label{margin-top:20px!important;font:600 clamp(28px,4vw,52px)/.94 Orbitron,sans-serif!important;letter-spacing:-.045em!important;color:#f8f8fb!important;text-transform:lowercase!important}
       .ls-releases-label em{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.65)}
@@ -25,12 +26,21 @@
     videos.style.order='';
     return true;
   };
+  const findMusicLink=()=>[...document.querySelectorAll('a[href]')].find(a=>{
+    try{return new URL(a.href,location.href).href===MUSIC_LINK}
+    catch{return false}
+  });
   const addVoteButton=()=>{
-    const strip=document.querySelector('#music .listen-strip');
-    if(!strip||document.querySelector('.ls-vote4'))return !!document.querySelector('.ls-vote4');
+    const existing=document.querySelector('.ls-vote4');
+    const target=findMusicLink();
+    if(!target)return false;
+    if(existing){
+      if(existing.previousElementSibling!==target)target.insertAdjacentElement('afterend',existing);
+      return true;
+    }
     const a=document.createElement('a');
     a.className='btn ls-vote4';a.href=VOTE_URL;a.target='_blank';a.rel='noopener noreferrer';a.textContent='VOTE 4 LIL SYNN';
-    strip.insertAdjacentElement('afterend',a);
+    target.insertAdjacentElement('afterend',a);
     return true;
   };
   const addReleasesLabel=()=>{
