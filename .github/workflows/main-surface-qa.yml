@@ -3,14 +3,12 @@ name: Main Surface QA
 on:
   push:
     branches: [main]
-    # README-only commits never trigger this workflow. This prevents the
-    # QA status commit from feeding itself back into an infinite loop.
     paths-ignore:
       - 'README.md'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: main-surface-qa-${{ github.ref }}
@@ -47,7 +45,7 @@ jobs:
 
       - name: Start static site server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 &
+          nohup python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/lilsynn-http.log 2>&1 </dev/null &
           echo $! > /tmp/lilsynn-http.pid
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
@@ -94,7 +92,6 @@ jobs:
           admin_status=$(extract_status QA_ADMIN)
           suno_status=$(extract_status QA_SUNO)
 
-          # Site Doctor is the repository-level MAIN gate.
           if [ "$site_doctor" != "0" ]; then main_status=FAIL; fi
 
           {
@@ -104,67 +101,6 @@ jobs:
             echo "admin=$admin_status"
             echo "suno=$suno_status"
           } >> "$GITHUB_OUTPUT"
-
-      - name: Update README QA status
-        if: ${{ always() }}
-        env:
-          QA_OVERALL: ${{ steps.status.outputs.overall || 'FAIL' }}
-          QA_MAIN: ${{ steps.status.outputs.main || 'FAIL' }}
-          QA_COMMAND: ${{ steps.status.outputs.command || 'FAIL' }}
-          QA_ADMIN: ${{ steps.status.outputs.admin || 'FAIL' }}
-          QA_SUNO: ${{ steps.status.outputs.suno || 'FAIL' }}
-          QA_COMMIT: ${{ github.sha }}
-          QA_RUN: ${{ github.run_id }}
-        run: |
-          python3 - <<'PY'
-          import os
-          from pathlib import Path
-          from datetime import datetime, timezone
-
-          path = Path('README.md')
-          text = path.read_text(encoding='utf-8')
-          start = '<!-- MAIN-SURFACE-QA:START -->'
-          end = '<!-- MAIN-SURFACE-QA:END -->'
-
-          def icon(value):
-              return '🟢' if value == 'PASS' else '🔴'
-
-          overall = os.environ['QA_OVERALL']
-          main = os.environ['QA_MAIN']
-          command = os.environ['QA_COMMAND']
-          admin = os.environ['QA_ADMIN']
-          suno = os.environ['QA_SUNO']
-          commit = os.environ['QA_COMMIT'][:7]
-          run = os.environ['QA_RUN']
-          checked = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
-
-          block = f'''{start}\n## 🩺 MAIN SURFACE QA\n\n**{icon(overall)} QA: {overall}**\n\n| Surface | Status |\n|---|---|\n| Main | {icon(main)} **{main}** |\n| Command | {icon(command)} **{command}** |\n| Admin | {icon(admin)} **{admin}** |\n| Suno | {icon(suno)} **{suno}** |\n\n**Tested commit:** `{commit}`  \n**Checked:** {checked}  \n**Workflow run:** `{run}`\n\n> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.\n\n{end}'''
-
-          if start in text and end in text:
-              before = text.split(start, 1)[0]
-              after = text.split(end, 1)[1]
-              new_text = before + block + after
-          else:
-              marker = '\n---\n'
-              insert_at = text.find(marker)
-              if insert_at == -1:
-                  new_text = block + '\n\n' + text
-              else:
-                  insert_at += len(marker)
-                  new_text = text[:insert_at] + '\n' + block + '\n' + text[insert_at:]
-
-          path.write_text(new_text, encoding='utf-8')
-          PY
-
-          if git diff --quiet -- README.md; then
-            echo 'README QA status unchanged; no commit needed.'
-          else
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add README.md
-            git commit -m "chore: update main surface QA status"
-            git push origin HEAD:main
-          fi
 
       - name: Upload QA artifacts
         if: ${{ always() }}
