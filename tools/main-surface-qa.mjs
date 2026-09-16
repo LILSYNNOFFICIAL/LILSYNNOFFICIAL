@@ -15,6 +15,7 @@ for (const [name, pass] of sourceChecks) console.log(`${pass ? 'PASS' : 'FAIL'} 
 if (sourceChecks.some(([, pass]) => !pass)) process.exit(1);
 
 const baseUrl = (process.env.QA_BASE_URL || 'http://127.0.0.1:4173').replace(/\/$/, '');
+const baseOrigin = new URL(baseUrl).origin;
 const routes = [
   { name: 'MAIN', path: '/' },
   { name: 'COMMAND', path: '/command/' },
@@ -29,6 +30,8 @@ const routes = [
   { name: 'SUNO AUDIO FIX', path: '/Suno/audio_fix_v6/' }
 ];
 
+// A missing favicon is optional browser chrome, not a broken application surface.
+const ignoredLocalRequests = new Set(['/favicon.ico']);
 const browser = await chromium.launch({ headless: true });
 const results = [];
 try {
@@ -40,7 +43,9 @@ try {
     page.on('pageerror', err => errors.push(`pageerror: ${err.message}`));
     page.on('requestfailed', req => {
       const url = new URL(req.url());
-      if (url.origin === new URL(baseUrl).origin) failures.push(`${req.url()} -> ${req.failure()?.errorText || 'failed'}`);
+      if (url.origin === baseOrigin && !ignoredLocalRequests.has(url.pathname)) {
+        failures.push(`${req.url()} -> ${req.failure()?.errorText || 'failed'}`);
+      }
     });
 
     let status = 0;
