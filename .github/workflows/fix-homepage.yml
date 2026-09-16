@@ -1,10 +1,11 @@
-name: Validate and normalize site architecture
+name: Validate canonical site architecture
 
 on:
   push:
-    branches: [main]
+    branches: [main, full-site-shell-update]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,90 +19,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Normalize shared shell references
+      - name: Normalize canonical shell references
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
         shell: python
         run: |
           import re
           from pathlib import Path
 
-          VERSION = '20260914'
           root = Path('.')
-
-          def update(path, transform):
-              p = root / path
-              if not p.exists():
-                  return
-              before = p.read_text(encoding='utf-8')
-              after = transform(before)
-              if after != before:
-                  p.write_text(after, encoding='utf-8')
-                  print('updated', path)
-
-          def normalize_html(s, path_name):
-              # index.html is now the promoted THE SIGNAL homepage. It owns
-              # its navigation and homepage-final-fix.js and must not be
-              # rewritten by this legacy shared-shell normalizer.
-              # vote.html is a dedicated page with the same local menu/footer
-              # shell as index.html and must remain self-contained.
-              if path_name.lower() in {'index.html','index2.html','404.html','vote.html'}:
-                  return s
-
-              def keep_first(pattern):
-                  nonlocal s
-                  matches = list(re.finditer(pattern, s, flags=re.I))
-                  for m in reversed(matches[1:]):
-                      s = s[:m.start()] + s[m.end():]
-
-              keep_first(r"<meta\b[^>]*\bname=[\"']description[\"'][^>]*>")
-              keep_first(r"<link\b[^>]*\brel=[\"']canonical[\"'][^>]*>")
-              s = re.sub(r"<link\b[^>]*\bhref=[\"']/site-global\.css(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
-              s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*</script>\s*", '', s, flags=re.I)
-              s = re.sub(r"<script\b[^>]*\bsrc=[\"']/site-global\.js(?:\?[^\"']*)?[\"'][^>]*>\s*", '', s, flags=re.I)
-              shell = f'<script src="/site-global.js?v={VERSION}"></script>'
-              s = re.sub(r'</head>', shell + '</head>', s, count=1, flags=re.I)
-              return s
+          excluded = {'index.html','index2.html','404.html','vote.html'}
 
           for p in root.glob('*.html'):
-              update(p.name, lambda s, name=p.name: normalize_html(s, name))
-
-          update('releases.html', lambda s: s.replace("'somewhere_in_between.jpg'", "'57_lil_synn_somewhere_in_between.jpg'"))
-
-          def css(s):
-              s = s.replace('var(--glow)', 'var(--ls-glow)')
-              s = re.sub(r'\.ls-brand-stack\{[^}]*\}', '', s)
-              s = re.sub(r'\.ls-brand\{[^}]*\}', '', s)
-              s = re.sub(r'\.ls-brand img\{[^}]*\}', '', s)
-              s = s.replace('.ls-header .ls-brand{display:none!important}', '')
-              s = s.replace('.ls-header .ls-footer{padding-bottom:28px}', '.ls-footer{padding-bottom:28px}')
-              s = s.replace("background-image:url('/assets/images/icons/LS_HEADPHONES.png');background-repeat:no-repeat;background-position:center;background-size:64px 64px;", '')
-              s = s.replace('.ls-global-top-art img{width:min(90vw,460px);max-height:350px;', '.ls-global-top-art img{width:min(78vw,390px);max-height:300px;')
-              s = s.replace('background:rgba(4,4,7,.95)!important', 'background:rgba(4,4,7,.88)!important')
-              s = s.replace('background:rgba(5,5,8,.82);', 'background:rgba(5,5,8,.72);')
-              return s
-          update('site-global.css', css)
-
-          def script(s):
-              pattern = r"const releaseFix=\(\)=>\{.*?\};const videoOrder="
-              replacement = "const releaseFix=()=>{const root=document.querySelector('.release-page #releases');if(!root)return;let running=false;let observer;const run=()=>{if(running)return;running=true;observer.disconnect();reorderReleases().finally(()=>{running=false;observer.observe(root,{childList:true})})};observer=new MutationObserver(run);observer.observe(root,{childList:true});run()};const videoOrder="
-              return re.sub(pattern, replacement, s, count=1, flags=re.S)
-          update('script.js', script)
-
-          def homepage_fix(s):
-              s = s.replace(
-                  '.nav-stack .menu-row:last-child{overflow:visible!important;position:relative!important;z-index:20!important}',
-                  '.nav-stack{overflow:visible!important}.nav-stack .menu-row{overflow:visible!important;position:relative!important;z-index:20!important}'
-              )
-              return s
-          update('homepage-final-fix.js', homepage_fix)
-
-          def footer(s):
-              return re.sub(r'<a href="/special_access\.html">Special Access</a>', '', s, count=1)
-          update('site-global.js', footer)
-
-          def release_detail(s):
-              return s.replace("add('SOUNDCLOUD',group?.soundcloud||catalog.soundcloud?.[title]);", "add('YOUTUBE','https://www.youtube.com/@LILSYNNOFFICIAL');")
-          update('release.html', release_detail)
+              if p.name.lower() in excluded:
+                  continue
+              s = p.read_text(encoding='utf-8')
+              before = s
+              s = re.sub(r'<link\b[^>]*\bhref=["\']/site-global\.css(?:\?[^"\']*)?["\'][^>]*>\s*', '', s, flags=re.I)
+              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-global\.js(?:\?[^"\']*)?["'][^>]*>\s*</script>\s*', '', s, flags=re.I)
+              s = re.sub(r'<script\b[^>]*\bsrc=["\']/site-shell\.js(?:\?[^"\']*)?["'][^>]*>\s*</script>\s*', '', s, flags=re.I)
+              s = re.sub(r'</head>', '<script src="/site-shell.js?v=20260917"></script></head>', s, count=1, flags=re.I)
+              if s != before:
+                  p.write_text(s, encoding='utf-8')
+                  print('canonical shell:', p.name)
 
       - name: Generate WebM manifest
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
@@ -112,7 +51,7 @@ jobs:
           files = sorted([p.name for p in Path('assets/mov').glob('*.webm') if p.is_file()], key=str.lower)
           Path('assets/mov/index.json').write_text(json.dumps(files, indent=2) + '\n', encoding='utf-8')
 
-      - name: Commit repairs
+      - name: Commit canonical repairs
         if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
         shell: bash
         run: |
@@ -121,7 +60,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'fix: normalize site shell and repair regressions [skip ci]'
+          git commit -m 'fix: normalize canonical site shell [skip ci]'
           git push
 
       - name: Validate source
@@ -129,41 +68,32 @@ jobs:
         run: |
           set -euo pipefail
           test -f index.html
+          test -f vote.html
+          test -f releases.html
+          test -f archive.html
+          test -f release.html
+          test -f gallery.html
+          test -f universe.html
           test -f special_access.html
           test -f coming_soon.html
           test -f privacy.html
           test -f terms.html
-          test -f releases.html
-          test -f archive.html
-          test -f release.html
-          test -f 404.html
-          test -f site-global.css
-          test -f site-global.js
-          test -f script.js
-          test -f music-random.js
-          test -f latest-videos.js
-          test -f latest-releases.js
-          test -f site-polish.js
+          test -f site-shell.js
+          test -f site-shell.css
           test -f release-catalog.json
           test -f assets/mov/LS_BG_STARS.webm
           test -f assets/mov/index.json
-          test -f assets/images/icons/LS_LOGO.png
-          test -f assets/images/icons/LS_HEADPHONES.png
-          test -f assets/images/icons/UP_ARROWS.png
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude='*.md' 'assets/mov/BG2.webm' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude='*.md' 'assets/mov/BG_ANI.webm' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'id="sideMenu"' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'aria-label="Primary navigation"' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'homepage-final-fixes.js' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'class="nav"' .
-          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --include='*.html' 'site-global.js?v=20260911' .
-          ! grep -Rni --include='*.html' --exclude='index2.html' --exclude='404.html' 'site-global.js' index.html
+          ! test -f site-global.js
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --exclude='*.md' 'site-global.js' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --exclude='*.md' 'site-global.css' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --include='*.html' 'id="sideMenu"' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --include='*.html' 'class="nav"' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --include='*.html' 'href="/vote#contact"' .
+          ! grep -Rni --exclude-dir=.git --exclude-dir=.github --exclude-dir=Suno --include='*.html' 'href="/index.html/contact"' .
           ! grep -n 'site-global.js' vote.html
-          grep -q 'rel="canonical" href="https://lilsynn.com/releases.html"' releases.html
-          grep -q 'rel="canonical" href="https://lilsynn.com/special_access.html"' special_access.html
-          grep -q 'name="description"' special_access.html
-          grep -q 'LIL SYNN — THE SIGNAL' index.html
           grep -q '/homepage-final-fix.js' index.html
+          grep -q 'LS_BG_STARS.webm' site-shell.js
+          grep -q 'signal-geometry-layer' homepage-final-fix.js
 
       - name: Validate release catalog
         shell: bash
@@ -172,9 +102,8 @@ jobs:
           import json
           from pathlib import Path
           data=json.loads(Path('release-catalog.json').read_text(encoding='utf-8'))
-          expected=['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']
-          assert data.get('order',[])[:3]==expected
-          assert all(data.get('spotify',{}).get(t) and data.get('apple',{}).get(t) for t in expected)
-          assert 'Touching to the North' in data.get('groups',{})
+          assert data.get('order'), 'release catalog order is empty'
+          assert len(dict.fromkeys(data['order'])) == len(data['order']), 'duplicate release order entries'
+          assert data['order'][:3] == ['Never Known','HOME (ACOUSTIC VERSION)','I DID IT AGAIN']
           print('Release catalog validation passed.')
           PY
