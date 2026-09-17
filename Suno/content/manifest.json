@@ -1,7 +1,8 @@
 {
   "sourceRepository": "https://github.com/LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide",
-  "generatedAt": "2026-09-15T12:26:08.053595+00:00",
+  "generatedAt": "2026-09-17T00:00:00+00:00",
   "documents": [
+    {"id":"current-2026","source":"CURRENT-2026.md","title":"SEPTEMBER 2026 CURRENT REFERENCE","html":"content/current-2026.html","markdown":null},
     {"id":"master-guide","source":"README.md","title":"LIL SYNN's Complete Suno V6 Guide","html":"content/master-guide.html","markdown":"content/master-guide.md"},
     {"id":"suno-v6-additional-current-details","source":"SUNO-V6-ADDITIONAL-CURRENT-DETAILS.md","title":"ADDITIONAL CURRENT DETAILS","html":"content/suno-v6-additional-current-details.html","markdown":"content/suno-v6-additional-current-details.md"},
     {"id":"suno-v6-audio-quality-rescue","source":"SUNO-V6-AUDIO-QUALITY-RESCUE.md","title":"AUDIO QUALITY RESCUE","html":"content/suno-v6-audio-quality-rescue.html","markdown":"content/suno-v6-audio-quality-rescue.md"},
