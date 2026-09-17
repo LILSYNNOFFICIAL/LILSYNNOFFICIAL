@@ -157,4 +157,52 @@ test.describe('Suno V6 route and browser regression', () => {
     expect(failures, `broken crawled routes: ${failures.join('; ')}`).toEqual([]);
     expect(visited.size, 'crawler discovered at least the canonical Suno surface').toBeGreaterThanOrEqual(ROUTES.length);
   });
+
+  test('all crawled internal Suno anchors resolve', async ({ page }) => {
+    const queue = [...ENTRY_ALIASES, ...ROUTES];
+    const visited = new Set();
+    const failures = [];
+
+    while (queue.length) {
+      const route = queue.shift();
+      if (visited.has(route)) continue;
+      visited.add(route);
+      const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
+      if (!response || response.status() >= 400) continue;
+      await page.waitForTimeout(200);
+      const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
+      for (const href of hrefs) {
+        if (!href || href.startsWith('#')) {
+          if (!href) continue;
+          const id = decodeURIComponent(href.slice(1));
+          if (!id) continue;
+          const count = await page.locator(`#${CSS.escape(id)}`).count();
+          if (!count) failures.push(`${route} -> ${href}`);
+          continue;
+        }
+        if (!isLocalSunoHref(href)) continue;
+        const url = new URL(href, BASE_URL);
+        const targetRoute = url.pathname;
+        if (!url.hash) {
+          if (!visited.has(targetRoute)) queue.push(targetRoute);
+          continue;
+        }
+        const target = `${targetRoute}${url.hash}`;
+        const targetResponse = await page.goto(absolute(target), { waitUntil: 'domcontentloaded', timeout: 30000 });
+        if (!targetResponse || targetResponse.status() >= 400) {
+          failures.push(`${route} -> ${href} (${targetResponse?.status() ?? 'NO_RESPONSE'})`);
+          continue;
+        }
+        await page.waitForTimeout(150);
+        const id = decodeURIComponent(url.hash.slice(1));
+        const count = await page.locator(`#${CSS.escape(id)}`).count();
+        if (!count) failures.push(`${route} -> ${href}`);
+        await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.waitForTimeout(150);
+        if (!visited.has(targetRoute)) queue.push(targetRoute);
+      }
+    }
+
+    expect(failures, `broken internal anchors: ${failures.join('; ')}`).toEqual([]);
+  });
 });
