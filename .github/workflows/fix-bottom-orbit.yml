@@ -1,0 +1,44 @@
+name: Fix bottom Universe orbit images
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace bottom orbit artwork
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '<a class="node n5" href="/suno"><img src="/assets/heal.jpg" alt="Suno V6 Guide"></a>'
+          new = '<a class="node n5" href="/suno"><img src="/assets/img/Image 3 - Universe key art.png" alt="Suno V6 Guide"></a>'
+          if old not in s:
+              raise SystemExit('n5 target not found')
+          p.write_text(s.replace(old, new, 1))
+
+          p = Path('homepage-final-fix.js')
+          s = p.read_text()
+          old = "if(n6){n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/heal2.png');n6.querySelector('img')?.setAttribute('alt','New Releases');n6.setAttribute('aria-label','New Releases')}"
+          new = "if(n6){n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/img/Image 2 - About page portrait.png');n6.querySelector('img')?.setAttribute('alt','New Releases');n6.setAttribute('aria-label','New Releases')}"
+          if old not in s:
+              raise SystemExit('n6 target not found')
+          s = s.replace(old, new, 1)
+          old = "if(e.matches('.n6')){e.href='#music';e.querySelector('img')?.setAttribute('src','/assets/heal2.png');e.querySelector('img')?.setAttribute('alt','New Releases')}"
+          new = "if(e.matches('.n6')){e.href='#music';e.querySelector('img')?.setAttribute('src','/assets/img/Image 2 - About page portrait.png');e.querySelector('img')?.setAttribute('alt','New Releases')}"
+          if old not in s:
+              raise SystemExit('n6 runtime target not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+          rm -f .github/workflows/fix-bottom-orbit.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html homepage-final-fix.js .github/workflows/fix-bottom-orbit.yml
+          git commit -m 'fix: replace bottom Universe orbit album art'
+          git push
