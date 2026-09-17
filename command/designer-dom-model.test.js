@@ -17,6 +17,6 @@ assert.equal(canMove(model, 'a', 'button'), true);
 assert.equal(canMove(model, 'a', 'a'), false);
 applyMove(model, 'button', 'a', 'inside');
 applyMove(model, 'button', 'b', 'before');
-assert.deepEqual(childrenOf(model, 'root').map(n => n.id), ['button','a','b']);
-assert.equal(serializeOperations(model).find(op => op.element === 'button').index, 0);
+assert.deepEqual(childrenOf(model, 'root').map(n => n.id), ['a','button','b']);
+assert.equal(serializeOperations(model).find(op => op.element === 'button').index, 1);
 console.log('designer-dom-model: PASS');
