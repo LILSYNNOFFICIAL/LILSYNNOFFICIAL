@@ -7,16 +7,16 @@ on:
         required: true
         type: string
       route:
-        description: 'Route to inspect'
+        description: 'Canonical site route to inspect'
         required: true
-        default: /index2
+        default: /
         type: string
       viewport:
         description: 'Viewport preset'
         required: true
         default: desktop
         type: choice
-        options: [desktop, mobile]
+        options: [desktop, tablet, mobile]
 permissions:
   contents: read
 jobs:
@@ -31,6 +31,8 @@ jobs:
         run: npm exec --yes playwright@1.55.0 install --with-deps chromium
       - name: Start static server
         run: npx --yes serve . -l 4173 >/tmp/lilsynn-qa.log 2>&1 &
+      - name: Wait for static server
+        run: for i in {1..20}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done; cat /tmp/lilsynn-qa.log; exit 1
       - name: Run visual QA
         env:
           QA_ROUTE: ${{ inputs.route }}
@@ -39,16 +41,24 @@ jobs:
           cat > /tmp/qa.mjs <<'EOF'
           import { chromium } from 'playwright';
           import fs from 'node:fs/promises';
+          const sizes={desktop:{width:1440,height:900},tablet:{width:900,height:900},mobile:{width:390,height:844}};
+          const viewport=sizes[process.env.QA_VIEWPORT]||sizes.desktop;
+          const route=(process.env.QA_ROUTE||'/').startsWith('/')?process.env.QA_ROUTE:'/'+process.env.QA_ROUTE;
           const browser=await chromium.launch({headless:true});
-          const page=await browser.newPage({viewport:process.env.QA_VIEWPORT==='mobile'?{width:390,height:844}:{width:1440,height:900},deviceScaleFactor:1});
-          const errors=[];const failed=[];
+          const page=await browser.newPage({viewport,deviceScaleFactor:1});
+          const errors=[],failed=[];
           page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+          page.on('pageerror',e=>errors.push('PAGEERROR: '+e.message));
           page.on('requestfailed',r=>failed.push({url:r.url(),error:r.failure()?.errorText||'failed'}));
-          const route=process.env.QA_ROUTE||'/index2';
-          const response=await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'networkidle',timeout:30000});
-          const result=await page.evaluate(()=>{const els=[...document.querySelectorAll('body *')];const vw=innerWidth,vh=innerHeight;const bad=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(r.right< -2||r.left>document.documentElement.scrollWidth+2||r.bottom< -2)}).length;const horizontal=document.documentElement.scrollWidth>innerWidth+2;const visible=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>1&&r.height>1}).length;return {viewport:{width:vw,height:vh},document:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},horizontalOverflow:horizontal,offscreenElements:bad,visibleElements:visible,title:document.title}});
-          const out={route,viewport:process.env.QA_VIEWPORT,status:response?.status(),consoleErrors:errors,failedRequests:failed,layout:result,passed:!!response?.ok()&&!errors.length&&!failed.length&&!result.horizontalOverflow&&!result.offscreenElements};
-          await fs.mkdir('qa-results',{recursive:true});await fs.writeFile('qa-results/result.json',JSON.stringify(out,null,2));await page.screenshot({path:'qa-results/screenshot.png',fullPage:true});await browser.close();
+          const response=await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'domcontentloaded',timeout:30000});
+          await page.waitForTimeout(1500);
+          const result=await page.evaluate(()=>{const els=[...document.querySelectorAll('body *')];const vw=innerWidth;const bad=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>1&&r.height>1&&(r.right< -2||r.left>vw+2)}).length;const horizontal=document.documentElement.scrollWidth>vw+2;const visible=els.filter(e=>{const r=e.getBoundingClientRect();return r.width>1&&r.height>1}).length;return {viewport:{width:innerWidth,height:innerHeight},document:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},horizontalOverflow:horizontal,offscreenElements:bad,visibleElements:visible,title:document.title}});
+          const out={route,viewport:process.env.QA_VIEWPORT||'desktop',status:response?.status(),consoleErrors:errors,failedRequests:failed,layout:result,passed:!!response?.ok()&&!errors.length&&!failed.length&&!result.horizontalOverflow&&!result.offscreenElements};
+          await fs.mkdir('qa-results',{recursive:true});
+          await fs.writeFile('qa-results/result.json',JSON.stringify(out,null,2));
+          await page.screenshot({path:'qa-results/screenshot.png',fullPage:true});
+          await browser.close();
+          console.log(JSON.stringify(out,null,2));
           if(!out.passed)process.exit(1);
           EOF
           node /tmp/qa.mjs
