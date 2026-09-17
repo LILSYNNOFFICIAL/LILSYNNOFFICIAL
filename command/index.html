@@ -4,16 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050505">
-<meta name="description" content="LIL SYNN read-only system operations command center.">
+<meta name="description" content="LIL SYNN secure system operations command center.">
 <title>LIL SYNN // Command Center</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/command/admin/admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/command/admin/admin.css?v=20260917">
+<link rel="stylesheet" href="/command/admin/command-overhaul.css?v=20260917">
 </head>
 <body>
 <section id="login" class="login-screen">
   <div class="login-grid" aria-hidden="true"></div>
+  <div class="login-scan" aria-hidden="true"></div>
   <form id="loginForm" class="login-panel" autocomplete="on">
     <div class="sig">LIL SYNN / SECURE OPERATIONS</div>
     <h1>COMMAND<br><span>CENTER</span></h1>
@@ -24,7 +26,6 @@
     <div id="loginError" class="error" role="alert" aria-live="polite"></div>
   </form>
 </section>
-
 <section id="app" class="app hidden">
   <aside class="sidebar">
     <div class="side-brand"><span>LS</span><div><b>LIL SYNN</b><small>COMMAND CENTER</small></div></div>
@@ -33,37 +34,24 @@
       <button data-view="qa" type="button">VISUAL QA</button>
       <button data-view="deployments" type="button">DEPLOYMENTS</button>
       <button data-view="git" type="button">GIT CONTROL</button>
-      <button data-view="assets" type="button">ASSETS</button>
-      <button data-view="system" type="button">SYSTEM</button>
+      <button data-view="assets" type="button">ASSET VAULT</button>
+      <button data-view="system" type="button">SYSTEM HEALTH</button>
       <button data-view="audit" type="button">AUDIT LOG</button>
       <button class="danger-nav" data-view="danger" type="button">DANGER ZONE</button>
     </nav>
+    <div class="sidebar-links"><a href="/command/designer.html">VISUAL DESIGNER ↗</a><a href="/" target="_blank" rel="noopener">LIVE SITE ↗</a></div>
     <button id="logout" class="logout" type="button">LOG OUT</button>
   </aside>
   <main class="main">
     <header class="top">
       <div><div class="panel-kicker">LIL SYNN / OPERATIONS</div><h2 id="viewTitle">DASHBOARD</h2></div>
-      <div class="top-status"><span class="live-dot"></span><span>AUTHORIZED · READ/CONTROL</span><button id="mobileMenu" type="button" aria-label="Open navigation">☰</button></div>
+      <div class="top-status"><span class="live-dot"></span><span>AUTHORIZED · CONTROL PLANE ONLINE</span><button id="mobileMenu" type="button" aria-label="Open navigation">☰</button></div>
     </header>
+    <div class="command-dock" aria-label="Quick destinations"><a href="/command/designer.html"><b>DESIGN</b><span>VISUAL EDITOR</span></a><a href="/releases.html"><b>RELEASES</b><span>CATALOG</span></a><a href="/archive.html"><b>ARCHIVE</b><span>DISCOVERY</span></a><a href="/vote"><b>VOTE</b><span>ARTIST SUPPORT</span></a><a href="/Suno/"><b>SUNO</b><span>KNOWLEDGE BASE</span></a></div>
     <div id="content" class="content"></div>
   </main>
 </section>
-
-<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-card">
-    <div class="modal-warning">CONFIRM ACTION</div>
-    <h3 id="modalTitle">CONFIRM</h3>
-    <p id="modalText"></p>
-    <div id="reauth" class="hidden">
-      <label>RE-AUTHENTICATE<input id="reauthPassword" type="password" autocomplete="current-password"></label>
-    </div>
-    <div class="modal-actions">
-      <button id="modalCancel" class="ghost" type="button">CANCEL</button>
-      <button id="modalConfirm" class="danger" type="button">CONFIRM</button>
-    </div>
-  </div>
-</div>
-
-<script type="module" src="/command/admin/admin.js"></script>
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-warning">CONFIRM ACTION</div><h3 id="modalTitle">CONFIRM</h3><p id="modalText"></p><div id="reauth" class="hidden"><label>RE-AUTHENTICATE<input id="reauthPassword" type="password" autocomplete="current-password"></label></div><div class="modal-actions"><button id="modalCancel" class="ghost" type="button">CANCEL</button><button id="modalConfirm" class="danger" type="button">CONFIRM</button></div></div></div>
+<script type="module" src="/command/admin/admin.js?v=20260917"></script>
 </body>
 </html>
