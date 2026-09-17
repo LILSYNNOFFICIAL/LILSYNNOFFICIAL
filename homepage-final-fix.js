@@ -101,7 +101,7 @@
     document.getElementById('catalog')?.remove();
 
     const n6=document.querySelector('.orbit-stage .n6');
-    if(n6){n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/heal2.png');n6.querySelector('img')?.setAttribute('alt','New Releases');n6.setAttribute('aria-label','New Releases')}
+    if(n6){n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/img/Image 2 - About page portrait.png');n6.querySelector('img')?.setAttribute('alt','New Releases');n6.setAttribute('aria-label','New Releases')}
     document.querySelectorAll('.orbit-stage .node').forEach((node,i)=>{if(!node.getAttribute('href')||node.getAttribute('href')==='/command'){node.href=i===5?'#music':'#home'};node.setAttribute('aria-label',node.querySelector('img')?.alt||`Transmission ${i+1}`);node.style.pointerEvents='auto'});
 
     const open=document.getElementById('menuOpen'),panel=document.getElementById('menuPanel'),close=document.getElementById('menuClose');
@@ -124,7 +124,7 @@
     stars();
     purgeExtraWebm();
     document.querySelectorAll('.hero>.hero-webm,.hero>.hero-stars').forEach(e=>e.remove());
-    document.querySelectorAll('.universe .node.n6,a.node[href="/command"],a.node[href="/command/"]').forEach(e=>{if(e.matches('.n6')){e.href='#music';e.querySelector('img')?.setAttribute('src','/assets/heal2.png');e.querySelector('img')?.setAttribute('alt','New Releases')}else e.remove()});
+    document.querySelectorAll('.universe .node.n6,a.node[href="/command"],a.node[href="/command/"]').forEach(e=>{if(e.matches('.n6')){e.href='#music';e.querySelector('img')?.setAttribute('src','/assets/img/Image 2 - About page portrait.png');e.querySelector('img')?.setAttribute('alt','New Releases')}else e.remove()});
     installGeometry();
     menuAndContentFixes();
     fixTransmission();
