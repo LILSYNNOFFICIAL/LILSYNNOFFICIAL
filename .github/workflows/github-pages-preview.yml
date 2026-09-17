@@ -27,6 +27,31 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Apply temporary Universe image migration
+        if: github.event.head_commit.message != 'chore: apply universe image replacements'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              '/assets/heal2.png': '/assets/img/Image 2 - About page portrait.png',
+              '/assets/heal.jpg': '/assets/img/Image 3 - Universe key art.png',
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'Missing expected image reference: {old}')
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'chore: apply universe image replacements'
+          git push origin main
+
       - name: Build static preview
         env:
           PAGES_BASE: /LILSYNNOFFICIAL
