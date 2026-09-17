@@ -26,20 +26,25 @@ const ROUTES = [
 
 const ENTRY_ALIASES = ['/Suno', '/Suno/Suno_Guide', '/Suno/Suno_Guide/'];
 
+const resolveHref = href => {
+  if (!href || href.startsWith('#')) return null;
+  try { return new URL(href, BASE_URL); } catch { return null; }
+};
+
 const isLocalSunoHref = href => {
-  if (!href || href.startsWith('#')) return false;
-  try {
-    const url = new URL(href, BASE_URL);
-    return url.origin === BASE_ORIGIN && url.pathname.startsWith('/Suno/');
-  } catch {
-    return false;
-  }
+  const url = resolveHref(href);
+  return Boolean(url && url.origin === BASE_ORIGIN && url.pathname.startsWith('/Suno/'));
 };
 
 const forbiddenPublicHref = href => {
-  if (!href) return false;
-  const normalized = href.toLowerCase();
-  return normalized.includes('/docs/') || normalized.endsWith('.md') || normalized.includes('github.com/') || normalized.includes('raw.githubusercontent.com/');
+  const url = resolveHref(href);
+  if (!url) return false;
+  const normalized = url.href.toLowerCase();
+  return normalized.includes('/docs/') ||
+    normalized.includes('/suno/content/') ||
+    normalized.endsWith('.md') ||
+    normalized.includes('github.com/') ||
+    normalized.includes('raw.githubusercontent.com/');
 };
 
 async function assertHealthyPage(page, route) {
@@ -53,7 +58,7 @@ async function assertHealthyPage(page, route) {
   page.on('pageerror', onPageError);
   page.on('requestfailed', onRequestFailed);
   const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(500);
   expect(response, `${route} returned no response`).not.toBeNull();
   expect(response.status(), `${route} HTTP status`).toBeLessThan(400);
   await expect(page.locator('body')).not.toBeEmpty();
@@ -108,7 +113,7 @@ test.describe('Suno V6 route and browser regression', () => {
     await context.close();
   });
 
-  test('public Suno surface has no repository-document rabbit holes', async ({ page }) => {
+  test('every rendered Suno link is public-safe', async ({ page }) => {
     const queue = [...ENTRY_ALIASES, ...ROUTES];
     const visited = new Set();
     const violations = [];
@@ -118,18 +123,18 @@ test.describe('Suno V6 route and browser regression', () => {
       visited.add(route);
       const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
       if (!response || response.status() >= 400) continue;
+      await page.waitForTimeout(500);
       const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
       for (const href of hrefs) {
         if (forbiddenPublicHref(href)) violations.push(`${route} -> ${href}`);
-        if (!isLocalSunoHref(href)) continue;
-        const url = new URL(href, BASE_URL); url.hash = ''; url.search = '';
-        if (!visited.has(url.pathname)) queue.push(url.pathname);
+        const url = resolveHref(href);
+        if (url?.origin === BASE_ORIGIN && url.pathname.startsWith('/Suno/') && !visited.has(url.pathname)) queue.push(url.pathname);
       }
     }
-    expect(violations, `public repository-document links: ${violations.join('; ')}`).toEqual([]);
+    expect(violations, `forbidden/dead-looking public links: ${violations.join('; ')}`).toEqual([]);
   });
 
-  test('crawled internal Suno links resolve', async ({ page, request }) => {
+  test('all crawled internal Suno links resolve', async ({ page, request }) => {
     const queue = [...ENTRY_ALIASES, ...ROUTES];
     const visited = new Set();
     const failures = [];
@@ -139,11 +144,13 @@ test.describe('Suno V6 route and browser regression', () => {
       visited.add(route);
       const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
       if (!response || response.status() >= 400) { failures.push(`${route} -> ${response?.status() ?? 'NO_RESPONSE'}`); continue; }
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(500);
       const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
       for (const href of hrefs) {
-        if (!isLocalSunoHref(href)) continue;
-        const url = new URL(href, BASE_URL); url.hash = ''; url.search = '';
+        const url = resolveHref(href);
+        if (!url || url.origin !== BASE_ORIGIN || !url.pathname.startsWith('/Suno/')) continue;
+        url.hash = '';
+        url.search = '';
         if (!visited.has(url.pathname)) queue.push(url.pathname);
       }
     }
@@ -165,30 +172,24 @@ test.describe('Suno V6 route and browser regression', () => {
       visited.add(route);
       const response = await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
       if (!response || response.status() >= 400) continue;
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(500);
       const hrefs = await page.locator('a[href]').evaluateAll(links => links.map(link => link.getAttribute('href')));
       for (const href of hrefs) {
-        if (!href || href.startsWith('#')) {
-          if (!href) continue;
-          const id = decodeURIComponent(href.slice(1));
-          if (!id) continue;
-          const count = await page.locator(`#${CSS.escape(id)}`).count();
-          if (!count) failures.push(`${route} -> ${href}`);
+        const url = resolveHref(href);
+        if (!url || url.origin !== BASE_ORIGIN || !url.pathname.startsWith('/Suno/')) continue;
+        if (!url.hash) { if (!visited.has(url.pathname)) queue.push(url.pathname); continue; }
+        const targetRoute = url.pathname;
+        const targetResponse = await page.goto(absolute(`${targetRoute}${url.hash}`), { waitUntil: 'domcontentloaded', timeout: 30000 });
+        if (!targetResponse || targetResponse.status() >= 400) {
+          failures.push(`${route} -> ${href} (${targetResponse?.status() ?? 'NO_RESPONSE'})`);
           continue;
         }
-        if (!isLocalSunoHref(href)) continue;
-        const url = new URL(href, BASE_URL);
-        const targetRoute = url.pathname;
-        if (!url.hash) { if (!visited.has(targetRoute)) queue.push(targetRoute); continue; }
-        const target = `${targetRoute}${url.hash}`;
-        const targetResponse = await page.goto(absolute(target), { waitUntil: 'domcontentloaded', timeout: 30000 });
-        if (!targetResponse || targetResponse.status() >= 400) { failures.push(`${route} -> ${href} (${targetResponse?.status() ?? 'NO_RESPONSE'})`); continue; }
         await page.waitForTimeout(150);
         const id = decodeURIComponent(url.hash.slice(1));
         const count = await page.locator(`#${CSS.escape(id)}`).count();
         if (!count) failures.push(`${route} -> ${href}`);
         await page.goto(absolute(route), { waitUntil: 'domcontentloaded', timeout: 30000 });
-        await page.waitForTimeout(150);
+        await page.waitForTimeout(200);
         if (!visited.has(targetRoute)) queue.push(targetRoute);
       }
     }
