@@ -20,10 +20,16 @@ on:
         description: 'Admin audit actor'
         required: true
         type: string
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/admin-git.yml'
+      - '.universe-image-fix'
 permissions:
   contents: write
 jobs:
   git-operation:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,3 +56,35 @@ jobs:
       - name: Summary
         run: |
           echo "ADMIN operation=${{ inputs.operation }} target=${{ inputs.target_sha }} branch=${{ inputs.branch }} actor=${{ inputs.actor }}" >> "$GITHUB_STEP_SUMMARY"
+
+  universe-image-fix:
+    if: github.event_name == 'push' && github.event.head_commit.message != 'chore: apply universe image replacements'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - name: Replace album artwork references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          replacements = {
+              '/assets/heal2.png': '/assets/img/Image 2 - About page portrait.png',
+              '/assets/heal.jpg': '/assets/img/Image 3 - Universe key art.png',
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'Missing expected image reference: {old}')
+              s = s.replace(old, new)
+          p.write_text(s)
+          PY
+          git config user.name "LIL SYNN BOT"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "chore: apply universe image replacements"
+          git push origin main
