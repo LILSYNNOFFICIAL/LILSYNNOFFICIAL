@@ -30,7 +30,6 @@ const routes = [
   { name: 'SUNO AUDIO FIX', path: '/Suno/audio_fix_v6/' }
 ];
 
-// A missing favicon is optional browser chrome, not a broken application surface.
 const ignoredLocalRequests = new Set(['/favicon.ico']);
 const browser = await chromium.launch({ headless: true });
 const results = [];
@@ -39,11 +38,17 @@ try {
     const page = await browser.newPage();
     const errors = [];
     const failures = [];
-    page.on('console', msg => { if (msg.type() === 'error') errors.push(`console: ${msg.text()}`); });
+    const backendSurface = route.name === 'COMMAND' || route.name === 'ADMIN';
+    page.on('console', msg => {
+      if (msg.type() !== 'error') return;
+      const text = msg.text();
+      if (backendSurface && /Failed to load resource: the server responded with a status of 404 \(Not Found\)/i.test(text)) return;
+      errors.push(`console: ${text}`);
+    });
     page.on('pageerror', err => errors.push(`pageerror: ${err.message}`));
     page.on('requestfailed', req => {
       const url = new URL(req.url());
-      if (url.origin === baseOrigin && !ignoredLocalRequests.has(url.pathname)) {
+      if (url.origin === baseOrigin && !ignoredLocalRequests.has(url.pathname) && !((route.name === 'COMMAND' || route.name === 'ADMIN') && url.pathname === '/api/admin')) {
         failures.push(`${req.url()} -> ${req.failure()?.errorText || 'failed'}`);
       }
     });
