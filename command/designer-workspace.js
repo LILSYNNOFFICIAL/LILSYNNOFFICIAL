@@ -1,0 +1,102 @@
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const state = { files: [], selected: new Set(), open: new Map(), active: null, dirty: new Set(), filter: '' };
+
+  async function api(action, options = {}) {
+    const r = await fetch('/api/admin-files?action=' + encodeURIComponent(action), { ...options, headers: {'Content-Type':'application/json', ...(options.headers || {})} });
+    const d = await r.json().catch(() => ({ok:false,error:'BAD_RESPONSE'}));
+    if (r.status === 401) throw new Error('AUTH_REQUIRED');
+    if (!r.ok || d.ok === false) throw new Error(d.error || 'Operation failed');
+    return d;
+  }
+
+  function toast(text) {
+    const old = $('.workspace-toast'); if (old) old.remove();
+    const t = document.createElement('div'); t.className = 'workspace-toast'; t.textContent = text; document.body.append(t);
+    setTimeout(() => t.remove(), 2200);
+  }
+
+  function htmlFile(path) { return /\.html?$/i.test(path); }
+  function filtered() { const q = state.filter.toLowerCase(); return state.files.filter(f => !q || f.path.toLowerCase().includes(q)); }
+
+  function renderFiles() {
+    const list = $('#workspaceFiles'); if (!list) return;
+    list.innerHTML = filtered().map(f => `<label class="workspace-file"><input type="checkbox" data-path="${esc(f.path)}" ${state.selected.has(f.path)?'checked':''}><span class="file-icon">${htmlFile(f.path)?'HTML':/\.css$/i.test(f.path)?'CSS':/\.js$/i.test(f.path)?'JS':'TXT'}</span><span class="file-name">${esc(f.path)}</span><span class="file-size">${Math.ceil((f.size||0)/1024)}K</span></label>`).join('') || '<div class="workspace-empty">No editable files found.</div>';
+    list.querySelectorAll('input').forEach(i => i.onchange = () => { i.checked ? state.selected.add(i.dataset.path) : state.selected.delete(i.dataset.path); updateWorkspaceCounts(); });
+  }
+
+  function renderTabs() {
+    const tabs = $('#workspaceTabs'); if (!tabs) return;
+    tabs.innerHTML = [...state.open.entries()].map(([path, data]) => `<button class="workspace-tab ${path===state.active?'active':''}" data-path="${esc(path)}">${esc(path.split('/').pop())}${state.dirty.has(path)?' •':''}</button>`).join('');
+    tabs.querySelectorAll('button').forEach(b => b.onclick = () => activate(b.dataset.path));
+  }
+
+  function renderEditor() {
+    const path = state.active, editor = $('#workspaceEditor'), meta = $('#workspaceMeta');
+    if (!path || !state.open.has(path)) { editor.value = ''; editor.placeholder = 'Select one or more files, then open a file to edit.'; meta.textContent = 'NO FILE OPEN'; return; }
+    editor.value = state.open.get(path).content;
+    editor.placeholder = '';
+    meta.innerHTML = `<strong>${esc(path)}</strong><span>SHA ${esc(state.open.get(path).sha.slice(0,10))}${state.dirty.has(path)?' · UNSAVED':''}</span>`;
+  }
+
+  function updateWorkspaceCounts() {
+    const c = $('#workspaceSelectionCount'); if (c) c.textContent = `${state.selected.size} SELECTED`;
+    const save = $('#workspaceSaveAll'); if (save) save.disabled = !state.dirty.size;
+  }
+
+  async function loadFiles() {
+    const d = await api('list'); state.files = d.files || []; renderFiles(); updateWorkspaceCounts();
+  }
+
+  async function openFile(path) {
+    if (!path) return;
+    if (!state.open.has(path)) state.open.set(path, await api('read&path=' + encodeURIComponent(path)).catch(async () => api('read', {method:'GET'})));
+    const d = state.open.get(path);
+    if (!d.content && d.ok === false) throw new Error(d.error || 'Unable to read file');
+    state.active = path; renderTabs(); renderEditor();
+    if (htmlFile(path)) { const frame = $('#pageFrame'); if (frame) frame.src = '/' + path; }
+    toast('Opened ' + path);
+  }
+
+  async function openSelected() {
+    if (!state.selected.size) return toast('Select at least one file first');
+    try { for (const path of state.selected) await openFile(path); } catch (e) { toast(e.message); }
+  }
+
+  async function saveFile(path) {
+    const d = state.open.get(path); if (!d || !state.dirty.has(path)) return;
+    const out = await api('save', {method:'POST', body:JSON.stringify({path, content:d.content, sha:d.sha})});
+    d.sha = out.sha || d.sha; state.dirty.delete(path);
+  }
+
+  async function saveAll() {
+    try {
+      const paths = [...state.dirty]; if (!paths.length) return toast('Everything is already saved');
+      $('#workspaceSaveAll').disabled = true; $('#workspaceStatus').textContent = 'SAVING…';
+      for (const path of paths) await saveFile(path);
+      renderTabs(); renderEditor(); updateWorkspaceCounts(); $('#workspaceStatus').textContent = 'ALL CHANGES SAVED'; toast('Saved ' + paths.length + ' file(s) to GitHub');
+    } catch (e) { $('#workspaceStatus').textContent = 'SAVE FAILED'; toast(e.message); updateWorkspaceCounts(); }
+  }
+
+  function mount() {
+    const toolbar = $('.toolbar'); if (!toolbar || $('#workspaceOpen')) return;
+    const b = document.createElement('button'); b.className = 'tool workspace-trigger'; b.id = 'workspaceOpen'; b.textContent = 'WORKSPACE'; toolbar.insertBefore(b, toolbar.firstChild);
+    const panel = document.createElement('div'); panel.id='workspacePanel'; panel.className='workspace-panel hidden'; panel.innerHTML = `
+      <div class="workspace-shell">
+        <header class="workspace-header"><div><div class="workspace-kicker">REPOSITORY WORKSPACE</div><h2>FILE COMMAND</h2></div><div class="workspace-header-actions"><span id="workspaceSelectionCount">0 SELECTED</span><button class="workspace-btn" id="workspaceReload">REFRESH FILES</button><button class="workspace-btn gold" id="workspaceOpenSelected">OPEN SELECTED</button><button class="workspace-btn gold" id="workspaceSaveAll" disabled>SAVE ALL</button><button class="workspace-close" id="workspaceClose">×</button></div></header>
+        <div class="workspace-grid"><aside class="workspace-browser"><input id="workspaceSearch" class="workspace-search" placeholder="Search repository files…"><div id="workspaceFiles" class="workspace-files"></div></aside><section class="workspace-editor"><div id="workspaceTabs" class="workspace-tabs"></div><div id="workspaceMeta" class="workspace-meta">NO FILE OPEN</div><textarea id="workspaceEditor" spellcheck="false" aria-label="Repository source editor"></textarea><footer class="workspace-footer"><span id="workspaceStatus">READY</span><span>Ctrl/Cmd + S saves the active file</span></footer></section></div>
+      </div>`;
+    document.body.append(panel);
+    b.onclick = () => { panel.classList.remove('hidden'); loadFiles().catch(e => toast(e.message)); };
+    $('#workspaceClose').onclick = () => panel.classList.add('hidden');
+    $('#workspaceReload').onclick = () => loadFiles().catch(e => toast(e.message));
+    $('#workspaceOpenSelected').onclick = openSelected;
+    $('#workspaceSaveAll').onclick = saveAll;
+    $('#workspaceSearch').oninput = e => { state.filter=e.target.value; renderFiles(); };
+    $('#workspaceEditor').oninput = e => { if (!state.active) return; state.open.get(state.active).content=e.target.value; state.dirty.add(state.active); renderTabs(); updateWorkspaceCounts(); $('#workspaceStatus').textContent='UNSAVED CHANGES'; };
+    document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s' && state.active && !panel.classList.contains('hidden')) { e.preventDefault(); saveFile(state.active).then(()=>{renderTabs();renderEditor();updateWorkspaceCounts();$('#workspaceStatus').textContent='ACTIVE FILE SAVED';toast('Saved '+state.active)}).catch(err=>toast(err.message)); } });
+    renderFiles();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
+})();
