@@ -9,7 +9,7 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"></script>
   <style>
     body{background:transparent;color:#fff}
-    .gallery-page{max-width:1220px;margin:0 auto;padding:150px 24px 80px}
+    .gallery-page{max-width:1220px;margin:0 auto;padding:88px 24px 80px}
     .gallery-page h1{text-align:center;font:700 clamp(34px,6vw,62px) Orbitron,sans-serif;letter-spacing:.08em;margin:0 0 10px}
     .intro{text-align:center;color:#aaa;max-width:780px;margin:0 auto 28px;line-height:1.6}
     .character-stage{position:relative;margin:0 auto 46px;max-width:1080px;border:1px solid rgba(255,0,143,.28);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 40%,rgba(255,0,143,.1),rgba(5,5,8,.96) 58%,#020205 100%);box-shadow:0 0 50px rgba(255,0,143,.08)}
@@ -17,8 +17,8 @@
     .character-kicker{display:block;color:var(--ls-glow);font:700 10px Rajdhani,sans-serif;letter-spacing:.18em;margin-bottom:5px}
     .character-heading h2{margin:0;font:700 clamp(20px,4vw,34px) Orbitron,sans-serif;letter-spacing:.06em}
     .character-heading p{margin:5px 0 0;color:#999;font:600 12px Rajdhani,sans-serif;letter-spacing:.08em}
-    .model-wrap{height:min(72vh,760px);min-height:520px;position:relative}
-    model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent;--progress-bar-color:var(--ls-pink);--progress-mask:rgba(255,255,255,.12)}
+    .model-wrap{height:min(72vh,760px);min-height:520px;position:relative}.model-fallback{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:70px 14%;background:radial-gradient(circle at 50% 40%,rgba(255,0,143,.1),rgba(5,5,8,.96) 58%,#020205 100%);z-index:0}.model-wrap.model-failed .model-fallback{display:block}.model-wrap.model-failed model-viewer{visibility:hidden}
+    model-viewer{position:relative;z-index:1;width:100%;height:100%;background:transparent;--poster-color:transparent;--progress-bar-color:var(--ls-pink);--progress-mask:rgba(255,255,255,.12)}
     .model-progress{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:min(360px,70%);height:3px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;pointer-events:none;opacity:1;transition:opacity .3s ease}
     .model-progress-bar{display:block;width:0;height:100%;background:var(--ls-pink);box-shadow:0 0 12px rgba(255,0,143,.65);transition:width .15s ease}
     .model-help{position:absolute;right:20px;bottom:18px;padding:8px 11px;border:1px solid rgba(255,0,143,.25);border-radius:999px;background:rgba(5,5,8,.72);color:#aaa;font:600 10px Rajdhani,sans-serif;letter-spacing:.1em;pointer-events:none}
@@ -48,7 +48,7 @@
     .lightbox-close{top:20px;right:20px}.lightbox-prev{left:20px;top:50%;transform:translateY(-50%)}.lightbox-next{right:20px;top:50%;transform:translateY(-50%)}
     @media(max-width:900px){.timeline{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media(max-width:640px){
-      .gallery-page{padding:132px 14px 55px}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .gallery-page{padding:78px 14px 55px}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
       .character-stage{border-radius:16px;margin-bottom:36px}.model-wrap{height:70vh;min-height:470px}.character-heading{top:16px;left:17px}.character-heading p{font-size:11px}.model-help{right:12px;bottom:12px;font-size:9px}.model-progress{bottom:18px}
       .lightbox{padding:16px}.lightbox img{max-width:94vw;max-height:72vh}.lightbox-prev{left:10px}.lightbox-next{right:10px}.lightbox-copy{bottom:18px}.lightbox-copy strong{font-size:16px}
     }
@@ -66,9 +66,11 @@
         <p>ROTATE · INSPECT · EXPLORE</p>
       </div>
       <div class="model-wrap">
+        <img class="model-fallback" src="/assets/2/LS3_ALT.png" alt="LIL SYNN character artwork fallback">
         <model-viewer
           id="lil-synn-model"
           src="/assets/other/LIL_SYNN_3D_Model_Realistic-2.glb"
+          crossorigin="anonymous"
           alt="Interactive 3D model of the LIL SYNN character, front-facing"
           camera-controls
           touch-action="pan-y"
@@ -118,6 +120,7 @@
     const lt=document.getElementById('lightbox-title');
     const lm=document.getElementById('lightbox-meta');
     const model=document.getElementById('lil-synn-model');
+    const modelWrap=document.querySelector('.model-wrap');
     const modelProgress=document.getElementById('model-progress');
     const modelProgressBar=document.getElementById('model-progress-bar');
     const modelError=document.getElementById('model-error');
@@ -131,8 +134,8 @@
       const value=Math.max(0,Math.min(1,event.detail.totalProgress||0));
       modelProgressBar.style.width=`${value*100}%`;
     });
-    model.addEventListener('load',()=>{modelProgress.style.opacity='0';modelError.classList.remove('open')});
-    model.addEventListener('error',()=>{modelProgress.style.opacity='0';modelError.classList.add('open')});
+    model.addEventListener('load',()=>{modelProgress.style.opacity='0';modelError.classList.remove('open');modelWrap.classList.remove('model-failed')});
+    model.addEventListener('error',()=>{modelProgress.style.opacity='0';modelWrap.classList.add('model-failed');modelError.classList.add('open')});
 
     function render(filter='all'){
       document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));
