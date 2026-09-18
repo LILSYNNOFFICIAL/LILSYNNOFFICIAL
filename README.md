@@ -88,8 +88,8 @@ CANONICAL DATA
         │
         ▼
 GLOBAL SHELL / BEHAVIOR
-├── site-global.js
-├── site-global.css
+├── site-shell.js
+├── site-shell.css
 ├── script.js
 ├── music-random.js
 ├── latest-releases.js
@@ -123,7 +123,7 @@ Do not create a second system when an existing canonical system already owns the
 
 # 👑 Global Shell
 
-`site-global.js` owns shared site behavior wherever the global shell is used.
+`site-shell.js` owns shared site behavior wherever the global shell is used.
 
 It provides or coordinates:
 
@@ -993,11 +993,11 @@ Important `vercel.json` responsibilities include:
 Shared shell assets currently use the intentional cache-busting value:
 
 ```html
-<script src="/site-global.js?v=20260914"></script>
-<link id="site-global-css" rel="stylesheet" href="/site-global.css?v=20260914">
+<script src="/site-shell.js?v=20260918"></script>
+<link id="site-global-css" rel="stylesheet" href="/site-shell.css?v=20260918">
 ```
 
-`20260914` is a cache-busting identifier currently present in source, not a roadmap date.
+`20260918` is a cache-busting identifier currently present in source, not a roadmap date.
 
 Any future shared-shell version change must be synchronized across consumers.
 
@@ -1039,17 +1039,22 @@ README-only changes must remain excluded from Main Surface QA unless the workflo
 
 ### Main site
 
-- Homepage root resolves to the current promoted design
-- `index.html` is the current homepage
-- `index3.html` preserves the previous homepage
+- Homepage root resolves to `index.html`
+- `index3.html` remains the preserved previous homepage
 - `index2.html` is absent
-- Header begins at viewport top
-- Logo remains centered
-- Mobile/desktop header dimensions remain correct
-- THE CALM remains lower-left
-- Menu remains correctly aligned
-- Global top artwork aligns to the header boundary
-- No duplicate global shell
+- Shared main shell is present on applicable main pages
+- `/Suno/` remains outside the main shell
+- MORE popup opens beneath the control and repositions with viewport changes
+- VOTE 4 LIL SYNN is centered beneath the top horizontal menu and links to `/vote`
+- Homepage section links use `/#section` form when the section exists on the homepage
+- Footer platform icons and destinations are present
+- Releases on the homepage derive from `release-catalog.json`
+- Homepage Releases presentation uses the first nine catalog entries
+- Coming Soon contains the requested upcoming artwork in catalog-card sizing
+- Follow The Signal uses the Buttondown subscription form
+- Sacred geometry and particles animate smoothly
+- Universe orb includes the transparent galaxy treatment
+- About Artist popups retain their links and support scrolling
 
 ### Release system
 
@@ -1086,28 +1091,18 @@ README-only changes must remain excluded from Main Surface QA unless the workflo
 
 - `/Suno/` entry loads
 - Legacy aliases route correctly
-- Create pages load
-- Control pages load
-- Produce pages load
-- Fix/Test pages load
-- Research pages load
-- Master Guide loads
-- Audio Quality module loads
+- Create, Control, Produce, Fix/Test, Research, Master, and Audio Quality surfaces load
 - Internal navigation remains coherent
 - Responsive/mobile behavior remains usable
 - No browser console/page errors on tested surfaces
 
 ### Production
 
-- Site Doctor passes
-- Main Surface QA passes
-- Suno Browser QA passes
-- Deployment status is checked separately
-- Cache behavior is checked separately
-- Authenticated Command/Admin behavior is checked once production credentials are available
-
----
-
+- Site Doctor status is checked separately
+- Main Surface QA status is checked separately
+- Suno Browser QA status is checked separately
+- Vercel deployment status is checked separately
+- Production browser verification is not inferred from source inspection alone
 # 🧑‍🎤 Owner Action Queue
 
 This is the handoff area for things that genuinely require LIL SYNN's input, approval, source material, or creative direction.
@@ -1166,33 +1161,30 @@ Existing artwork remains authoritative unless a specific new visual has been req
 
 ```text
 /
-├── index.html                    # CURRENT homepage / promoted new design
-├── index3.html                   # previous homepage preserved
+├── index.html                     # CURRENT homepage
+├── index3.html                    # preserved previous homepage
+├── template.html                  # canonical standalone main-site shell
+├── site-shell.js                  # shared main-site shell/runtime
+├── site-shell.css                 # shared main-site shell styling
+├── index-enhancements.js          # homepage releases/about/orb enhancements
+├── homepage-final-fix.js          # homepage navigation/visual repairs
+├── release-catalog.json            # canonical release order/data
+├── releases.html
+├── archive.html
+├── release.html
+├── gallery.html
+├── universe.html
+├── videos.html
+├── coming_soon.html
+├── lore.html
+├── special_access.html
 ├── command/
-│   └── admin/                    # Command/Admin surfaces
-├── Suno/
-│   ├── index.html                # Suno guide entry
-│   ├── create/
-│   ├── control/
-│   ├── produce/
-│   ├── fix-test/
-│   ├── research/
-│   ├── master/
-│   ├── audio_fix_v6/
-│   ├── content/
-│   └── assets/
+├── Suno/                           # separate, do not modify for main-site shell work
 ├── assets/
 ├── tools/
-├── docs/
 ├── .github/workflows/
-│   ├── site-doctor.yml
-│   ├── main-surface-qa.yml
-│   └── suno-browser-qa.yml
 └── vercel.json
 ```
-
----
-
 # 📜 Project Status / History
 
 The original five major site architecture phases are complete at the architecture level:
