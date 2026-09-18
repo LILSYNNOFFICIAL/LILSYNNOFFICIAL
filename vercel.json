@@ -6,6 +6,8 @@
   "redirects": [
     {"source":"/presave","destination":"https://hyperfollow.com/lilsynnofficial","permanent":false},
     {"source":"/presave/","destination":"https://hyperfollow.com/lilsynnofficial","permanent":false},
+    {"source":"/forum","destination":"https://lilsynn-suno.base44.app","permanent":false},
+    {"source":"/forum/","destination":"https://lilsynn-suno.base44.app","permanent":false},
     {"source":"/command","destination":"/command/","permanent":false},
     {"source":"/Suno","destination":"/Suno/","permanent":true},
     {"source":"/Suno/Suno_Guide","destination":"/Suno/","permanent":true},
