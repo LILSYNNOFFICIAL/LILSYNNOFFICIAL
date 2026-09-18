@@ -102,6 +102,21 @@
 
     const open=document.getElementById('menuOpen'),panel=document.getElementById('menuPanel'),close=document.getElementById('menuClose');
     if(open&&panel&&!open.dataset.menuRepair){open.dataset.menuRepair='1';const set=v=>{panel.classList.toggle('open',v);panel.setAttribute('aria-hidden',String(!v));open.setAttribute('aria-expanded',String(v));document.documentElement.style.overflow=v?'hidden':'';document.body.style.overflow=v?'hidden':''};open.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(true)});close?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(false)});panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>set(false)))}
+    const more=document.getElementById('utilityDropdown'),moreButton=more?.querySelector('button'),moreMenu=document.getElementById('utilityMenu');
+    if(more&&moreButton&&moreMenu&&!more.dataset.portalRepair){
+      more.dataset.portalRepair='1';
+      const portalButton=moreButton.cloneNode(true);moreButton.replaceWith(portalButton);
+      document.body.appendChild(moreMenu);
+      moreMenu.classList.add('ls-index-more-portal');
+      moreMenu.style.display='none';moreMenu.style.position='fixed';moreMenu.style.zIndex='2147483647';moreMenu.style.minWidth='225px';
+      const place=()=>{const r=portalButton.getBoundingClientRect(),w=moreMenu.offsetWidth,h=moreMenu.offsetHeight;moreMenu.style.left=Math.max(12,Math.min(r.left,innerWidth-w-12))+'px';moreMenu.style.top=Math.max(68,Math.min(r.bottom+7,innerHeight-h-12))+'px'};
+      const closeMore=()=>{more.classList.remove('open');portalButton.setAttribute('aria-expanded','false');moreMenu.style.display='none'};
+      portalButton.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const o=!more.classList.contains('open');if(o){more.classList.add('open');moreMenu.style.display='block';portalButton.setAttribute('aria-expanded','true');requestAnimationFrame(place)}else closeMore()});
+      document.addEventListener('click',e=>{if(!e.target.closest('#utilityDropdown')&&!e.target.closest('#utilityMenu'))closeMore()});
+      addEventListener('resize',()=>more.classList.contains('open')&&place());
+      addEventListener('scroll',()=>more.classList.contains('open')&&place(),{passive:true});
+      document.addEventListener('keydown',e=>e.key==='Escape'&&closeMore());
+    }
   };
 
   const css=()=>{if(document.getElementById('homepage-final-fix-css'))return;const s=document.createElement('style');s.id='homepage-final-fix-css';s.textContent=`html,body{background:#020204!important;overflow-x:hidden}#site-stars-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;object-fit:cover!important;z-index:0!important;pointer-events:none!important;opacity:.62!important;filter:brightness(.72) contrast(1.12)!important}#signal-geometry-layer{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;z-index:2!important;pointer-events:none!important;overflow:visible!important;opacity:.52!important;mix-blend-mode:screen!important;filter:saturate(1.65) brightness(1.22) contrast(1.01)!important}.sg-symbol{transform-origin:0 0;will-change:transform}.hero,.hero-inner,.section,.archive,.stars-zone,.signal,.catalog,.videos-section,.universe,.footer{position:relative;z-index:3}.hero{background:transparent!important}.stars-zone>video{display:none!important}.topbar{z-index:10000!important}.nav-stack{z-index:9999!important}.menu-panel,.dropdown-menu{z-index:11000!important}.universe-layout>.orbit-stage{grid-column:1/-1!important;justify-self:center!important;width:min(560px,52vw)!important;margin:58px auto 0!important}@media(max-width:800px){#signal-geometry-layer{opacity:.46!important}.universe-layout{grid-template-columns:1fr!important}.universe-layout>.orbit-stage{width:min(82vw,420px)!important;margin:38px auto 0!important}.orbit-stage .node{width:66px;height:66px}}@media(max-width:480px){#signal-geometry-layer{opacity:.42!important}.universe-layout>.orbit-stage{width:88vw!important;max-width:360px!important;margin:28px auto 0!important}.orbit-stage .node{width:58px;height:58px}}@media(prefers-reduced-motion:reduce){#signal-geometry-layer{display:none!important}}`;document.head.appendChild(s)};
