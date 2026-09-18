@@ -13,3 +13,19 @@ body.ls-canonical-page .legal-page{padding-top:96px!important}
 @media(max-width:900px){body.ls-canonical-page .gallery-page,body.ls-canonical-page .archive-page,body.ls-canonical-page .universe,body.ls-canonical-page .lore-page,body.ls-canonical-page .release-detail,body.ls-canonical-page .release-page,body.ls-canonical-page .coming-page,body.ls-canonical-page .vote-page{padding-top:78px!important}body.ls-canonical-page .legal-page{padding-top:88px!important}}
 /* The canonical header is fixed; do not insert a normal-flow spacer after it. */
 .ls-vote-row{display:none!important}
+
+/* Navigation redesign: compact category menu + persistent action CTAs */
+.ls-nav-inner{gap:18px}
+.ls-desktop-nav{gap:6px;align-items:center}
+.ls-nav-group{position:relative;display:inline-flex}
+.ls-nav-drop{font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.08em;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.12);padding:10px 12px;border-radius:8px;cursor:pointer;transition:.2s}
+.ls-nav-drop:hover,.ls-nav-group.open .ls-nav-drop{border-color:rgba(255,20,147,.7);box-shadow:0 0 18px rgba(255,20,147,.18);color:#ff55b5}
+.ls-nav-dropdown{position:absolute;top:calc(100% + 8px);left:0;min-width:190px;padding:8px;background:rgba(7,7,14,.97);border:1px solid rgba(255,20,147,.35);border-radius:10px;box-shadow:0 18px 40px rgba(0,0,0,.5),0 0 24px rgba(255,20,147,.12);display:none;z-index:10001}
+.ls-nav-group.open .ls-nav-dropdown{display:flex;flex-direction:column}
+.ls-nav-dropdown a{padding:10px 12px;color:#eee;text-decoration:none;border-radius:6px;font:600 12px/1 Rajdhani,sans-serif;letter-spacing:.1em}
+.ls-nav-dropdown a:hover{background:rgba(255,20,147,.12);color:#ff69bd}
+.ls-nav-ctas{display:inline-flex;gap:7px;margin-left:6px}
+.ls-nav-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:8px;text-decoration:none;font:800 10px/1 Orbitron,sans-serif;letter-spacing:.07em;color:#fff;border:1px solid rgba(255,20,147,.8);background:linear-gradient(135deg,rgba(255,20,147,.72),rgba(180,0,110,.55));box-shadow:0 0 18px rgba(255,20,147,.18);white-space:nowrap}
+.ls-nav-cta:hover{box-shadow:0 0 25px rgba(255,20,147,.42);transform:translateY(-1px)}
+@media(max-width:1100px){.ls-nav-drop{padding:9px 8px;font-size:11px}.ls-nav-cta{padding:9px 8px;font-size:9px}.ls-nav-inner{gap:8px}.ls-desktop-nav{gap:3px}}
+@media(max-width:900px){.ls-desktop-nav{display:none}.ls-nav-inner{justify-content:space-between}.ls-nav-ctas{margin-left:0}.ls-nav-cta{padding:10px 9px;font-size:9px}}
