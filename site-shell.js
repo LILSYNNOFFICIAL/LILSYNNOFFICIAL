@@ -1,7 +1,7 @@
 (()=>{'use strict';
 const path=location.pathname.toLowerCase().replace(/\/$/,'')||'/';
 const indexPage=path==='/'||path==='/index.html';
-const regular=new Set(['/archive.html','/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html','/lore.html','/lore','/404.html','/site-health.html']);
+const regular=new Set(['/archive.html','/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html','/lore.html','/lore','/404.html','/site-health.html','/index3.html']);
 const vote=new Set(['/vote','/vote.html']);
 if(!indexPage&&!regular.has(path)&&!vote.has(path))return;
 const nav=[['HOME','/'],['MUSIC','/#music'],['VIDEOS','/#videos'],['GALLERY','/gallery.html'],['UNIVERSE','/#universe'],['CONTACT','/#signal'],['FORUM','https://suno-forum.base44.app']];
