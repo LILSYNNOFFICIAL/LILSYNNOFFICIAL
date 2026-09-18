@@ -2,7 +2,7 @@
 const path=location.pathname.toLowerCase().replace(/\/$/,'')||'/';
 const routePath=path.replace(/\.html$/,'');
 const indexPage=path==='/'||routePath==='/index';
-const regular=new Set(['/archive','/releases','/gallery','/universe','/release','/special_access','/privacy','/terms','/coming_soon','/videos','/lore','/404','/site-health','/index3','/syntient_records/index','/syntient_records/ZiggyAndChickenman/index','/SynovaMedia/index']);
+const regular=new Set(['/archive','/releases','/gallery','/universe','/release','/special_access','/privacy','/terms','/coming_soon','/videos','/lore','/404','/site-health','/syntient_records/index','/syntient_records/ZiggyAndChickenman/index','/SynovaMedia/index']);
 const vote=new Set(['/vote']);
 if(!indexPage&&!regular.has(routePath)&&!vote.has(routePath))return;
 const nav=[['HOME','/'],['MUSIC','/#music'],['VIDEOS','/#videos'],['GALLERY','/gallery.html'],['UNIVERSE','/#universe'],['CONTACT','/#signal'],['FORUM','https://lilsynn-suno.base44.app']];
