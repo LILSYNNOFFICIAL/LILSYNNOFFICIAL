@@ -8,8 +8,8 @@ body.ls-canonical-page .lore-page,
 body.ls-canonical-page .release-detail,
 body.ls-canonical-page .release-page,
 body.ls-canonical-page .coming-page,
-body.ls-canonical-page .vote-page{padding-top:68px!important}
-body.ls-canonical-page .legal-page{padding-top:76px!important}
-@media(max-width:900px){body.ls-canonical-page .gallery-page,body.ls-canonical-page .archive-page,body.ls-canonical-page .universe,body.ls-canonical-page .lore-page,body.ls-canonical-page .release-detail,body.ls-canonical-page .release-page,body.ls-canonical-page .coming-page,body.ls-canonical-page .vote-page{padding-top:62px!important}body.ls-canonical-page .legal-page{padding-top:68px!important}}
+body.ls-canonical-page .vote-page{padding-top:88px!important}
+body.ls-canonical-page .legal-page{padding-top:96px!important}
+@media(max-width:900px){body.ls-canonical-page .gallery-page,body.ls-canonical-page .archive-page,body.ls-canonical-page .universe,body.ls-canonical-page .lore-page,body.ls-canonical-page .release-detail,body.ls-canonical-page .release-page,body.ls-canonical-page .coming-page,body.ls-canonical-page .vote-page{padding-top:78px!important}body.ls-canonical-page .legal-page{padding-top:88px!important}}
 /* The canonical header is fixed; do not insert a normal-flow spacer after it. */
 .ls-vote-row{display:none!important}
