@@ -6,9 +6,9 @@ const source = fs.readFileSync(new URL('../api/admin-files.js', import.meta.url)
 assert.match(source, /ADMIN_SESSION_SECRET/);
 assert.match(source, /ls_admin_session/);
 assert.match(source, /function isAllowedPath/);
-assert.match(source, /action === 'list'/);
-assert.match(source, /action === 'read'/);
-assert.match(source, /action === 'save'/);
+assert.match(source, /action\s*===\s*['"]list['"]/);
+assert.match(source, /action\s*===\s*['"]read['"]/);
+assert.match(source, /action\s*===\s*['"]save['"]/);
 assert.match(source, /\.html|\.css|\.js|\.json/);
 assert.match(source, /\.\./);
 
