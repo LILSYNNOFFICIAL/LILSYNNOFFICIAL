@@ -53,7 +53,7 @@
     while(queue.length&&seen.size<max){const url=clean(queue.shift());if(seen.has(url)||url.startsWith('/Suno/'))continue;seen.add(url);const outcome=await checkPage(url);add(`Page ${url}`,outcome.status,outcome.detail);
       if(outcome.status!=='FAIL'){try{const {text}=await fetchText(url);const doc=new DOMParser().parseFromString(text,'text/html');for(const a of doc.querySelectorAll('a[href]')){const ref=a.getAttribute('href');if(ref&&same(ref)&&isHtml(ref)){const p=clean(ref);if(!p.startsWith('/Suno/')&&!seen.has(p))queue.push(p)}}}catch{}}
     }
-    for(const asset of ['/site-global.css','/site-global.js','/assets/images/icons/LS_LOGO.png','/assets/images/icons/LS_HEADPHONES.png','/assets/mov/LS_BG_STARS.webm']){
+    for(const asset of ['/site-shell.css','/site-shell.js','/assets/images/icons/LS_LOGO.png','/assets/images/icons/LS_HEADPHONES.png','/assets/mov/LS_BG_STARS.webm']){
       try{const r=await fetch(asset,{method:'HEAD',cache:'no-store'});add(`Asset ${asset}`,r.ok?'PASS':'FAIL',r.ok?'Reachable from the browser.':`HTTP ${r.status}`)}catch(error){add(`Asset ${asset}`,'FAIL',error.message)}
     }
     try{const r=await fetch('/Suno/Suno_Guide.html',{cache:'no-store'});add('Suno entry point',r.ok?'PASS':'WARN',r.ok?'Suno is reachable; use its dedicated dashboard for full Suno checks.':`Suno entry returned HTTP ${r.status}. Main-site status remains independent.`)}catch(error){add('Suno entry point','WARN',`Suno probe failed: ${error.message}`)}
