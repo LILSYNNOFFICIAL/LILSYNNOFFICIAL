@@ -55,8 +55,10 @@ function particles(){
  requestAnimationFrame(tick);
 }
 function geometry(){
- if(document.getElementById('ls-geometry-layer'))return;
- const layer=document.createElement('div');layer.id='ls-geometry-layer';layer.setAttribute('aria-hidden','true');document.body.prepend(layer);
+ let layer=document.getElementById('ls-geometry-layer');
+ if(layer?.dataset.lsReady==='1')return;
+ if(!layer){layer=document.createElement('div');layer.id='ls-geometry-layer';layer.setAttribute('aria-hidden','true');document.body.prepend(layer)}
+ layer.dataset.lsReady='1';
  const count=window.innerWidth<600?10:window.innerWidth<1000?14:18;const items=[];
  for(let i=0;i<count;i++){
   const s=document.createElement('span');s.innerHTML=shapes[i%shapes.length];const depth=rand(.28,1);
