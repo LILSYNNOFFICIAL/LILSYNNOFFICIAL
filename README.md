@@ -9,20 +9,20 @@
 <!-- MAIN-SURFACE-QA:START -->
 ## 🩺 MAIN SURFACE QA
 
-**🔴 QA: FAIL**
+**🟡 QA: NOT CURRENTLY VERIFIED**
 
-| Surface | Status |
-|---|---|
-| Main | 🔴 **FAIL** |
-| Command | 🔴 **FAIL** |
-| Admin | 🔴 **FAIL** |
-| Suno | 🟢 **PASS** |
+| Surface | Status | Latest verified evidence |
+|---|---|---|
+| Main | 🟡 **NOT VERIFIED** | No current Main Surface QA run is available for the latest main commit |
+| Command | 🟢 **PASS** | Command Center regression run 218 |
+| Admin | 🟡 **NOT VERIFIED** | No current standalone Admin QA result is available |
+| Suno | 🟢 **PASS** | Suno Browser QA run 47 |
 
-**Tested commit:** `b441864`  
-**Checked:** 2026-09-16 22:56 UTC  
-**Workflow run:** `35159974991`
+**Current main commit:** `48a0fd0`  
+**Checked:** 2026-09-18 07:37 UTC  
+**Vercel:** 🟢 **SUCCESS** for the current commit
 
-> This status is generated automatically. README-only commits are excluded from this workflow, so the QA status update cannot recursively trigger another QA run.
+> This block reports only verification that is actually available. A missing current workflow result is shown as **NOT VERIFIED**, not as a failure or pass. README-only commits are excluded from Main Surface QA, so this status update does not recursively trigger another QA run.
 
 <!-- MAIN-SURFACE-QA:END -->
 
