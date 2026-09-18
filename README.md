@@ -1249,3 +1249,466 @@ KNOW MORE.
 [**Open the GitHub Pages Preview →**](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
 
 The preview is generated from `main` by GitHub Actions and is kept separate from the production Vercel configuration.
+
+
+---
+
+# 🛡️ LIL SYNN OFFICIAL — PROJECT OPERATING RULES
+
+This section is the standing engineering, design, QA, and maintenance contract for work on the main LIL SYNN website.
+
+## 1. Evidence Before Assertions
+
+**Do not assume what the website looks like.**
+
+Source inspection, a successful build, or a successful HTTP response does not prove rendered correctness.
+
+For visual or interactive claims, actually render and test the affected page.
+
+Report only what was observed.
+
+> **Evidence before assertions.**
+
+## 2. Root Cause Before Patch
+
+Do not repeatedly compensate for an architectural problem with arbitrary CSS offsets, transforms, margins, padding, or z-index escalation.
+
+When a layout or shell problem occurs, inspect:
+
+- positioning
+- containing blocks
+- stacking contexts
+- z-index
+- header geometry
+- margins/padding
+- transforms
+- overflow
+- body/min-height behavior
+- viewport calculations
+- duplicate shell elements
+- injected shell elements
+- legacy navigation
+- route-specific wrappers
+- footer positioning
+
+Fix the responsible system rather than stacking another patch.
+
+## 3. Canonical Main-Site Shell
+
+The main site should have one coherent canonical shell:
+
+- one header contract
+- one horizontal navigation system
+- one separate hamburger navigation system
+- one footer contract
+- one global visual/background contract
+- one responsive behavior contract
+
+Page-specific content belongs inside the shell.
+
+Do not create competing global headers, duplicated navigation systems, duplicated footers, or giant scripts that indiscriminately delete page content.
+
+## 4. Two Navigation Systems Are Required
+
+### Horizontal navigation
+
+The main header must contain functional category navigation, organized approximately around:
+
+- MUSIC
+- VISUALS
+- UNIVERSE
+- RECORDS
+- MORE
+
+Exact labels and destinations must follow the repository architecture.
+
+Intended dropdown categories must actually open and close and must work appropriately with mouse, keyboard, and touch.
+
+Dropdowns must not be clipped, hidden behind other layers, or create unexplained layout gaps.
+
+### Hamburger navigation
+
+The hamburger is a **separate** navigation system.
+
+It must visibly exist, open, close, contain navigation, remain accessible, and work without replacing or destroying the horizontal navigation.
+
+Do not simplify the site by removing one of the two required menus.
+
+## 5. Navigation Typography
+
+Navigation should be:
+
+- compact
+- refined
+- readable
+- premium
+- futuristic
+- consistent with LIL SYNN
+
+Do not globally shrink the site's typography to compensate for oversized navigation.
+
+Use the existing typography system and establish an intentional navigation scale.
+
+## 6. Protected Routes
+
+The following are protected and must not be modified without explicit authorization:
+
+`/suno`
+
+`/backup`
+
+Do not redesign, normalize, migrate, refactor, or automatically modify these routes.
+
+They must coexist with the main-site architecture without being swept into global changes.
+
+## 7. Preserve Existing Creative Work
+
+Do not replace the existing website with a generic template.
+
+Preserve intended existing:
+
+- cosmic atmosphere
+- stars
+- particles
+- sacred geometry
+- swirls
+- visual effects
+- branding
+- artwork
+- releases
+- page content
+- social links
+- footer functionality
+- Special Access
+- existing routes
+
+Before deleting or replacing an asset, search the repository and determine its role.
+
+## 8. Gallery Rule
+
+The Gallery is an artwork-first experience.
+
+Inspect the repository's existing artwork before creating replacements.
+
+Use real production artwork whenever available.
+
+The gallery may include:
+
+- featured visuals
+- artwork grids/masonry
+- album artwork
+- EP artwork
+- singles
+- character visuals
+- filters
+- lightboxes
+- visual archive
+- an intentional 3D-model component
+
+The 3D model must not dominate the gallery at the expense of the artwork archive.
+
+## 9. Content Integrity
+
+Never invent official:
+
+- releases
+- songs
+- dates
+- credits
+- lyrics
+- lore
+- social accounts
+- links
+- artwork
+- statistics
+- statements
+
+If authoritative information is missing, identify the gap rather than fabricating content.
+
+Do not silently alter official content.
+
+## 10. Asset Rules
+
+Search the repository before requesting or creating an asset.
+
+Do not ask the owner to re-upload an asset that already exists.
+
+Before removing an asset, search:
+
+- HTML
+- CSS
+- JavaScript
+- JSON
+- dynamic references
+- configuration
+- workflows
+
+Do not remove an asset merely because it appears unused from one file.
+
+## 11. Release/Data Rules
+
+Prefer canonical structured sources over duplicated hand-written data.
+
+`release-catalog.json` is the canonical source for release catalog information.
+
+Do not create competing copies of release metadata when the canonical catalog already provides it.
+
+The same principle applies to other repository-defined canonical data sources.
+
+## 12. Accessibility
+
+Accessibility is part of completion, not optional polish.
+
+Verify:
+
+- semantic HTML
+- keyboard navigation
+- visible focus
+- accessible labels
+- correct button/link semantics
+- alt text
+- contrast
+- dropdown accessibility
+- hamburger accessibility
+- modal/lightbox behavior
+- reduced-motion behavior
+
+A UI that looks correct but cannot be operated correctly is not finished.
+
+## 13. Performance
+
+Preserve visual richness without allowing it to make the site unusable.
+
+Watch for:
+
+- oversized assets
+- unnecessary JavaScript
+- excessive DOM manipulation
+- unoptimized media
+- blocking resources
+- expensive animation
+- excessive network requests
+- memory-heavy effects
+- layout shifts
+
+Optional visual effects should degrade gracefully.
+
+## 14. Responsive Design
+
+Desktop and mobile are both first-class experiences.
+
+Verify:
+
+- navigation
+- hamburger
+- dropdowns
+- typography
+- content positioning
+- gallery
+- images
+- footer
+- background effects
+- overflow
+- touch interaction
+
+Do not rely on hover-only interactions for important functionality.
+
+## 15. Security
+
+Never commit or expose:
+
+- API keys
+- passwords
+- private tokens
+- credentials
+- deployment secrets
+
+Treat user-generated content and external URLs as untrusted.
+
+Use safe handling for external links and third-party content.
+
+## 16. Browser Verification
+
+Browser verification is mandatory for changes affecting rendered behavior.
+
+For `/template.html`, verify at minimum:
+
+### Desktop
+
+- horizontal navigation is visible
+- dropdowns visibly open
+- hamburger is visible
+- hamburger opens and closes
+- navigation typography is appropriate
+- menus are not clipped
+- content is not behind the shell
+- no unexplained gap exists
+- cosmic visual system is present
+- relevant console errors are absent
+
+### Mobile
+
+- navigation remains usable
+- hamburger works
+- dropdowns work
+- text does not overflow
+- content remains visible
+- header does not consume excessive viewport space
+- touch interactions work
+
+Repeat representative checks on other main-site routes.
+
+A page loading successfully is **not** visual verification.
+
+## 17. Vercel and GitHub Pages
+
+Vercel is the primary deployment verification environment.
+
+If Vercel fails because of build rate limits, capacity, quota, or deployment throttling:
+
+1. inspect the deployment logs
+2. distinguish infrastructure failure from application failure
+3. do not rewrite application code to solve a rate-limit problem
+4. use the GitHub Pages fallback when appropriate
+5. actually render and inspect the fallback
+6. accurately report the verification limitation
+
+Fallback:
+
+https://lilsynnofficial.github.io/LILSYNNOFFICIAL/
+
+## 18. QA and Independent Review
+
+Use repository QA, browser QA, deployment verification, and independent code review as separate evidence layers.
+
+Where applicable, use:
+
+- Codex Engineering Guardrails
+- CodeRabbit
+- browser automation
+- Vercel verification
+- TinyFish
+- repository tests and workflows
+
+Do not treat the implementation author's own reasoning as sufficient independent verification.
+
+## 19. Git Discipline
+
+For significant work:
+
+1. inspect `main`
+2. inspect recent commits
+3. inspect open PRs
+4. establish a clean baseline
+5. use an isolated branch
+6. make controlled changes
+7. inspect the final diff
+8. run fresh verification
+9. create/integrate only after the applicable gates pass
+
+Do not merge an old broken implementation merely because it already exists.
+
+## 20. Change Scope
+
+Every modification must have a reason.
+
+Before changing a shared component, determine which routes depend on it.
+
+Avoid unrelated cleanup during focused repairs.
+
+Do not make broad automated replacements without understanding their consequences.
+
+Protected routes must remain explicitly excluded.
+
+## 21. Debugging Workflow
+
+For bugs:
+
+1. reproduce
+2. gather evidence
+3. identify the responsible system
+4. form a hypothesis
+5. test the hypothesis
+6. make the smallest coherent correction
+7. verify the result
+8. run regression checks
+
+If a previous fix failed, investigate why before stacking another fix on top.
+
+## 22. Definition of Done
+
+A task is not complete merely because code was written or a page loaded.
+
+Completion requires the applicable combination of:
+
+- architecture understood
+- source inspected
+- correct files changed
+- protected routes untouched
+- root cause addressed
+- source validation passed
+- browser verification passed
+- responsive behavior checked
+- deployment state understood
+- independent review completed
+- regression verification completed
+- final diff reviewed
+
+Anything not freshly demonstrated must be treated as **unverified**.
+
+## 23. Communication Standard
+
+When reporting work, state:
+
+- what was inspected
+- what changed
+- why it changed
+- what was tested
+- what was actually observed
+- which environment was tested
+- what remains unverified
+- any infrastructure limitations
+
+Never report an interaction as tested when it was not tested.
+
+Never call a visual issue fixed based only on source inspection.
+
+---
+
+# 🧭 Standing Engineering Doctrine
+
+```text
+SOURCE
+  ↓
+UNDERSTAND
+  ↓
+DIAGNOSE
+  ↓
+PLAN
+  ↓
+IMPLEMENT
+  ↓
+VALIDATE
+  ↓
+RENDER
+  ↓
+INTERACT
+  ↓
+INDEPENDENT REVIEW
+  ↓
+REGRESSION
+  ↓
+INTEGRATE
+```
+
+**ROOT CAUSE BEFORE PATCH.**
+
+**EVIDENCE BEFORE ASSERTIONS.**
+
+**VERIFY BEFORE CLAIMING.**
+
+**PROTECT WHAT ALREADY WORKS.**
+
+**PRESERVE THE LIL SYNN IDENTITY.**
+
+**DIVINE PERFECTION IS THE STANDARD.**
