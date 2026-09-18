@@ -40,6 +40,13 @@ function safePath(urlPath) {
   return candidate;
 }
 
+const apiResponse = (req, res) => {
+  if ((req.url || '').split('?')[0] !== '/api/admin') return false;
+  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify({ ok: false, error: 'AUTH_REQUIRED' }));
+  return true;
+};
+
 const mime = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -56,6 +63,7 @@ const mime = {
 
 const server = http.createServer((req, res) => {
   try {
+    if (apiResponse(req, res)) return;
     const file = safePath(req.url || '/');
     if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
