@@ -38,8 +38,8 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-template-hamburger{width:40px;height:40px;display:grid;place-content:center;gap:4px;flex:0 0 auto;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.28);cursor:pointer}
 .ls-template-hamburger span{display:block;width:17px;height:1px;background:#fff;transition:transform .2s ease,opacity .2s ease}
 .ls-template-hamburger:hover{border-color:rgba(255,0,143,.55);background:rgba(255,0,143,.06)}
- .ls-template-menu{position:fixed;inset:auto 18px 18px auto;width:min(430px,calc(100vw - 36px));height:auto;max-height:min(78vh,690px);z-index:2147483641;background:linear-gradient(145deg,rgba(255,0,143,.22),rgba(42,5,36,.78) 42%,rgba(8,8,13,.88));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:translateY(18px) scale(.98);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
-.ls-template-menu.open{transform:translateY(0) scale(1);opacity:1;visibility:visible;pointer-events:auto}
+ .ls-template-menu{position:fixed;left:50%;right:auto;bottom:18px;width:min(560px,calc(100vw - 36px));height:auto;max-height:min(78vh,690px);z-index:2147483641;background:linear-gradient(145deg,rgba(255,0,143,.22),rgba(42,5,36,.78) 42%,rgba(8,8,13,.88));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:translate(-50%,18px) scale(.98);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
+.ls-template-menu.open{transform:translate(-50%,0) scale(1);opacity:1;visibility:visible;pointer-events:auto}
 .ls-template-menu::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(circle at 85% 0,rgba(255,80,210,.24),transparent 38%),radial-gradient(circle at 0 100%,rgba(110,40,255,.14),transparent 40%),linear-gradient(180deg,rgba(255,0,143,.06),transparent 55%)}
 .ls-template-menu-inner{position:relative;z-index:1}
 .ls-template-menu-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 2px 13px;border-bottom:1px solid var(--ls-line)}
@@ -84,14 +84,14 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
  .ls-template-ctas{display:none}
  .ls-desktop-nav{display:flex!important;overflow-x:auto;justify-content:flex-start;gap:10px;padding-bottom:1px}
  .ls-template-cat-menu{position:fixed;top:67px;left:12px;right:12px;transform:none;width:auto;max-height:62vh}
- .ls-template-menu{inset:74px 12px auto auto;width:min(410px,calc(100vw - 24px));max-height:calc(100vh - 88px);padding:15px}
+ .ls-template-menu{left:50%;right:auto;top:74px;bottom:auto;width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 88px);padding:15px;transform:translate(-50%,18px) scale(.98)}
 }
 @media(max-width:560px){
  .ls-nav-inner{padding:0 10px;gap:10px}
  .ls-brand{font-size:14px}
  .ls-desktop-nav{gap:12px}
  .ls-template-cat>button{font-size:8px}
- .ls-template-menu{inset:68px 8px 8px;width:auto;max-height:calc(100vh - 76px);border-radius:14px;background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
+ .ls-template-menu{left:50%;right:auto;top:68px;bottom:8px;width:calc(100vw - 16px);max-height:calc(100vh - 76px);border-radius:14px;transform:translate(-50%,18px) scale(.98);background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
  .ls-menu-groups{grid-template-columns:1fr}
  .ls-menu-wide{grid-column:auto}
  .ls-menu-social-grid{grid-template-columns:repeat(4,1fr)}
@@ -115,11 +115,6 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
       <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-universe">UNIVERSE ▾</button><div class="ls-template-cat-menu" id="ls-menu-universe" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">UNIVERSE</div><a href="/universe.html" role="menuitem">UNIVERSE <span>EXPLORE</span></a><a href="/lore.html" role="menuitem">LORE <span>STORY</span></a></div></div></span>
       <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-more">MORE ▾</button><div class="ls-template-cat-menu" id="ls-menu-more" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">EXPLORE</div><a href="/coming_soon.html" role="menuitem">UPCOMING <span>SOON</span></a><a href="/vote" role="menuitem">VOTE 4 LIL SYNN <span>SUPPORT</span></a><a href="/#signal" role="menuitem">SYNN SIGNAL <span>CONNECT</span></a><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" role="menuitem">OFFICIAL MERCH <span>SHOP ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">SOCIAL</div><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" role="menuitem">INSTAGRAM <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">TIKTOK <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">X / TWITTER <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">FACEBOOK <span>↗</span></a></div></div></span>
     </nav>
-
-    <div class="ls-template-ctas" aria-label="Primary calls to action">
-      <a class="ls-template-cta" href="https://tinyurl.com/LIL-SYNN-HELLO-GOODBYE" target="_blank" rel="noopener noreferrer">PRE-SAVE</a>
-      <a class="ls-template-cta" href="/vote">VOTE 4 LIL SYNN</a>
-    </div>
 
     <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><span></span><span></span><span></span></button>
   </div>
@@ -190,3 +185,12 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 <script src="/site-shell.js?v=20260918"></script>
 </body>
 </html>
+
+/* Symmetric hamburger panel across desktop/mobile: equal outer margins, consistent card rhythm, and centered social/CTA rows. */
+.ls-template-menu-inner{width:100%;box-sizing:border-box}
+.ls-menu-groups{align-items:stretch}
+.ls-menu-card{min-width:0;box-sizing:border-box}
+.ls-menu-stream-grid,.ls-menu-social-grid{min-width:0}
+.ls-menu-footer-ctas{align-items:stretch}
+.ls-menu-footer-ctas a{display:flex;align-items:center;justify-content:center;min-height:32px;box-sizing:border-box}
+@media(max-width:560px){.ls-menu-groups{grid-template-columns:1fr;}.ls-menu-wide{grid-column:auto}.ls-menu-social-grid{grid-template-columns:repeat(2,1fr)}.ls-menu-stream-grid{grid-template-columns:1fr 1fr}.ls-menu-footer-ctas{display:grid;grid-template-columns:1fr 1fr 1fr}.ls-menu-footer-ctas a{width:100%}}
