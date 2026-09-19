@@ -186,7 +186,12 @@ async function injectTemplate(){
 
     const h=header.cloneNode(true);
     const m=menu.cloneNode(true);
-    const f=footer.cloneNode(true);rewriteTemplateUrls(h);rewriteTemplateUrls(m);rewriteTemplateUrls(f);
+    const f=footer.cloneNode(true);
+    rewriteTemplateUrls(h);rewriteTemplateUrls(m);rewriteTemplateUrls(f);
+
+    // The template is the canonical shell. Remove every page-owned copy of
+    // the global header/menu/footer before mounting the template instances.
+    // Page content itself is preserved verbatim inside #template-content.
 
     h.dataset.lsTemplateApplied='1';
     document.body.replaceChildren(...visuals,h,m,content,f);document.body.style.overflow='';document.documentElement.style.overflowX='hidden';
