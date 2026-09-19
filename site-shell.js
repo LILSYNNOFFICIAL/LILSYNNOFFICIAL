@@ -5,7 +5,9 @@ const route=path.replace(/\.html$/,'');
 const excluded=new Set(['/suno','/backup','/template','/template_bu']);
 if(excluded.has(route))return;
 
-const TEMPLATE_URL='/template.html?template=20260919';
+const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const TEMPLATE_URL=ROOT('/template.html')+'?template=20260919';
+
+function rewriteTemplateUrls(root){root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{const attr=el.hasAttribute('href')?'href':'src';const v=el.getAttribute(attr);if(v&&v.startsWith('/'))el.setAttribute(attr,ROOT(v));});}
 
 function normalize(){
   document.querySelectorAll('a[href]').forEach(a=>{
@@ -18,13 +20,13 @@ function addTemplateStyles(doc){
   [...doc.head.querySelectorAll('style')].forEach(s=>{
     const x=document.createElement('style');
     if(s.id)x.id='ls-injected-'+s.id;
-    x.textContent=s.textContent;
+    x.textContent=s.textContent.replace(/url\((['"]?)\//g,`url($1${SITE_BASE}/`);
     document.head.appendChild(x);
   });
   if(!document.querySelector('link[data-ls-template-shell]')){
     const l=document.createElement('link');
     l.rel='stylesheet';
-    l.href='/site-shell.css?v=20260919';
+    l.href=ROOT('/site-shell.css')+'?v=20260919';
     l.dataset.lsTemplateShell='1';
     document.head.appendChild(l);
   }
@@ -178,7 +180,7 @@ async function injectTemplate(){
 
     const h=header.cloneNode(true);
     const m=menu.cloneNode(true);
-    const f=footer.cloneNode(true);
+    const f=footer.cloneNode(true);rewriteTemplateUrls(h);rewriteTemplateUrls(m);rewriteTemplateUrls(f);
 
     h.dataset.lsTemplateApplied='1';
     document.body.replaceChildren(...visuals,h,m,content,f);document.body.style.overflow='';document.documentElement.style.overflowX='hidden';
