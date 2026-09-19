@@ -15,7 +15,7 @@ function rewriteTemplateUrls(root){
   });
   root.querySelectorAll('[style]').forEach(el=>{
     const v=el.getAttribute('style');
-    if(v)el.setAttribute('style',v.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/'));
+    if(v)el.setAttribute('style',v.replace(/url\((['"]?)\//g,'url($1'+SITE_BASE+'/'));
   });
 }
 
@@ -28,10 +28,10 @@ function rewritePageUrls(root){
   });
   root.querySelectorAll('[style]').forEach(el=>{
     const v=el.getAttribute('style');
-    if(v)el.setAttribute('style',v.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/'));
+    if(v)el.setAttribute('style',v.replace(/url\((['"]?)\//g,'url($1'+SITE_BASE+'/'));
   });
   root.querySelectorAll('style').forEach(style=>{
-    style.textContent=style.textContent.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/');
+    style.textContent=style.textContent.replace(/url\((['"]?)\//g,'url($1'+SITE_BASE+'/');
   });
 }
 
