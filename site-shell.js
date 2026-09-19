@@ -63,7 +63,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-canonical-topbar{position:fixed!important;z-index:2147483000!important}body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-canonical-footer{position:relative!important;z-index:100!important}
+body.ls-canonical-page .ls-canonical-topbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483000!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483641!important}body.ls-canonical-page .ls-canonical-footer{position:relative!important;z-index:100!important}
 body.ls-canonical-page #ls-template-menu{z-index:110!important;scrollbar-color:#ff008f rgba(255,255,255,.06)!important;scrollbar-width:thin!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar{width:8px!important;height:8px!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:999px!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar-track{background:rgba(255,255,255,.05)!important}
 body.ls-canonical-page #template-content{
   display:block!important;
@@ -174,7 +174,7 @@ async function injectTemplate(){
   if(document.documentElement.dataset.lsTemplateApplied==='1')return;
 
   try{
-    let res=await fetch(TEMPLATE_URL,{cache:'no-store'});if(!res.ok)res=await fetch('/template.html',{cache:'no-store'});
+    let res=await fetch(TEMPLATE_URL,{cache:'no-store'});if(!res.ok)res=await fetch(TEMPLATE_URL,{cache:'no-store'});
     if(!res.ok)throw new Error('template fetch '+res.status);
 
     const html=await res.text();
