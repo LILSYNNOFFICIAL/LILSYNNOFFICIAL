@@ -213,6 +213,43 @@ body.ls-canonical-page #template-content{height:1px!important;min-height:1px!imp
 body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important}
 @media(max-width:560px){.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 </style>
+
+<style id="ls-mobile-menu-repair">
+/* MOBILE MENU REPAIR 2026-09-19 */
+@media(max-width:900px){
+.ls-canonical-topbar{height:68px!important;min-height:68px!important}
+.ls-nav-inner{height:68px!important;min-height:68px!important;box-sizing:border-box!important}
+.ls-template-hamburger{display:grid!important;margin-left:auto!important;z-index:5!important}
+.ls-template-actionbar{top:68px!important;z-index:2!important;box-sizing:border-box!important}
+.ls-desktop-nav{display:none!important}
+.ls-template-cat-menu{display:none!important}
+.ls-template-menu{position:fixed!important;left:8px!important;right:8px!important;top:112px!important;bottom:8px!important;width:auto!important;height:auto!important;max-height:none!important;box-sizing:border-box!important;margin:0!important;padding:12px!important;transform:translateY(12px) scale(.985)!important;overflow:hidden!important;border-radius:14px!important}
+.ls-template-menu.open{transform:translateY(0) scale(1)!important}
+.ls-template-menu-inner{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important}
+.ls-template-menu-top{flex:0 0 auto!important;padding-bottom:10px!important}
+.ls-menu-groups{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;gap:7px!important;margin-top:9px!important;padding:0 2px 8px!important;scrollbar-width:thin!important;scrollbar-color:#ff008f rgba(255,255,255,.06)!important}
+.ls-menu-groups::-webkit-scrollbar{width:6px!important}
+.ls-menu-groups::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:8px!important}
+.ls-menu-card{width:100%!important;height:auto!important;flex:0 0 auto!important;box-sizing:border-box!important;padding:8px!important}
+.ls-menu-card h3{text-align:center!important;margin-bottom:6px!important}
+.ls-menu-card a{min-height:32px!important;box-sizing:border-box!important;justify-content:center!important;text-align:center!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+.ls-menu-footer-ctas{position:relative!important;flex:0 0 auto!important;margin-top:0!important;padding:9px 2px 0!important;flex-wrap:nowrap!important}
+.ls-menu-footer-ctas a{min-width:0!important;flex:1 1 0!important;white-space:normal!important}
+}
+@media(max-width:560px){
+.ls-template-actionbar{gap:4px!important;padding:5px 6px!important}
+.ls-template-actionbar a{padding:6px 7px!important;font-size:7.5px!important}
+.ls-template-menu{top:108px!important;left:6px!important;right:6px!important;bottom:6px!important;padding:10px!important}
+.ls-template-menu-brand{font-size:14px!important}
+.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.ls-menu-card a{font-size:8.5px!important;letter-spacing:.06em!important;padding:6px 4px!important}
+}
+@media(min-width:901px){.ls-template-hamburger{display:grid!important}}
+</style>
+<script>
+(()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o||!c)return;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.onclick=e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))};c.onclick=e=>{e.preventDefault();s(false)};m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});addEventListener('resize',()=>{if(innerWidth>900)s(false)})})();
+</script>
 </body>
 </html>
 
