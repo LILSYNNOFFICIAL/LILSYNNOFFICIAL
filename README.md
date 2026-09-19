@@ -155,12 +155,13 @@ site-shell.js
 ### Protected surfaces
 
 ```text
-/suno/*      → COMPLETELY EXCLUDED
-/backup/*    → COMPLETELY EXCLUDED
-/template    → SHELL SOURCE ONLY; NO SELF-INJECTION
+/suno/*        → COMPLETELY EXCLUDED
+/backup/*      → COMPLETELY EXCLUDED
+/template      → SHELL SOURCE ONLY; NO SELF-INJECTION
+/template_bu   → SHELL BACKUP; NO INJECTION
 ```
 
-**Do not modify /suno as part of universal-shell work.** The same protection applies to /backup.
+**Do not modify /suno as part of universal-shell work.** The same protection applies to /backup. `template_bu.html` is a point-in-time backup of the canonical template and is also excluded from universal injection.
 
 ### Page ownership
 
@@ -238,7 +239,20 @@ Discovery-oriented catalog layer with release search, track search, release-type
 
 # 🖼️ Visual System
 
-Reuse existing production assets before creating replacements.
+Reuse existing production assets before creating replacements. The repository contains multiple generations of LIL SYNN character imagery, release artwork, new visual studies, key art, and supporting media. The Visual Gallery is an artwork-first archive that consumes those real production assets rather than inventing replacement artwork.
+
+The gallery intentionally excludes navigation icons, platform/social icons, utility graphics, and other non-artwork UI assets. It also does **not** use the 3D character model as gallery content. The current gallery is a static-artwork experience with:
+
+- Character/model photography and character studies from `/assets/2/`
+- Release and single artwork from `/assets/images/icons/album_art/`
+- New visual studies from `/assets/images/icons/new_art/`
+- Selected artwork-bearing key art from `/assets/img/`
+- Lightbox viewing with keyboard and touch navigation
+- Artwork filters for Characters, Release Art, New Art, and World/Key Art
+- Lazy-loaded image cards so the large archive does not eagerly load every full-resolution image
+- A gallery-specific animated visual core and ambient field that is independent of the homepage orb
+
+The gallery inherits the universal shell through `site-shell.js`; the page owns only its artwork archive, visual treatment, filters, and lightbox.
 
 Known core assets include:
 
@@ -254,6 +268,8 @@ Known core assets include:
 ```
 
 The repository already contains established release artwork and LIL SYNN visual assets. Audit the repository before requesting or generating a replacement.
+
+Gallery page uses the canonical shell but owns its own artwork presentation. The page should remain content-only from the universal-shell perspective: no duplicate header/footer, no legacy 3D-model stage, and no competing global navigation.
 
 **Do not ask the owner to recreate or re-upload an asset that already exists in the repository.**
 
@@ -1024,11 +1040,17 @@ Important `vercel.json` responsibilities include:
 Shared shell assets currently use the intentional cache-busting value:
 
 ```html
-<script src="/site-shell.js?v=20260918"></script>
-<link id="site-global-css" rel="stylesheet" href="/site-shell.css?v=20260918">
+<script src="/site-shell.js?v=20260919"></script>
+<link id="site-global-css" rel="stylesheet" href="/site-shell.css?v=20260919">
 ```
 
-`20260918` is a cache-busting identifier currently present in source, not a roadmap date.
+`20260919` is a cache-busting identifier currently present in source, not a roadmap date.
+
+The Gallery page uses its own query value on its page-local script reference:
+
+```html
+<script src="/site-shell.js?v=20260919-gallery"></script>
+```
 
 Any future shared-shell version change must be synchronized across consumers.
 
@@ -1203,7 +1225,7 @@ Existing artwork remains authoritative unless a specific new visual has been req
 ├── releases.html
 ├── archive.html
 ├── release.html
-├── gallery.html
+├── gallery.html                    # artwork-first visual archive; inherits template shell
 ├── universe.html
 ├── videos.html
 ├── coming_soon.html
