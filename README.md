@@ -18,8 +18,8 @@
 | Admin | 🟡 **NOT VERIFIED** | No current standalone Admin QA result is available |
 | Suno | 🟢 **PASS** | Suno Browser QA run 47 |
 
-**Current main commit:** `48a0fd0`  
-**Checked:** 2026-09-18 07:37 UTC  
+**Current main commit:** `e9e1929fcae0d8206da3be7674e6ed40476d1c13`  
+**Checked:** 2026-09-19 (not re-verified after the universal-template migration)  
 **Vercel:** 🟢 **SUCCESS** for the current commit
 
 > This block reports only verification that is actually available. A missing current workflow result is shown as **NOT VERIFIED**, not as a failure or pass. README-only commits are excluded from Main Surface QA, so this status update does not recursively trigger another QA run.
