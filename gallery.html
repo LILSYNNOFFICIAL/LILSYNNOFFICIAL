@@ -27,17 +27,20 @@
 .gallery-section-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:0 0 14px}
 .gallery-section-heading h2{margin:0;font:700 clamp(20px,3vw,30px) Orbitron,sans-serif;letter-spacing:.08em}
 .gallery-section-heading p{margin:0;color:#74747f;font:600 11px Rajdhani,sans-serif;letter-spacing:.12em}
-.gallery-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.gallery-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:0;background:rgba(5,5,11,.86);color:#fff;text-align:left;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;content-visibility:auto;contain-intrinsic-size:320px}
-.gallery-card:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.09) 47%,transparent 66%);transform:translateX(-130%);transition:transform .65s;pointer-events:none}
-.gallery-card:hover,.gallery-card:focus-visible{transform:translateY(-5px) scale(1.008);border-color:rgba(255,0,143,.55);box-shadow:0 18px 45px rgba(0,0,0,.45),0 0 32px rgba(255,0,143,.09);outline:none}
-.gallery-card:hover:after,.gallery-card:focus-visible:after{transform:translateX(130%)}
-.gallery-art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#09090d;transition:transform .5s,filter .5s}
-.gallery-card:hover .gallery-art,.gallery-card:focus-visible .gallery-art{transform:scale(1.035);filter:saturate(1.08) contrast(1.03)}
-.gallery-copy{display:block;padding:12px 13px 14px;background:linear-gradient(180deg,rgba(7,7,13,.82),rgba(3,3,8,.98))}
-.gallery-type{display:block;color:#ff63bf;font:700 9px Rajdhani,sans-serif;letter-spacing:.17em}
-.gallery-card h3{margin:5px 0 0;font:700 14px Orbitron,sans-serif;line-height:1.25}
-.gallery-meta{display:block;margin-top:5px;color:#73737e;font:600 10px Rajdhani,sans-serif;letter-spacing:.07em}
+.gallery-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px;grid-auto-flow:dense}
+.gallery-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.11);border-radius:22px;padding:0;background:linear-gradient(145deg,rgba(12,10,20,.95),rgba(4,4,10,.92));color:#fff;text-align:left;cursor:pointer;transition:transform .35s,border-color .35s,box-shadow .35s;content-visibility:auto;contain-intrinsic-size:320px;box-shadow:0 12px 38px rgba(0,0,0,.3)}
+.gallery-card:nth-child(6n+1),.gallery-card:nth-child(6n+4){grid-column:span 5}.gallery-card:nth-child(6n+2),.gallery-card:nth-child(6n+5){grid-column:span 4}.gallery-card:nth-child(6n+3),.gallery-card:nth-child(6n+6){grid-column:span 3}
+.gallery-card:nth-child(4n+1) .gallery-art{aspect-ratio:1.18}.gallery-card:nth-child(4n+2) .gallery-art{aspect-ratio:.88}.gallery-card:nth-child(4n+3) .gallery-art{aspect-ratio:1}.gallery-card:nth-child(4n) .gallery-art{aspect-ratio:1.28}
+.gallery-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(255,255,255,.08);border-radius:16px;z-index:2;pointer-events:none;mix-blend-mode:screen}
+.gallery-card:after{content:"";position:absolute;inset:-30%;background:conic-gradient(from 180deg,transparent 0 32%,rgba(255,0,143,.22),rgba(72,217,255,.12),transparent 62%);transform:rotate(0deg);opacity:.55;transition:transform .8s,opacity .4s;pointer-events:none}
+.gallery-card:hover,.gallery-card:focus-visible{transform:translateY(-8px) rotate(-.35deg);border-color:rgba(255,0,143,.65);box-shadow:0 25px 60px rgba(0,0,0,.55),0 0 45px rgba(255,0,143,.13);outline:none}
+.gallery-card:hover:after,.gallery-card:focus-visible:after{transform:rotate(24deg);opacity:.9}
+.gallery-art{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#09090d;transition:transform .7s,filter .7s;clip-path:polygon(0 0,96% 0,100% 7%,100% 100%,4% 100%,0 94%)}
+.gallery-card:hover .gallery-art,.gallery-card:focus-visible .gallery-art{transform:scale(1.06);filter:saturate(1.16) contrast(1.06)}
+.gallery-copy{display:block;padding:14px 16px 16px;background:linear-gradient(180deg,rgba(7,7,13,.62),rgba(3,3,8,.99))}
+.gallery-type{display:block;color:#ff63bf;font:700 9px Rajdhani,sans-serif;letter-spacing:.2em}
+.gallery-card h3{margin:6px 0 0;font:700 14px Orbitron,sans-serif;line-height:1.25;letter-spacing:.04em}
+.gallery-meta{display:block;margin-top:6px;color:#73737e;font:600 10px Rajdhani,sans-serif;letter-spacing:.09em}
 .gallery-empty{grid-column:1/-1;padding:50px 20px;border:1px dashed rgba(255,255,255,.12);border-radius:16px;color:#888;text-align:center;font:600 13px Rajdhani,sans-serif}
 .gallery-lightbox{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:30px;background:rgba(0,0,0,.94);backdrop-filter:blur(16px)}
 .gallery-lightbox.open{display:flex}
@@ -47,10 +50,10 @@
 .gallery-lightbox-copy strong{display:block;font:700 17px Orbitron,sans-serif;letter-spacing:.05em}.gallery-lightbox-copy span{display:block;margin-top:5px;color:#999;font:600 11px Rajdhani,sans-serif;letter-spacing:.12em}
 .gallery-lightbox button{position:absolute;z-index:3;width:48px;height:48px;border:1px solid rgba(255,0,143,.38);border-radius:50%;background:rgba(5,5,10,.84);color:#fff;font:400 26px/1 Arial,sans-serif;cursor:pointer;transition:.2s}
 .gallery-lightbox button:hover,.gallery-lightbox button:focus-visible{border-color:rgba(255,0,143,.85);background:rgba(255,0,143,.15);outline:none}
-.gallery-close{top:18px;right:18px}.gallery-prev{left:18px;top:50%;transform:translateY(-50%)}.gallery-next{right:18px;top:50%;transform:translateY(-50%)}
-@media(max-width:1050px){.gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:720px){.gallery-page{padding-left:14px;padding-right:14px;padding-bottom:60px}.gallery-hero{min-height:285px;padding-top:30px}.gallery-core{width:190px;height:190px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gallery-card{border-radius:13px}.gallery-copy{padding:10px}.gallery-card h3{font-size:11px}.gallery-lightbox{padding:14px}.gallery-lightbox-image{max-width:96vw;max-height:74vh}.gallery-lightbox-copy{bottom:14px;width:86vw}.gallery-prev{left:8px}.gallery-next{right:8px}}
-@media(max-width:420px){.gallery-grid{grid-template-columns:1fr}.gallery-card h3{font-size:13px}.gallery-section-heading{display:block}.gallery-section-heading p{margin-top:5px}}
+.gallery-close{top:18px;right:18px;width:56px!important;height:56px!important;border-color:rgba(255,255,255,.38)!important;background:rgba(2,2,7,.92)!important;font-size:32px!important;box-shadow:0 0 28px rgba(255,0,143,.2)}.gallery-prev{left:18px;top:50%;transform:translateY(-50%)}.gallery-next{right:18px;top:50%;transform:translateY(-50%)}
+@media(max-width:1050px){.gallery-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.gallery-card:nth-child(n){grid-column:span 3}.gallery-card:nth-child(3n+1){grid-column:span 4}}
+@media(max-width:720px){.gallery-page{padding-left:14px;padding-right:14px;padding-bottom:60px}.gallery-hero{min-height:285px;padding-top:30px}.gallery-core{width:190px;height:190px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gallery-card:nth-child(n){grid-column:span 1}.gallery-card{border-radius:16px}.gallery-card:before{inset:6px;border-radius:12px}.gallery-copy{padding:10px 11px}.gallery-card h3{font-size:11px}.gallery-lightbox{padding:14px}.gallery-lightbox-image{max-width:96vw;max-height:74vh}.gallery-lightbox-copy{bottom:14px;width:86vw}.gallery-prev{left:8px}.gallery-next{right:8px}}
+@media(max-width:420px){.gallery-grid{grid-template-columns:1fr}.gallery-card:nth-child(n){grid-column:span 1}.gallery-card h3{font-size:13px}.gallery-section-heading{display:block}.gallery-section-heading p{margin-top:5px}}
 @media(prefers-reduced-motion:reduce){.gallery-page:before,.gallery-core,.gallery-core:after{animation:none}.gallery-card,.gallery-art,.gallery-filter{transition:none}}
 </style>
 </head>
@@ -68,7 +71,6 @@
 <div class="gallery-toolbar" aria-label="Visual archive filters">
 <button class="gallery-filter active" type="button" data-filter="all">ALL VISUALS</button>
 <button class="gallery-filter" type="button" data-filter="characters">CHARACTERS</button>
-<button class="gallery-filter" type="button" data-filter="new">3D / NEW ART</button>
 <button class="gallery-filter" type="button" data-filter="world">WORLD / KEY ART</button>
 </div>
 <section aria-labelledby="archive-heading">
@@ -84,36 +86,29 @@
 <div class="gallery-lightbox-copy"><strong id="gallery-lightbox-title"></strong><span id="gallery-lightbox-meta"></span></div>
 </div>
 <script>
-(()=>{const assets=[["characters","LS2.png","LIL SYNN — Character Study","CHARACTER · 01","/assets/2/LS2.png"],
-        ["characters","LS3.png","LIL SYNN — Character Study","CHARACTER · 02","/assets/2/LS3.png"],
-        ["characters","LS4.png","LIL SYNN — Character Study","CHARACTER · 03","/assets/2/LS4.png"],
-        ["characters","LS5.png","LIL SYNN — Character Study","CHARACTER · 04","/assets/2/LS5.png"],
-        ["characters","LS6.png","LIL SYNN — Character Study","CHARACTER · 05","/assets/2/LS6.png"],
-        ["characters","LS3_ALT.png","LIL SYNN — Alternate Study","CHARACTER · ALT","/assets/2/LS3_ALT.png"],
-        ["characters","LS5_ALT.png","LIL SYNN — Alternate Study","CHARACTER · ALT","/assets/2/LS5_ALT.png"],
-        ["characters","heal.jpg","Heal","CHARACTER / VISUAL","/assets/heal.jpg"],
-        ["characters","heal2.png","Heal2","CHARACTER / VISUAL","/assets/heal2.png"],
-        ["new","0000.webp","transmission_01","NEW ART · TRANSMISSION 01","/assets/images/icons/new_art/0000.webp"],
-        ["new","LIL_SYNN_triptych_views_2K_202609010909.jpeg","transmission_02","NEW ART · TRANSMISSION 02","/assets/images/icons/new_art/LIL_SYNN_triptych_views_2K_202609010909.jpeg"],
-        ["new","Triptych_three_distinct_views_202609010909.jpeg","transmission_03","NEW ART · TRANSMISSION 03","/assets/images/icons/new_art/Triptych_three_distinct_views_202609010909.jpeg"],
-        ["new","ad7bde5d-1bc0-4dbc-88e0-ebc817b390a9.png","transmission_04","NEW ART · TRANSMISSION 04","/assets/images/icons/new_art/ad7bde5d-1bc0-4dbc-88e0-ebc817b390a9.png"],
-        ["new","file_0000000015d881fdb6d05861229061b3 (1).png","transmission_05","NEW ART · TRANSMISSION 05","/assets/images/icons/new_art/file_0000000015d881fdb6d05861229061b3 (1).png"],
-        ["new","file_0000000051cc81fdb1d90e85a92928e2.png","transmission_06","NEW ART · TRANSMISSION 06","/assets/images/icons/new_art/file_0000000051cc81fdb1d90e85a92928e2.png"],
-        ["new","file_00000000523881fd922dd6e02aa7ae5f.png","transmission_07","NEW ART · TRANSMISSION 07","/assets/images/icons/new_art/file_00000000523881fd922dd6e02aa7ae5f.png"],
-        ["new","file_000000008b2c81fd8413a07cdbdac1e0.png","transmission_08","NEW ART · TRANSMISSION 08","/assets/images/icons/new_art/file_000000008b2c81fd8413a07cdbdac1e0.png"],
-        ["new","file_000000008eb081fdbffc646c6019e188.png","transmission_09","NEW ART · TRANSMISSION 09","/assets/images/icons/new_art/file_000000008eb081fdbffc646c6019e188.png"],
-        ["new","file_00000000c0d481fd9a96452f9b1ec294.png","transmission_10","NEW ART · TRANSMISSION 10","/assets/images/icons/new_art/file_00000000c0d481fd9a96452f9b1ec294.png"],
-        ["new","file_00000000dc6881fd95c29ee85467473c.png","transmission_11","NEW ART · TRANSMISSION 11","/assets/images/icons/new_art/file_00000000dc6881fd95c29ee85467473c.png"],
-        ["new","file_00000000f1dc81fda62f1cf072e0c3fc (2).png","transmission_12","NEW ART · TRANSMISSION 12","/assets/images/icons/new_art/file_00000000f1dc81fda62f1cf072e0c3fc (2).png"],
-        ["new","file_00000000f2b881fda5c5e6060e076be9 (1).png","transmission_13","NEW ART · TRANSMISSION 13","/assets/images/icons/new_art/file_00000000f2b881fda5c5e6060e076be9 (1).png"],
-        ["world","Image 1 - Homepage hero identity artwork.png","Image 1 Homepage Hero Identity Artwork","WORLD / KEY ART · 01","/assets/img/Image 1 - Homepage hero identity artwork.png"],
-        ["world","Image 2 - About page portrait.png","Image 2 About Page Portrait","WORLD / KEY ART · 02","/assets/img/Image 2 - About page portrait.png"],
-        ["world","Image 3 - Universe key art.png","Image 3 Universe Key Art","WORLD / KEY ART · 03","/assets/img/Image 3 - Universe key art.png"],
-        ["world","Image 4 - Visual Gallery header artwork.png","Image 4 Visual Gallery Header Artwork","WORLD / KEY ART · 04","/assets/img/Image 4 - Visual Gallery header artwork.png"],
-        ["world","Image 5 - Special Access key art.png","Image 5 Special Access Key Art","WORLD / KEY ART · 05","/assets/img/Image 5 - Special Access key art.png"],
-        ["world","Image 6 - 404 lost-signal artwork.png","Image 6 404 Lost Signal Artwork","WORLD / KEY ART · 06","/assets/img/Image 6 - 404 lost-signal artwork.png"]];
+(()=>{const assets=[
+["world","0000.webp","transmission_01","WORLD / KEY ART · TRANSMISSION 01","/assets/images/icons/new_art/0000.webp"],
+["characters","LIL_SYNN_triptych_views_2K_202609010909.jpeg","transmission_02","CHARACTER RENDER · TRANSMISSION 02","/assets/images/icons/new_art/LIL_SYNN_triptych_views_2K_202609010909.jpeg"],
+["characters","Triptych_three_distinct_views_202609010909.jpeg","transmission_03","CHARACTER RENDER · TRANSMISSION 03","/assets/images/icons/new_art/Triptych_three_distinct_views_202609010909.jpeg"],
+["world","ad7bde5d-1bc0-4dbc-88e0-ebc817b390a9.png","transmission_04","WORLD / KEY ART · TRANSMISSION 04","/assets/images/icons/new_art/ad7bde5d-1bc0-4dbc-88e0-ebc817b390a9.png"],
+["characters","file_0000000015d881fdb6d05861229061b3 (1).png","transmission_05","CHARACTER RENDER · TRANSMISSION 05","/assets/images/icons/new_art/file_0000000015d881fdb6d05861229061b3 (1).png"],
+["characters","file_0000000051cc81fdb1d90e85a92928e2.png","transmission_06","CHARACTER RENDER · TRANSMISSION 06","/assets/images/icons/new_art/file_0000000051cc81fdb1d90e85a92928e2.png"],
+["characters","file_00000000523881fd922dd6e02aa7ae5f.png","transmission_07","CHARACTER RENDER · TRANSMISSION 07","/assets/images/icons/new_art/file_00000000523881fd922dd6e02aa7ae5f.png"],
+["characters","file_000000008b2c81fd8413a07cdbdac1e0.png","transmission_08","CHARACTER RENDER · TRANSMISSION 08","/assets/images/icons/new_art/file_000000008b2c81fd8413a07cdbdac1e0.png"],
+["characters","file_000000008eb081fdbffc646c6019e188.png","transmission_09","CHARACTER RENDER · TRANSMISSION 09","/assets/images/icons/new_art/file_000000008eb081fdbffc646c6019e188.png"],
+["characters","file_00000000c0d481fd9a96452f9b1ec294.png","transmission_10","CHARACTER RENDER · TRANSMISSION 10","/assets/images/icons/new_art/file_00000000c0d481fd9a96452f9b1ec294.png"],
+["world","file_00000000dc6881fd95c29ee85467473c.png","transmission_11","WORLD / KEY ART · TRANSMISSION 11","/assets/images/icons/new_art/file_00000000dc6881fd95c29ee85467473c.png"],
+["characters","file_00000000f1dc81fda62f1cf072e0c3fc (2).png","transmission_12","CHARACTER RENDER · TRANSMISSION 12","/assets/images/icons/new_art/file_00000000f1dc81fda62f1cf072e0c3fc (2).png"],
+["characters","file_00000000f2b881fda5c5e6060e076be9 (1).png","transmission_13","CHARACTER RENDER · TRANSMISSION 13","/assets/images/icons/new_art/file_00000000f2b881fda5c5e6060e076be9 (1).png"],
+["world","eye_2.png","SIGNAL EYE","WORLD / KEY ART · SIGNAL","/assets/img/eye_2.png"],
+["world","Image 1 - Homepage hero identity artwork.png","Image 1 Homepage Hero Identity Artwork","WORLD / KEY ART · 01","/assets/img/Image 1 - Homepage hero identity artwork.png"],
+["world","Image 2 - About page portrait.png","Image 2 About Page Portrait","WORLD / KEY ART · 02","/assets/img/Image 2 - About page portrait.png"],
+["world","Image 3 - Universe key art.png","Image 3 Universe Key Art","WORLD / KEY ART · 03","/assets/img/Image 3 - Universe key art.png"],
+["world","Image 4 - Visual Gallery header artwork.png","Image 4 Visual Gallery Header Artwork","WORLD / KEY ART · 04","/assets/img/Image 4 - Visual Gallery header artwork.png"],
+["world","Image 5 - Special Access key art.png","Image 5 Special Access Key Art","WORLD / KEY ART · 05","/assets/img/Image 5 - Special Access key art.png"],
+["world","Image 6 - 404 lost-signal artwork.png","Image 6 404 Lost Signal Artwork","WORLD / KEY ART · 06","/assets/img/Image 6 - 404 lost-signal artwork.png"]];
 const grid=document.getElementById("gallery-grid"),count=document.getElementById("gallery-count"),box=document.getElementById("gallery-lightbox"),image=document.getElementById("gallery-lightbox-image"),lt=document.getElementById("gallery-lightbox-title"),lm=document.getElementById("gallery-lightbox-meta");
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])),label=x=>x==="characters"?"CHARACTER / VISUAL":x==="releases"?"RELEASE ART":x==="new"?"NEW ART":"WORLD / KEY ART";
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])),label=x=>x==="characters"?"CHARACTER RENDER": "WORLD / KEY ART";
 let visible=[],current=0;
 function render(filter="all"){visible=filter==="all"?assets:assets.filter(x=>x[0]===filter);count.textContent=visible.length+" VISUAL RECORDS";grid.innerHTML=visible.length?visible.map((x,i)=>'<button class="gallery-card" type="button" data-index="'+i+'" aria-label="Open '+esc(x[2])+'"><img class="gallery-art" src="'+x[4]+'" alt="'+esc(x[2])+'" loading="lazy" decoding="async"><span class="gallery-copy"><span class="gallery-type">'+label(x[0])+'</span><h3>'+esc(x[2])+'</h3><span class="gallery-meta">'+esc(x[3])+'</span></span></button>').join(""):'<div class="gallery-empty">No artwork is assigned to this archive view.</div>';grid.querySelectorAll(".gallery-card").forEach(c=>c.addEventListener("click",()=>open(+c.dataset.index)));}
 function open(i){if(!visible.length)return;current=(i+visible.length)%visible.length;const x=visible[current];image.src=x[4];image.alt=x[2];lt.textContent=x[2];lm.textContent=x[3];box.classList.add("open");document.body.style.overflow="hidden";}
