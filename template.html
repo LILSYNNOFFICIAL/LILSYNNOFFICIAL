@@ -1,7 +1,239 @@
-/* Center hamburger menu category labels and keep arrows anchored at the right edge. */
-@media(max-width:900px){
-  #ls-template-menu .ls-menu-card h3{text-align:center!important;width:100%!important}
-  #ls-template-menu .ls-menu-card>a{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:100%!important;box-sizing:border-box!important;padding-left:28px!important;padding-right:28px!important}
-  #ls-template-menu .ls-menu-card>a span{position:absolute!important;right:8px!important;color:#555!important}
-  #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LIL SYNN — OFFICIAL</title>
+<meta name="description" content="Official LIL SYNN website — music, visuals, universe, records, archives and the official creative signal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site-shell.css?v=20260918">
+<style>
+:root{--ls-pink:#ff008f;--ls-glow:#ff4fd8;--ls-panel:rgba(7,7,11,.96);--ls-line:rgba(255,255,255,.11)}
+html,body{margin:0!important;padding:0!important;min-height:0!important;height:auto!important}
+body.ls-canonical-page{display:block!important;overflow-x:hidden!important;overflow-y:visible!important}
+main#template-content{display:block!important;position:relative!important;flex:none!important;width:100%!important;height:1px!important;min-height:1px!important;margin:0!important;padding:0!important;overflow:hidden!important}
+.ls-canonical-topbar{height:auto!important;min-height:68px}
+.ls-nav-inner{min-height:68px}
+.ls-canonical-topbar{overflow:visible!important}
+.ls-template-actionbar{position:absolute;top:68px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:8px;padding:6px 12px;background:linear-gradient(180deg,rgba(4,4,8,.9),rgba(4,4,8,.62));border-bottom:1px solid rgba(255,0,143,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:1}
+.ls-template-actionbar a{display:inline-flex;align-items:center;justify-content:center;padding:7px 13px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 8.5px Rajdhani;letter-spacing:.12em;white-space:nowrap;box-shadow:0 0 18px rgba(255,0,143,.14)}
+.ls-template-actionbar a:hover,.ls-template-actionbar a:focus-visible{background:var(--ls-glow);border-color:var(--ls-glow);transform:translateY(-1px);outline:none}
+.ls-template-cat{position:relative;flex:0 0 auto}
+.ls-template-cat>button{border:0;background:transparent;color:#bfc0c8;padding:7px 2px;font:800 8.5px Rajdhani,Arial,sans-serif;letter-spacing:.12em;cursor:pointer;white-space:nowrap}
+.ls-template-cat>button:hover,.ls-template-cat.open>button{color:#fff;text-shadow:0 0 16px rgba(255,79,216,.35)}
+.ls-template-cat-menu{position:absolute;top:38px;left:50%;transform:translateX(-50%);display:none;width:300px;max-height:min(70vh,520px);overflow:auto;padding:9px;background:rgba(4,4,8,.985);border:1px solid rgba(255,0,143,.36);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.78),0 0 30px rgba(255,0,143,.08);z-index:2147483640}
+.ls-template-cat.open .ls-template-cat-menu{display:block}
+.ls-menu-section{padding:6px 4px}
+.ls-menu-section+.ls-menu-section{border-top:1px solid rgba(255,255,255,.08);margin-top:4px;padding-top:10px}
+.ls-menu-label{padding:5px 9px 6px;color:#ff4fd8;font:700 8px Rajdhani;letter-spacing:.22em;text-transform:uppercase}
+.ls-template-cat-menu a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 9px;color:#bfc0c8;text-decoration:none;font:700 10px Rajdhani;letter-spacing:.11em;border-radius:7px}
+.ls-template-cat-menu a span{color:#666;font-size:9px;letter-spacing:.04em}
+.ls-template-cat-menu a:hover,.ls-template-cat-menu a:focus-visible{color:#fff;background:rgba(255,0,143,.09);outline:none}
+.ls-template-cat-menu a:hover span,.ls-template-cat-menu a:focus-visible span{color:#ff4fd8}
+.ls-template-ctas{display:flex;align-items:center;gap:7px;margin-left:auto;flex:0 0 auto}
+.ls-template-cta{display:inline-flex;align-items:center;justify-content:center;padding:8px 11px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.12em;white-space:nowrap;box-shadow:0 0 18px rgba(255,0,143,.13)}
+.ls-template-cta:hover,.ls-template-cta:focus-visible{background:var(--ls-glow);border-color:var(--ls-glow);transform:translateY(-1px);outline:none}
+.ls-template-hamburger{width:40px;height:40px;display:grid;place-content:center;gap:4px;flex:0 0 auto;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.28);cursor:pointer}
+.ls-template-hamburger span{display:block;width:18px;height:2px;background:#ff008f;box-shadow:0 0 7px rgba(255,0,143,.75);transition:transform .2s ease,opacity .2s ease}
+.ls-template-hamburger:hover{border-color:rgba(255,0,143,.55);background:rgba(255,0,143,.06)}
+ .ls-template-menu{position:fixed;left:50%;right:auto;bottom:18px;width:min(440px,calc(100vw - 36px));height:auto;max-height:min(76vh,680px);z-index:2147483641;background:linear-gradient(145deg,rgba(255,0,143,.22),rgba(42,5,36,.78) 42%,rgba(8,8,13,.88));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:translate(-50%,18px) scale(.98);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
+.ls-template-menu.open{transform:translate(-50%,0) scale(1);opacity:1;visibility:visible;pointer-events:auto}
+.ls-template-menu::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(circle at 85% 0,rgba(255,80,210,.24),transparent 38%),radial-gradient(circle at 0 100%,rgba(110,40,255,.14),transparent 40%),linear-gradient(180deg,rgba(255,0,143,.06),transparent 55%)}
+.ls-template-menu-inner{position:relative;z-index:1}
+.ls-template-menu-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 2px 13px;border-bottom:1px solid var(--ls-line)}
+.ls-template-menu-kicker{color:#777;font:700 8px Rajdhani;letter-spacing:.22em}
+.ls-template-menu-brand{margin-top:4px;font:800 15px Orbitron;letter-spacing:.12em;color:#fff}
+.ls-template-menu-brand b{color:var(--ls-pink)}
+.ls-template-menu-close{border:1px solid rgba(255,255,255,.13);border-radius:7px;background:rgba(255,255,255,.035);color:#ddd;padding:7px 10px;cursor:pointer;font:800 8px Rajdhani;letter-spacing:.18em}
+.ls-template-menu-close:hover{border-color:rgba(255,0,143,.55);color:#fff;background:rgba(255,0,143,.07)}
+.ls-menu-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px;align-items:stretch}
+.ls-menu-groups>.ls-menu-card:nth-child(1),
+.ls-menu-groups>.ls-menu-card:nth-child(2),
+.ls-menu-groups>.ls-menu-card:nth-child(3){grid-column:1/-1}
+.ls-menu-groups>.ls-menu-card:nth-child(n+4){min-width:0}
+.ls-menu-card h3{text-align:center}
+.ls-menu-card a{justify-content:center;text-align:center}
+.ls-menu-card .ls-menu-stream-grid{justify-items:stretch}
+.ls-menu-card .ls-menu-social-grid{justify-items:stretch}
+
+.ls-menu-card{padding:10px;min-width:0;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.018);flex:0 0 auto}
+.ls-menu-card h3{margin:0 0 6px;color:#ff4fd8;font:700 8px Rajdhani;letter-spacing:.22em}
+.ls-menu-card a{display:flex;min-width:0;align-items:center;justify-content:space-between;gap:8px;padding:5px 4px;color:#c6c6cd;text-decoration:none;font:700 9px Rajdhani;letter-spacing:.08em;border-radius:5px}
+.ls-menu-card a span{color:#555;font-size:8px}
+.ls-menu-card a:hover,.ls-menu-card a:focus-visible{background:rgba(255,0,143,.08);color:#fff;outline:none}
+.ls-menu-card a:hover span,.ls-menu-card a:focus-visible span{color:#ff4fd8}
+.ls-menu-wide{width:100%;box-sizing:border-box}
+.ls-menu-social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.ls-menu-social-grid a{justify-content:center;padding:7px 3px;border:1px solid rgba(255,255,255,.06)}
+.ls-menu-social-grid a span{display:none}
+.ls-menu-stream-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+.ls-menu-footer-ctas{position:sticky;bottom:0;z-index:3;display:flex;gap:7px;margin-top:10px;padding-top:10px;flex-wrap:wrap;background:linear-gradient(180deg,transparent 0,rgba(12,5,14,.92) 24%,rgba(12,5,14,.98) 100%)}
+.ls-menu-footer-ctas a{flex:1 1 30%;text-align:center;padding:8px 6px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.1em}
+.ls-menu-footer-ctas a:hover{background:var(--ls-glow);border-color:var(--ls-glow)}
+.ls-canonical-footer{padding:14px 5vw 8px!important;margin:0!important;clear:both!important}
+.ls-footer-brand{display:flex;align-items:center;justify-content:center;gap:10px;line-height:1;font:800 19px Orbitron!important;letter-spacing:.08em}
+.ls-footer-brand>span{color:var(--ls-pink)!important}
+.ls-footer-headphones{display:inline-flex;width:72px;height:58px;overflow:hidden;align-items:center;justify-content:center;text-decoration:none;flex:0 0 72px;border-radius:8px}
+.ls-footer-headphones img{width:160px;height:160px;max-width:none;display:block;object-fit:contain;transform:scale(1.45);transform-origin:center}
+.ls-footer-headphones:hover{background:rgba(255,0,143,.05)}
+.ls-footer-headphones:focus-visible{outline:2px solid var(--ls-glow);outline-offset:3px}
+.ls-footer-tag{margin:7px 0 10px}
+.ls-footer-social-icons{margin:7px 0!important}
+@media(max-width:1050px){
+ .ls-nav-inner{gap:12px}
+ .ls-desktop-nav{gap:10px}
+ .ls-template-cta{padding:7px 8px;font-size:8px}
+ .ls-template-cat-menu{width:280px}
 }
+@media(max-width:900px){
+ .ls-template-actionbar{top:68px;gap:6px;padding:5px 8px}
+ .ls-template-actionbar a{padding:6px 9px;font-size:8px}
+ .ls-template-ctas{display:none}
+ .ls-desktop-nav{display:flex!important;overflow-x:auto;justify-content:flex-start;gap:10px;padding-bottom:1px}
+ .ls-template-cat-menu{position:fixed;top:67px;left:12px;right:12px;transform:none;width:auto;max-height:62vh}
+ .ls-template-menu{left:50%;right:auto;top:74px;bottom:auto;width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 88px);padding:15px;transform:translate(-50%,18px) scale(.98)}
+}
+@media(max-width:560px){
+ .ls-nav-inner{padding:0 10px;gap:10px}
+ .ls-brand{font-size:14px}
+ .ls-desktop-nav{gap:12px}
+ .ls-template-cat>button{font-size:8px}
+ .ls-template-menu{left:50%;right:auto;top:68px;bottom:8px;width:calc(100vw - 16px);max-height:calc(100dvh - 76px);border-radius:14px;transform:translate(-50%,18px) scale(.98);background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
+ .ls-menu-groups{grid-template-columns:1fr}.ls-menu-groups>.ls-menu-card:nth-child(n){grid-column:auto}
+ .ls-menu-wide{grid-column:auto}
+ .ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .ls-footer-brand{gap:6px;font-size:17px!important}
+ .ls-footer-headphones{width:60px;height:50px;flex-basis:60px}
+ .ls-footer-headphones img{width:140px;height:140px}
+}
+</style>
+<style id="ls-hamburger-category-centering">/* Center hamburger menu category links. */\n@media(max-width:900px){#ls-template-menu .ls-menu-card h3{text-align:center!important;width:100%!important}#ls-template-menu .ls-menu-card>a{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:100%!important;box-sizing:border-box!important;padding-left:28px!important;padding-right:28px!important}#ls-template-menu .ls-menu-card>a span{position:absolute!important;right:8px!important;color:#555!important}#ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}}</style></head>
+<body class="ls-canonical-page">
+<div id="ls-bg-layer" aria-hidden="true"><video autoplay muted loop playsinline preload="auto"><source src="/assets/mov/LS_BG_STARS.webm" type="video/webm"></video></div>
+<div class="ls-particles" aria-hidden="true"></div>
+<div id="ls-geometry-layer" aria-hidden="true"></div>
+
+<header class="ls-canonical-topbar" data-ls-global-header>
+  <div class="ls-nav-inner">
+    <a class="ls-brand" href="/" aria-label="LIL SYNN home"><b>LIL</b> SYNN</a>
+    <nav class="ls-desktop-nav" aria-label="Primary navigation">
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-music">MUSIC ▾</button><div class="ls-template-cat-menu" id="ls-menu-music" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">MUSIC</div><a href="/releases.html" role="menuitem">RELEASES <span>CATALOG</span></a><a href="/archive.html" role="menuitem">TRACK ARCHIVE <span>ALL MUSIC</span></a><a href="/coming_soon.html" role="menuitem">COMING SOON <span>UPCOMING</span></a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">LYRICS <span>GENIUS ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">LISTEN</div><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" role="menuitem">SPOTIFY <span>STREAM ↗</span></a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" role="menuitem">APPLE MUSIC <span>STREAM ↗</span></a><a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE MUSIC <span>STREAM ↗</span></a><a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer" role="menuitem">TIDAL <span>STREAM ↗</span></a><a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">AMAZON MUSIC <span>STREAM ↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">SOUNDCLOUD <span>STREAM ↗</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-visuals">VISUALS ▾</button><div class="ls-template-cat-menu" id="ls-menu-visuals" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">VISUALS</div><a href="/gallery.html" role="menuitem">GALLERY <span>ARTWORK</span></a><a href="/videos.html" role="menuitem">VIDEOS <span>WATCH</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-universe">UNIVERSE ▾</button><div class="ls-template-cat-menu" id="ls-menu-universe" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">UNIVERSE</div><a href="/universe.html" role="menuitem">UNIVERSE <span>EXPLORE</span></a><a href="/lore.html" role="menuitem">LORE <span>STORY</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-more">MORE ▾</button><div class="ls-template-cat-menu" id="ls-menu-more" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">EXPLORE</div><a href="/coming_soon.html" role="menuitem">UPCOMING <span>SOON</span></a><a href="/vote" role="menuitem">VOTE 4 LIL SYNN <span>SUPPORT</span></a><a href="/#signal" role="menuitem">SYNN SIGNAL <span>CONNECT</span></a><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" role="menuitem">OFFICIAL MERCH <span>SHOP ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">SOCIAL</div><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" role="menuitem">INSTAGRAM <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">TIKTOK <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">X / TWITTER <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">FACEBOOK <span>↗</span></a></div></div></span>
+    </nav>
+
+    <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="ls-template-actionbar" aria-label="Primary calls to action"><a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">PRE-SAVE</a><a href="/vote">VOTE 4 LIL SYNN</a><a href="/coming_soon.html">UPCOMING</a></div>
+</header>
+
+<aside id="ls-template-menu" class="ls-template-menu" aria-hidden="true">
+  <div class="ls-template-menu-inner">
+    <div class="ls-template-menu-top">
+      <div>
+        <div class="ls-template-menu-kicker">LIL SYNN / SITE DIRECTORY</div>
+        <div class="ls-template-menu-brand"><b>LIL</b> SYNN</div>
+      </div>
+      <button class="ls-template-menu-close" id="ls-template-menu-close" type="button">CLOSE ×</button>
+    </div>
+
+    <nav class="ls-menu-groups" aria-label="Expanded navigation">
+      <section class="ls-menu-card"><h3>MUSIC</h3><a href="/releases.html">RELEASES <span>→</span></a><a href="/archive.html">TRACK ARCHIVE <span>→</span></a><a href="/coming_soon.html">COMING SOON <span>→</span></a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer">LYRICS <span>↗</span></a></section>
+      <section class="ls-menu-card ls-menu-wide"><h3>LISTEN</h3><div class="ls-menu-stream-grid"><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">SPOTIFY <span>↗</span></a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">APPLE MUSIC <span>↗</span></a><a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC <span>↗</span></a><a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer">TIDAL <span>↗</span></a><a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer">AMAZON MUSIC <span>↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">SOUNDCLOUD <span>↗</span></a></div></section>
+      <section class="ls-menu-card ls-menu-wide"><h3>SOCIALS</h3><div class="ls-menu-social-grid"><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer">TIKTOK <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">FACEBOOK <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer">INSTAGRAM <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">X <span>↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">SOUNDCLOUD <span>↗</span></a><a href="https://lilsynn-suno.base44.app" target="_blank" rel="noopener noreferrer">FORUM <span>↗</span></a><a href="https://discord.gg/Byuf89FqZ" target="_blank" rel="noopener noreferrer">DISCORD <span>↗</span></a></div></section>
+      <section class="ls-menu-card"><h3>VISUALS</h3><a href="/gallery.html">GALLERY <span>→</span></a><a href="/videos.html">VIDEOS <span>→</span></a></section>
+      <section class="ls-menu-card"><h3>UNIVERSE</h3><a href="/universe.html">UNIVERSE <span>→</span></a><a href="/lore.html">LORE <span>→</span></a></section>
+      <section class="ls-menu-card"><h3>RECORDS</h3><a href="/syntient_records/">SYNTIENT RECORDS <span>→</span></a><a href="/syntient_records/ZiggyAndChickenman/">ZIGGY &amp; CHICKENMAN <span>→</span></a></section>
+    </nav>
+
+    <div class="ls-menu-footer-ctas">
+      <a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">PRE-SAVE</a>
+      <a href="/vote">VOTE 4 LIL SYNN</a>
+      <a href="/coming_soon.html">UPCOMING</a>
+    </div>
+  </div>
+</aside>
+
+<main id="template-content"><!-- PAGE-SPECIFIC CONTENT IS INJECTED HERE BY site-shell.js --></main>
+
+<footer class="ls-canonical-footer" data-ls-global-footer>
+  <div class="ls-footer-brand">
+    <span>LIL</span>
+    <a class="ls-footer-headphones" href="/special_access.html" aria-label="LIL SYNN Special Access">
+      <img src="/assets/images/icons/LS_HEADPHONES.png" alt="Special Access">
+    </a>
+    <span>SYNN</span>
+  </div>
+  <div class="ls-footer-tag">Dark sound. Raw emotion. No limits</div>
+  <nav class="ls-footer-links" aria-label="Footer">
+    <a href="/">HOME</a><a href="/releases.html">RELEASES</a><a href="/archive.html">ARCHIVE</a><a href="/gallery.html">GALLERY</a><a href="/videos.html">VIDEOS</a><a href="/universe.html">UNIVERSE</a><a href="/lore.html">LORE</a><a href="/#signal">SYNN SIGNAL</a><a href="/vote">VOTE 4 LIL SYNN</a>
+  </nav>
+  <div class="ls-footer-social-icons" aria-label="LIL SYNN official platforms">
+    <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/spotify.svg" alt="Spotify"></a>
+    <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/apple-music.svg" alt="Apple Music"></a>
+    <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/youtube.svg" alt="YouTube"></a>
+    <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/instagram.svg" alt="Instagram"></a>
+    <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/tiktok.svg" alt="TikTok"></a>
+    <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/twitter.svg" alt="X"></a>
+    <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/facebook.svg" alt="Facebook"></a>
+    <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/soundcloud.svg" alt="SoundCloud"></a>
+  </div>
+  <nav class="ls-footer-legal"><a href="/privacy.html">PRIVACY</a><a href="/terms.html">TERMS</a></nav>
+  <div class="ls-footer-copy">© 2026 LIL SYNN</div>
+</footer>
+
+<script>
+(()=>{const menu=document.getElementById('ls-template-menu'),open=document.getElementById('ls-template-menu-open'),close=document.getElementById('ls-template-menu-close');if(!menu||!open||!close)return;const set=v=>{menu.classList.toggle('open',v);menu.setAttribute('aria-hidden',String(!v));open.setAttribute('aria-expanded',String(v));open.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};open.addEventListener('click',()=>set(!menu.classList.contains('open')));close.addEventListener('click',()=>set(false));menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>set(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});})();
+(()=>{const cats=[...document.querySelectorAll('.ls-template-cat')];if(!cats.length)return;const closeAll=except=>cats.forEach(c=>{if(c!==except){c.classList.remove('open');c.querySelector('button')?.setAttribute('aria-expanded','false')}});cats.forEach(c=>{const b=c.querySelector('button');b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const o=!c.classList.contains('open');closeAll(c);c.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o))});b.addEventListener('keydown',e=>{if(e.key==='Escape'){c.classList.remove('open');b.setAttribute('aria-expanded','false')}})});document.addEventListener('click',e=>{if(!e.target.closest('.ls-template-cat'))closeAll(null)});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll(null)});})();
+</script>
+<script src="/site-shell.js?v=20260918"></script>
+
+<style id="ls-template-final-spacing">#template-content{display:block!important;position:relative!important;width:100%!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}.ls-canonical-footer{margin:0!important;padding-bottom:8px!important}</style>
+
+<style id="ls-template-menu-layout-final">.ls-menu-stream-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}@media(max-width:560px){.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}</style>
+
+<style id="ls-mobile-menu-repair">
+/* MOBILE MENU REPAIR 2026-09-19 */
+@media(max-width:900px){
+.ls-canonical-topbar{height:68px!important;min-height:68px!important}
+.ls-nav-inner{height:68px!important;min-height:68px!important;box-sizing:border-box!important;gap:8px!important}
+.ls-template-hamburger{display:grid!important;margin-left:auto!important;z-index:5!important}
+.ls-template-actionbar{display:flex!important;position:absolute!important;top:68px!important;left:0!important;right:0!important;z-index:2147482999!important}
+.ls-desktop-nav{display:flex!important;align-items:center;justify-content:flex-start;gap:8px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.ls-desktop-nav::-webkit-scrollbar{display:none}.ls-desktop-nav>*{flex:0 0 auto}.ls-brand{font-size:13px!important;letter-spacing:.10em!important}.ls-template-cat>button{font-size:8px!important;padding-left:1px!important;padding-right:1px!important}
+.ls-template-cat-menu{display:none!important}
+.ls-template-cat.open .ls-template-cat-menu{display:block!important;position:fixed!important;top:108px!important;left:8px!important;right:8px!important;transform:none!important;width:auto!important;max-height:calc(100vh - 122px)!important;overflow:auto!important;z-index:2147483642!important}
+ .ls-template-menu{position:fixed!important;left:8px!important;right:8px!important;top:68px!important;bottom:8px!important;width:auto!important;height:auto!important;max-height:none!important;box-sizing:border-box!important;margin:0!important;padding:12px!important;transform:translateY(12px) scale(.985)!important;overflow:hidden!important;border-radius:14px!important}
+.ls-template-menu.open{transform:translateY(0) scale(1)!important}
+.ls-template-menu-inner{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important}
+.ls-template-menu-top{flex:0 0 auto!important;padding-bottom:10px!important}
+.ls-menu-groups{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;gap:7px!important;margin-top:9px!important;padding:0 2px 8px!important;scrollbar-width:thin!important;scrollbar-color:#ff008f rgba(255,255,255,.06)!important}
+.ls-menu-groups::-webkit-scrollbar{width:6px!important}
+.ls-menu-groups::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:8px!important}
+.ls-menu-card{width:100%!important;height:auto!important;flex:0 0 auto!important;box-sizing:border-box!important;padding:8px!important}
+.ls-menu-card h3{text-align:center!important;margin-bottom:6px!important}
+.ls-menu-card a{min-height:32px!important;box-sizing:border-box!important;justify-content:center!important;text-align:center!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.ls-menu-card:nth-child(1) h3,.ls-menu-card:nth-child(4) h3,.ls-menu-card:nth-child(5) h3,.ls-menu-card:nth-child(6) h3{width:100%!important;text-align:center!important}
+.ls-menu-card:nth-child(1) a,.ls-menu-card:nth-child(4) a,.ls-menu-card:nth-child(5) a,.ls-menu-card:nth-child(6) a{justify-content:center!important;text-align:center!important}
+.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+.ls-menu-footer-ctas{position:relative!important;flex:0 0 auto!important;margin-top:0!important;padding:9px 2px 0!important;flex-wrap:nowrap!important}
+.ls-menu-footer-ctas a{min-width:0!important;flex:1 1 0!important;white-space:normal!important}
+}
+@media(max-width:560px){
+.ls-template-actionbar{display:flex!important;position:absolute!important;top:68px!important;left:0!important;right:0!important;z-index:2147482999!important;gap:4px!important;padding:5px 6px!important}
+.ls-template-actionbar a{padding:6px 7px!important;font-size:7.5px!important}
+.ls-template-menu{top:68px!important;left:6px!important;right:6px!important;bottom:6px!important;padding:10px!important}
+.ls-template-menu-brand{font-size:14px!important}
+.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.ls-menu-card a{font-size:8.5px!important;letter-spacing:.06em!important;padding:6px 4px!important}
+}
+@media(min-width:901px){.ls-template-hamburger{display:grid!important}}
+</style>
+<script>
+(()=>{const init=()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o)return;if(window.__lsTemplateMenuInit)return;window.__lsTemplateMenuInit=true;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))});if(c)c.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(false)});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});window.addEventListener('resize',()=>{if(innerWidth>900)s(false)})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()};init();})();
+</script>
+</body>
+</html>
+
