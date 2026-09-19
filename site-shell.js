@@ -1,101 +1,22 @@
 (()=>{'use strict';
 const path=location.pathname.toLowerCase().replace(/\/$/,'')||'/';
-const routePath=path.replace(/\.html$/,'');
-const indexPage=path==='/'||routePath==='/index';
+const route=path.replace(/\.html$/,'');
+const indexPage=path==='/'||route==='/index';
 const excluded=new Set(['/suno','/backup']);
-const vote=new Set(['/vote']);
-if(excluded.has(routePath))return;
+if(excluded.has(route)) return;
 const nav=[['HOME','/'],['MUSIC','/#music'],['VIDEOS','/#videos'],['GALLERY','/gallery.html'],['UNIVERSE','/#universe'],['CONTACT','/#signal'],['FORUM','https://lilsynn-suno.base44.app']];
 const more=[['RELEASES','/releases.html'],['VOTE 4 LIL SYNN','/vote'],['UPCOMING','/coming_soon.html'],['SUNO GUIDE','/suno'],['ARCHIVE','/archive.html'],['THE SIGNAL','/#signal'],['LORE','/lore']];
 const social=[['SPOTIFY','https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU','/assets/images/icons/spotify.svg'],['APPLE MUSIC','https://music.apple.com/us/artist/lil-synn/1850720041','/assets/images/icons/apple-music.svg'],['YOUTUBE','https://www.youtube.com/@LILSYNNOFFICIAL','/assets/images/icons/youtube.svg'],['INSTAGRAM','https://www.instagram.com/lilsynnofficial/','/assets/images/icons/instagram.svg'],['TIKTOK','https://www.tiktok.com/@lilsynnofficial','/assets/images/icons/tiktok.svg'],['X','https://x.com/lilsynnofficial','/assets/images/icons/twitter.svg'],['FACEBOOK','https://www.facebook.com/lilsynnofficial','/assets/images/icons/facebook.svg'],['SOUNDCLOUD','https://soundcloud.com/lilsynnofficial','/assets/images/icons/soundcloud.svg']];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function injectCss(){if(document.getElementById('ls-canonical-css'))return;const l=document.createElement('link');l.id='ls-canonical-css';l.rel='stylesheet';l.href='/site-shell.css?v=20260918';document.head.appendChild(l)}
-function bg(){if(indexPage&&document.getElementById('site-stars-bg'))return;if(document.getElementById('ls-bg-layer'))return;const d=document.createElement('div');d.id='ls-bg-layer';d.setAttribute('aria-hidden','true');d.innerHTML='<video id="ls-shell-stars" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="/assets/mov/LS_BG_STARS.webm" type="video/webm"></video>';document.body.prepend(d);const v=d.querySelector('video');v.muted=true;v.defaultMuted=true;v.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(!document.hidden)v.play().catch(()=>{})})}
-const shapes=[
-'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="25"/><path d="M50 8L86 71H14Z"/><path d="M50 92L14 29H86Z"/></svg>',
-'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="43"/><polygon points="50,7 87,72 13,72"/><polygon points="50,93 13,28 87,28"/><circle cx="50" cy="50" r="10"/></svg>',
-'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40"/><path d="M50 10L90 50L50 90L10 50Z"/><path d="M50 20L80 50L50 80L20 50Z"/><circle cx="50" cy="50" r="8"/></svg>',
-'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39"/><path d="M50 6L61 39L94 50L61 61L50 94L39 61L6 50L39 39Z"/><circle cx="50" cy="50" r="18"/></svg>',
-'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="41"/><polygon points="50,8 60,40 92,50 60,60 50,92 40,60 8,50 40,40"/><circle cx="50" cy="50" r="27"/></svg>'
-];
-function rand(a,b){return a+Math.random()*(b-a)}
-function particles(){
- let root=document.querySelector('.ls-particles');
- if(!root){root=document.createElement('div');root.className='ls-particles';root.setAttribute('aria-hidden','true');document.body.prepend(root)}
- if(root.dataset.lsReady==='1')return;
- root.dataset.lsReady='1';
- const count=window.innerWidth<600?24:window.innerWidth<1000?32:42;
- const items=[];
- for(let i=0;i<count;i++){
-  const p=document.createElement('i');
-  const depth=rand(.35,1);
-  p.style.setProperty('--s',`${rand(1,3.8)*depth}px`);
-  p.style.setProperty('--hue',Math.floor(rand(0,360)));
-  p.style.setProperty('--alpha',rand(.18,.52)*depth);
-  root.appendChild(p);
-  items.push({el:p,x:rand(-20,innerWidth+20),y:rand(-20,innerHeight+20),vx:rand(-8,8),vy:rand(-7,7),phase:rand(0,Math.PI*2),wobble:rand(.4,1.5),depth});
- }
- const tick=(now)=>{
-  if(!document.hidden){
-   const last=particles._last??now;const dt=Math.min(.04,Math.max(.001,(now-last)/1000));particles._last=now;
-   for(const q of items){
-    q.phase+=dt*q.wobble;
-    q.vx+=Math.cos(q.phase*.73)*.35*dt;
-    q.vy+=Math.sin(q.phase*.61)*.35*dt;
-    q.vx=Math.max(-12,Math.min(12,q.vx));q.vy=Math.max(-12,Math.min(12,q.vy));
-    q.x+=q.vx*dt;q.y+=q.vy*dt;
-    const m=30;
-    if(q.x<-m)q.x=innerWidth+m;if(q.x>innerWidth+m)q.x=-m;
-    if(q.y<-m)q.y=innerHeight+m;if(q.y>innerHeight+m)q.y=-m;
-    const twinkle=.82+.18*Math.sin(q.phase*1.7);
-    q.el.style.transform=`translate3d(${q.x}px,${q.y}px,0) scale(${twinkle})`;
-    q.el.style.opacity=(.72*twinkle*q.depth).toFixed(3);
-   }
-  } else particles._last=now;
-  requestAnimationFrame(tick);
- };
- requestAnimationFrame(tick);
-}
-function geometry(){
- let layer=document.getElementById('ls-geometry-layer');
- if(layer?.dataset.lsReady==='1')return;
- if(!layer){layer=document.createElement('div');layer.id='ls-geometry-layer';layer.setAttribute('aria-hidden','true');document.body.prepend(layer)}
- layer.dataset.lsReady='1';
- const count=window.innerWidth<600?10:window.innerWidth<1000?14:18;const items=[];
- for(let i=0;i<count;i++){
-  const s=document.createElement('span');s.innerHTML=shapes[i%shapes.length];const depth=rand(.28,1);
-  s.style.setProperty('--size',`${rand(34,92)*depth+18}px`);
-  s.style.setProperty('--hue',Math.floor(rand(180,335)));
-  s.style.setProperty('--alpha',rand(.10,.28)*depth);
-  s.style.setProperty('--glow',rand(.08,.22)*depth);
-  layer.appendChild(s);
-  const angle=rand(0,Math.PI*2),speed=rand(4,13)*depth,spin=rand(-8,8);
-  items.push({el:s,x:rand(-120,innerWidth+120),y:rand(-120,innerHeight+120),vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rot:rand(0,360),vr:spin,phase:rand(0,Math.PI*2),wobble:rand(.25,1),depth});
- }
- const tick=(now)=>{
-  if(!document.hidden){
-   const last=geometry._last??now;const dt=Math.min(.04,Math.max(.001,(now-last)/1000));geometry._last=now;
-   for(const q of items){
-    q.phase+=dt*q.wobble;
-    const side=Math.sin(q.phase)*3.5*dt, cross=Math.cos(q.phase*.71)*3.5*dt;
-    q.x+=q.vx*dt+side;q.y+=q.vy*dt+cross;q.rot+=q.vr*dt;
-    const margin=150;
-    if(q.x<-margin)q.x=innerWidth+margin;if(q.x>innerWidth+margin)q.x=-margin;
-    if(q.y<-margin)q.y=innerHeight+margin;if(q.y>innerHeight+margin)q.y=-margin;
-    const breathe=1+.045*Math.sin(q.phase*1.3);
-    q.el.style.transform=`translate3d(${q.x}px,${q.y}px,0) rotate(${q.rot}deg) scale(${breathe})`;
-   }
-  } else geometry._last=now;
-  requestAnimationFrame(tick);
- };
- requestAnimationFrame(tick);
-}
-function orbGalaxy(){
- const orb=document.querySelector('.hero-ring');if(!orb||orb.querySelector('.ls-orb-galaxy'))return;
- const g=document.createElement('div');g.className='ls-orb-galaxy';g.setAttribute('aria-hidden','true');g.innerHTML='<span></span><i></i>';orb.appendChild(g);
-}
-function menu(){if(indexPage||document.querySelector('.ls-canonical-topbar'))return;const h=document.createElement('header');h.className='ls-canonical-topbar';h.innerHTML=`<div class="ls-nav-inner"><a class="ls-brand" href="/" aria-label="LIL SYNN home"><b>LIL</b> SYNN</a><nav class="ls-desktop-nav" aria-label="Primary navigation">${nav.map(([t,u])=>`<a href="${u}"${u.startsWith('http')?' target="_blank" rel="noopener noreferrer"':''}>${t}</a>`).join('')}<span class="ls-more-wrap"><button class="ls-more-btn" type="button" aria-expanded="false" aria-controls="ls-more-menu">MORE</button></span></nav></div>`;document.body.prepend(h);const m=document.createElement('div');m.id='ls-more-menu';m.setAttribute('role','menu');m.innerHTML=more.map(([t,u])=>`<a href="${u}" role="menuitem">${t}</a>`).join('');document.body.appendChild(m);const b=h.querySelector('.ls-more-btn');const place=()=>{const r=b.getBoundingClientRect(),w=m.offsetWidth,hgt=m.offsetHeight,left=Math.max(12,Math.min(r.left,innerWidth-w-12)),top=Math.max(68,Math.min(r.bottom+7,innerHeight-hgt-12));m.style.left=`${left}px`;m.style.top=`${top}px`};const close=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false')};b.onclick=e=>{e.preventDefault();e.stopPropagation();const o=!m.classList.contains('open');if(o){m.classList.add('open');b.setAttribute('aria-expanded','true');requestAnimationFrame(place)}else close()};document.addEventListener('click',e=>{if(!e.target.closest('#ls-more-menu')&&!e.target.closest('.ls-more-btn'))close()});addEventListener('resize',()=>m.classList.contains('open')&&place());addEventListener('scroll',()=>m.classList.contains('open')&&place(),{passive:true});document.addEventListener('keydown',e=>e.key==='Escape'&&close());const mobile=document.createElement('aside');mobile.id='ls-mobile-menu';mobile.setAttribute('aria-hidden','true');mobile.innerHTML=`<nav>${nav.map(([t,u])=>`<a href="${u}">${t}</a>`).join('')}${more.map(([t,u])=>`<a href="${u}">${t}</a>`).join('')}</nav>`;document.body.appendChild(mobile)}
-function footer(){if(!indexPage&&document.querySelector('.ls-canonical-footer'))return;if(indexPage){const f=document.querySelector('.footer');if(!f)return;if(!f.querySelector('.ls-footer-social-icons')){const wrap=document.createElement('div');wrap.className='ls-footer-social-icons';wrap.setAttribute('aria-label','LIL SYNN official platforms');wrap.innerHTML=social.map(([t,u,img])=>`<a href="${u}" target="_blank" rel="noopener noreferrer" aria-label="${t}" title="${t}"><img src="${img}" alt="${t}"></a>`).join('');const bottom=f.querySelector('.footer-bottom');(bottom||f).before(wrap)}if(!f.querySelector('a[href="/lore"]')){const a=document.createElement('a');a.href='/lore';a.textContent='LORE';a.setAttribute('aria-label','LIL SYNN lore');const legal=f.querySelector('.footer-legal,.legal,.footer-links,nav');(legal||f).appendChild(a)}return}const f=document.createElement('footer');f.className='ls-canonical-footer';f.innerHTML=`<div class="ls-footer-brand"><b>LIL</b> SYNN</div><div class="ls-footer-tag">Dark sound. Raw emotion. No limits</div><nav class="ls-footer-links"><a href="/">HOME</a><a href="/releases.html">RELEASES</a><a href="/archive.html">ARCHIVE</a><a href="/gallery.html">GALLERY</a><a href="/videos.html">VIDEOS</a><a href="/universe.html">UNIVERSE</a><a href="/#signal">CONTACT</a><a href="/#signal">SYNN SIGNAL</a><a href="/lore">LORE</a><a href="/vote">VOTE 4 LIL SYNN</a></nav><div class="ls-footer-social-icons" aria-label="LIL SYNN official platforms">${social.map(([t,u,img])=>`<a href="${u}" target="_blank" rel="noopener noreferrer" aria-label="${t}" title="${t}"><img src="${img}" alt="${t}"></a>`).join('')}</div><nav class="ls-footer-legal"><a href="/privacy.html">PRIVACY</a><a href="/terms.html">TERMS</a></nav><div class="ls-footer-copy">© ${new Date().getFullYear()} LIL SYNN</div>`;document.body.appendChild(f)}
+function bg(){if(document.getElementById('ls-bg-layer'))return;const d=document.createElement('div');d.id='ls-bg-layer';d.setAttribute('aria-hidden','true');d.innerHTML='<video autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="/assets/mov/LS_BG_STARS.webm" type="video/webm"></video>';document.body.prepend(d);const v=d.querySelector('video');v.muted=true;v.defaultMuted=true;v.play().catch(()=>{})}
+function particles(){let root=document.querySelector('.ls-particles');if(!root){root=document.createElement('div');root.className='ls-particles';root.setAttribute('aria-hidden','true');document.body.prepend(root)}if(root.dataset.lsReady==='1')return;root.dataset.lsReady='1';const count=innerWidth<600?24:innerWidth<1000?32:42,items=[];for(let i=0;i<count;i++){const p=document.createElement('i'),depth=.35+Math.random()*.65;p.style.setProperty('--s',((1+Math.random()*2.8)*depth)+'px');p.style.setProperty('--hue',Math.floor(Math.random()*360));p.style.setProperty('--alpha',(.18+Math.random()*.34)*depth);root.appendChild(p);items.push({el:p,x:-20+Math.random()*(innerWidth+40),y:-20+Math.random()*(innerHeight+40),vx:-8+Math.random()*16,vy:-7+Math.random()*14,phase:Math.random()*Math.PI*2,w:.4+Math.random()*1.1,d:depth})}let last=performance.now();const tick=now=>{const dt=Math.min(.04,Math.max(.001,(now-last)/1000));last=now;if(!document.hidden)for(const q of items){q.phase+=dt*q.w;q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.x<-30)q.x=innerWidth+30;if(q.x>innerWidth+30)q.x=-30;if(q.y<-30)q.y=innerHeight+30;if(q.y>innerHeight+30)q.y=-30;const t=.82+.18*Math.sin(q.phase*1.7);q.el.style.transform='translate3d('+q.x+'px,'+q.y+'px,0) scale('+t+')';q.el.style.opacity=(.72*t*q.d).toFixed(3)}requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+const shapes=['<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="25"/><path d="M50 8L86 71H14Z"/><path d="M50 92L14 29H86Z"/></svg>','<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="43"/><polygon points="50,7 87,72 13,72"/><polygon points="50,93 13,28 87,28"/><circle cx="50" cy="50" r="10"/></svg>','<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/><path d="M50 10L90 50L50 90L10 50Z"/><path d="M50 20L80 50L50 80L20 50Z"/><circle cx="50" cy="50" r="8"/></svg>'];
+function geometry(){let layer=document.getElementById('ls-geometry-layer');if(layer?.dataset.lsReady==='1')return;if(!layer){layer=document.createElement('div');layer.id='ls-geometry-layer';layer.setAttribute('aria-hidden','true');document.body.prepend(layer)}layer.dataset.lsReady='1';const count=innerWidth<600?8:innerWidth<1000?12:16,items=[];for(let i=0;i<count;i++){const s=document.createElement('span');s.innerHTML=shapes[i%shapes.length];const d=.28+Math.random()*.72;s.style.setProperty('--size',(34*d+18)+'px');s.style.setProperty('--hue',Math.floor(180+Math.random()*155));s.style.setProperty('--alpha',(.1+Math.random()*.18)*d);s.style.setProperty('--glow',(.08+Math.random()*.14)*d);layer.appendChild(s);items.push({el:s,x:-120+Math.random()*(innerWidth+240),y:-120+Math.random()*(innerHeight+240),vx:-13+Math.random()*26,vy:-13+Math.random()*26,r:Math.random()*360,vr:-8+Math.random()*16})}let last=performance.now();const tick=now=>{const dt=Math.min(.04,Math.max(.001,(now-last)/1000));last=now;if(!document.hidden)for(const q of items){q.x+=q.vx*dt;q.y+=q.vy*dt;q.r+=q.vr*dt;if(q.x<-150)q.x=innerWidth+150;if(q.x>innerWidth+150)q.x=-150;if(q.y<-150)q.y=innerHeight+150;if(q.y>innerHeight+150)q.y=-150;q.el.style.transform='translate3d('+q.x+'px,'+q.y+'px,0) rotate('+q.r+'deg)'}requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+function moreMenu(){if(document.getElementById('ls-more-menu'))return;const wrap=document.querySelector('.ls-more-wrap');if(!wrap)return;const b=wrap.querySelector('.ls-more-btn');const m=document.createElement('div');m.id='ls-more-menu';m.setAttribute('role','menu');m.setAttribute('aria-hidden','true');m.innerHTML=more.map(([t,u])=>'<a href="'+u+'" role="menuitem">'+esc(t)+'</a>').join('');document.body.appendChild(m);const place=()=>{if(!m.classList.contains('open'))return;const r=b.getBoundingClientRect(),w=m.offsetWidth;m.style.left=Math.max(12,Math.min(r.left,innerWidth-w-12))+'px';m.style.top=Math.max(68,Math.min(r.bottom+7,innerHeight-m.offsetHeight-12))+'px'};const close=()=>{m.classList.remove('open');m.setAttribute('aria-hidden','true');b.setAttribute('aria-expanded','false')};b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const o=!m.classList.contains('open');if(o){m.classList.add('open');m.setAttribute('aria-hidden','false');b.setAttribute('aria-expanded','true');requestAnimationFrame(place)}else close()});document.addEventListener('click',e=>{if(!e.target.closest('#ls-more-menu')&&!e.target.closest('.ls-more-btn'))close()});addEventListener('resize',place);addEventListener('scroll',place,{passive:true});document.addEventListener('keydown',e=>e.key==='Escape'&&close())}
+function header(){if(document.querySelector('.ls-canonical-topbar'))return;const h=document.createElement('header');h.className='ls-canonical-topbar';h.innerHTML='<div class="ls-nav-inner"><a class="ls-brand" href="/" aria-label="LIL SYNN home"><b>LIL</b> SYNN</a><nav class="ls-desktop-nav" aria-label="Primary navigation">'+nav.map(([t,u])=>'<a href="'+u+'"'+(u.startsWith('http')?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(t)+'</a>').join('')+'<span class="ls-more-wrap"><button class="ls-more-btn" type="button" aria-expanded="false" aria-controls="ls-more-menu">MORE</button></span></nav><button class="ls-mobile-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false">☰</button></div>';document.body.prepend(h);moreMenu();const toggle=h.querySelector('.ls-mobile-toggle');const panel=document.createElement('aside');panel.id='ls-mobile-menu';panel.setAttribute('aria-hidden','true');panel.innerHTML='<div class="ls-mobile-head"><b>LIL SYNN</b><button type="button" class="ls-mobile-close" aria-label="Close navigation">CLOSE ×</button></div><nav>'+nav.map(([t,u])=>'<a href="'+u+'">'+esc(t)+'</a>').join('')+more.map(([t,u])=>'<a href="'+u+'">'+esc(t)+'</a>').join('')+'</nav>';document.body.appendChild(panel);const close=()=>{panel.classList.remove('open');panel.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false');document.body.style.overflow=''};toggle.addEventListener('click',()=>{panel.classList.add('open');panel.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'});panel.querySelector('.ls-mobile-close').addEventListener('click',close);panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));document.addEventListener('keydown',e=>e.key==='Escape'&&close())}
+function footer(){if(document.querySelector('.ls-canonical-footer'))return;const existing=document.querySelector('footer');if(existing&&!indexPage){existing.classList.add('ls-canonical-footer');return}if(indexPage)return;const f=document.createElement('footer');f.className='ls-canonical-footer';f.innerHTML='<div class="ls-footer-brand"><b>LIL</b> SYNN</div><div class="ls-footer-tag">Dark sound. Raw emotion. No limits</div><nav class="ls-footer-links"><a href="/">HOME</a><a href="/releases.html">RELEASES</a><a href="/archive.html">ARCHIVE</a><a href="/gallery.html">GALLERY</a><a href="/videos.html">VIDEOS</a><a href="/universe.html">UNIVERSE</a><a href="/#signal">CONTACT</a><a href="/#signal">SYNN SIGNAL</a><a href="/lore">LORE</a><a href="/vote">VOTE 4 LIL SYNN</a></nav><div class="ls-footer-social-icons">'+social.map(([t,u,img])=>'<a href="'+u+'" target="_blank" rel="noopener noreferrer" aria-label="'+t+'"><img src="'+img+'" alt="'+t+'"></a>').join('')+'</div><nav class="ls-footer-legal"><a href="/privacy.html">PRIVACY</a><a href="/terms.html">TERMS</a></nav><div class="ls-footer-copy">© 2026 LIL SYNN</div>';document.body.appendChild(f)}
 function normalize(){document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(h==='/vote#contact'||h==='/vote.html#contact'||h==='/index.html/contact')a.setAttribute('href','/#signal')})}
-function init(){injectCss();if(!indexPage&&!vote.has(routePath)){document.querySelectorAll('.topbar,.nav-stack,.menu-panel').forEach(x=>x.remove())}bg();particles();geometry();orbGalaxy();if(vote.has(routePath)){document.querySelectorAll('.topbar,.nav-stack,.menu-panel,.footer').forEach(x=>x.remove());document.body.classList.add('ls-vote-canonical-page')}else{menu();footer()}normalize();document.body.classList.add('ls-canonical-page')}
+function init(){injectCss();bg();particles();geometry();if(!indexPage)header();footer();normalize();document.body.classList.add('ls-canonical-page')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
