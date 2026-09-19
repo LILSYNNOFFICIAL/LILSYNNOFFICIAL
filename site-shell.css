@@ -55,3 +55,58 @@ body.ls-canonical-page>main:has(.legal-page){min-height:0!important;height:auto!
 body.ls-canonical-page .ls-canonical-footer{margin-top:0!important;}
 
 /* deployment trigger: final blank-gap repair included */
+
+/* 2026-09-19 canonical hamburger rebuild: structured categories, centered content, compact flow. */
+.ls-mobile-toggle{display:none!important;width:42px!important;height:42px!important;flex:0 0 42px!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:8px!important;background:rgba(0,0,0,.28)!important;cursor:pointer!important;padding:0!important;place-content:center!important;gap:4px!important}
+.ls-mobile-toggle span{display:block!important;width:18px!important;height:2px!important;background:#ff008f!important;box-shadow:0 0 7px rgba(255,0,143,.75)!important}
+#ls-mobile-menu{display:none!important;position:fixed!important;inset:0!important;z-index:2147483641!important;box-sizing:border-box!important;padding:74px 12px 12px!important;background:linear-gradient(145deg,rgba(255,0,143,.20),rgba(42,5,36,.82) 42%,rgba(8,8,13,.94))!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important;overflow:hidden!important}
+#ls-mobile-menu.open{display:block!important}
+.ls-mobile-inner{position:relative!important;height:100%!important;max-width:620px!important;margin:0 auto!important;display:flex!important;flex-direction:column!important;min-height:0!important}
+.ls-mobile-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:2px 2px 12px!important;border-bottom:1px solid rgba(255,255,255,.11)!important;flex:0 0 auto!important}
+.ls-mobile-kicker{color:#777!important;font:700 8px Rajdhani,Arial,sans-serif!important;letter-spacing:.22em!important}
+.ls-mobile-title{margin-top:4px!important;color:#fff!important;font:800 15px Orbitron,sans-serif!important;letter-spacing:.12em!important}
+.ls-mobile-title b{color:#ff008f!important}
+.ls-mobile-close{border:1px solid rgba(255,255,255,.14)!important;border-radius:7px!important;background:rgba(255,255,255,.035)!important;color:#ddd!important;padding:7px 10px!important;cursor:pointer!important;font:800 8px Rajdhani,Arial,sans-serif!important;letter-spacing:.18em!important}
+.ls-mobile-groups{display:flex!important;flex-direction:column!important;gap:7px!important;margin-top:9px!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 2px 8px!important;scrollbar-width:thin!important;scrollbar-color:#ff008f rgba(255,255,255,.06)!important}
+.ls-mobile-groups::-webkit-scrollbar{width:7px!important}
+.ls-mobile-groups::-webkit-scrollbar-track{background:rgba(255,255,255,.04)!important}
+.ls-mobile-groups::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:8px!important}
+.ls-mobile-card{padding:8px 9px!important;min-width:0!important;border:1px solid rgba(255,255,255,.075)!important;border-radius:10px!important;background:rgba(255,255,255,.018)!important;box-sizing:border-box!important}
+.ls-mobile-card h3{margin:0 0 6px!important;text-align:center!important;color:#ff4fd8!important;font:700 8px Rajdhani,Arial,sans-serif!important;letter-spacing:.22em!important}
+.ls-mobile-links{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+.ls-mobile-links a,.ls-mobile-socials a{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;padding:7px 5px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:6px!important;color:#c6c6cd!important;text-decoration:none!important;text-align:center!important;font:700 9px Rajdhani,Arial,sans-serif!important;letter-spacing:.08em!important}
+.ls-mobile-links a:hover,.ls-mobile-links a:focus-visible,.ls-mobile-socials a:hover,.ls-mobile-socials a:focus-visible{background:rgba(255,0,143,.08)!important;color:#fff!important;outline:none!important}
+.ls-mobile-card-music .ls-mobile-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.ls-mobile-card-listen .ls-mobile-links{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.ls-mobile-socials{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+.ls-mobile-socials .ls-mobile-discord{grid-column:2!important}
+.ls-mobile-trio{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+.ls-mobile-trio .ls-mobile-card{height:100%!important}
+.ls-mobile-trio .ls-mobile-links{grid-template-columns:1fr!important}
+.ls-mobile-explore .ls-mobile-links{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.ls-mobile-ctas{display:flex!important;gap:7px!important;flex:0 0 auto!important;padding:9px 2px 0!important;background:linear-gradient(180deg,transparent,rgba(12,5,14,.96) 25%)!important}
+.ls-mobile-ctas a{flex:1 1 0!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;padding:8px 5px!important;border:1px solid #ff008f!important;border-radius:7px!important;background:#ff008f!important;color:#050507!important;text-decoration:none!important;text-align:center!important;font:800 8px Rajdhani,Arial,sans-serif!important;letter-spacing:.09em!important}
+.ls-mobile-ctas a:hover{background:#ff4fd8!important;border-color:#ff4fd8!important}
+@media(max-width:900px){
+  .ls-mobile-toggle{display:grid!important}
+  .ls-desktop-nav{display:none!important}
+}
+@media(min-width:901px){
+  #ls-mobile-menu{display:none!important}
+}
+@media(max-width:560px){
+  #ls-mobile-menu{padding:68px 8px 8px!important}
+  .ls-mobile-inner{max-width:none!important}
+  .ls-mobile-groups{gap:6px!important}
+  .ls-mobile-card{padding:7px 8px!important}
+  .ls-mobile-links a,.ls-mobile-socials a{padding:6px 4px!important;font-size:8.5px!important}
+  .ls-mobile-card-listen .ls-mobile-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .ls-mobile-explore .ls-mobile-links{grid-template-columns:1fr 1fr 1fr!important}
+  .ls-mobile-ctas a{font-size:7.5px!important;padding:7px 3px!important}
+}
+/* End canonical hamburger rebuild. */
+
+/* Hard stop on phantom document height: canonical pages size from real in-flow content only. */
+html:has(body.ls-canonical-page),body.ls-canonical-page{min-height:0!important;height:auto!important}
+body.ls-canonical-page>main{min-height:0!important;height:auto!important;max-height:none!important}
+body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!important;height:auto!important}
