@@ -2,7 +2,7 @@
 const path=location.pathname.toLowerCase().replace(/\/$/,'')||'/';
 const route=path.replace(/\.html$/,'');
 const indexPage=path==='/'||route==='/index';
-const excluded=new Set(['/suno','/backup']);
+const excluded=new Set(['/suno','/backup','/template']);
 if(excluded.has(route)) return;
 const nav=[['HOME','/'],['MUSIC','/#music'],['VIDEOS','/#videos'],['GALLERY','/gallery.html'],['UNIVERSE','/#universe'],['CONTACT','/#signal'],['FORUM','https://lilsynn-suno.base44.app']];
 const more=[['RELEASES','/releases.html'],['VOTE 4 LIL SYNN','/vote'],['UPCOMING','/coming_soon.html'],['SUNO GUIDE','/suno'],['ARCHIVE','/archive.html'],['THE SIGNAL','/#signal'],['LORE','/lore']];
