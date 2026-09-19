@@ -45,7 +45,7 @@ body.ls-canonical-page #template-content{
   width:100%!important;
   height:auto!important;
   min-height:0!important;
-  margin:68px 0 0!important;
+  margin:0!important;
   padding:0!important;
   overflow:visible!important;
   box-sizing:border-box!important;
@@ -65,7 +65,7 @@ body.ls-canonical-page #template-content>script,
 body.ls-canonical-page #template-content>style{display:none!important}
 body.ls-canonical-page .ls-canonical-footer{margin-top:0!important}
 @media(max-width:900px){
-  body.ls-canonical-page #template-content{margin-top:68px!important}
+  body.ls-canonical-page #template-content{margin-top:0!important}
 }
 `;
   document.head.appendChild(repair);
