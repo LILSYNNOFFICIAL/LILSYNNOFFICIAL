@@ -83,7 +83,7 @@
       .orbit-stage .n4{right:0!important;top:50%!important;transform:translateY(-50%)!important}
       .orbit-stage .n5{right:17%!important;bottom:5%!important}
       .orbit-stage .n6{left:17%!important;bottom:5%!important}
-      .orbit-stage .node:hover{transform:scale(1.08)!important}.orbit-stage .core:after{content:"";position:absolute;inset:-8%;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 0 34%,rgba(255,255,255,.06) 39%,transparent 44%),conic-gradient(from 0deg,transparent 0 12%,rgba(255,0,143,.18) 18%,transparent 28%,rgba(70,180,255,.16) 42%,transparent 54%,rgba(170,80,255,.18) 67%,transparent 78%,rgba(255,120,30,.12) 88%,transparent 96%);filter:blur(4px) saturate(1.35);mix-blend-mode:screen;opacity:.42;animation:ls-orb-galaxy 34s linear infinite;z-index:5}@keyframes ls-orb-galaxy{to{transform:rotate(360deg) scale(1.02)}}
+      .orbit-stage .node:hover{transform:scale(1.08)!important}.orbit-stage .core:after{content:"";position:absolute;inset:-9%;border-radius:50%;pointer-events:none;background:url('/assets/img/bg_stars.svg') center/cover no-repeat;opacity:.7;mix-blend-mode:screen;animation:ls-orb-galaxy 24s linear infinite;z-index:5}@keyframes ls-orb-galaxy{to{transform:rotate(360deg) scale(1.02)}}
       .release-feed+.buttons{display:none!important}
       #catalog{display:none!important}
       #videos{order:-1}
