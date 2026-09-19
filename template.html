@@ -221,7 +221,7 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important}
 .ls-nav-inner{height:68px!important;min-height:68px!important;box-sizing:border-box!important}
 .ls-template-hamburger{display:grid!important;margin-left:auto!important;z-index:5!important}
 .ls-template-actionbar{display:none!important}
-.ls-desktop-nav{display:none!important}
+.ls-desktop-nav{display:flex!important;align-items:center;justify-content:flex-start;gap:12px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.ls-desktop-nav::-webkit-scrollbar{display:none}.ls-desktop-nav>*{flex:0 0 auto}
 .ls-template-cat-menu{display:none!important}
  .ls-template-menu{position:fixed!important;left:8px!important;right:8px!important;top:68px!important;bottom:8px!important;width:auto!important;height:auto!important;max-height:none!important;box-sizing:border-box!important;margin:0!important;padding:12px!important;transform:translateY(12px) scale(.985)!important;overflow:hidden!important;border-radius:14px!important}
 .ls-template-menu.open{transform:translateY(0) scale(1)!important}
@@ -248,7 +248,7 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important}
 @media(min-width:901px){.ls-template-hamburger{display:grid!important}}
 </style>
 <script>
-(()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o||!c)return;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.onclick=e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))};c.onclick=e=>{e.preventDefault();s(false)};m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});addEventListener('resize',()=>{if(innerWidth>900)s(false)})})();
+(()=>{const init=()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o)return;if(window.__lsTemplateMenuInit)return;window.__lsTemplateMenuInit=true;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))});if(c)c.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(false)});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});window.addEventListener('resize',()=>{if(innerWidth>900)s(false)})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()};init();})();
 </script>
 </body>
 </html>
