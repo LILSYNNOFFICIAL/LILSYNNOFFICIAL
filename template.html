@@ -48,7 +48,16 @@ main#template-content{display:block!important;position:relative!important;flex:n
 .ls-template-menu-brand b{color:var(--ls-pink)}
 .ls-template-menu-close{border:1px solid rgba(255,255,255,.13);border-radius:7px;background:rgba(255,255,255,.035);color:#ddd;padding:7px 10px;cursor:pointer;font:800 8px Rajdhani;letter-spacing:.18em}
 .ls-template-menu-close:hover{border-color:rgba(255,0,143,.55);color:#fff;background:rgba(255,0,143,.07)}
-.ls-menu-groups{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.ls-menu-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px;align-items:stretch}
+.ls-menu-groups>.ls-menu-card:nth-child(1),
+.ls-menu-groups>.ls-menu-card:nth-child(2),
+.ls-menu-groups>.ls-menu-card:nth-child(3){grid-column:1/-1}
+.ls-menu-groups>.ls-menu-card:nth-child(n+4){min-width:0}
+.ls-menu-card h3{text-align:center}
+.ls-menu-card a{justify-content:center;text-align:center}
+.ls-menu-card .ls-menu-stream-grid{justify-items:stretch}
+.ls-menu-card .ls-menu-social-grid{justify-items:stretch}
+
 .ls-menu-card{padding:10px;min-width:0;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.018);flex:0 0 auto}
 .ls-menu-card h3{margin:0 0 6px;color:#ff4fd8;font:700 8px Rajdhani;letter-spacing:.22em}
 .ls-menu-card a{display:flex;min-width:0;align-items:center;justify-content:space-between;gap:8px;padding:5px 4px;color:#c6c6cd;text-decoration:none;font:700 9px Rajdhani;letter-spacing:.08em;border-radius:5px}
@@ -92,7 +101,7 @@ main#template-content{display:block!important;position:relative!important;flex:n
  .ls-desktop-nav{gap:12px}
  .ls-template-cat>button{font-size:8px}
  .ls-template-menu{left:50%;right:auto;top:68px;bottom:8px;width:calc(100vw - 16px);max-height:calc(100dvh - 76px);border-radius:14px;transform:translate(-50%,18px) scale(.98);background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
- .ls-menu-groups{grid-template-columns:1fr}
+ .ls-menu-groups{grid-template-columns:1fr}.ls-menu-groups>.ls-menu-card:nth-child(n){grid-column:auto}
  .ls-menu-wide{grid-column:auto}
  .ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
  .ls-footer-brand{gap:6px;font-size:17px!important}
