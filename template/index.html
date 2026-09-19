@@ -108,6 +108,12 @@ main#template-content{display:block!important;position:relative!important;flex:n
  .ls-footer-headphones{width:60px;height:50px;flex-basis:60px}
  .ls-footer-headphones img{width:140px;height:140px}
 }
+
+/* Hamburger category alignment: centered headings and centered item labels on all screen sizes. */
+#ls-template-menu .ls-menu-card h3{text-align:center!important;width:100%!important}
+#ls-template-menu .ls-menu-card:not(.ls-menu-wide)>a{position:relative!important;text-align:center!important;justify-content:center!important;padding-left:22px!important;padding-right:22px!important}
+#ls-template-menu .ls-menu-card:not(.ls-menu-wide)>a span{position:absolute!important;right:4px!important;margin-left:0!important}
+@media(max-width:900px){#ls-template-menu .ls-menu-card:not(.ls-menu-wide)>a{text-align:center!important;justify-content:center!important}}
 </style>
 <style id="ls-template-menu-layout-final">.ls-menu-stream-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}@media(max-width:560px){.ls-menu-stream-grid,.ls-menu-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}</style>
 <style id="ls-mobile-menu-repair">
