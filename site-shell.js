@@ -7,7 +7,33 @@ if(excluded.has(route))return;
 
 const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const TEMPLATE_URL=ROOT('/template.html')+'?template=20260919';
 
-function rewriteTemplateUrls(root){root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{const attr=el.hasAttribute('href')?'href':'src';const v=el.getAttribute(attr);if(v&&v.startsWith('/'))el.setAttribute(attr,ROOT(v));});}
+function rewriteTemplateUrls(root){
+  root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{
+    const attr=el.hasAttribute('href')?'href':'src';
+    const v=el.getAttribute(attr);
+    if(v&&v.startsWith('/'))el.setAttribute(attr,ROOT(v));
+  });
+  root.querySelectorAll('[style]').forEach(el=>{
+    const v=el.getAttribute('style');
+    if(v)el.setAttribute('style',v.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/'));
+  });
+}
+
+function rewritePageUrls(root){
+  root.querySelectorAll('a[href],img[src],video[src],source[src],iframe[src],script[src],link[href]').forEach(el=>{
+    const attr=el.hasAttribute('href')?'href':'src';
+    const v=el.getAttribute(attr);
+    if(!v||!v.startsWith('/')||v.startsWith('//'))return;
+    el.setAttribute(attr,ROOT(v));
+  });
+  root.querySelectorAll('[style]').forEach(el=>{
+    const v=el.getAttribute('style');
+    if(v)el.setAttribute('style',v.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/'));
+  });
+  root.querySelectorAll('style').forEach(style=>{
+    style.textContent=style.textContent.replace(/url\\((['"]?)\\//g,'url($1'+SITE_BASE+'/');
+  });
+}
 
 function normalize(){
   document.querySelectorAll('a[href]').forEach(a=>{
@@ -184,7 +210,7 @@ async function injectTemplate(){
       content.appendChild(el);
     });
 
-    const h=header.cloneNode(true);
+    rewritePageUrls(content);\n\n    const h=header.cloneNode(true);
     const m=menu.cloneNode(true);
     const f=footer.cloneNode(true);
     rewriteTemplateUrls(h);rewriteTemplateUrls(m);rewriteTemplateUrls(f);
