@@ -33,8 +33,10 @@ function addTemplateStyles(doc){
   repair.id='ls-universal-template-layout';
   repair.textContent=`
 /* UNIVERSAL TEMPLATE LAYOUT */
-html,body{height:auto!important;min-height:0!important}
+html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
+body.ls-canonical-page .ls-template-header,body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-template-footer{position:relative!important;z-index:100!important}
+body.ls-canonical-page #ls-template-menu{z-index:110!important}
 body.ls-canonical-page #template-content{
   display:block!important;
   position:relative!important;
@@ -138,7 +140,7 @@ async function injectTemplate(){
   if(document.documentElement.dataset.lsTemplateApplied==='1')return;
 
   try{
-    const res=await fetch(TEMPLATE_URL,{cache:'no-store'});
+    let res=await fetch(TEMPLATE_URL,{cache:'no-store'});if(!res.ok)res=await fetch('/template.html',{cache:'no-store'});
     if(!res.ok)throw new Error('template fetch '+res.status);
 
     const html=await res.text();
@@ -179,7 +181,7 @@ async function injectTemplate(){
     const f=footer.cloneNode(true);
 
     h.dataset.lsTemplateApplied='1';
-    document.body.replaceChildren(...visuals,h,m,content,f);
+    document.body.replaceChildren(...visuals,h,m,content,f);document.body.style.overflow='';document.documentElement.style.overflowX='hidden';
     document.body.classList.add('ls-canonical-page');
     document.documentElement.dataset.lsTemplateApplied='1';
 
