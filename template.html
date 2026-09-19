@@ -13,7 +13,7 @@
 :root{--ls-pink:#ff008f;--ls-glow:#ff4fd8;--ls-panel:rgba(7,7,11,.96);--ls-line:rgba(255,255,255,.11)}
 html,body{margin:0;min-height:0}
 body.ls-canonical-page{overflow-x:hidden}
-main#template-content{min-height:0!important;height:auto!important;margin:0!important;padding:50px 0 0!important}
+main#template-content{min-height:0!important;height:auto!important;margin:0!important;padding:8px 0 0!important}
 .ls-canonical-topbar{height:auto!important;min-height:68px}
 .ls-nav-inner{min-height:68px}
 .ls-canonical-topbar{overflow:visible!important}
@@ -55,7 +55,7 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-menu-card a span{color:#555;font-size:8px}
 .ls-menu-card a:hover,.ls-menu-card a:focus-visible{background:rgba(255,0,143,.08);color:#fff;outline:none}
 .ls-menu-card a:hover span,.ls-menu-card a:focus-visible span{color:#ff4fd8}
-.ls-menu-wide{grid-column:1/-1}
+.ls-menu-wide{grid-column:auto}
 .ls-menu-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
 .ls-menu-social-grid a{justify-content:center;padding:7px 3px;border:1px solid rgba(255,255,255,.06)}
 .ls-menu-social-grid a span{display:none}
@@ -63,15 +63,15 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-menu-footer-ctas{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
 .ls-menu-footer-ctas a{flex:1 1 30%;text-align:center;padding:8px 6px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.1em}
 .ls-menu-footer-ctas a:hover{background:var(--ls-glow);border-color:var(--ls-glow)}
-.ls-canonical-footer{padding:30px 5vw 22px!important;margin-top:0!important}
+.ls-canonical-footer{padding:18px 5vw 10px!important;margin:0!important}
 .ls-footer-brand{display:flex;align-items:center;justify-content:center;gap:10px;line-height:1;font:800 19px Orbitron!important;letter-spacing:.08em}
 .ls-footer-brand>span{color:var(--ls-pink)!important}
 .ls-footer-headphones{display:inline-flex;width:72px;height:58px;overflow:hidden;align-items:center;justify-content:center;text-decoration:none;flex:0 0 72px;border-radius:8px}
 .ls-footer-headphones img{width:160px;height:160px;max-width:none;display:block;object-fit:contain;transform:scale(1.45);transform-origin:center}
 .ls-footer-headphones:hover{background:rgba(255,0,143,.05)}
 .ls-footer-headphones:focus-visible{outline:2px solid var(--ls-glow);outline-offset:3px}
-.ls-footer-tag{margin:9px 0 15px}
-.ls-footer-social-icons{margin:18px 0!important}
+.ls-footer-tag{margin:7px 0 10px}
+.ls-footer-social-icons{margin:10px 0!important}
 @media(max-width:1050px){
  .ls-nav-inner{gap:12px}
  .ls-desktop-nav{gap:10px}
@@ -94,7 +94,7 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
  .ls-template-menu{left:50%;right:auto;top:68px;bottom:8px;width:calc(100vw - 16px);max-height:calc(100vh - 76px);border-radius:14px;transform:translate(-50%,18px) scale(.98);background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
  .ls-menu-groups{grid-template-columns:1fr}
  .ls-menu-wide{grid-column:auto}
- .ls-menu-social-grid{grid-template-columns:repeat(4,1fr)}
+ .ls-menu-social-grid{grid-template-columns:repeat(2,1fr)}
  .ls-footer-brand{gap:6px;font-size:17px!important}
  .ls-footer-headphones{width:60px;height:50px;flex-basis:60px}
  .ls-footer-headphones img{width:140px;height:140px}
@@ -183,14 +183,17 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 (()=>{const cats=[...document.querySelectorAll('.ls-template-cat')];if(!cats.length)return;const closeAll=except=>cats.forEach(c=>{if(c!==except){c.classList.remove('open');c.querySelector('button')?.setAttribute('aria-expanded','false')}});cats.forEach(c=>{const b=c.querySelector('button');b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const o=!c.classList.contains('open');closeAll(c);c.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o))});b.addEventListener('keydown',e=>{if(e.key==='Escape'){c.classList.remove('open');b.setAttribute('aria-expanded','false')}})});document.addEventListener('click',e=>{if(!e.target.closest('.ls-template-cat'))closeAll(null)});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll(null)});})();
 </script>
 <script src="/site-shell.js?v=20260918"></script>
+
+<style id="ls-template-final-spacing">
+/* Template is a shell, not a content page: keep the header-to-footer footprint compact. */
+#template-content:empty{display:block;height:8px!important;min-height:8px!important;padding:0!important;margin:0!important}
+.ls-menu-groups{grid-template-columns:1fr 1fr;align-items:stretch}
+.ls-menu-wide{grid-column:auto}
+.ls-menu-card{height:100%;box-sizing:border-box}
+.ls-menu-social-grid,.ls-menu-stream-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ls-canonical-footer{margin:0!important;padding-bottom:8px!important}
+@media(max-width:560px){.ls-menu-groups{grid-template-columns:1fr}.ls-menu-wide{grid-column:auto}.ls-menu-social-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </body>
 </html>
 
-/* Symmetric hamburger panel across desktop/mobile: equal outer margins, consistent card rhythm, and centered social/CTA rows. */
-.ls-template-menu-inner{width:100%;box-sizing:border-box}
-.ls-menu-groups{align-items:stretch}
-.ls-menu-card{min-width:0;box-sizing:border-box}
-.ls-menu-stream-grid,.ls-menu-social-grid{min-width:0}
-.ls-menu-footer-ctas{align-items:stretch}
-.ls-menu-footer-ctas a{display:flex;align-items:center;justify-content:center;min-height:32px;box-sizing:border-box}
-@media(max-width:560px){.ls-menu-groups{grid-template-columns:1fr;}.ls-menu-wide{grid-column:auto}.ls-menu-social-grid{grid-template-columns:repeat(2,1fr)}.ls-menu-stream-grid{grid-template-columns:1fr 1fr}.ls-menu-footer-ctas{display:grid;grid-template-columns:1fr 1fr 1fr}.ls-menu-footer-ctas a{width:100%}}
