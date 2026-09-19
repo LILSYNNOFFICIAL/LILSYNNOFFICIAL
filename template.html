@@ -13,11 +13,15 @@
 :root{--ls-pink:#ff008f;--ls-glow:#ff4fd8;--ls-panel:rgba(7,7,11,.96);--ls-line:rgba(255,255,255,.11)}
 html,body{margin:0;min-height:0}
 body.ls-canonical-page{overflow-x:hidden}
-main#template-content{min-height:0!important;height:auto!important;margin:0!important;padding:0!important}
+main#template-content{min-height:0!important;height:auto!important;margin:0!important;padding:50px 0 0!important}
 .ls-canonical-topbar{height:auto!important;min-height:68px}
 .ls-nav-inner{min-height:68px}
+.ls-canonical-topbar{overflow:visible!important}
+.ls-template-actionbar{position:absolute;top:68px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:8px;padding:6px 12px;background:linear-gradient(180deg,rgba(4,4,8,.9),rgba(4,4,8,.62));border-bottom:1px solid rgba(255,0,143,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:-1}
+.ls-template-actionbar a{display:inline-flex;align-items:center;justify-content:center;padding:7px 13px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 8.5px Rajdhani;letter-spacing:.12em;white-space:nowrap;box-shadow:0 0 18px rgba(255,0,143,.14)}
+.ls-template-actionbar a:hover,.ls-template-actionbar a:focus-visible{background:var(--ls-glow);border-color:var(--ls-glow);transform:translateY(-1px);outline:none}
 .ls-template-cat{position:relative;flex:0 0 auto}
-.ls-template-cat>button{border:0;background:transparent;color:#bfc0c8;padding:8px 2px;font:800 10px Rajdhani,Arial,sans-serif;letter-spacing:.15em;cursor:pointer;white-space:nowrap}
+.ls-template-cat>button{border:0;background:transparent;color:#bfc0c8;padding:7px 2px;font:800 8.5px Rajdhani,Arial,sans-serif;letter-spacing:.12em;cursor:pointer;white-space:nowrap}
 .ls-template-cat>button:hover,.ls-template-cat.open>button{color:#fff;text-shadow:0 0 16px rgba(255,79,216,.35)}
 .ls-template-cat-menu{position:absolute;top:38px;left:50%;transform:translateX(-50%);display:none;width:300px;max-height:min(70vh,520px);overflow:auto;padding:9px;background:rgba(4,4,8,.985);border:1px solid rgba(255,0,143,.36);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.78),0 0 30px rgba(255,0,143,.08);z-index:2147483640}
 .ls-template-cat.open .ls-template-cat-menu{display:block}
@@ -34,9 +38,9 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-template-hamburger{width:40px;height:40px;display:grid;place-content:center;gap:4px;flex:0 0 auto;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.28);cursor:pointer}
 .ls-template-hamburger span{display:block;width:17px;height:1px;background:#fff;transition:transform .2s ease,opacity .2s ease}
 .ls-template-hamburger:hover{border-color:rgba(255,0,143,.55);background:rgba(255,0,143,.06)}
-.ls-template-menu{position:fixed;inset:auto 18px 18px auto;width:min(430px,calc(100vw - 36px));height:auto;max-height:min(78vh,690px);z-index:2147483641;background:linear-gradient(145deg,rgba(8,8,13,.985),rgba(18,4,17,.97));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:translateY(18px) scale(.98);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
+ .ls-template-menu{position:fixed;inset:auto 18px 18px auto;width:min(430px,calc(100vw - 36px));height:auto;max-height:min(78vh,690px);z-index:2147483641;background:linear-gradient(145deg,rgba(255,0,143,.22),rgba(42,5,36,.78) 42%,rgba(8,8,13,.88));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:translateY(18px) scale(.98);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
 .ls-template-menu.open{transform:translateY(0) scale(1);opacity:1;visibility:visible;pointer-events:auto}
-.ls-template-menu::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(circle at 85% 0,rgba(255,0,143,.1),transparent 38%),radial-gradient(circle at 0 100%,rgba(110,40,255,.08),transparent 40%)}
+.ls-template-menu::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(circle at 85% 0,rgba(255,80,210,.24),transparent 38%),radial-gradient(circle at 0 100%,rgba(110,40,255,.14),transparent 40%),linear-gradient(180deg,rgba(255,0,143,.06),transparent 55%)}
 .ls-template-menu-inner{position:relative;z-index:1}
 .ls-template-menu-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 2px 13px;border-bottom:1px solid var(--ls-line)}
 .ls-template-menu-kicker{color:#777;font:700 8px Rajdhani;letter-spacing:.22em}
@@ -56,8 +60,8 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-menu-social-grid a{justify-content:center;padding:7px 3px;border:1px solid rgba(255,255,255,.06)}
 .ls-menu-social-grid a span{display:none}
 .ls-menu-stream-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.ls-menu-footer-ctas{display:flex;gap:7px;margin-top:10px}
-.ls-menu-footer-ctas a{flex:1;text-align:center;padding:8px 6px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.1em}
+.ls-menu-footer-ctas{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.ls-menu-footer-ctas a{flex:1 1 30%;text-align:center;padding:8px 6px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.1em}
 .ls-menu-footer-ctas a:hover{background:var(--ls-glow);border-color:var(--ls-glow)}
 .ls-canonical-footer{padding:30px 5vw 22px!important;margin-top:0!important}
 .ls-footer-brand{display:flex;align-items:center;justify-content:center;gap:10px;line-height:1;font:800 19px Orbitron!important;letter-spacing:.08em}
@@ -69,14 +73,16 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 .ls-footer-tag{margin:9px 0 15px}
 .ls-footer-social-icons{margin:18px 0!important}
 @media(max-width:1050px){
- .ls-nav-inner{gap:14px}
- .ls-desktop-nav{gap:11px}
+ .ls-nav-inner{gap:12px}
+ .ls-desktop-nav{gap:10px}
  .ls-template-cta{padding:7px 8px;font-size:8px}
  .ls-template-cat-menu{width:280px}
 }
 @media(max-width:900px){
+ .ls-template-actionbar{top:68px;gap:6px;padding:5px 8px}
+ .ls-template-actionbar a{padding:6px 9px;font-size:8px}
  .ls-template-ctas{display:none}
- .ls-desktop-nav{display:flex!important;overflow-x:auto;justify-content:flex-start;gap:14px;padding-bottom:1px}
+ .ls-desktop-nav{display:flex!important;overflow-x:auto;justify-content:flex-start;gap:10px;padding-bottom:1px}
  .ls-template-cat-menu{position:fixed;top:67px;left:12px;right:12px;transform:none;width:auto;max-height:62vh}
  .ls-template-menu{inset:74px 12px auto auto;width:min(410px,calc(100vw - 24px));max-height:calc(100vh - 88px);padding:15px}
 }
@@ -84,8 +90,8 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
  .ls-nav-inner{padding:0 10px;gap:10px}
  .ls-brand{font-size:14px}
  .ls-desktop-nav{gap:12px}
- .ls-template-cat>button{font-size:9px}
- .ls-template-menu{inset:68px 8px 8px;width:auto;max-height:calc(100vh - 76px);border-radius:14px}
+ .ls-template-cat>button{font-size:8px}
+ .ls-template-menu{inset:68px 8px 8px;width:auto;max-height:calc(100vh - 76px);border-radius:14px;background:linear-gradient(145deg,rgba(255,0,143,.24),rgba(42,5,36,.8) 42%,rgba(8,8,13,.9))}
  .ls-menu-groups{grid-template-columns:1fr}
  .ls-menu-wide{grid-column:auto}
  .ls-menu-social-grid{grid-template-columns:repeat(4,1fr)}
@@ -104,83 +110,10 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
   <div class="ls-nav-inner">
     <a class="ls-brand" href="/" aria-label="LIL SYNN home"><b>LIL</b> SYNN</a>
     <nav class="ls-desktop-nav" aria-label="Primary navigation">
-      <span class="ls-template-cat">
-        <button type="button" aria-expanded="false" aria-controls="ls-menu-music">MUSIC ▾</button>
-        <div class="ls-template-cat-menu" id="ls-menu-music" role="menu">
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">MUSIC</div>
-            <a href="/releases.html" role="menuitem">RELEASES <span>CATALOG</span></a>
-            <a href="/archive.html" role="menuitem">TRACK ARCHIVE <span>ALL MUSIC</span></a>
-            <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">LYRICS <span>GENIUS ↗</span></a>
-          </div>
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">LISTEN</div>
-            <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" role="menuitem">SPOTIFY <span>STREAM ↗</span></a>
-            <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" role="menuitem">APPLE MUSIC <span>STREAM ↗</span></a>
-            <a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE MUSIC <span>STREAM ↗</span></a>
-            <a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer" role="menuitem">TIDAL <span>STREAM ↗</span></a>
-            <a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">AMAZON MUSIC <span>STREAM ↗</span></a>
-            <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">SOUNDCLOUD <span>STREAM ↗</span></a>
-          </div>
-        </div>
-      </span>
-
-      <span class="ls-template-cat">
-        <button type="button" aria-expanded="false" aria-controls="ls-menu-visuals">VISUALS ▾</button>
-        <div class="ls-template-cat-menu" id="ls-menu-visuals" role="menu">
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">VISUALS</div>
-            <a href="/gallery.html" role="menuitem">GALLERY <span>ARTWORK</span></a>
-            <a href="/videos.html" role="menuitem">VIDEOS <span>WATCH</span></a>
-            <a href="/coming_soon.html" role="menuitem">COMING SOON <span>UPCOMING</span></a>
-          </div>
-        </div>
-      </span>
-
-      <span class="ls-template-cat">
-        <button type="button" aria-expanded="false" aria-controls="ls-menu-universe">UNIVERSE ▾</button>
-        <div class="ls-template-cat-menu" id="ls-menu-universe" role="menu">
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">UNIVERSE</div>
-            <a href="/universe.html" role="menuitem">UNIVERSE <span>EXPLORE</span></a>
-            <a href="/lore.html" role="menuitem">LORE <span>STORY</span></a>
-            <a href="/special_access.html" role="menuitem">SPECIAL ACCESS <span>HIDDEN</span></a>
-          </div>
-        </div>
-      </span>
-
-      <span class="ls-template-cat">
-        <button type="button" aria-expanded="false" aria-controls="ls-menu-records">RECORDS ▾</button>
-        <div class="ls-template-cat-menu" id="ls-menu-records" role="menu">
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">LABEL</div>
-            <a href="/syntient_records/" role="menuitem">SYNTIENT RECORDS <span>LABEL</span></a>
-            <a href="/syntient_records/ZiggyAndChickenman/" role="menuitem">ZIGGY & CHICKENMAN <span>ARTIST</span></a>
-          </div>
-        </div>
-      </span>
-
-      <span class="ls-template-cat">
-        <button type="button" aria-expanded="false" aria-controls="ls-menu-more">MORE ▾</button>
-        <div class="ls-template-cat-menu" id="ls-menu-more" role="menu">
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">EXPLORE</div>
-            <a href="/coming_soon.html" role="menuitem">UPCOMING <span>SOON</span></a>
-            <a href="/special_access.html" role="menuitem">SPECIAL ACCESS <span>ENTER</span></a>
-            <a href="/vote" role="menuitem">VOTE 4 LIL SYNN <span>SUPPORT</span></a>
-            <a href="/#signal" role="menuitem">SYNN SIGNAL <span>CONNECT</span></a>
-            <a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" role="menuitem">OFFICIAL MERCH <span>SHOP ↗</span></a>
-          </div>
-          <div class="ls-menu-section">
-            <div class="ls-menu-label">SOCIAL</div>
-            <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE <span>↗</span></a>
-            <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" role="menuitem">INSTAGRAM <span>↗</span></a>
-            <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">TIKTOK <span>↗</span></a>
-            <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">X / TWITTER <span>↗</span></a>
-            <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">FACEBOOK <span>↗</span></a>
-          </div>
-        </div>
-      </span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-music">MUSIC ▾</button><div class="ls-template-cat-menu" id="ls-menu-music" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">MUSIC</div><a href="/releases.html" role="menuitem">RELEASES <span>CATALOG</span></a><a href="/archive.html" role="menuitem">TRACK ARCHIVE <span>ALL MUSIC</span></a><a href="/coming_soon.html" role="menuitem">COMING SOON <span>UPCOMING</span></a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">LYRICS <span>GENIUS ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">LISTEN</div><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" role="menuitem">SPOTIFY <span>STREAM ↗</span></a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" role="menuitem">APPLE MUSIC <span>STREAM ↗</span></a><a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE MUSIC <span>STREAM ↗</span></a><a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer" role="menuitem">TIDAL <span>STREAM ↗</span></a><a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">AMAZON MUSIC <span>STREAM ↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">SOUNDCLOUD <span>STREAM ↗</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-visuals">VISUALS ▾</button><div class="ls-template-cat-menu" id="ls-menu-visuals" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">VISUALS</div><a href="/gallery.html" role="menuitem">GALLERY <span>ARTWORK</span></a><a href="/videos.html" role="menuitem">VIDEOS <span>WATCH</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-universe">UNIVERSE ▾</button><div class="ls-template-cat-menu" id="ls-menu-universe" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">UNIVERSE</div><a href="/universe.html" role="menuitem">UNIVERSE <span>EXPLORE</span></a><a href="/lore.html" role="menuitem">LORE <span>STORY</span></a></div></div></span>
+      <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-more">MORE ▾</button><div class="ls-template-cat-menu" id="ls-menu-more" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">EXPLORE</div><a href="/coming_soon.html" role="menuitem">UPCOMING <span>SOON</span></a><a href="/vote" role="menuitem">VOTE 4 LIL SYNN <span>SUPPORT</span></a><a href="/#signal" role="menuitem">SYNN SIGNAL <span>CONNECT</span></a><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" role="menuitem">OFFICIAL MERCH <span>SHOP ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">SOCIAL</div><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" role="menuitem">INSTAGRAM <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">TIKTOK <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">X / TWITTER <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">FACEBOOK <span>↗</span></a></div></div></span>
     </nav>
 
     <div class="ls-template-ctas" aria-label="Primary calls to action">
@@ -190,6 +123,7 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
 
     <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><span></span><span></span><span></span></button>
   </div>
+  <div class="ls-template-actionbar" aria-label="Primary calls to action"><a href="https://tinyurl.com/LIL-SYNN-HELLO-GOODBYE" target="_blank" rel="noopener noreferrer">PRE-SAVE</a><a href="/vote">VOTE 4 LIL SYNN</a><a href="/coming_soon.html">UPCOMING</a></div>
 </header>
 
 <aside id="ls-template-menu" class="ls-template-menu" aria-hidden="true">
@@ -203,61 +137,18 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
     </div>
 
     <nav class="ls-menu-groups" aria-label="Expanded navigation">
-      <section class="ls-menu-card">
-        <h3>MUSIC</h3>
-        <a href="/releases.html">RELEASES <span>→</span></a>
-        <a href="/archive.html">TRACK ARCHIVE <span>→</span></a>
-        <a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer">LYRICS <span>↗</span></a>
-      </section>
-
-      <section class="ls-menu-card">
-        <h3>VISUALS</h3>
-        <a href="/gallery.html">GALLERY <span>→</span></a>
-        <a href="/videos.html">VIDEOS <span>→</span></a>
-        <a href="/coming_soon.html">COMING SOON <span>→</span></a>
-      </section>
-
-      <section class="ls-menu-card">
-        <h3>UNIVERSE</h3>
-        <a href="/universe.html">UNIVERSE <span>→</span></a>
-        <a href="/lore.html">LORE <span>→</span></a>
-        <a href="/special_access.html">SPECIAL ACCESS <span>→</span></a>
-      </section>
-
-      <section class="ls-menu-card">
-        <h3>RECORDS</h3>
-        <a href="/syntient_records/">SYNTIENT RECORDS <span>→</span></a>
-        <a href="/syntient_records/ZiggyAndChickenman/">ZIGGY & CHICKENMAN <span>→</span></a>
-      </section>
-
-      <section class="ls-menu-card ls-menu-wide">
-        <h3>LISTEN</h3>
-        <div class="ls-menu-stream-grid">
-          <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">SPOTIFY <span>↗</span></a>
-          <a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">APPLE MUSIC <span>↗</span></a>
-          <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE <span>↗</span></a>
-          <a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC <span>↗</span></a>
-          <a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer">TIDAL <span>↗</span></a>
-          <a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer">AMAZON MUSIC <span>↗</span></a>
-          <a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">SOUNDCLOUD <span>↗</span></a>
-        </div>
-      </section>
-
-      <section class="ls-menu-card ls-menu-wide">
-        <h3>SOCIAL</h3>
-        <div class="ls-menu-social-grid">
-          <a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE <span>↗</span></a>
-          <a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer">INSTAGRAM <span>↗</span></a>
-          <a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer">TIKTOK <span>↗</span></a>
-          <a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">X <span>↗</span></a>
-          <a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">FACEBOOK <span>↗</span></a>
-        </div>
-      </section>
+      <section class="ls-menu-card"><h3>MUSIC</h3><a href="/releases.html">RELEASES <span>→</span></a><a href="/archive.html">TRACK ARCHIVE <span>→</span></a><a href="/coming_soon.html">COMING SOON <span>→</span></a><a href="https://genius.com/artists/Lil-synn" target="_blank" rel="noopener noreferrer">LYRICS <span>↗</span></a></section>
+      <section class="ls-menu-card ls-menu-wide"><h3>LISTEN</h3><div class="ls-menu-stream-grid"><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">SPOTIFY <span>↗</span></a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer">APPLE MUSIC <span>↗</span></a><a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC <span>↗</span></a><a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer">TIDAL <span>↗</span></a><a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer">AMAZON MUSIC <span>↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">SOUNDCLOUD <span>↗</span></a></div></section>
+      <section class="ls-menu-card ls-menu-wide"><h3>SOCIALS</h3><div class="ls-menu-social-grid"><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer">YOUTUBE <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer">INSTAGRAM <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer">TIKTOK <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">X <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">FACEBOOK <span>↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">SOUNDCLOUD <span>↗</span></a><a href="https://lilsynn-suno.base44.app" target="_blank" rel="noopener noreferrer">FORUM <span>↗</span></a></div></section>
+      <section class="ls-menu-card"><h3>VISUALS</h3><a href="/gallery.html">GALLERY <span>→</span></a><a href="/videos.html">VIDEOS <span>→</span></a></section>
+      <section class="ls-menu-card"><h3>UNIVERSE</h3><a href="/universe.html">UNIVERSE <span>→</span></a><a href="/lore.html">LORE <span>→</span></a></section>
+      <section class="ls-menu-card"><h3>RECORDS</h3><a href="/syntient_records/">SYNTIENT RECORDS <span>→</span></a><a href="/syntient_records/ZiggyAndChickenman/">ZIGGY &amp; CHICKENMAN <span>→</span></a></section>
     </nav>
 
     <div class="ls-menu-footer-ctas">
       <a href="https://tinyurl.com/LIL-SYNN-HELLO-GOODBYE" target="_blank" rel="noopener noreferrer">PRE-SAVE</a>
       <a href="/vote">VOTE 4 LIL SYNN</a>
+      <a href="/coming_soon.html">UPCOMING</a>
     </div>
   </div>
 </aside>
@@ -276,7 +167,7 @@ main#template-content{min-height:0!important;height:auto!important;margin:0!impo
   </div>
   <div class="ls-footer-tag">Dark sound. Raw emotion. No limits</div>
   <nav class="ls-footer-links" aria-label="Footer">
-    <a href="/">HOME</a><a href="/releases.html">RELEASES</a><a href="/archive.html">ARCHIVE</a><a href="/gallery.html">GALLERY</a><a href="/videos.html">VIDEOS</a><a href="/universe.html">UNIVERSE</a><a href="/lore.html">LORE</a><a href="/special_access.html">SPECIAL ACCESS</a><a href="/#signal">SYNN SIGNAL</a><a href="/vote">VOTE 4 LIL SYNN</a>
+    <a href="/">HOME</a><a href="/releases.html">RELEASES</a><a href="/archive.html">ARCHIVE</a><a href="/gallery.html">GALLERY</a><a href="/videos.html">VIDEOS</a><a href="/universe.html">UNIVERSE</a><a href="/lore.html">LORE</a><a href="/#signal">SYNN SIGNAL</a><a href="/vote">VOTE 4 LIL SYNN</a>
   </nav>
   <div class="ls-footer-social-icons" aria-label="LIL SYNN official platforms">
     <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer"><img src="/assets/images/icons/spotify.svg" alt="Spotify"></a>
