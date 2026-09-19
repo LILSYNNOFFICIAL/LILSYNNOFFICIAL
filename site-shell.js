@@ -51,6 +51,7 @@ body.ls-canonical-page #template-content{
   box-sizing:border-box!important;
 }
 body.ls-canonical-page #template-content> :first-child{margin-top:0!important}
+body.ls-canonical-page #template-content> *{margin-top:0!important;}
 body.ls-canonical-page #template-content .page{min-height:0!important;height:auto!important;overflow:visible!important}
 body.ls-canonical-page #template-content .gallery-page,
 body.ls-canonical-page #template-content .archive-page,
