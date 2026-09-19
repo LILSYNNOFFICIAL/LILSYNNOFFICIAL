@@ -79,7 +79,10 @@ body.ls-canonical-page .ls-canonical-footer{margin-top:0!important;}
 .ls-mobile-card-music .ls-mobile-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 .ls-mobile-card-listen .ls-mobile-links{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 .ls-mobile-socials{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
-.ls-mobile-socials .ls-mobile-discord{grid-column:2!important}
+.ls-mobile-socials .ls-mobile-discord{grid-column:2!important;grid-row:2!important}
+.ls-mobile-socials a:nth-child(5){grid-column:1!important;grid-row:3!important}
+.ls-mobile-socials a:nth-child(6){grid-column:2!important;grid-row:3!important}
+.ls-mobile-socials a:nth-child(7){grid-column:3!important;grid-row:3!important}
 .ls-mobile-trio{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
 .ls-mobile-trio .ls-mobile-card{height:100%!important}
 .ls-mobile-trio .ls-mobile-links{grid-template-columns:1fr!important}
