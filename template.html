@@ -160,34 +160,14 @@ main#template-content{display:block!important;position:relative!important;flex:n
 </style>
 
 <style id="ls-horizontal-nav-repair">
-/* 2026-09-19 horizontal primary navigation repair — force visible desktop row */
-.ls-canonical-topbar .ls-nav-inner{position:relative!important}
-.ls-canonical-topbar .ls-desktop-nav{
-  position:absolute!important;left:50%!important;top:0!important;transform:translateX(-50%)!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  width:max-content!important;max-width:calc(100% - 180px)!important;height:68px!important;
-  gap:16px!important;flex:none!important;min-width:0!important;
-  overflow:visible!important;visibility:visible!important;opacity:1!important;
-  z-index:2147483001!important;
-}
-.ls-canonical-topbar .ls-desktop-nav .ls-template-cat{
-  display:flex!important;position:relative!important;align-items:center!important;
-  flex:0 0 auto!important;visibility:visible!important;opacity:1!important;
-}
-.ls-canonical-topbar .ls-desktop-nav .ls-template-cat>button{
-  display:inline-flex!important;align-items:center!important;justify-content:center!important;
-  visibility:visible!important;opacity:1!important;color:#c7c7ce!important;
-}
-.ls-canonical-topbar .ls-desktop-nav .ls-template-cat>button:hover,
-.ls-canonical-topbar .ls-desktop-nav .ls-template-cat.open>button{color:#fff!important}
-@media(max-width:900px){
-  .ls-canonical-topbar .ls-desktop-nav{
-    position:static!important;transform:none!important;width:auto!important;max-width:none!important;
-    height:auto!important;display:flex!important;justify-content:flex-start!important;
-    overflow-x:auto!important;overflow-y:hidden!important;flex:1 1 auto!important;
-  }
-  .ls-canonical-topbar .ls-desktop-nav .ls-template-cat{flex:0 0 auto!important}
-}
+/* 2026-09-19 FINAL: stable centered horizontal primary navigation */
+.ls-canonical-topbar .ls-nav-inner{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;align-items:center!important;width:min(1320px,94vw)!important;min-height:68px!important;margin:0 auto!important;gap:12px!important}
+.ls-canonical-topbar .ls-brand{grid-column:1!important;justify-self:start!important;min-width:0!important}
+.ls-canonical-topbar .ls-desktop-nav{grid-column:2!important;grid-row:1!important;position:static!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:center!important;width:auto!important;max-width:none!important;height:68px!important;min-width:0!important;flex:none!important;gap:16px!important;overflow:visible!important;visibility:visible!important;opacity:1!important;z-index:10!important}
+.ls-canonical-topbar .ls-desktop-nav .ls-template-cat{display:flex!important;position:relative!important;align-items:center!important;flex:0 0 auto!important;visibility:visible!important;opacity:1!important}
+.ls-canonical-topbar .ls-desktop-nav .ls-template-cat>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;color:#c7c7ce!important}
+.ls-canonical-topbar .ls-template-hamburger{grid-column:3!important;grid-row:1!important;justify-self:end!important;z-index:11!important}
+@media(max-width:900px){.ls-canonical-topbar .ls-nav-inner{grid-template-columns:auto minmax(0,1fr) auto!important;width:100%!important;padding:0 10px!important;box-sizing:border-box!important;gap:8px!important}.ls-canonical-topbar .ls-desktop-nav{grid-column:2!important;justify-content:flex-start!important;gap:8px!important;width:100%!important;height:68px!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important}.ls-canonical-topbar .ls-desktop-nav::-webkit-scrollbar{display:none!important}.ls-canonical-topbar .ls-desktop-nav .ls-template-cat{flex:0 0 auto!important}}
 </style>
 </head>
 <body class="ls-canonical-page">
