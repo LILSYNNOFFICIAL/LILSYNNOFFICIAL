@@ -121,47 +121,78 @@ Do not create a second system when an existing canonical system already owns the
 
 ---
 
-# 👑 Global Shell
+# 👑 Universal Site Template / Global Shell
 
-`site-shell.js` owns shared site behavior wherever the global shell is used.
+The production site uses **template.html as the canonical universal shell**. It is injected client-side by site-shell.js into every normal HTML page so the shared navigation, hamburger menu, CTAs, visual shell, and footer remain one source of truth.
 
-It provides or coordinates:
+```text
+NORMAL HTML PAGE
+      │
+      ▼
+site-shell.js
+      │
+      ├── fetches /template.html
+      ├── injects template styles
+      ├── injects global header + navigation
+      ├── injects hamburger menu
+      ├── injects PRE-SAVE / VOTE / UPCOMING CTAs
+      ├── creates #template-content
+      ├── places the page's existing content inside #template-content
+      └── injects the canonical footer
+```
 
-- Universal header
-- Universal footer
-- Hamburger navigation
-- THE CALM control
-- Back To Top
-- About controls
-- Escape/keyboard behavior
-- Body scroll locking
-- Global `LS.png` top artwork
-- Skip navigation
-- MusicGroup structured data
-- Signal loading
-- Latest Releases loading
-- Random music discovery
-- Shared easter-egg behavior
+### Universal template contract
 
-### Header contract
+- template.html is the **single source of truth** for the shared site shell.
+- Individual pages retain their own page-specific content, scripts, media, and feature logic.
+- Page-specific content is placed inside #template-content rather than being duplicated into the shell.
+- The template owns the global header, desktop category navigation, hamburger navigation, action buttons, shell styling, and footer.
+- Existing legacy global headers/menus are removed when the universal shell is applied so duplicate navigation systems do not stack.
+- The shell must not manufacture giant empty document height; #template-content is a normal content-flow container.
+- The current hamburger category links for **MUSIC, VISUALS, UNIVERSE, and RECORDS** are centered, with their navigation arrows independently aligned.
+- The canonical PRE-SAVE destination is https://hyperfollow.com/lilsynnofficial.
 
-- Desktop header: `150px`
-- Mobile header: `118px`
-- `LS_LOGO.png` remains independently centered
-- Header begins at viewport top (`top: 0`)
-- THE CALM remains lower-left
-- Menu remains right-aligned
-- `LS.png` begins at the exact bottom boundary of the header
-- `LS_HEADPHONES.png` remains footer-only and links to Special Access
-- Releases, Archive, Visuals, and Universe remain available through navigation
-- Page-specific duplicate global headers are not the preferred architecture
+### Protected surfaces
 
-### Easter eggs
+```text
+/suno/*      → COMPLETELY EXCLUDED
+/backup/*    → COMPLETELY EXCLUDED
+/template    → SHELL SOURCE ONLY; NO SELF-INJECTION
+```
 
-- Five logo clicks trigger the Signal layer
-- Keyboard sequence `L I L S Y N` triggers the same Signal layer
+**Do not modify /suno as part of universal-shell work.** The same protection applies to /backup.
 
----
+### Page ownership
+
+```text
+template.html
+   │
+   ├── Global Header / Navigation
+   ├── Hamburger Menu
+   ├── Global CTAs
+   ├── Shared Visual Shell
+   └── Global Footer
+            │
+            ▼
+      #template-content
+            │
+            ├── Releases
+            ├── Archive
+            ├── Release Detail
+            ├── Gallery
+            ├── Videos
+            ├── Universe
+            ├── Lore
+            ├── Special Access
+            ├── Vote
+            └── other normal site-page content
+```
+
+site-shell.js is responsible for applying this contract. Do not build another global navigation/header/footer system when the template already owns that responsibility.
+
+### Legacy shell migration rule
+
+If a normal page contains an older page-specific global header, navigation panel, or footer, migrate/remove that duplicate rather than layering it beneath the universal template. Page-specific content inside the main content area should be preserved.
 
 # 💿 Canonical Release Architecture
 
