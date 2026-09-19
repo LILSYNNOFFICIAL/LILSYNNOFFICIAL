@@ -37,7 +37,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-canonical-topbar,body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-canonical-footer{position:relative!important;z-index:100!important}
+body.ls-canonical-page .ls-canonical-topbar{position:fixed!important;z-index:2147483000!important}body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-canonical-footer{position:relative!important;z-index:100!important}
 body.ls-canonical-page #ls-template-menu{z-index:110!important;scrollbar-color:#ff008f rgba(255,255,255,.06)!important;scrollbar-width:thin!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar{width:8px!important;height:8px!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar-thumb{background:#ff008f!important;border-radius:999px!important}.ls-canonical-page #ls-template-menu::-webkit-scrollbar-track{background:rgba(255,255,255,.05)!important}
 body.ls-canonical-page #template-content{
   display:block!important;
@@ -45,7 +45,7 @@ body.ls-canonical-page #template-content{
   width:100%!important;
   height:auto!important;
   min-height:0!important;
-  margin:104px 0 0!important;
+  margin:68px 0 0!important;
   padding:0!important;
   overflow:visible!important;
   box-sizing:border-box!important;
@@ -65,7 +65,7 @@ body.ls-canonical-page #template-content>script,
 body.ls-canonical-page #template-content>style{display:none!important}
 body.ls-canonical-page .ls-canonical-footer{margin-top:0!important}
 @media(max-width:900px){
-  body.ls-canonical-page #template-content{margin-top:104px!important}
+  body.ls-canonical-page #template-content{margin-top:68px!important}
 }
 `;
   document.head.appendChild(repair);
