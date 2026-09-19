@@ -20,3 +20,4 @@ function normalize(){document.querySelectorAll('a[href]').forEach(a=>{const h=a.
 function init(){injectCss();bg();particles();geometry();if(!indexPage)header();footer();normalize();document.body.classList.add('ls-canonical-page')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+/* 2026-09-18 deployment sync: keep main branch fixes deploy-visible. */
