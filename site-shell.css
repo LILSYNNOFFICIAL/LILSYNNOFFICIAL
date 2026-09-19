@@ -113,3 +113,11 @@ body.ls-canonical-page .ls-canonical-footer{margin-top:0!important;}
 html:has(body.ls-canonical-page),body.ls-canonical-page{min-height:0!important;height:auto!important}
 body.ls-canonical-page>main{min-height:0!important;height:auto!important;max-height:none!important}
 body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!important;height:auto!important}
+
+/* Universal hamburger category centering */
+@media(max-width:900px){
+  #ls-template-menu .ls-menu-card h3{text-align:center!important;width:100%!important}
+  #ls-template-menu .ls-menu-card>a{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:100%!important;box-sizing:border-box!important;padding-left:28px!important;padding-right:28px!important}
+  #ls-template-menu .ls-menu-card>a span{position:absolute!important;right:8px!important;color:#555!important}
+  #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
+}
