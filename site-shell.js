@@ -35,7 +35,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-template-header,body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-template-footer{position:relative!important;z-index:100!important}
+body.ls-canonical-page .ls-canonical-topbar,body.ls-canonical-page #ls-template-menu,body.ls-canonical-page .ls-canonical-footer{position:relative!important;z-index:100!important}
 body.ls-canonical-page #ls-template-menu{z-index:110!important}
 body.ls-canonical-page #template-content{
   display:block!important;
