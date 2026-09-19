@@ -73,7 +73,13 @@ function removeLegacyShell(){
     '.ls-canonical-topbar',
     '.ls-canonical-footer',
     '#ls-mobile-menu',
-    '#menuPanel'
+    '#menuPanel',
+    '.topbar',
+    '.nav-stack',
+    '.menu-panel',
+    'footer.footer',
+    '.site-header',
+    '.site-footer'
   ];
   selectors.forEach(sel=>{
     document.querySelectorAll(sel).forEach(el=>el.remove());
@@ -168,7 +174,7 @@ async function injectTemplate(){
     });
 
     [...document.body.children].forEach(el=>{
-      if(el.matches('[data-ls-global-header],[data-ls-global-footer],.ls-canonical-topbar,.ls-canonical-footer,#ls-mobile-menu,#menuPanel'))return;
+      if(el.matches('[data-ls-global-header],[data-ls-global-footer],.ls-canonical-topbar,.ls-canonical-footer,#ls-mobile-menu,#menuPanel,.topbar,.nav-stack,.menu-panel,footer.footer,.site-header,.site-footer'))return;
       if(visuals.includes(el))return;
       if(el.tagName==='SCRIPT'&&el.src&&el.src.includes('/site-shell.js'))return;
       content.appendChild(el);
