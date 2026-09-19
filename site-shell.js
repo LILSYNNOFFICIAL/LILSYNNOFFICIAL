@@ -210,7 +210,7 @@ async function injectTemplate(){
       content.appendChild(el);
     });
 
-    rewritePageUrls(content);\n\n    const h=header.cloneNode(true);
+    rewritePageUrls(content);    const h=header.cloneNode(true);
     const m=menu.cloneNode(true);
     const f=footer.cloneNode(true);
     rewriteTemplateUrls(h);rewriteTemplateUrls(m);rewriteTemplateUrls(f);
