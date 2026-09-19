@@ -13,3 +13,16 @@ body.ls-canonical-page .legal-page{padding-top:96px!important}
 @media(max-width:900px){body.ls-canonical-page .gallery-page,body.ls-canonical-page .archive-page,body.ls-canonical-page .universe,body.ls-canonical-page .lore-page,body.ls-canonical-page .release-detail,body.ls-canonical-page .release-page,body.ls-canonical-page .coming-page,body.ls-canonical-page .vote-page{padding-top:78px!important}body.ls-canonical-page .legal-page{padding-top:88px!important}}
 /* The canonical header is fixed; do not insert a normal-flow spacer after it. */
 .ls-vote-row{display:none!important}
+
+/* Mobile scroll/compositing hardening: keep the canonical visual stack in one isolated root. */
+html:has(body.ls-canonical-page),
+body.ls-canonical-page{background:#020204!important;isolation:isolate;}
+body.ls-canonical-page #ls-bg-layer{z-index:0!important;}
+body.ls-canonical-page .ls-particles,
+body.ls-canonical-page #ls-geometry-layer{z-index:1!important;}
+body.ls-canonical-page>main,
+body.ls-canonical-page>.release-page,
+body.ls-canonical-page>.coming-page,
+body.ls-canonical-page>.ls-canonical-footer{z-index:2;}
+/* Dead decorative orb styling must never establish an opaque paint surface. */
+body.ls-canonical-page .ls-orb-galaxy{background:transparent!important;}
