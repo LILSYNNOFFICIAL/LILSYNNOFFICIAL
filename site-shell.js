@@ -50,7 +50,7 @@ async function injectTemplate(){
   }catch(err){console.error('[LIL SYNN] Universal template injection failed:',err)}
 }
 function normalize(){document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(h==='/vote#contact'||h==='/vote.html#contact'||h==='/index.html/contact')a.setAttribute('href','/#signal')})}
-function init(){injectCss();bg();particles();geometry();if(!indexPage)signalGeometry();header();footer();normalize();document.body.classList.add('ls-canonical-page')}
+async function init(){if(excluded.has(route))return;injectCss();await injectTemplate();bg();particles();geometry();if(!indexPage&&typeof signalGeometry==='function')signalGeometry();normalize();document.body.classList.add('ls-canonical-page')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 /* 2026-09-19: universal template injection; /suno and /backup remain excluded. */
