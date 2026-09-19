@@ -156,9 +156,20 @@ async function injectTemplate(){
     content.id='template-content';
     content.dataset.lsTemplateContent='1';
 
+    const visuals=[];
+    const visualSelectors=['#ls-bg-layer','.ls-particles','#ls-geometry-layer'];
+    visualSelectors.forEach(sel=>{
+      const existing=document.querySelector(sel);
+      if(existing)visuals.push(existing);
+      else{
+        const source=doc.querySelector(sel);
+        if(source)visuals.push(source.cloneNode(true));
+      }
+    });
+
     [...document.body.children].forEach(el=>{
       if(el.matches('[data-ls-global-header],[data-ls-global-footer],.ls-canonical-topbar,.ls-canonical-footer,#ls-mobile-menu,#menuPanel'))return;
-      if(el.id==='ls-bg-layer'||el.classList.contains('ls-particles')||el.id==='ls-geometry-layer')return;
+      if(visuals.includes(el))return;
       if(el.tagName==='SCRIPT'&&el.src&&el.src.includes('/site-shell.js'))return;
       content.appendChild(el);
     });
@@ -168,7 +179,7 @@ async function injectTemplate(){
     const f=footer.cloneNode(true);
 
     h.dataset.lsTemplateApplied='1';
-    document.body.replaceChildren(h,m,content,f);
+    document.body.replaceChildren(...visuals,h,m,content,f);
     document.body.classList.add('ls-canonical-page');
     document.documentElement.dataset.lsTemplateApplied='1';
 
