@@ -53,3 +53,5 @@ body.ls-canonical-page>main:has(.coming-page),
 body.ls-canonical-page>main:has(.vote-page),
 body.ls-canonical-page>main:has(.legal-page){min-height:0!important;height:auto!important;}
 body.ls-canonical-page .ls-canonical-footer{margin-top:0!important;}
+
+/* deployment trigger: final blank-gap repair included */
