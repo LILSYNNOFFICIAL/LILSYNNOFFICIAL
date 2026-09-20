@@ -31,9 +31,11 @@ assert.match(shell, /aria-expanded/);
 assert.match(shell, /Escape/);
 assert.doesNotMatch(shell, /\/merch\.html/);
 
-const regularMatch = shell.match(/const regular=new Set\(\[([^\]]+)\]\)/);
-assert.ok(regularMatch, 'canonical shell must declare its regular-page allowlist');
-for (const page of pages) assert.match(regularMatch[1], new RegExp(`['"]/${page.replace('.', '\\.')}['"]`), `${page} missing from canonical shell`);
+const excludedMatch = shell.match(/const excluded=new Set\(\[([^\]]+)\]\)/);
+assert.ok(excludedMatch, 'canonical shell must declare its excluded-route set');
+for (const route of ['/suno','/backup','/template','/template_bu']) {
+  assert.match(excludedMatch[1], route.replace('/', '\\/'));
+}
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
 assert.match(css, /#ls-more-menu\{position:fixed/);
