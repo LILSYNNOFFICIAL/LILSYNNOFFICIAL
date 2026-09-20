@@ -14,7 +14,29 @@ function openModal(title){let back=$('#ls-artist-modal-backdrop');if(!back){back
 function closeModal(){const b=$('#ls-artist-modal-backdrop');if(!b)return;b.classList.remove('open');document.documentElement.style.overflow=''}
 function signal(){const box=$('#signal .signal-inner');if(!box||box.dataset.signalEnhanced)return;box.dataset.signalEnhanced='1';const old=[...box.querySelectorAll('a')].find(a=>/JOIN THE SIGNAL/i.test(a.textContent));if(old){old.classList.add('ls-signal-button');old.textContent='JOIN THE SIGNAL →'}}
 function cleanupIndex(){const c=$('#contact');if(c)c.remove();const cat=$('#catalog');if(cat)cat.remove();document.querySelectorAll('a[href="#contact"],a[href="/#contact"]').forEach(a=>a.setAttribute('href','#signal'))}
-function reorderHomepage(){const main=document.querySelector('main');if(!main)return;const order=['music','videos','releases','universe','archive','about','signal'];order.map(id=>document.getElementById(id)).filter(Boolean).forEach(section=>main.appendChild(section));const universe=document.getElementById('universe');const archive=document.getElementById('archive');const orbit=universe?.querySelector('.orbit-stage');if(orbit&&archive){orbit.classList.add('homepage-orbit');archive.parentNode.insertBefore(orbit,archive);}const labels={music:['01 / NEW RELEASES','New <em>releases.</em>','The newest LIL SYNN transmission is here first — artwork, listening links and the full release experience.'],videos:['02 / VIDEOS + MUSIC','Videos / <em>Music.</em>','Music videos, songs, performances and visual releases from LIL SYNN.'],releases:['03 / CATALOG','The <em>catalog.</em>','The canonical release catalog — the source of truth for release order, artwork and listening destinations.'],universe:['04 / ARTIST + WORLD','One identity.<br><em>Many transmissions.</em>','LIL SYNN is an intentionally faceless AI artist and creative persona built across music, visual art, storytelling and technology.'],archive:['05 / EXPLORE','Pick a <em>door.</em>','Real LIL SYNN artwork, releases, videos and world-building — not filler cards.'],signal:['07 / STAY CONNECTED','Follow the <em>signal.</em>','New music. New videos. No spam.']};Object.entries(labels).forEach(([id,v])=>{const s=document.getElementById(id);if(!s)return;const h=s.querySelector('.section-head');if(h){const k=h.querySelector('.ey'),t=h.querySelector('h2'),p=h.querySelector('.section-head>p');if(k)k.textContent=v[0];if(t)t.innerHTML=v[1];if(p)p.textContent=v[2]}});const signal=document.getElementById('signal');if(signal){signal.style.marginBottom='0';signal.querySelector('.signal')?.style.setProperty('padding-bottom','28px','important')}const footer=document.querySelector('footer');if(footer){footer.style.marginTop='0';footer.style.paddingTop='18px'}}
+function reorderHomepage(){
+  const apply=()=>{
+    const host=document.querySelector('#template-content > main')||document.querySelector('main:not(#template-content)')||document.querySelector('main');
+    if(!host)return false;
+    const order=['music','videos','releases','universe','archive','about','signal'];
+    const sections=order.map(id=>document.getElementById(id)).filter(Boolean);
+    if(sections.length!==order.length)return false;
+    sections.forEach(section=>host.appendChild(section));
+    const universe=document.getElementById('universe'),archive=document.getElementById('archive');
+    const orbit=universe?.querySelector('.orbit-stage');
+    if(orbit&&archive){orbit.classList.add('homepage-orbit');archive.parentNode.insertBefore(orbit,archive);}
+    const labels={music:['01 / NEW RELEASES','New <em>releases.</em>','The newest LIL SYNN transmission is here first — artwork, listening links and the full release experience.'],videos:['02 / VIDEOS + MUSIC','Videos / <em>Music.</em>','Music videos, songs, performances and visual releases from LIL SYNN.'],releases:['03 / CATALOG','The <em>catalog.</em>','The canonical release catalog — the source of truth for release order, artwork and listening destinations.'],universe:['04 / ARTIST + WORLD','One identity.<br><em>Many transmissions.</em>','LIL SYNN is an intentionally faceless AI artist and creative persona built across music, visual art, storytelling and technology.'],archive:['05 / EXPLORE','Pick a <em>door.</em>','Real LIL SYNN artwork, releases, videos and world-building — not filler cards.'],about:['06 / ABOUT ME','About <em>the artist.</em>','The human creative force, story, and ideas behind the LIL SYNN project.'],signal:['07 / STAY CONNECTED','Follow the <em>signal.</em>','New music. New videos. No spam.']};
+    Object.entries(labels).forEach(([id,v])=>{const section=document.getElementById(id);if(!section)return;const h=section.querySelector('.section-head');if(h){const k=h.querySelector('.ey'),t=h.querySelector('h2'),p=h.querySelector('.section-head>p');if(k)k.textContent=v[0];if(t)t.innerHTML=v[1];if(p)p.textContent=v[2]}});
+    const signal=document.getElementById('signal');if(signal){signal.style.marginBottom='0';signal.querySelector('.signal')?.style.setProperty('padding-bottom','28px','important')}
+    const footer=document.querySelector('footer');if(footer){footer.style.marginTop='0';footer.style.paddingTop='18px'}
+    return true;
+  };
+  if(apply())return;
+  const retry=()=>{if(apply()){clearInterval(timer);observer?.disconnect()}};
+  const timer=setInterval(retry,100);
+  const observer=new MutationObserver(retry);observer.observe(document.body,{childList:true,subtree:true});
+  setTimeout(()=>{clearInterval(timer);observer.disconnect()},10000);
+}
 function init(){style();artist();signal();cleanupIndex();const old=$('#releaseFeed');if(old){let head=$('.ls-new-releases-head');if(!head){head=document.createElement('div');head.className='ls-new-releases-head';head.textContent='Releases';old.before(head)}}reorderHomepage()}
 document.addEventListener('ls-template-applied',()=>init(),{once:true});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
