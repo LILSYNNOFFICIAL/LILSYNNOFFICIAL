@@ -34,7 +34,7 @@ assert.doesNotMatch(shell, /\/merch\.html/);
 const excludedMatch = shell.match(/const excluded=new Set\(\[([^\]]+)\]\)/);
 assert.ok(excludedMatch, 'canonical shell must declare its excluded-route set');
 for (const route of ['/suno','/backup','/template','/template_bu']) {
-  assert.match(excludedMatch[1], route.replace('/', '\\/'));
+  assert.ok(excludedMatch[1].includes(`'${route}'`), `${route} missing from shell exclusions`);
 }
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
