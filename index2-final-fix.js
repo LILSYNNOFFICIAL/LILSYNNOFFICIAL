@@ -18,11 +18,13 @@
   const reorder=()=>{
     const main=document.querySelector('main');
     if(!main)return;
-    const order=['music','videos','releases','archive','universe','signal','contact']
+    const order=['music','videos','releases','archive','about','universe','signal','contact']
       .map(id=>document.getElementById(id)).filter(Boolean);
     order.forEach(section=>main.appendChild(section));
+const labels={music:['01 / NEW RELEASES','New <em>releases.</em>','The newest LIL SYNN transmission is here first — artwork, listening links and the full release experience.'],videos:['02 / VIDEOS + MUSIC','Videos / <em>Music.</em>','Watch the latest visual transmissions and jump directly into the music.'],releases:['03 / CATALOG','The <em>catalog.</em>','The canonical release catalog — the source of truth for release order, artwork and listening destinations.'],archive:['04 / EXPLORE','Pick a <em>door.</em>','Search and explore the LIL SYNN visual and release archive.'],universe:['05 / ARTIST + WORLD','One identity.<br><em>Many transmissions.</em>','LIL SYNN is an intentionally faceless AI artist and creative persona built across music, visual art, storytelling and technology.'],signal:['07 / STAY CONNECTED','Follow the <em>signal.</em>','New music. New videos. No spam.']};
+Object.entries(labels).forEach(([id,v])=>{const s=document.getElementById(id);if(!s)return;const h=s.querySelector('.section-head');if(h){const k=h.querySelector('.ey'),t=h.querySelector('h2'),p=h.querySelector('.section-head>p');if(k)k.textContent=v[0];if(t)t.innerHTML=v[1];if(p)p.textContent=v[2]}});
     document.querySelectorAll('.index2-presave,.index2-coming-soon').forEach(el=>el.remove());
   };
   const artistButtons=()=>{document.querySelectorAll('.node').forEach((node,i)=>{if(!node.getAttribute('aria-label'))node.setAttribute('aria-label',node.querySelector('img')?.alt||`Artist transmission ${i+1}`);node.setAttribute('data-artist-button','true')})};
-  const run=()=>{document.body.classList.add('index2-refined');install();backgrounds();nav();menu();signalForm();reorder();artistButtons()};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  const run=()=>{document.body.classList.add('index2-refined');install();backgrounds();nav();menu();signalForm();reorder();artistButtons();const signal=document.getElementById('signal');if(signal)signal.style.paddingBottom='105px';};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
 })();
