@@ -88,10 +88,10 @@
     const videos=document.getElementById('videos'),music=document.getElementById('music');
     if(music&&videos)music.insertAdjacentElement('afterend',videos);
     if(music){const h=music.querySelector('.section-head h2');if(h)h.innerHTML='New <em>releases.</em>';const p=music.querySelector('.section-head>p');if(p)p.textContent='New music, videos and streaming links — the latest LIL SYNN transmissions in one place.'}
-    document.getElementById('catalog')?.remove();
+    /* Keep canonical catalog; index2-final-fix controls section order. */
 
     const n6=document.querySelector('.orbit-stage .n6');
-    if(n6){n6.href='#music';n6.querySelector('img')?.setAttribute('src','/assets/img/Image 2 - About page portrait.png');n6.querySelector('img')?.setAttribute('alt','New Releases');n6.setAttribute('aria-label','New Releases')}
+    if(n6){n6.href='./releases.html';n6.querySelector('img')?.setAttribute('src','./assets/img/LS.png');n6.querySelector('img')?.setAttribute('alt','Releases');n6.setAttribute('aria-label','Releases')}
     document.querySelectorAll('.orbit-stage .node').forEach((node,i)=>{if(!node.getAttribute('href')||node.getAttribute('href')==='/command'){node.href=i===5?'#music':'#home'};node.setAttribute('aria-label',node.querySelector('img')?.alt||`Transmission ${i+1}`);node.style.pointerEvents='auto'});
 
     const open=document.getElementById('menuOpen'),panel=document.getElementById('menuPanel'),close=document.getElementById('menuClose');
@@ -113,9 +113,34 @@
     }
   };
 
-  const css=()=>{if(document.getElementById('homepage-final-fix-css'))return;const s=document.createElement('style');s.id='homepage-final-fix-css';s.textContent=`html,body{background:#020204!important;overflow-x:hidden}#site-stars-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;object-fit:cover!important;z-index:0!important;pointer-events:none!important;opacity:.62!important;filter:brightness(.72) contrast(1.12)!important}#signal-geometry-layer{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;z-index:2!important;pointer-events:none!important;overflow:visible!important;opacity:.52!important;mix-blend-mode:screen!important;filter:saturate(1.65) brightness(1.22) contrast(1.01)!important}.sg-symbol{transform-origin:0 0;will-change:transform}.hero,.hero-inner,.section,.archive,.stars-zone,.signal,.catalog,.videos-section,.universe,.footer{position:relative;z-index:3}.hero{background:transparent!important}.stars-zone>video{display:none!important}.topbar{z-index:10000!important}.nav-stack{z-index:9999!important}.menu-panel,.dropdown-menu{z-index:11000!important}.universe-layout>.orbit-stage{grid-column:1/-1!important;justify-self:center!important;width:min(560px,52vw)!important;margin:58px auto 0!important}@media(max-width:800px){#signal-geometry-layer{opacity:.46!important}.universe-layout{grid-template-columns:1fr!important}.universe-layout>.orbit-stage{grid-column:1!important;width:min(82vw,420px)!important;margin:38px auto 0!important}.orbit-stage .node{width:66px;height:66px}}@media(max-width:480px){#signal-geometry-layer{opacity:.42!important}.universe-layout>.orbit-stage{grid-column:1!important;width:88vw!important;max-width:620px!important;margin:28px auto 0!important}.orbit-stage .node{width:58px;height:58px}}@media(prefers-reduced-motion:reduce){#signal-geometry-layer{display:none!important}}`;document.head.appendChild(s)};
+  const css=()=>{if(document.getElementById('homepage-final-fix-css'))return;const s=document.createElement('style');s.id='homepage-final-fix-css';s.textContent=`html,body{background:#020204!important;overflow-x:hidden}#site-stars-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;object-fit:cover!important;z-index:0!important;pointer-events:none!important;opacity:.62!important;filter:brightness(.72) contrast(1.12)!important}#signal-geometry-layer{position:fixed!important;inset:0!important;width:100vw!important;height:100svh!important;z-index:2!important;pointer-events:none!important;overflow:visible!important;opacity:.52!important;mix-blend-mode:screen!important;filter:saturate(1.65) brightness(1.22) contrast(1.01)!important}.sg-symbol{transform-origin:0 0;will-change:transform}.hero,.hero-inner,.section,.archive,.stars-zone,.signal,.catalog,.videos-section,.universe,.footer{position:relative;z-index:3}.hero{background:transparent!important}.stars-zone>video{display:none!important}.topbar{z-index:10000!important}.nav-stack{z-index:9999!important}.menu-panel,.dropdown-menu{z-index:11000!important}.universe-layout>.orbit-stage{grid-column:2!important;justify-self:auto!important;width:min(620px,100%)!important;margin:auto!important}@media(max-width:800px){#signal-geometry-layer{opacity:.46!important}.universe-layout{grid-template-columns:1fr!important}.universe-layout>.orbit-stage{grid-column:1!important;width:min(82vw,420px)!important;margin:38px auto 0!important}.orbit-stage .node{width:66px;height:66px}}@media(max-width:480px){#signal-geometry-layer{opacity:.42!important}.universe-layout>.orbit-stage{grid-column:1!important;width:88vw!important;max-width:620px!important;margin:28px auto 0!important}.orbit-stage .node{width:58px;height:58px}}@media(prefers-reduced-motion:reduce){#signal-geometry-layer{display:none!important}}`;document.head.appendChild(s)};
 
-    const fixYoutubePlayButton=()=>{if(document.getElementById('ls-youtube-visible-fix'))return;const style=document.createElement('style');style.id='ls-youtube-visible-fix';style.textContent='.youtube-card{position:relative!important;isolation:isolate!important}.youtube-card:after{content:"▶";position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:72px!important;height:72px!important;box-sizing:border-box!important;border-radius:50%!important;background:#ff008f!important;border:2px solid rgba(255,255,255,.22)!important;box-shadow:0 0 28px rgba(255,0,143,.62)!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;padding-left:5px!important;font:900 30px/1 Arial,sans-serif!important;z-index:999!important;pointer-events:none!important}.youtube-card>.youtube-play-overlay{z-index:1000!important;opacity:1!important;visibility:visible!important}.youtube-card>.youtube-play-overlay>span{background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important}';document.head.appendChild(style)};\n\nconst fixTransmission=()=>{
+    const fixYoutubePlayButton=()=>{
+      const styleId='ls-youtube-visible-fix';
+      if(!document.getElementById(styleId)){
+        const style=document.createElement('style');
+        style.id=styleId;
+        style.textContent='.youtube-card{position:relative!important;isolation:isolate!important}.ls-youtube-play-indicator{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:72px!important;height:72px!important;box-sizing:border-box!important;border-radius:50%!important;background:#ff008f!important;border:2px solid rgba(255,255,255,.22)!important;box-shadow:0 0 28px rgba(255,0,143,.62)!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 0 0 5px!important;font:900 30px/1 Arial,sans-serif!important;z-index:999999!important;pointer-events:none!important;opacity:1!important;visibility:visible!important}.youtube-card>.youtube-play-overlay{z-index:1000000!important;opacity:1!important;visibility:visible!important}';
+        document.head.appendChild(style);
+      }
+      const ensure=()=>{
+        document.querySelectorAll('.youtube-card').forEach(card=>{
+          if(card.querySelector('.ls-youtube-play-indicator'))return;
+          const b=document.createElement('span');
+          b.className='ls-youtube-play-indicator';
+          b.setAttribute('aria-hidden','true');
+          b.textContent='▶';
+          card.appendChild(b);
+        });
+      };
+      ensure();
+      if(!document.body.dataset.lsYoutubePlayObserver){
+        document.body.dataset.lsYoutubePlayObserver='1';
+        new MutationObserver(ensure).observe(document.body,{childList:true,subtree:true});
+      }
+    };
+
+    const fixTransmission=()=>{
     const replace=()=>document.querySelectorAll('.hero-kicker .ey').forEach(el=>{if(/OFFICIAL TRANSMISSION\s*\/\s*002/i.test(el.textContent||''))el.textContent=(el.textContent||'').replace(/002/g,'369')});
     replace();
     const observer=new MutationObserver(replace);
