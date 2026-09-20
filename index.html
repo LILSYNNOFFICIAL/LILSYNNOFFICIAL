@@ -164,6 +164,9 @@ main#template-content{display:block!important;position:relative!important;flex:n
 @media(min-width:901px){.ls-template-hamburger{display:grid!important}}
 
 </style>
+<style id="ls-hamburger-click-final">
+#ls-template-menu-open{position:relative!important;z-index:2147483647!important;pointer-events:auto!important;cursor:pointer!important}
+</style>
 <style data-ls-canonical-static>
 
 /* 2026-09-19 FINAL: stable centered horizontal primary navigation */
@@ -198,7 +201,7 @@ main#template-content{display:block!important;position:relative!important;flex:n
       <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-more">MORE ▾</button><div class="ls-template-cat-menu" id="ls-menu-more" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">EXPLORE</div><a href="/coming_soon.html" role="menuitem">UPCOMING <span>SOON</span></a><a href="/vote" role="menuitem">VOTE 4 LIL SYNN <span>SUPPORT</span></a><a href="/#signal" role="menuitem">SYNN SIGNAL <span>CONNECT</span></a><a href="https://lilsynnofficial.threadless.com/" target="_blank" rel="noopener noreferrer" role="menuitem">OFFICIAL MERCH <span>SHOP ↗</span></a></div><div class="ls-menu-section"><div class="ls-menu-label">SOCIAL</div><a href="https://www.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE <span>↗</span></a><a href="https://www.instagram.com/lilsynnofficial/" target="_blank" rel="noopener noreferrer" role="menuitem">INSTAGRAM <span>↗</span></a><a href="https://www.tiktok.com/@lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">TIKTOK <span>↗</span></a><a href="https://x.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">X / TWITTER <span>↗</span></a><a href="https://www.facebook.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">FACEBOOK <span>↗</span></a></div></div></span>
     </nav>
 
-    <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><span></span><span></span><span></span></button>
+    <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu" onclick="(function(b){var m=document.getElementById('ls-template-menu');if(!m)return false;var v=!m.classList.contains('open');m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));b.setAttribute('aria-expanded',String(v));b.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':'';if(v){m.style.setProperty('display','block','important');m.style.setProperty('visibility','visible','important');m.style.setProperty('opacity','1','important');m.style.setProperty('pointer-events','auto','important');}else{m.style.setProperty('display','none','important');m.style.setProperty('visibility','hidden','important');m.style.setProperty('opacity','0','important');m.style.setProperty('pointer-events','none','important');}})(this); return false;"><span></span><span></span><span></span></button>
   </div>
   <div class="ls-template-actionbar" aria-label="Primary calls to action"><a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">PRE-SAVE</a><a href="/vote">VOTE 4 LIL SYNN</a><a href="/coming_soon.html">UPCOMING</a></div>
 </header>
