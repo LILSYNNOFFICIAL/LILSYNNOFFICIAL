@@ -327,6 +327,14 @@ main#template-content{display:block!important;position:relative!important;flex:n
     margin:12px auto 40px!important;
   }
 }
+<style id="ls-homepage-orb-final">
+.homepage-orbit{display:block!important;width:min(760px,92vw)!important;max-width:760px!important;margin:20px auto 52px!important}
+.homepage-orbit .orbit-stage{width:min(620px,100%)!important;aspect-ratio:1!important;margin:auto!important;position:relative!important}
+.homepage-orbit .orbit-stage .core{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important;z-index:3!important}
+.homepage-orbit .orbit-stage .core-eye{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:1!important;transform:none!important;animation:none!important}
+.homepage-orbit .orbit-stage .orb-space-image{position:absolute!important;inset:-8%!important;width:116%!important;height:116%!important;z-index:2!important;opacity:.32!important;border-radius:50%!important;animation:ls-ws4-galaxy-spin 24s linear infinite!important;transform-origin:50% 50%!important;pointer-events:none!important}
+.homepage-orbit .orbit-stage:before,.homepage-orbit .orbit-stage:after,.homepage-orbit .orbit-stage .orbit,.homepage-orbit .orbit-stage .node,.homepage-orbit .orbit-stage .orbit-label{display:none!important}
+@media(max-width:800px){.homepage-orbit{width:92vw!important;margin:12px auto 40px!important}}
 </style>
 <style id="ls-navigation-final">
 /* Single authoritative navigation layer */
