@@ -269,6 +269,34 @@ main#template-content{display:block!important;position:relative!important;flex:n
 <script>
 (()=>{const init=()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o)return;if(window.__lsTemplateMenuInit)return;window.__lsTemplateMenuInit=true;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))});if(c)c.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(false)});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});window.addEventListener('resize',()=>{if(innerWidth>900)s(false)})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()};init();})();
 </script>
+<script>
+/* FINAL MENU RUNTIME REPAIR: move popup to body stacking context */
+(()=>{const init=()=>{
+ const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open');
+ if(!m||!o||m.dataset.runtimeRepaired)return;
+ m.dataset.runtimeRepaired='1';
+ if(m.parentElement!==document.body) document.body.appendChild(m);
+ const c=document.getElementById('ls-template-menu-close');
+ const set=v=>{
+   m.classList.toggle('open',v);
+   m.setAttribute('aria-hidden',String(!v));
+   o.setAttribute('aria-expanded',String(v));
+   o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');
+   m.style.setProperty('position','fixed','important');
+   m.style.setProperty('z-index','2147483647','important');
+   m.style.setProperty('display',v?'block':'none','important');
+   m.style.setProperty('visibility',v?'visible':'hidden','important');
+   m.style.setProperty('opacity',v?'1':'0','important');
+   m.style.setProperty('pointer-events',v?'auto':'none','important');
+   if(v){m.style.setProperty('top','68px','important');m.style.setProperty('left','8px','important');m.style.setProperty('right','8px','important');m.style.setProperty('bottom','8px','important');m.style.setProperty('transform','none','important');}
+   document.body.style.overflow=v?'hidden':'';
+ };
+ o.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(!m.classList.contains('open'));});
+ if(c)c.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();set(false);});
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
 
