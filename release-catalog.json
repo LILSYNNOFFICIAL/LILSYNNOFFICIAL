@@ -121,6 +121,14 @@
         "Touching to the North (Radio Edit)"
       ],
       "soundcloud": "https://soundcloud.com/lilsynnofficial/sets/touching-to-the-north"
+    },
+    "Memory of You": {
+      "type": "SINGLE",
+      "tracks": [
+        "Memory of You"
+      ],
+      "spotify": "https://open.spotify.com/search/Memory%20of%20You%20LIL%20SYNN",
+      "apple": "https://music.apple.com/us/search?term=Memory%20of%20You%20LIL%20SYNN"
     }
   },
   "spotify": {
@@ -160,7 +168,8 @@
     "Faith": "https://open.spotify.com/track/6ysvRK9IYDVl5lqeI8AHvU?si=15b7333a4e074fd5",
     "Through the Flames": "https://open.spotify.com/track/48OAVmSEPwMtAnnkhi0BJJ?si=a74e5f9ebafe453f",
     "Wounds": "https://open.spotify.com/track/0dR7h3yranTGvaaVVlEd61?si=94db72a91a0e4200",
-    "Discernment": "https://open.spotify.com/track/5CwW8S1cZwLfoJOAds7I8H?si=c3cc414ff0e74b16"
+    "Discernment": "https://open.spotify.com/track/5CwW8S1cZwLfoJOAds7I8H?si=c3cc414ff0e74b16",
+    "Memory of You": "https://open.spotify.com/search/Memory%20of%20You%20LIL%20SYNN"
   },
   "trackSpotify": {
     "Never Known": "https://open.spotify.com/track/4cLYkMRqkj97pQjUUw6G2i?si=d593f674734c4879",
@@ -272,7 +281,8 @@
     "Misread": "https://music.apple.com/us/album/enough/1880555015",
     "After The Light": "https://music.apple.com/us/album/enough/1880555015",
     "Touch Hunger": "https://music.apple.com/us/album/enough/1880555015",
-    "Until Dawn": "https://music.apple.com/us/album/enough/1880555015"
+    "Until Dawn": "https://music.apple.com/us/album/enough/1880555015",
+    "Memory of You": "https://music.apple.com/us/search?term=Memory%20of%20You%20LIL%20SYNN"
   },
   "appleMissing": {
     "Burn It Down": "* I WILL REACH OUT TO DISTRIBUTOR",
