@@ -26,7 +26,7 @@ assert.match(shell, /ls-geometry-layer/);
 assert.match(shell, /ls-canonical-topbar/);
 assert.match(shell, /ls-mobile-menu/);
 assert.match(read('template.html'), /id=["']ls-menu-more["']/);
-assert.match(shell, /document\.body\.appendChild\(m\)/, 'MORE must be portaled to body');
+assert.match(shell, /document\.body\.replaceChildren\(\.\.\.visuals,h,m,content,f\)/, 'canonical shell must mount header, menu, content, and footer together');
 assert.match(shell, /aria-expanded/);
 assert.match(shell, /Escape/);
 assert.doesNotMatch(shell, /\/merch\.html/);
