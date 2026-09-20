@@ -3,7 +3,7 @@
 const path=location.pathname.toLowerCase().replace(/\/$/,'')||'/';
 const route=path.replace(/\.html$/,'');
 const excluded=new Set(['/suno','/backup','/template','/template_bu']);
-if(excluded.has(route))return;
+if(excluded.has(route)||route.startsWith('/suno/'))return;
 
 const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const LS_BG_STARS='/assets/mov/LS_BG_STARS.webm';
 const TEMPLATE_URL=ROOT('/template.html')+'?template=20260919';
