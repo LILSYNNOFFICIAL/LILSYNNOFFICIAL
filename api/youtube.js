@@ -1,3 +1,6 @@
+const fs=require('node:fs');
+const path=require('node:path');
+
 module.exports = async function handler(req,res){
  res.setHeader('Access-Control-Allow-Origin','*');
  res.setHeader('Access-Control-Allow-Methods','GET,OPTIONS');
@@ -14,11 +17,18 @@ module.exports = async function handler(req,res){
    const d=new Date(m[1]);
    return Number.isNaN(d.getTime())?'':d.toISOString().slice(0,10);
  };
+ const latestReleaseDates=()=>{
+   try{
+     const file=path.join(process.cwd(),'latest-videos.json');
+     const json=JSON.parse(fs.readFileSync(file,'utf8'));
+     return new Map((json.videos||[]).map(v=>[String(v.id||''),{releasedOn:String(v.releasedOn||''),releaseTitle:String(v.releaseTitle||v.title||'')}]));
+   }catch{return new Map()}
+ };
  const catalogFor=async()=>{
    try{const r=await fetch('https://lilsynnofficial.github.io/LILSYNNOFFICIAL/release-catalog.json',{cache:'no-store'});if(!r.ok)throw Error();return await r.json()}catch{return null}
  };
  const annotate=async(items)=>{
-   const c=await catalogFor(); const groups=c?.groups||{};
+   const c=await catalogFor(); const groups=c?.groups||{}; const latest=latestReleaseDates();
    const groupByTrack=new Map();
    Object.entries(groups).forEach(([release,g])=>{
      groupByTrack.set(norm(release),release);
@@ -26,8 +36,9 @@ module.exports = async function handler(req,res){
    });
    return (items||[]).map(x=>{
      const title=x?.snippet?.title||'';
-     const releaseTitle=groupByTrack.get(norm(title))||title;
-     const releasedOn=releaseDateFromDescription(x?.snippet?.description);
+     const latestMeta=latest.get(String(x?.videoId||x?.id?.videoId||''));
+     const releaseTitle=groupByTrack.get(norm(title))||latestMeta?.releaseTitle||title;
+     const releasedOn=releaseDateFromDescription(x?.snippet?.description)||latestMeta?.releasedOn||'';
      return {...x,releaseTitle,releasedOn};
    });
  };
