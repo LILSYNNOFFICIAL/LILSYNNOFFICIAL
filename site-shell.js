@@ -240,6 +240,7 @@ async function injectTemplate(){
 
     wireMenu(document.body);
     normalize();
+    document.dispatchEvent(new CustomEvent('ls-template-applied'));
   }catch(err){
     console.error('[LIL SYNN] Universal template injection failed:',err);
   }
