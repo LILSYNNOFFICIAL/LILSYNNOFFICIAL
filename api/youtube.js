@@ -9,7 +9,7 @@ module.exports = async function handler(req,res){
  const norm=s=>String(s??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'');
  const releaseDateFromDescription=description=>{
    const s=String(description||'');
-   const m=s.match(/(?:released\s+on|release\s+date)\s*[:\-]?\s*([A-Za-z]+\s+\d{1,2},\s+\d{4}|\d{1,2}[\/.-]\d{1,2}[\/.-]\d{4})/i);
+   const m=s.match(/(?:released\s+on|release\s+date)\s*[:\-]?\s*([A-Za-z]+\s+\d{1,2},\s+\d{4}|\d{1,2}[\/.-]\d{1,2}[\/.-]\d{4}|\d{4}-\d{1,2}-\d{1,2})/i);
    if(!m)return '';
    const d=new Date(m[1]);
    return Number.isNaN(d.getTime())?'':d.toISOString().slice(0,10);
