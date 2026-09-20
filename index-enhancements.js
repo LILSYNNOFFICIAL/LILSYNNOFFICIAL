@@ -14,6 +14,6 @@ function openModal(title){let back=$('#ls-artist-modal-backdrop');if(!back){back
 function closeModal(){const b=$('#ls-artist-modal-backdrop');if(!b)return;b.classList.remove('open');document.documentElement.style.overflow=''}
 function signal(){const box=$('#signal .signal-inner');if(!box||box.dataset.signalEnhanced)return;box.dataset.signalEnhanced='1';const old=[...box.querySelectorAll('a')].find(a=>/JOIN THE SIGNAL/i.test(a.textContent));if(old){old.classList.add('ls-signal-button');old.textContent='JOIN THE SIGNAL →'}}
 function cleanupIndex(){const c=$('#contact');if(c)c.remove();const cat=$('#catalog');if(cat)cat.remove();document.querySelectorAll('a[href="#contact"],a[href="/#contact"]').forEach(a=>a.setAttribute('href','#signal'))}
-function init(){style();artist();signal();cleanupIndex();const old=$('#releaseFeed');if(old){let head=$('.ls-new-releases-head');if(!head){head=document.createElement('div');head.className='ls-new-releases-head';head.textContent='Releases';old.before(head)}}}
+function init(){style();artist();signal();cleanupIndex();const old=$('#releaseFeed');if(old){let head=$('.ls-new-releases-head');if(!head){head=document.createElement('div');head.className='ls-new-releases-head';head.textContent='Releases';old.before(head)}}reorderHomepage()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
