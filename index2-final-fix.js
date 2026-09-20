@@ -18,7 +18,7 @@
   const reorder=()=>{
     const main=document.querySelector('main');
     if(!main)return;
-    const order=['music','videos','releases','archive','about','universe','signal','contact']
+    const order=['music','videos','releases','universe','archive','about','signal','contact']
       .map(id=>document.getElementById(id)).filter(Boolean);
     order.forEach(section=>main.appendChild(section));
 const labels={music:['01 / NEW RELEASES','New <em>releases.</em>','The newest LIL SYNN transmission is here first — artwork, listening links and the full release experience.'],videos:['02 / VIDEOS + MUSIC','Videos / <em>Music.</em>','Watch the latest visual transmissions and jump directly into the music.'],releases:['03 / CATALOG','The <em>catalog.</em>','The canonical release catalog — the source of truth for release order, artwork and listening destinations.'],archive:['04 / EXPLORE','Pick a <em>door.</em>','Search and explore the LIL SYNN visual and release archive.'],universe:['05 / ARTIST + WORLD','One identity.<br><em>Many transmissions.</em>','LIL SYNN is an intentionally faceless AI artist and creative persona built across music, visual art, storytelling and technology.'],signal:['07 / STAY CONNECTED','Follow the <em>signal.</em>','New music. New videos. No spam.']};
