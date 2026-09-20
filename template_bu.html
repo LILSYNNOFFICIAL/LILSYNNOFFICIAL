@@ -158,7 +158,28 @@ main#template-content{display:block!important;position:relative!important;flex:n
 }
 @media(min-width:901px){.ls-template-hamburger{display:grid!important}}
 </style>
-</head>
+
+<style id="ls-horizontal-nav-repair">
+/* 2026-09-19 FINAL: stable centered horizontal primary navigation */
+.ls-canonical-topbar .ls-nav-inner{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;align-items:center!important;width:min(1320px,94vw)!important;min-height:68px!important;margin:0 auto!important;gap:12px!important}
+.ls-canonical-topbar .ls-brand{grid-column:1!important;justify-self:start!important;min-width:0!important}
+.ls-canonical-topbar .ls-desktop-nav{grid-column:2!important;grid-row:1!important;position:static!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:center!important;width:auto!important;max-width:none!important;height:68px!important;min-width:0!important;flex:none!important;gap:16px!important;overflow:visible!important;visibility:visible!important;opacity:1!important;z-index:10!important}
+.ls-canonical-topbar .ls-desktop-nav .ls-template-cat{display:flex!important;position:relative!important;align-items:center!important;flex:0 0 auto!important;visibility:visible!important;opacity:1!important}
+.ls-canonical-topbar .ls-desktop-nav .ls-template-cat>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;color:#c7c7ce!important}
+.ls-canonical-topbar .ls-template-hamburger{grid-column:3!important;grid-row:1!important;justify-self:end!important;z-index:11!important}
+@media(max-width:900px){.ls-canonical-topbar .ls-nav-inner{grid-template-columns:auto minmax(0,1fr) auto!important;width:100%!important;padding:0 10px!important;box-sizing:border-box!important;gap:8px!important}.ls-canonical-topbar .ls-desktop-nav{grid-column:2!important;justify-content:flex-start!important;gap:8px!important;width:100%!important;height:68px!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important}.ls-canonical-topbar .ls-desktop-nav::-webkit-scrollbar{display:none!important}.ls-canonical-topbar .ls-desktop-nav .ls-template-cat{flex:0 0 auto!important}}
+</style>
+<style id="ls-menu-final-visibility-fix">
+/* FINAL MENU VISIBILITY FIX */
+.ls-canonical-topbar{overflow:visible!important;position:fixed!important;z-index:2147483000!important}
+.ls-template-actionbar{overflow:visible!important;position:absolute!important;z-index:2147483001!important}
+.ls-template-cat{z-index:2147483002!important}
+.ls-template-cat-menu{z-index:2147483646!important}
+.ls-template-cat.open .ls-template-cat-menu{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#ls-template-menu{position:fixed!important;z-index:2147483647!important}
+#ls-template-menu.open{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:2147483647!important}
+#ls-template-menu.open .ls-template-menu-inner{visibility:visible!important;opacity:1!important}
+</style></head>
 <body class="ls-canonical-page">
 <div id="ls-bg-layer" aria-hidden="true"><video autoplay muted loop playsinline preload="auto"><source src="/assets/mov/LS_BG_STARS.webm" type="video/webm"></video></div>
 <div class="ls-particles" aria-hidden="true"></div>
@@ -247,6 +268,30 @@ main#template-content{display:block!important;position:relative!important;flex:n
 
 <script>
 (()=>{const init=()=>{const m=document.getElementById('ls-template-menu'),o=document.getElementById('ls-template-menu-open'),c=document.getElementById('ls-template-menu-close');if(!m||!o)return;if(window.__lsTemplateMenuInit)return;window.__lsTemplateMenuInit=true;const s=v=>{m.classList.toggle('open',v);m.setAttribute('aria-hidden',String(!v));o.setAttribute('aria-expanded',String(v));o.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};o.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(!m.classList.contains('open'))});if(c)c.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();s(false)});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>s(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')s(false)});window.addEventListener('resize',()=>{if(innerWidth>900)s(false)})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()};init();})();
+</script>
+<style id="ls-navigation-final">
+#ls-template-menu{position:fixed!important;left:8px!important;right:8px!important;top:68px!important;bottom:8px!important;width:auto!important;height:auto!important;max-height:none!important;margin:0!important;box-sizing:border-box!important;z-index:2147483647!important;display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;transform:translateY(12px) scale(.985)!important;overflow:auto!important}
+#ls-template-menu.open{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:translateY(0) scale(1)!important}
+#ls-template-menu .ls-template-menu-inner{visibility:visible!important;opacity:1!important}
+.ls-template-cat-menu{z-index:2147483646!important}
+.ls-template-cat.open .ls-template-cat-menu{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:2147483646!important}
+.ls-canonical-topbar{overflow:visible!important;z-index:2147483000!important}
+.ls-template-actionbar{z-index:2147483001!important;overflow:visible!important}
+.ls-template-hamburger{position:relative!important;z-index:2147483002!important;pointer-events:auto!important}
+</style>
+<script>
+(()=>{const init=()=>{
+ const menu=document.getElementById('ls-template-menu'),open=document.getElementById('ls-template-menu-open'),close=document.getElementById('ls-template-menu-close');
+ if(!menu||!open)return;
+ if(menu.parentElement!==document.body)document.body.appendChild(menu);
+ const setMenu=v=>{menu.classList.toggle('open',v);menu.setAttribute('aria-hidden',String(!v));open.setAttribute('aria-expanded',String(v));open.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');document.body.style.overflow=v?'hidden':''};
+ open.onclick=e=>{e.preventDefault();e.stopPropagation();setMenu(!menu.classList.contains('open'))};
+ if(close)close.onclick=e=>{e.preventDefault();e.stopPropagation();setMenu(false)};
+ menu.querySelectorAll('a').forEach(a=>a.onclick=()=>setMenu(false));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+ document.querySelectorAll('.ls-template-cat').forEach(cat=>{const b=cat.querySelector(':scope > button');if(!b)return;b.onclick=e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.ls-template-cat.open').forEach(x=>{if(x!==cat){x.classList.remove('open');x.querySelector(':scope > button')?.setAttribute('aria-expanded','false')}});const v=!cat.classList.contains('open');cat.classList.toggle('open',v);b.setAttribute('aria-expanded',String(v))}});
+ document.addEventListener('click',e=>{if(!e.target.closest('.ls-template-cat'))document.querySelectorAll('.ls-template-cat.open').forEach(cat=>{cat.classList.remove('open');cat.querySelector(':scope > button')?.setAttribute('aria-expanded','false')})});
+};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()})();
 </script>
 </body>
 </html>
