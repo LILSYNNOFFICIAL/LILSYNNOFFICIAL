@@ -24,9 +24,10 @@ for(const file of htmlFiles){
  const standaloneHome=file==='index.html'&&/LIL SYNN — THE SIGNAL/i.test(html)&&/homepage-final-fix\.js/i.test(html);
  const standalone404=file==='404.html';
 
- if(isCanonicalPage&&!/<script\\b[^>]*src=["'](?:\\.\\/)?\\/?site-shell\\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: missing canonical site-shell.js`);
+ if(isCanonicalPage&&!/<script\b[^>]*src=["'](?:\.\/)?\/?site-shell\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: missing canonical site-shell.js`);
  if(isBackgroundOnly&&!/<script\b[^>]*src=["'](?:\\.\\/)?\\/?site-shell\\.js(?:\?[^"']*)?["'][^>]*>/i.test(html))fail(`${file}: vote background shell missing site-shell.js`);
- const shellSource=file==='template.html'||file==='template_bu.html';\n if(!shellSource&&file!=='site-health.html'&&!standaloneHome&&!standalone404&&/site-global(?:\.js|\.css)/i.test(html))fail(`${file}: legacy site-global shell reference detected`);
+ const shellSource=file==='template.html'||file==='template_bu.html';
+ if(!shellSource&&file!=='site-health.html'&&!standaloneHome&&!standalone404&&/site-global(?:\.js|\.css)/i.test(html))fail(`${file}: legacy site-global shell reference detected`);
 
  const globalScripts=[...html.matchAll(/<script\b[^>]*src=["']\/?site-global\.js[^"']*["'][^>]*>/gi)];
  if(globalScripts.length)fail(`${file}: legacy site-global.js reference detected`);
