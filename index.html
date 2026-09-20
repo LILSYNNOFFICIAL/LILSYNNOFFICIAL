@@ -297,15 +297,14 @@ main#template-content{display:block!important;position:relative!important;flex:n
 <script src="./latest-videos.js?v=20260920-restored"></script>
 <script src="./index-enhancements.js?v=20260920-final"></script>
 <style id="ls-orbit-footer-spacing">
-/* Homepage orbit + footer spacing correction */
+/* Homepage orb: centered directly above Pick a door */
 .universe-layout{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  gap:28px!important;
+  display:block!important;
+  width:100%!important;
 }
 .universe-copy{
-  width:min(900px,100%)!important;
+  width:min(900px,92vw)!important;
+  margin:0 auto!important;
   text-align:center!important;
 }
 .universe-copy p{
@@ -315,18 +314,20 @@ main#template-content{display:block!important;position:relative!important;flex:n
 .universe-copy .buttons{
   justify-content:center!important;
 }
-.orbit-stage{
+.homepage-orbit{
+  display:block!important;
   width:min(760px,92vw)!important;
   max-width:760px!important;
-  margin:0 auto!important;
-  flex:0 0 auto!important;
+  margin:20px auto 52px!important;
 }
 .stars-zone{
   margin-bottom:20px!important;
 }
 @media(max-width:800px){
-  .universe-layout{gap:24px!important}
-  .orbit-stage{width:min(92vw,620px)!important}
+  .homepage-orbit{
+    width:min(92vw,620px)!important;
+    margin:12px auto 40px!important;
+  }
 }
 </style>
 <style id="ls-navigation-final">
