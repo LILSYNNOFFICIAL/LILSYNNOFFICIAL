@@ -124,6 +124,7 @@
   };
 
   const run=()=>{
+    fixYoutubePlayButton();
     css();
     stars();
     purgeExtraWebm();
