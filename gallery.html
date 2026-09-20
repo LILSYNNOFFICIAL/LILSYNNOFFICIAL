@@ -127,6 +127,6 @@ document.addEventListener("keydown",e=>{if(!box.classList.contains("open"))retur
 let sx=0;box.addEventListener("touchstart",e=>sx=e.changedTouches[0].clientX,{passive:true});box.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)step(dx<0?1:-1)},{passive:true});render();
 })();
 </script>
-<script src="./site-shell.js?v=20260919-shellfix3"></script>
+<script src="/site-shell.js?v=20260919-shellfix3"></script>
 </body>
 </html>
