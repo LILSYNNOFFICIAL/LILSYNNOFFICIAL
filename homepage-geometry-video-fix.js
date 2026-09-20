@@ -18,15 +18,7 @@
     `;
     if(!s.isConnected)document.head.appendChild(s);
   };
-  const placeVideosUnderNeverKnown=()=>{
-    const videos=document.getElementById('videos'),feed=document.getElementById('releaseFeed');
-    if(!videos||!feed)return false;
-    const target=[...feed.querySelectorAll('.release-card')].find(card=>/never\s*known/i.test(card.textContent||''));
-    if(!target)return false;
-    if(target.nextElementSibling!==videos)target.insertAdjacentElement('afterend',videos);
-    videos.style.order='';
-    return true;
-  };
+  const placeVideosUnderNeverKnown=()=>true;
   const findMusicLink=()=>[...document.querySelectorAll('a[href]')].find(a=>{
     try{
       if(new URL(a.href,location.href).href!==MUSIC_LINK)return false;
