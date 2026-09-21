@@ -1,8 +1,14 @@
 {
-  "generatedAt": "2026-09-20T15:12:48.254812+00:00",
+  "generatedAt": "2026-09-21T11:09:55.382938+00:00",
   "source": "https://www.youtube.com/@LILSYNNOFFICIAL/releases",
   "selection": "canonical release-catalog order; YouTube Releases tab used only to resolve video IDs; unmatched catalog entries are skipped",
   "videos": [
+    {
+      "id": "PWOH5Mgmyvo",
+      "title": "Heavy (Acoustic)",
+      "publishedAt": "2026-09-20T10:04:44Z",
+      "release": "Heavy (Acoustic Version)"
+    },
     {
       "id": "oxX7eWI4aEU",
       "title": "Memory of You",
@@ -50,12 +56,6 @@
       "title": "Hello Goodbye",
       "publishedAt": "2026-09-09T02:46:12Z",
       "release": "Hello Goodbye"
-    },
-    {
-      "id": "JRJswRmhbmA",
-      "title": "Static On My Tongue",
-      "publishedAt": "2026-07-26T10:04:12Z",
-      "release": "Static On My Tongue"
     }
   ]
 }
