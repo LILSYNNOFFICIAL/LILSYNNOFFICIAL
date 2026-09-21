@@ -1,5 +1,6 @@
 {
   "order": [
+    "Heavy (Acoustic Version)",
     "Memory of You",
     "Never Known",
     "HOME (ACOUSTIC VERSION)",
@@ -129,6 +130,12 @@
       ],
       "spotify": "https://open.spotify.com/album/690pmPNm6kdm4Kx5QCwWEP?si=ph-fGPlTSxmOygoaw3EiXQ",
       "apple": "https://music.apple.com/us/song/memory-of-you/6813555820"
+    },
+    "Heavy (Acoustic Version)": {
+      "type": "SINGLE",
+      "tracks": [
+        "Heavy (Acoustic Version)"
+      ]
     }
   },
   "spotify": {
@@ -169,7 +176,8 @@
     "Through the Flames": "https://open.spotify.com/track/48OAVmSEPwMtAnnkhi0BJJ?si=a74e5f9ebafe453f",
     "Wounds": "https://open.spotify.com/track/0dR7h3yranTGvaaVVlEd61?si=94db72a91a0e4200",
     "Discernment": "https://open.spotify.com/track/5CwW8S1cZwLfoJOAds7I8H?si=c3cc414ff0e74b16",
-    "Memory of You": "https://open.spotify.com/search/Memory%20of%20You%20LIL%20SYNN"
+    "Memory of You": "https://open.spotify.com/search/Memory%20of%20You%20LIL%20SYNN",
+    "Heavy (Acoustic Version)": "https://open.spotify.com/track/7K9VpBXUk4k1erJPL8x97o?si=1a7984ffad74477e"
   },
   "trackSpotify": {
     "Never Known": "https://open.spotify.com/track/4cLYkMRqkj97pQjUUw6G2i?si=d593f674734c4879",
@@ -228,7 +236,8 @@
     "Faith": "https://open.spotify.com/track/6ysvRK9IYDVl5lqeI8AHvU?si=15b7333a4e074fd5",
     "Through the Flames": "https://open.spotify.com/track/48OAVmSEPwMtAnnkhi0BJJ?si=a74e5f9ebafe453f",
     "Wounds": "https://open.spotify.com/track/0dR7h3yranTGvaaVVlEd61?si=94db72a91a0e4200",
-    "Discernment": "https://open.spotify.com/track/5CwW8S1cZwLfoJOAds7I8H?si=c3cc414ff0e74b16"
+    "Discernment": "https://open.spotify.com/track/5CwW8S1cZwLfoJOAds7I8H?si=c3cc414ff0e74b16",
+    "Heavy (Acoustic Version)": "https://open.spotify.com/track/7K9VpBXUk4k1erJPL8x97o?si=1a7984ffad74477e"
   },
   "trackSoundcloud": {
     "Astral Signal": "https://soundcloud.com/lilsynnofficial/01-astral-signal-1?in=lilsynnofficial/sets/touching-to-the-north&si=516878e74a8d437f8ebbb8b0e0231474&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
@@ -282,7 +291,8 @@
     "After The Light": "https://music.apple.com/us/album/enough/1880555015",
     "Touch Hunger": "https://music.apple.com/us/album/enough/1880555015",
     "Until Dawn": "https://music.apple.com/us/album/enough/1880555015",
-    "Memory of You": "https://music.apple.com/us/search?term=Memory%20of%20You%20LIL%20SYNN"
+    "Memory of You": "https://music.apple.com/us/search?term=Memory%20of%20You%20LIL%20SYNN",
+    "Heavy (Acoustic Version)": "https://music.apple.com/us/song/heavy-acoustic/6813942522"
   },
   "appleMissing": {
     "Burn It Down": "* I WILL REACH OUT TO DISTRIBUTOR",
@@ -329,7 +339,8 @@
     "ifustayded": "55_lil_synn_if_u_stay_ded.jpg",
     "alreadyfamous": "56_lil_synn_already_famous.jpg",
     "touchingtothenorth": "01 - Astral Signal - LIL SYN-artwork.jpg",
-    "memoryofyou": "memory of you.png"
+    "memoryofyou": "memory of you.png",
+    "heavyacousticversion": "heavy_acoustic.png"
   },
   "stories": {
     "Never Known": "A release about the strange space between knowing someone and realizing how much remains unknown.",
