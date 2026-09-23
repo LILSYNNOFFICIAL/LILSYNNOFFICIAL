@@ -187,7 +187,7 @@ async function injectTemplate(){
   if(document.documentElement.dataset.lsTemplateApplied==='1')return;
 
   try{
-    const res=await fetch(TEMPLATE_URL,{cache:'default'});
+    const res=await fetch(TEMPLATE_URL,{cache:'no-store'});
     if(!res.ok)throw new Error('template fetch '+res.status);
 
     const html=await res.text();
