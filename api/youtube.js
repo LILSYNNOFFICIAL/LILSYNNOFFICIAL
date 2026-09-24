@@ -5,7 +5,8 @@ module.exports = async function handler(req,res){
  res.setHeader('Access-Control-Allow-Origin','*');
  res.setHeader('Access-Control-Allow-Methods','GET,OPTIONS');
  res.setHeader('Access-Control-Allow-Headers','Content-Type');
- res.setHeader('Cache-Control','no-store, max-age=0');
+ res.setHeader('Cache-Control','public, max-age=60, s-maxage=300, stale-while-revalidate=600, stale-if-error=86400');
+ res.setHeader('CDN-Cache-Control','public, max-age=300, stale-while-revalidate=600, stale-if-error=86400');
  if(req.method==='OPTIONS')return res.status(204).end();
  const API_KEY=process.env.YOUTUBE_API_KEY;
  const CHANNEL_ID="UC1uTOgZd1rNHnASINvT4b4Q";
