@@ -170,6 +170,27 @@
       ]
     },
     {
+      "source": "/release-catalog.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=600" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/latest-videos.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=600" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/transmissions.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=600" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
       "source": "/(.*\\.html)",
       "headers": [
         {
