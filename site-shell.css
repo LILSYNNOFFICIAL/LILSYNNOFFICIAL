@@ -122,12 +122,12 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
 }
 
-/* SIQA verification badge: compact, visible, centered */
+/* SIQA verification badge: visible, larger, centered */
 .ls-siqa-badge{
-  width:36px!important;
-  max-width:36px!important;
-  height:14px!important;
-  max-height:14px!important;
+  width:72px!important;
+  max-width:72px!important;
+  height:72px!important;
+  max-height:72px!important;
   min-width:0!important;
   min-height:0!important;
   display:flex!important;
@@ -138,10 +138,10 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   padding:0!important;
 }
 .ls-siqa-badge img{
-  width:36px!important;
-  max-width:36px!important;
-  height:auto!important;
-  max-height:14px!important;
+  width:72px!important;
+  max-width:72px!important;
+  height:72px!important;
+  max-height:72px!important;
   min-width:0!important;
   min-height:0!important;
   display:block!important;
