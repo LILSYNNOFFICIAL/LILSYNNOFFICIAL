@@ -122,13 +122,26 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
 }
 
-/* SIQA verification badge: hard size cap */
-.ls-siqa-badge,
+/* SIQA verification badge: compact, visible, centered */
+.ls-siqa-badge{
+  width:36px!important;
+  max-width:36px!important;
+  height:14px!important;
+  max-height:14px!important;
+  min-width:0!important;
+  min-height:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding:0!important;
+}
 .ls-siqa-badge img{
-  width:16px!important;
-  max-width:16px!important;
-  height:6px!important;
-  max-height:6px!important;
+  width:36px!important;
+  max-width:36px!important;
+  height:auto!important;
+  max-height:14px!important;
   min-width:0!important;
   min-height:0!important;
   display:block!important;
@@ -136,11 +149,5 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   object-position:center!important;
   border:0!important;
   padding:0!important;
-  margin:0!important;
-}
-.ls-siqa-badge img{
-  width:16px!important;
-  max-width:16px!important;
-  height:auto!important;
-  max-height:6px!important;
+  margin:0 auto!important;
 }
