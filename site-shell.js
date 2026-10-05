@@ -239,6 +239,7 @@ async function injectTemplate(){
 
     wireMenu(document.body);
     normalize();
+    if(!document.querySelector('script[data-ls-siqa-badge]')){const s=document.createElement('script');s.async=true;s.src='https://son-reg-verify-hub.lovable.app/siqa-badge.js';s.dataset.lsSiqaBadge='1';document.body.appendChild(s);}
     document.dispatchEvent(new CustomEvent('ls-template-applied'));
   }catch(err){
     console.error('[LIL SYNN] Universal template injection failed:',err);
