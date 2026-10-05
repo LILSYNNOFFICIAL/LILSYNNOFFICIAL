@@ -121,3 +121,26 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   #ls-template-menu .ls-menu-card>a span{position:absolute!important;right:8px!important;color:#555!important}
   #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
 }
+
+/* SIQA verification badge: hard size cap */
+.ls-siqa-badge,
+.ls-siqa-badge img{
+  width:16px!important;
+  max-width:16px!important;
+  height:6px!important;
+  max-height:6px!important;
+  min-width:0!important;
+  min-height:0!important;
+  display:block!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border:0!important;
+  padding:0!important;
+  margin:0!important;
+}
+.ls-siqa-badge img{
+  width:16px!important;
+  max-width:16px!important;
+  height:auto!important;
+  max-height:6px!important;
+}
