@@ -13,7 +13,23 @@
 
 <p align="center"><strong>THE GOD GUIDE TO SUNO V6</strong><br>Creation • Prompting • Lyrics • Style • Models • Sliders • References • Voices • Custom Models • Editing • Stems • Studio 2.0 • MIDI • Effects • Automation • Production • Rights • Testing • Troubleshooting</p>
 
-> **Current-reference date: September 13, 2026.** Suno changes quickly. This repository is a living knowledge base: current official Suno documentation and release notes outrank old screenshots, old tutorials, remembered behavior, and community claims.
+> **Current-reference date: October 18, 2026.** Suno changes quickly. This repository is a living knowledge base: current official Suno documentation and release notes outrank old screenshots, old tutorials, remembered behavior, and community claims.
+
+---
+
+# 🆕 OCTOBER 18, 2026 — CURRENT DELTA
+
+Verified changes since the September baseline. Sources: [Suno v6 FAQ](https://help.suno.com/en/articles/13924481), [official release notes](https://suno.com/release-notes), and the on-site [Current V6 Capabilities audit](../research/current-v6-capabilities.html).
+
+- **Max Mode:** costs extra credits and is recommended for longer songs, fidelity-sensitive Covers, style transfer and consistency across a full track. It is not a guarantee; do not invent an exact multiplier.
+- **Variety:** the slider can adjust/update Style prompts. Set it to 0 for controlled tests that need Style tags preserved and record the value.
+- **Standard generation:** the v6 FAQ states 10 credits for two generated songs; many image/video inputs can increase the cost.
+- **Custom Models:** October 15 release notes announce shareable Custom Models for Premier and twice the inputs for this workflow. This newer note supersedes older help text saying models cannot be shared; confirm current in-app access.
+- **Studio:** September 17 improved MIDI workflows and clip renaming. October 8 added improved downbeat detection, Shift-click-drag time-stretching, adjustable exponential/logarithmic fade curves and floating windows for synth/keyboard/plugin views.
+- **Community reports:** September–October Reddit users disagree about which variant sounds best. Some report strong v6-mini Cover fidelity; others report artifacts, repetition or weak adherence in v6-wild. Treat these as hypotheses and compare matched conditions, not universal facts.
+
+**Research protocol:** keep an unchanged control, vary one major factor at a time, compare multiple generations per model, score adherence/continuity/artifacts/mix separately, and log date, model, Max Mode, Variety, source and edit path.
+
 
 ---
 

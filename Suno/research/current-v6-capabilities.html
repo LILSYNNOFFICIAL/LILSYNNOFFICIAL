@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LIL SYNN — Current V6 Capabilities</title>
+<title>LIL SYNN — Current V6 Capabilities (October 2026)</title>
 <link rel="stylesheet" href="../assets/suno.css">
 <link rel="stylesheet" href="../assets/suno-overrides.css">
 </head>
@@ -18,7 +18,7 @@
 <section class="topic-hero">
 <div class="eyebrow">CURRENT / V6 ECOSYSTEM</div>
 <h1>V6 CAPABILITIES</h1>
-<p>A current-state reference for the capabilities surrounding Suno V6. Product features can change independently of prompting behavior, so verify the current model and feature before treating a workflow as permanent.</p>
+<p>Current-reference date: <strong>October 18, 2026.</strong> A current-state reference for Suno v6, v6-wild and v6-mini. Product features can change independently of prompting behavior, so verify the current model and feature before treating a workflow as permanent.</p>
 <div class="hero-actions"><a class="button primary" href="../master/">00 MASTER →</a><a class="button" href="../research/v6-experiment-lab.html">PHASE 12 LAB →</a></div>
 </section>
 <section class="guide-section">
@@ -32,6 +32,22 @@
 <p><a href="https://help.suno.com/en/articles/13924737" target="_blank" rel="noopener">Official current models →</a> · <a href="https://help.suno.com/en/articles/13924801" target="_blank" rel="noopener">What's new in V6 →</a> · <a href="https://help.suno.com/en/articles/13924993" target="_blank" rel="noopener">How to change models →</a></p>
 </section>
 <section class="guide-section">
+<h2>OCTOBER 2026 — CURRENT MODEL CONTROLS</h2>
+<p><strong>Checked October 18, 2026.</strong> The official v6 FAQ adds two important controls that should be included in every serious test record:</p>
+<div class="master-grid">
+<article><h3>MAX MODE</h3><p>Optional mode that spends more credits to improve the chance of a closer result. Suno specifically recommends considering it for songs over two minutes, Covers that should stay close to the source, style transfer, and consistency across a full song. It is not a guarantee, and the FAQ does not specify a universal multiplier.</p></article>
+<article><h3>VARIETY</h3><p>Suno says the Variety slider introduces variation by adjusting/updating style prompts. Use 0 when testing exact Style-tag control; log the setting because the prompt condition can change.</p></article>
+<article><h3>GENERATION COST</h3><p>The standard v6 generation cost remains 10 credits for two songs according to the FAQ. Many image/video inputs can increase the cost. Max Mode costs more; confirm the live cost before running batches.</p></article>
+<article><h3>CUSTOM MODELS</h3><p>The October 15 release notes announce shareable Custom Models for Premier and twice the inputs for this workflow. This newer release note conflicts with the older Custom Models help article's “private” wording; use the newer release notes and the current in-app controls as the current reference.</p></article>
+</div>
+<p><a href="https://help.suno.com/en/articles/13924481" target="_blank" rel="noopener">Official v6 FAQ →</a> · <a href="https://help.suno.com/en/articles/13924737" target="_blank" rel="noopener">Current models →</a> · <a href="https://suno.com/release-notes" target="_blank" rel="noopener">Release notes →</a></p>
+</section>
+<section class="guide-section">
+<h2>STUDIO 2.0 — SEPTEMBER/OCTOBER DELTAS</h2>
+<p>Studio 2.0 is a Premier production environment. The October 8 release notes add more precise downbeat detection for new clips (including a cappella material), shift-click-drag time-stretching, draggable exponential/logarithmic clip-fade curves, and pop-out windows for the wavetable synth, musical typing keyboard and expanded plugin views. The September 17 update improved MIDI-to-audio transcription, MIDI prompting through the Chat Bar, and clip renaming.</p>
+<p>These are official Studio workflow changes, not claims that a particular song-generation prompt will behave deterministically. For MIDI, keep source material, generated version and the exact Studio action in the project notes.</p>
+<p><a href="https://suno.com/release-notes" target="_blank" rel="noopener">Official release notes →</a> · <a href="https://help.suno.com/en/articles/13670529" target="_blank" rel="noopener">Studio 2.0 overview →</a></p>
+</section><section class="guide-section">
 <h2>CUSTOM MODELS</h2>
 <p>Pro and Premier users can create up to three private Custom Models from their own music. Current Suno documentation says a model can be built from at least six songs, and the uploader must own the rights to the tracks used. Treat Custom Models as a separate model condition in controlled tests rather than silently mixing them with standard V6.</p>
 <p><a href="https://help.suno.com/en/articles/11362497" target="_blank" rel="noopener">Official Custom Models guide →</a></p>
@@ -70,11 +86,23 @@
 </section>
 <section class="guide-section">
 <h2>DOWNLOAD / RIGHTS REALITY</h2>
-<p>As of September 2026, Suno applies download limits to downloads outside Studio: Pro receives 20 downloads per month and Premier receives 60. Free accounts have limited trial downloads; Suno's current help documentation says trial downloads are non-commercial. Studio workflows are not subject to these download limits. Commercial-use rights depend on the applicable Suno plan and terms, so this guide should not treat a free trial download as commercially cleared.</p>
+<p>As of October 18, 2026, Suno documents 20 monthly downloads for Pro and 60 for Premier; these reset on the billing date and do not roll over. Downloading the same song again, or choosing multiple formats for that song, does not consume another song-download allowance, and downloaded stems are included with that song. Studio workflows are outside these download limits. Free-plan trial download availability has account-age qualifications in current help pages; check the current account UI rather than assuming every account has the same allowance. Trial downloads are non-commercial. Commercial-use rights depend on the applicable plan and terms.</p>
 <p>Do not confuse streaming/sharing inside Suno with downloading files off the platform. For production research, record whether an artifact was streamed, shared, downloaded, or exported from Studio.</p>
 <p><a href="https://help.suno.com/en/articles/13926209" target="_blank" rel="noopener">Current download limits →</a> · <a href="https://help.suno.com/en/articles/13876865" target="_blank" rel="noopener">How downloads work →</a> · <a href="https://suno.com/pricing" target="_blank" rel="noopener">Live pricing →</a></p>
 </section>
 <section class="guide-section">
+<h2>RECENT COMMUNITY FIELD NOTES (AUG 18–OCT 18, 2026)</h2>
+<p>These Reddit threads are useful for generating test hypotheses, not establishing universal model rankings. Their findings conflict and are based on creator anecdotes rather than controlled, representative benchmarks.</p>
+<ul>
+<li><strong>Producer-brief prompting:</strong> a September 12 guide recommends prioritizing musical identity, pulse, instrument behavior, vocal performance, arrangement arc, mix and constraints. It cautions against treating BPM, section tags or bracket cues as hard commands. <a href="https://www.reddit.com/r/SunoAI/comments/1wehqi9/suno-v6-prompting-guide-compiled-from-your-reddit/" target="_blank" rel="noopener">Read thread →</a></li>
+<li><strong>v6-mini Covers:</strong> a September 27 report found mini surprisingly faithful on three difficult longer Covers; other replies note genre/source-dependent exceptions. Test it as an option when source fidelity is the goal, not as a guaranteed advantage. <a href="https://www.reddit.com/r/SunoAI/comments/1wrqb6j/v6mini_is_a_covering_machine/" target="_blank" rel="noopener">Read thread →</a></li>
+<li><strong>Model results conflict:</strong> a September 28 discussion contains users preferring mini, v6 or wild depending on source and genre. No universal winner can be inferred. <a href="https://www.reddit.com/r/SunoAI/comments/1wsieq8/i_feel_like_v6_mini_is_100x_better_than_v6_and_v6/" target="_blank" rel="noopener">Read thread →</a></li>
+<li><strong>v6-wild:</strong> September reports describe both useful instrumental riff-mining and failure modes such as artifacts, repeated sections, poor lyric/vocal adherence and quality decline in longer generations. Inspect the entire output and move promising ideas into v6 for refinement. <a href="https://www.reddit.com/r/SunoAI/comments/1wco7gr/v6wild_is_completely_unusable/" target="_blank" rel="noopener">Read thread →</a></li>
+<li><strong>Prompt templates are genre-biased:</strong> a September 29 discussion notes that a universal blank template can impose the author's own sound. Tailor the framework to the target. <a href="https://www.reddit.com/r/SunoAI/comments/1wtmliy/suno-v6mini-advanced-modeon-styles-prompt-guidance/" target="_blank" rel="noopener">Read thread →</a></li>
+<li><strong>Perceived behavior shifts:</strong> an October 11 user reported a change in results around October 7 but could not identify a cause. A single report is not proof of a model update. <a href="https://www.reddit.com/r/SunoAI/comments/1x317qp/something_changed_for_me_on_october_7th/" target="_blank" rel="noopener">Read thread →</a></li>
+</ul>
+<p><strong>Suggested model bake-off:</strong> preserve one source and prompt; test all available variants; hold non-model controls constant; compare several generations; score adherence, vocal/lyric integrity, continuity, artifacts, mix and usefulness separately. Record date, Max Mode, Variety, reference source, duration and editing path.</p>
+</section><section class="guide-section">
 <h2>RESEARCH IMPLICATION</h2>
 <p>Every experiment should record the exact model, feature path, settings and source material. Product capabilities are official evidence; claims about how a particular prompt, symbol, slider combination or undocumented tag changes generation remain experimental until they are tested.</p>
 <p><strong>Current product fact ≠ experimental result.</strong> Keep those evidence classes separate.</p>
