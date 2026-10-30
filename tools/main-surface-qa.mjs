@@ -45,12 +45,17 @@ try {
     const page = await browser.newPage();
     const errors = [];
     const failures = [];
+    const httpErrors = [];
     const backendSurface = route.name === 'COMMAND' || route.name === 'ADMIN';
     page.on('console', msg => {
       if (msg.type() !== 'error') return;
       const text = msg.text();
       if (backendSurface && /Failed to load resource: the server responded with a status of 404 \(Not Found\)/i.test(text)) return;
-      errors.push(`console: ${text}`);
+      if (!/Failed to load resource: the server responded with a 404 \\(Not Found\\)/i.test(text)) errors.push(`console: ${text}`);
+    });
+    page.on('response', response => {
+      const url = new URL(response.url());
+      if (url.origin === baseOrigin && response.status() >= 400 && !ignoredLocalRequests.has(url.pathname)) httpErrors.push(`${url.pathname} -> HTTP ${response.status()}`);
     });
     page.on('pageerror', err => errors.push(`pageerror: ${err.message}`));
     page.on('requestfailed', req => {
@@ -72,11 +77,12 @@ try {
       else if (bodyLength < 30) failure = `body too small (${bodyLength} chars)`;
       else if (errors.length) failure = errors[0];
       else if (failures.length) failure = failures[0];
+      else if (httpErrors.length) failure = httpErrors[0];
     } catch (error) {
       failure = error.message;
     }
 
-    results.push({ ...route, pass: !failure, status, bodyLength, errors, failures, failure });
+    results.push({ ...route, pass: !failure, status, bodyLength, errors, failures, httpErrors, failure });
     await page.close();
   }
 } finally {
