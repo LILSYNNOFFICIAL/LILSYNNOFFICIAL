@@ -49,12 +49,12 @@ assert.match(index, /id=["']playerDock["']/i);
 assert.match(index, /id=["']playerClose["']/i);
 assert.match(index, /id=["']spotifyFrame["']/i);
 assert.match(index, /open\.spotify\.com\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i, 'homepage must retain the canonical Spotify artist destination');
-for (const section of ['THE ARTIST','PERSONA OF THE MUSIC','TOOLKIT','VISUAL WORLD','CREATOR','VISION']) assert.match(enhancements, new RegExp(section));
-assert.match(enhancements, /ls-modal-backdrop/);
-assert.match(enhancements, /ls-artist-modal/);
-assert.match(enhancements, /role=\"dialog\"/);
-assert.match(enhancements, /aria-modal=\"true\"/);
-assert.match(enhancements, /document\.body\.appendChild\(back\)/);
+assert.match(index, /06 \/ ARTIST \+ WORLD/, 'homepage retains its current artist/world section');
+assert.match(index, /id=["']releaseFeed["']/);
+assert.match(index, /id=["']newReleaseFeed["']/);
+assert.match(enhancements, /ensureHomepageLayout/);
+assert.match(enhancements, /signal\.before\(orbit\)/);
+assert.match(enhancements, /querySelectorAll\('#universe'\)/);
 
 assert.match(releases, /\.slice\(0,8\)/);
 assert.match(releases, /new Set/);
