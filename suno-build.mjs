@@ -16,7 +16,7 @@ async function fallbackTree(){
         if (entry.name === '.git') continue;
         const full = path.join(folder, entry.name);
         if (entry.isDirectory()) await walk(full);
-        else if (entry.isFile() && /\\.md$/i.test(entry.name)) tree.push({ type: 'blob', path: path.relative(dir, full).split(path.sep).join('/') });
+        else if (entry.isFile() && /\.md$/i.test(entry.name)) tree.push({ type: 'blob', path: path.relative(dir, full).split(path.sep).join('/') });
       }
     }
     await walk(dir);
@@ -26,7 +26,7 @@ async function fallbackTree(){
   }
 }
 function get(url){return new Promise((resolve,reject)=>{https.get(url,{headers:{'User-Agent':'LIL-SYNN-Suno-Site-Builder'}},res=>{let data='';res.setEncoding('utf8');res.on('data',c=>data+=c);res.on('end',()=>{if(res.statusCode>=300&&res.statusCode<400&&res.headers.location)return get(res.headers.location).then(resolve,reject);if(res.statusCode!==200){
-  const detail=data.replace(/\\s+/g,' ').slice(0,500);
+  const detail=data.replace(/\s+/g,' ').slice(0,500);
   if(res.statusCode===403 && url.includes('/git/trees/main?recursive=1')){
     return fallbackTree().then(resolve, fallbackError => reject(new Error(`GitHub tree API returned 403 and git-clone fallback failed: ${fallbackError.message}; API response: ${detail}`)));
   }
