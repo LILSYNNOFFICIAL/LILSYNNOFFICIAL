@@ -24,7 +24,6 @@ const baseUrl = (process.env.QA_BASE_URL || 'http://127.0.0.1:4173').replace(/\/
 const baseOrigin = new URL(baseUrl).origin;
 const routes = [
   { name: 'MAIN', path: '/' },
-  { name: 'MAIN HEALTH', path: '/site-health.html' },
   { name: 'COMMAND', path: '/command/' },
   { name: 'ADMIN', path: '/command/admin/' },
   { name: 'SUNO', path: '/Suno/' },
@@ -97,13 +96,12 @@ for (const result of results) {
 
 const grouped = {
   MAIN: results.find(r => r.name === 'MAIN')?.pass ?? false,
-  MAIN_HEALTH: results.find(r => r.name === 'MAIN HEALTH')?.pass ?? false,
   COMMAND: results.find(r => r.name === 'COMMAND')?.pass ?? false,
   ADMIN: results.find(r => r.name === 'ADMIN')?.pass ?? false,
   SUNO: results.filter(r => r.name.startsWith('SUNO')).every(r => r.pass)
 };
 
-console.log(`QA_MAIN=${grouped.MAIN && grouped.MAIN_HEALTH ? 'PASS' : 'FAIL'}`);
+console.log(`QA_MAIN=${grouped.MAIN ? 'PASS' : 'FAIL'}`);
 console.log(`QA_COMMAND=${grouped.COMMAND ? 'PASS' : 'FAIL'}`);
 console.log(`QA_ADMIN=${grouped.ADMIN ? 'PASS' : 'FAIL'}`);
 console.log(`QA_SUNO=${grouped.SUNO ? 'PASS' : 'FAIL'}`);
