@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import { chromium } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
 
 const sourceChecks = [
   ['command/index.html', fs.existsSync('command/index.html')],
   ['command/admin/index.html', fs.existsSync('command/admin/index.html')],
   ['command/admin/admin.js', fs.existsSync('command/admin/admin.js')],
+  ['api/admin.js', fs.existsSync('api/admin.js')],
   ['Suno/index.html', fs.existsSync('Suno/index.html')],
   ['vercel.json', fs.existsSync('vercel.json')],
   ['vercel.json /Suno redirect contract', fs.existsSync('vercel.json') && fs.readFileSync('vercel.json', 'utf8').includes('"/Suno"')],
@@ -12,7 +14,11 @@ const sourceChecks = [
   ['vercel.json /command/admin rewrite contract', fs.existsSync('vercel.json') && fs.readFileSync('vercel.json', 'utf8').includes('/command/admin')]
 ];
 for (const [name, pass] of sourceChecks) console.log(`${pass ? 'PASS' : 'FAIL'} | SOURCE | ${name}`);
-if (sourceChecks.some(([, pass]) => !pass)) process.exit(1);
+let adminApiSyntax = true;
+try { execFileSync(process.execPath, ['--check', 'api/admin.js'], { stdio: 'pipe' }); }
+catch (error) { adminApiSyntax = false; console.error(`FAIL | SOURCE | api/admin.js syntax | ${String(error.stderr || error.message)}`); }
+console.log(`${adminApiSyntax ? 'PASS' : 'FAIL'} | SOURCE | api/admin.js syntax`);
+if (sourceChecks.some(([, pass]) => !pass) || !adminApiSyntax) process.exit(1);
 
 const baseUrl = (process.env.QA_BASE_URL || 'http://127.0.0.1:4173').replace(/\/$/, '');
 const baseOrigin = new URL(baseUrl).origin;
@@ -38,12 +44,17 @@ try {
     const page = await browser.newPage();
     const errors = [];
     const failures = [];
+    const httpErrors = [];
     const backendSurface = route.name === 'COMMAND' || route.name === 'ADMIN';
     page.on('console', msg => {
       if (msg.type() !== 'error') return;
       const text = msg.text();
       if (backendSurface && /Failed to load resource: the server responded with a status of 404 \(Not Found\)/i.test(text)) return;
-      errors.push(`console: ${text}`);
+      if (!/Failed to load resource:.*404/i.test(text)) errors.push(`console: ${text}`);
+    });
+    page.on('response', response => {
+      const url = new URL(response.url());
+      if (url.origin === baseOrigin && response.status() >= 400 && !ignoredLocalRequests.has(url.pathname)) httpErrors.push(`${url.pathname} -> HTTP ${response.status()}`);
     });
     page.on('pageerror', err => errors.push(`pageerror: ${err.message}`));
     page.on('requestfailed', req => {
@@ -59,17 +70,19 @@ try {
     try {
       const response = await page.goto(`${baseUrl}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
       status = response?.status() ?? 0;
+      await page.waitForLoadState('load', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(350);
       bodyLength = (await page.locator('body').innerText()).replace(/\s+/g, ' ').trim().length;
       if (status >= 400 || status === 0) failure = `HTTP ${status}`;
       else if (bodyLength < 30) failure = `body too small (${bodyLength} chars)`;
       else if (errors.length) failure = errors[0];
       else if (failures.length) failure = failures[0];
+      else if (httpErrors.length) failure = httpErrors[0];
     } catch (error) {
       failure = error.message;
     }
 
-    results.push({ ...route, pass: !failure, status, bodyLength, errors, failures, failure });
+    results.push({ ...route, pass: !failure, status, bodyLength, errors, failures, httpErrors, failure });
     await page.close();
   }
 } finally {

@@ -41,7 +41,7 @@ for(const file of htmlFiles){
  if(!/<main\b/i.test(html))warn(`${file}: no main landmark found; verify accessibility intent`);
  let inlineIndex=0;
  if(shellSource) continue;
- for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(/\bsrc\s*=/.test(match[1]))continue;const code=match[2].trim();if(code)checkInlineScript(file,code,++inlineIndex)}
+ for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(/\bsrc\s*=/.test(match[1]))continue;const type=(match[1].match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]||'').toLowerCase();if(type&&type!=='text/javascript'&&type!=='application/javascript'&&type!=='module')continue;const code=match[2].trim();if(code)checkInlineScript(file,code,++inlineIndex)}
  for(const m of html.matchAll(/(?:src|href)=["']([^"'#?]+)(?:\?[^"']*)?["']/gi)){const ref=m[1];if(!ref.startsWith('/')||ref.startsWith('//')||/^(https?:|mailto:|tel:|data:|javascript:)/i.test(ref))continue;if(ref==='/_vercel/insights/script.js')continue;if(virtualRoutes.has(ref))continue;const local=ref.slice(1);if(local.includes('['))continue;if(!exists(local))fail(`${file}: missing local asset/reference ${ref}`)}
  if(!shellSource&&/id=["']sideMenu["']|aria-label=["']Primary navigation["']|homepage-final-fixes\.js/i.test(html))fail(`${file}: legacy shell marker detected`);
 }

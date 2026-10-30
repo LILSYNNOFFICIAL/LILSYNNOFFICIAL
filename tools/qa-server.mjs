@@ -41,10 +41,30 @@ function safePath(urlPath) {
 }
 
 const apiResponse = (req, res) => {
-  if ((req.url || '').split('?')[0] !== '/api/admin') return false;
-  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify({ ok: false, error: 'AUTH_REQUIRED' }));
-  return true;
+  const route = (req.url || '').split('?')[0];
+  if (route === '/api/admin') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ ok: false, error: 'AUTH_REQUIRED' }));
+    return true;
+  }
+  if (route === '/api/youtube') {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(root, 'latest-videos.json'), 'utf8'));
+      const items = (Array.isArray(data.videos) ? data.videos : []).map(video => ({
+        id: { videoId: String(video.id || '') },
+        snippet: { title: String(video.title || ''), publishedAt: String(video.publishedAt || ''), description: '' },
+        releaseTitle: String(video.release || video.title || ''),
+        releasedOn: String(video.releasedOn || '')
+      })).filter(video => video.id.videoId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ items, kind: 'youtube#searchListResponse', qaFixture: true }));
+    } catch {
+      res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'QA YouTube fixture unavailable' }));
+    }
+    return true;
+  }
+  return false;
 };
 
 const mime = {

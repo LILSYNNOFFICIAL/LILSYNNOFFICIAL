@@ -9,7 +9,6 @@ const css = read('site-shell.css');
 const index = read('index.html');
 const enhancements = read('index-enhancements.js');
 const releases = read('latest-releases.js');
-const vote = read('vote.html');
 const adminApi = read('api/admin.js');
 const command = read('command/index.html');
 const admin = read('command/admin/index.html');
@@ -49,13 +48,13 @@ assert.match(index, /LS_BG_STARS\.webm/);
 assert.match(index, /id=["']playerDock["']/i);
 assert.match(index, /id=["']playerClose["']/i);
 assert.match(index, /id=["']spotifyFrame["']/i);
-assert.match(index, /open\.spotify\.com\/embed\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i);
-for (const section of ['THE ARTIST','PERSONA OF THE MUSIC','TOOLKIT','VISUAL WORLD','CREATOR','VISION']) assert.match(enhancements, new RegExp(section));
-assert.match(enhancements, /ls-modal-backdrop/);
-assert.match(enhancements, /ls-artist-modal/);
-assert.match(enhancements, /role=\"dialog\"/);
-assert.match(enhancements, /aria-modal=\"true\"/);
-assert.match(enhancements, /document\.body\.appendChild\(back\)/);
+assert.match(index, /open\.spotify\.com\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i, 'homepage must retain the canonical Spotify artist destination');
+assert.match(index, /06 \/ ARTIST \+ WORLD/, 'homepage retains its current artist/world section');
+assert.match(index, /id=["']releaseFeed["']/);
+assert.match(index, /id=["']newReleaseFeed["']/);
+assert.match(enhancements, /ensureHomepageLayout/);
+assert.match(enhancements, /signal\.before\(orbit\)/);
+assert.match(enhancements, /querySelectorAll\('#universe'\)/);
 
 assert.match(releases, /\.slice\(0,8\)/);
 assert.match(releases, /new Set/);
@@ -71,11 +70,7 @@ for (const page of pages) {
 }
 assert.doesNotMatch(read('404.html'), /\/site-global\.js/i);
 
-// Vote has its own surface but must retain the canonical background and a real Contact target.
-assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i);
-assert.doesNotMatch(vote, /\/site-global\.js/i);
-assert.doesNotMatch(vote, /href=["']\/index\.html\/contact/i);
-assert.match(vote, /id=["']contact["']/i);
+// The legacy vote.html page is not part of the current tracked site surface.
 
 // Admin/auth route contract.
 assert.match(adminApi, /action==='login'/);
@@ -94,7 +89,7 @@ assert.match(designerJs, /\/api\/admin\?action=login/);
 assert.match(designerJs, /\/api\/admin\?action=session/);
 
 // Vercel route contract.
-for (const route of ['/command','/command/admin','/vote','/Suno','/api/admin']) assert.match(vercel, new RegExp(route.replace('/', '\\/')));
+for (const route of ['/command','/command/admin','/Suno','/api/admin']) assert.match(vercel, new RegExp(route.replace('/', '\\/')));
 
 // Workflow safety contract: old auto-mutators must stay gone and RERUN ALL JOBS is manual-only.
 const workflowDir = new URL('.github/workflows/', root);
