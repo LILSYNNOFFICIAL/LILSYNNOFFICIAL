@@ -71,6 +71,7 @@ try {
     try {
       const response = await page.goto(`${baseUrl}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
       status = response?.status() ?? 0;
+      await page.waitForLoadState('load', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(350);
       bodyLength = (await page.locator('body').innerText()).replace(/\s+/g, ' ').trim().length;
       if (status >= 400 || status === 0) failure = `HTTP ${status}`;
