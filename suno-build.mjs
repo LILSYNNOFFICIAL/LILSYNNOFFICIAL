@@ -1,8 +1,38 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import https from 'node:https';
+import { execFile } from 'node:child_process';
+import os from 'node:os';
+import { promisify } from 'node:util';
+const execFileAsync = promisify(execFile);
 const ROOT=process.cwd(),SUNO=path.join(ROOT,'Suno'),GUIDE='LILSYNNOFFICIAL/LIL-SYNN-s-Complete-Suno-V6-Guide';
-function get(url){return new Promise((resolve,reject)=>{https.get(url,{headers:{'User-Agent':'LIL-SYNN-Suno-Site-Builder'}},res=>{let data='';res.setEncoding('utf8');res.on('data',c=>data+=c);res.on('end',()=>{if(res.statusCode>=300&&res.statusCode<400&&res.headers.location)return get(res.headers.location).then(resolve,reject);if(res.statusCode!==200)return reject(new Error(`GET ${url} -> ${res.statusCode}`));resolve(data)})}).on('error',reject)})}
+async function fallbackTree(){
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'suno-guide-'));
+  try {
+    await execFileAsync('git', ['clone', '--depth', '1', '--no-tags', `https://github.com/${GUIDE}.git`, dir], { timeout: 120000, maxBuffer: 10 * 1024 * 1024 });
+    const tree = [];
+    async function walk(folder) {
+      for (const entry of await fs.readdir(folder, { withFileTypes: true })) {
+        if (entry.name === '.git') continue;
+        const full = path.join(folder, entry.name);
+        if (entry.isDirectory()) await walk(full);
+        else if (entry.isFile() && /\\.md$/i.test(entry.name)) tree.push({ type: 'blob', path: path.relative(dir, full).split(path.sep).join('/') });
+      }
+    }
+    await walk(dir);
+    return JSON.stringify({ tree });
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+}
+function get(url){return new Promise((resolve,reject)=>{https.get(url,{headers:{'User-Agent':'LIL-SYNN-Suno-Site-Builder'}},res=>{let data='';res.setEncoding('utf8');res.on('data',c=>data+=c);res.on('end',()=>{if(res.statusCode>=300&&res.statusCode<400&&res.headers.location)return get(res.headers.location).then(resolve,reject);if(res.statusCode!==200){
+  const detail=data.replace(/\\s+/g,' ').slice(0,500);
+  if(res.statusCode===403 && url.includes('/git/trees/main?recursive=1')){
+    return fallbackTree().then(resolve, fallbackError => reject(new Error(`GitHub tree API returned 403 and git-clone fallback failed: ${fallbackError.message}; API response: ${detail}`)));
+  }
+  return reject(new Error(`GET ${url} -> ${res.statusCode}: ${detail}`));
+}
+resolve(data)})}).on('error',reject)})}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
 function localHref(h){let x=String(h||'');const hash=(x.match(/(#.*)$/)||['',''])[1];x=x.replace(/#.*$/,'').replace(/^\.\//,'');if(/^\.\.\//.test(x))x=x.replace(/^\.\.\//,'');if(/\.md$/i.test(x))return `/suno/library/${x.replace(/\.md$/i,'')}/${hash}`;return null}
 const inline=s=>{let x=String(s);x=x.replace(/https?:\/\/(?:www\.)?github\.com\/[^)\s]+/gi,'').replace(/https?:\/\/raw\.githubusercontent\.com\/[^)\s]+/gi,'');x=x.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,label,href)=>{const local=localHref(href);if(local)return `<a href="${local}">${label}</a>`;if(/github\.com|githubusercontent\.com/i.test(href))return label;return `<a href="${href}">${label}</a>`});x=x.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>');return x};
