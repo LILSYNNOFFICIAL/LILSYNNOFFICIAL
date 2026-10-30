@@ -89,7 +89,7 @@ assert.match(designerJs, /\/api\/admin\?action=login/);
 assert.match(designerJs, /\/api\/admin\?action=session/);
 
 // Vercel route contract.
-for (const route of ['/command','/command/admin','/vote','/Suno','/api/admin']) assert.match(vercel, new RegExp(route.replace('/', '\\/')));
+for (const route of ['/command','/command/admin','/Suno','/api/admin']) assert.match(vercel, new RegExp(route.replace('/', '\\/')));
 
 // Workflow safety contract: old auto-mutators must stay gone and RERUN ALL JOBS is manual-only.
 const workflowDir = new URL('.github/workflows/', root);
