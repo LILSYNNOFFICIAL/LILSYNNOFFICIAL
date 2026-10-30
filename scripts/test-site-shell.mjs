@@ -48,7 +48,7 @@ assert.match(index, /LS_BG_STARS\.webm/);
 assert.match(index, /id=["']playerDock["']/i);
 assert.match(index, /id=["']playerClose["']/i);
 assert.match(index, /id=["']spotifyFrame["']/i);
-assert.match(index, /open\.spotify\.com\/embed\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i);
+assert.match(index, /open\.spotify\.com\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i, 'homepage must retain the canonical Spotify artist destination');
 for (const section of ['THE ARTIST','PERSONA OF THE MUSIC','TOOLKIT','VISUAL WORLD','CREATOR','VISION']) assert.match(enhancements, new RegExp(section));
 assert.match(enhancements, /ls-modal-backdrop/);
 assert.match(enhancements, /ls-artist-modal/);
