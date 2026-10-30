@@ -51,7 +51,7 @@ try {
       if (msg.type() !== 'error') return;
       const text = msg.text();
       if (backendSurface && /Failed to load resource: the server responded with a status of 404 \(Not Found\)/i.test(text)) return;
-      if (!/Failed to load resource: the server responded with a 404 \\(Not Found\\)/i.test(text)) errors.push(`console: ${text}`);
+      if (!/Failed to load resource:.*404/i.test(text)) errors.push(`console: ${text}`);
     });
     page.on('response', response => {
       const url = new URL(response.url());
