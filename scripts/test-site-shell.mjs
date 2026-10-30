@@ -9,7 +9,6 @@ const css = read('site-shell.css');
 const index = read('index.html');
 const enhancements = read('index-enhancements.js');
 const releases = read('latest-releases.js');
-const vote = read('vote.html');
 const adminApi = read('api/admin.js');
 const command = read('command/index.html');
 const admin = read('command/admin/index.html');
@@ -71,11 +70,7 @@ for (const page of pages) {
 }
 assert.doesNotMatch(read('404.html'), /\/site-global\.js/i);
 
-// Vote has its own surface but must retain the canonical background and a real Contact target.
-assert.match(vote, /LS_BG_STARS\.webm|class=["']bg-stars["']/i);
-assert.doesNotMatch(vote, /\/site-global\.js/i);
-assert.doesNotMatch(vote, /href=["']\/index\.html\/contact/i);
-assert.match(vote, /id=["']contact["']/i);
+// The legacy vote.html page is not part of the current tracked site surface.
 
 // Admin/auth route contract.
 assert.match(adminApi, /action==='login'/);
