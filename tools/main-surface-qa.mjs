@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import { chromium } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
 
 const sourceChecks = [
   ['command/index.html', fs.existsSync('command/index.html')],
   ['command/admin/index.html', fs.existsSync('command/admin/index.html')],
   ['command/admin/admin.js', fs.existsSync('command/admin/admin.js')],
+  ['api/admin.js', fs.existsSync('api/admin.js')],
   ['Suno/index.html', fs.existsSync('Suno/index.html')],
   ['vercel.json', fs.existsSync('vercel.json')],
   ['vercel.json /Suno redirect contract', fs.existsSync('vercel.json') && fs.readFileSync('vercel.json', 'utf8').includes('"/Suno"')],
@@ -12,12 +14,17 @@ const sourceChecks = [
   ['vercel.json /command/admin rewrite contract', fs.existsSync('vercel.json') && fs.readFileSync('vercel.json', 'utf8').includes('/command/admin')]
 ];
 for (const [name, pass] of sourceChecks) console.log(`${pass ? 'PASS' : 'FAIL'} | SOURCE | ${name}`);
-if (sourceChecks.some(([, pass]) => !pass)) process.exit(1);
+let adminApiSyntax = true;
+try { execFileSync(process.execPath, ['--check', 'api/admin.js'], { stdio: 'pipe' }); }
+catch (error) { adminApiSyntax = false; console.error(`FAIL | SOURCE | api/admin.js syntax | ${String(error.stderr || error.message)}`); }
+console.log(`${adminApiSyntax ? 'PASS' : 'FAIL'} | SOURCE | api/admin.js syntax`);
+if (sourceChecks.some(([, pass]) => !pass) || !adminApiSyntax) process.exit(1);
 
 const baseUrl = (process.env.QA_BASE_URL || 'http://127.0.0.1:4173').replace(/\/$/, '');
 const baseOrigin = new URL(baseUrl).origin;
 const routes = [
   { name: 'MAIN', path: '/' },
+  { name: 'MAIN HEALTH', path: '/site-health.html' },
   { name: 'COMMAND', path: '/command/' },
   { name: 'ADMIN', path: '/command/admin/' },
   { name: 'SUNO', path: '/Suno/' },
@@ -83,12 +90,13 @@ for (const result of results) {
 
 const grouped = {
   MAIN: results.find(r => r.name === 'MAIN')?.pass ?? false,
+  MAIN_HEALTH: results.find(r => r.name === 'MAIN HEALTH')?.pass ?? false,
   COMMAND: results.find(r => r.name === 'COMMAND')?.pass ?? false,
   ADMIN: results.find(r => r.name === 'ADMIN')?.pass ?? false,
   SUNO: results.filter(r => r.name.startsWith('SUNO')).every(r => r.pass)
 };
 
-console.log(`QA_MAIN=${grouped.MAIN ? 'PASS' : 'FAIL'}`);
+console.log(`QA_MAIN=${grouped.MAIN && grouped.MAIN_HEALTH ? 'PASS' : 'FAIL'}`);
 console.log(`QA_COMMAND=${grouped.COMMAND ? 'PASS' : 'FAIL'}`);
 console.log(`QA_ADMIN=${grouped.ADMIN ? 'PASS' : 'FAIL'}`);
 console.log(`QA_SUNO=${grouped.SUNO ? 'PASS' : 'FAIL'}`);
