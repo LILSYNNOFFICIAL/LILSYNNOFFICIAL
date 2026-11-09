@@ -109,7 +109,7 @@
       "apple": "https://music.apple.com/us/album/enough/1880555015",
       "origin": "https://www.youtube.com/playlist?list=OLAK5uy_lpVcEj_2qk_7o-lWEwzZUdQHxIjZxel2w"
     },
-    "Touching to the North": {
+    "Touching to the North": {"soundcloudOnly":true,
       "type": "ALBUM",
       "tracks": [
         "Astral Signal",
