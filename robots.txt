@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+Disallow: /command/
+Disallow: /command
+Disallow: /admin
+Disallow: /api/
+Disallow: /site-health
+Disallow: /site-health.html
+Disallow: /presave
+Disallow: /404
+
 Sitemap: https://lilsynn.com/sitemap.xml

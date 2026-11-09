@@ -7,17 +7,17 @@
     {
       "source": "/archive",
       "destination": "/releases",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/archive/",
       "destination": "/releases",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/archive.html",
       "destination": "/releases",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/:path*",
@@ -29,6 +29,11 @@
       ],
       "destination": "https://lilsynn.com/:path*",
       "permanent": true
+    },
+    {
+      "source": "/presave.html",
+      "destination": "https://hyperfollow.com/lilsynnofficial",
+      "permanent": false
     },
     {
       "source": "/presave",
@@ -130,7 +135,7 @@
     },
     {
       "source": "/assets/2/LS1.png",
-      "destination": "/assets/2/LS3.png"
+      "destination": "/assets/2/LS3.webp"
     },
     {
       "source": "/suno/deep-dives/ultimate-control",

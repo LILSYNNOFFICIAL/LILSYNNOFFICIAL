@@ -2,48 +2,308 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lilsynn.com/</loc>
-    <lastmod>2026-10-03T00:00:00Z</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://lilsynn.com/press</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://lilsynn.com/releases</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://lilsynn.com/release</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://lilsynn.com/press</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://lilsynn.com/gallery</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://lilsynn.com/universe</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://lilsynn.com/lore</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://lilsynn.com/coming_soon</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://lilsynn.com/special_access</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/privacy</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/terms</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Echoes%20of%20Us</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Heavy%20(Acoustic%20Version)</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Memory%20of%20You</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Never%20Known</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=HOME%20(ACOUSTIC%20VERSION)</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=I%20DID%20IT%20AGAIN</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Rescue%20You%20(Acoustic%20Version)</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Somewhere%20In-Between</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Black%20Glass</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Hello%20Goodbye</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Static%20On%20My%20Tongue</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=It's%20In%20Her%20Eyes</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Fade%20Into%20You</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Heal</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Back%20From%20The%20Blackout</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Burn%20It%20Down</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Hindsight</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=When%20The%20World%20Gets%20Loud</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Light</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Manic%20Side</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Don't%20Say%20It</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Don't%20Let%20Me%20Go</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Signal%20Light%20Sermon</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Lost%20In%20The%20Fog</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=In%20The%20End</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Stay%20Here</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=IF%20U%20STAY%20DED</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Home</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Enough</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=My%20Light</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Ties%20Remain</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Gravity%20and%20Ghosts</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Already%20Famous</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Word%20to%20Word</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Shattered</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Mirrors</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Faith</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Through%20the%20Flames</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Wounds</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Discernment</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lilsynn.com/release?id=Touching%20to%20the%20North</loc>
+    <lastmod>2026-11-09T20:45:10Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
