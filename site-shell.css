@@ -122,32 +122,37 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   #ls-template-menu .ls-menu-card>a:hover span,#ls-template-menu .ls-menu-card>a:focus-visible span{color:#ff4fd8!important}
 }
 
-/* SIQA verification badge: visible, larger, centered */
+/* SIQA verification badge: the artwork itself, large, with no button chrome. */
 .ls-siqa-badge{
-  width:72px!important;
-  max-width:72px!important;
-  height:72px!important;
-  max-height:72px!important;
+  width:auto!important;
+  max-width:92vw!important;
+  height:auto!important;
+  max-height:none!important;
   min-width:0!important;
   min-height:0!important;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  margin-left:auto!important;
-  margin-right:auto!important;
+  margin:16px auto 10px!important;
   padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
 }
+.ls-siqa-badge a{display:block!important;margin:0!important;padding:0!important;border:0!important;background:none!important;line-height:0!important}
 .ls-siqa-badge img{
-  width:72px!important;
-  max-width:72px!important;
-  height:72px!important;
-  max-height:72px!important;
+  display:block!important;
+  width:260px!important;
+  max-width:82vw!important;
+  height:auto!important;
+  max-height:none!important;
   min-width:0!important;
   min-height:0!important;
-  display:block!important;
   object-fit:contain!important;
   object-position:center!important;
   border:0!important;
   padding:0!important;
   margin:0 auto!important;
 }
+@media(max-width:560px){.ls-siqa-badge img{width:210px!important}}

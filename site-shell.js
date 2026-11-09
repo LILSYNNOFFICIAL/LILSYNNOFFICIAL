@@ -6,7 +6,7 @@ const excluded=new Set(['/suno','/backup','/template','/template_bu']);
 if(excluded.has(route)||route.startsWith('/suno/'))return;
 
 const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const LS_BG_STARS='/assets/mov/LS_BG_STARS.webm';
-const TEMPLATE_URL=ROOT('/template.html')+'?template=20261109';
+const TEMPLATE_URL=ROOT('/template.html')+'?template=20261112';
 
 function rewriteTemplateUrls(root){
   root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{
@@ -52,7 +52,7 @@ function addTemplateStyles(doc){
   if(!document.querySelector('link[data-ls-template-shell]')){
     const l=document.createElement('link');
     l.rel='stylesheet';
-    l.href=ROOT('/site-shell.css')+'?v=20260919';
+    l.href=ROOT('/site-shell.css')+'?v=20261112';
     l.dataset.lsTemplateShell='1';
     document.head.appendChild(l);
   }

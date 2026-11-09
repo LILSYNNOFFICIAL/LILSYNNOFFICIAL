@@ -151,6 +151,9 @@ site-shell.js
 - The shell must not manufacture giant empty document height; #template-content is a normal content-flow container.
 - The current hamburger category links for **MUSIC, VISUALS, UNIVERSE, and RECORDS** are centered, with their navigation arrows independently aligned.
 - The canonical PRE-SAVE destination is https://hyperfollow.com/lilsynnofficial.
+- The hamburger button (`#ls-template-menu-open`) is mounted at **every** viewport width; only the horizontal category navigation hides at ≤900px. On desktop the drawer opens as the same right-hand panel as on mobile.
+- Rules that must survive injection belong in `template.html`'s `<head>`: `site-shell.js` copies only `<head><style>` nodes, so a rule placed at the end of `<body>` is silently dropped on every page that uses the shell.
+- Shell styles, the template, and each page's `site-shell.js?v=` key move together. Current key: `20261112` (`template=20261112`, `site-shell.css?v=20261112`). Bump all three in one change or browsers keep serving the previous shell.
 
 ### Protected surfaces
 
@@ -1258,6 +1261,8 @@ The Suno knowledge base is a parallel living documentation/creator system rather
 
 # 🧾 Important Recent Repository State
 
+**2026-11 homepage / release pass.** The hero block and the section heads (NEW RELEASES, WATCH, RELEASES, VISUAL ARCHIVE) are centered. The SIQA verification badge — a wide `SIQA VERIFIED ARTIST` lockup at `assets/images/icons/siqa-verified.webp` — renders as artwork at 260px wide (210px at ≤560px) with no button chrome. `Echoes of Us` is in the canonical catalog with its own artwork (`assets/images/icons/album_art/Echoes of Us.webp`) plus Spotify, Apple Music and YouTube destinations; release cards and `release.html` fall back to the channel when a release has no video of its own. The hamburger was restored at every width after a leftover `min-width:901px` rule kept hiding it, and every root page now shares the shell cache key `20261112`.
+
 The Main Surface QA system was added and its detached-HEAD push behavior was corrected before the homepage promotion.
 
 The current homepage promotion was completed on `main` by moving the former `index2.html` design into `index.html` and preserving the old homepage as `index3.html`.
@@ -1386,6 +1391,8 @@ The hamburger is a **separate** navigation system.
 It must visibly exist, open, close, contain navigation, remain accessible, and work without replacing or destroying the horizontal navigation.
 
 Do not simplify the site by removing one of the two required menus.
+
+The hamburger must stay visible at **all** widths, desktop included. It may never be hidden by a `min-width` media query, and its drawer must still be able to open above 900px.
 
 ## 5. Navigation Typography
 
