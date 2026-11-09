@@ -1,8 +1,14 @@
 {
-  "generatedAt": "2026-11-08T15:40:08.184402+00:00",
+  "generatedAt": "2026-11-09T15:27:26.261598+00:00",
   "source": "https://www.youtube.com/@LILSYNNOFFICIAL/releases",
   "selection": "canonical release-catalog order; YouTube Releases tab used only to resolve video IDs; unmatched catalog entries are skipped",
   "videos": [
+    {
+      "id": "0EpsP7QUDIE",
+      "title": "Echoes of Us",
+      "publishedAt": "2026-11-08T10:04:44Z",
+      "release": "Echoes of Us"
+    },
     {
       "id": "PWOH5Mgmyvo",
       "title": "Heavy (Acoustic)",
@@ -50,12 +56,6 @@
       "title": "Black Glass",
       "publishedAt": "2026-08-11T10:01:50Z",
       "release": "Black Glass"
-    },
-    {
-      "id": "VwDzW1g08oo",
-      "title": "Hello Goodbye",
-      "publishedAt": "2026-09-09T02:46:12Z",
-      "release": "Hello Goodbye"
     }
   ]
 }
