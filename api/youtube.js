@@ -32,7 +32,7 @@ module.exports = async function handler(req,res){
    const byRelease=new Map(),byTrack=new Map(),orderByNorm=new Map();
    (c?.order||[]).forEach(t=>orderByNorm.set(norm(t),t));
    Object.entries(c?.groups||{}).forEach(([release,g])=>{
-     const entry={release,type:String(g?.type||'').toUpperCase()};
+     const entry={release,type:String(g?.type||'').toUpperCase(),playlist:(String(g?.origin||'').match(/[?&]list=([A-Za-z0-9_-]+)/)||[])[1]||'',trackCount:(g?.tracks||[]).length};
      byRelease.set(norm(release),entry);
      (g?.tracks||[]).forEach(t=>{const k=norm(t);if(k&&!byRelease.has(k))byTrack.set(k,entry)});
    });
@@ -69,8 +69,11 @@ module.exports = async function handler(req,res){
      const match=albumEntry||resolve(title)||seeded;
      const releaseTitle=match?.release||title;
      const releaseType=match?.type||'';
+     const releaseEntry=byRelease.get(norm(releaseTitle))||byTrack.get(norm(releaseTitle));
+     const releasePlaylist=releaseEntry?.playlist||'';
+     const trackCount=releaseEntry?.trackCount||0;
      const releasedOn=releaseDateFromDescription(x?.snippet?.description)||latestMeta?.releasedOn||'';
-     return {...x,releaseTitle,releaseType,releasedOn};
+     return {...x,releaseTitle,releaseType,releasePlaylist,trackCount,releasedOn};
    });
  };
  // One card per release, newest first: collapse before slicing so a release with
