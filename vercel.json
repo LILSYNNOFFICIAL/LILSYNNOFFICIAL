@@ -5,6 +5,21 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/archive",
+      "destination": "/releases",
+      "permanent": false
+    },
+    {
+      "source": "/archive/",
+      "destination": "/releases",
+      "permanent": false
+    },
+    {
+      "source": "/archive.html",
+      "destination": "/releases",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "has": [
         {

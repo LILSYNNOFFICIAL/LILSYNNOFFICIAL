@@ -25,7 +25,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const results = [];
-  const seeds = ['/', '/index.html', '/archive.html', '/release.html', '/gallery.html', '/universe.html', '/special_access.html', '/releases.html'];
+  const seeds = ['/', '/index.html', '/release.html', '/gallery.html', '/universe.html', '/special_access.html', '/releases.html'];
   const same = value => { try { const u = new URL(value, location.origin); return u.origin === location.origin; } catch { return false; } };
   const isHtml = value => /\.html?$|\/$/.test(new URL(value, location.origin).pathname);
   const clean = value => { const u = new URL(value, location.origin); u.hash=''; return u.pathname || '/'; };

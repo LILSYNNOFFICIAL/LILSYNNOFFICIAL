@@ -16,7 +16,7 @@ const designer = read('command/designer.html');
 const designerJs = read('command/designer.js');
 const vercel = read('vercel.json');
 
-const pages = ['archive.html','releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html','videos.html'];
+const pages = ['releases.html','gallery.html','universe.html','release.html','special_access.html','privacy.html','terms.html','coming_soon.html','videos.html'];
 
 // Canonical shell contract.
 assert.match(shell, /LS_BG_STARS\.webm/);

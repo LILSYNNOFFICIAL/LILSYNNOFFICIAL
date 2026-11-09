@@ -11,7 +11,7 @@ const jsFiles=[];
 const walk=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','Suno'].includes(entry.name))continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')||entry.name.endsWith('.mjs'))jsFiles.push(full)}};
 walk(root);
 
-const canonicalPages=new Set(['/archive.html','/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html']);
+const canonicalPages=new Set(['/releases.html','/gallery.html','/universe.html','/release.html','/special_access.html','/privacy.html','/terms.html','/coming_soon.html','/videos.html']);
 const backgroundOnlyPages=new Set(['/vote.html']);
 const virtualRoutes=new Set(['/vote','/vote/','/suno','/suno/','/command','/command/','/admin','/admin/','/site-doctor','/site-doctor/']);
 const checkInlineScript=(file,code,index)=>{const temp=path.join(os.tmpdir(),`lilsynn-inline-${process.pid}-${index}.js`);try{fs.writeFileSync(temp,code,'utf8');execFileSync(process.execPath,['--check',temp],{stdio:'pipe'})}catch{fail(`${file}: inline JavaScript syntax check failed (script ${index})`)}finally{try{fs.unlinkSync(temp)}catch{}}};
@@ -37,7 +37,7 @@ for(const file of htmlFiles){
  if(descriptions.length>1)fail(`${file}: duplicate meta description tags`);
  const canonicals=[...html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi)];
  if(canonicals.length>1)fail(`${file}: duplicate canonical links`);
- if(['archive.html','release.html','gallery.html','universe.html'].includes(file)&&!exists('release-catalog.json'))fail(`${file}: release catalog dependency missing`);
+ if(['release.html','gallery.html','universe.html'].includes(file)&&!exists('release-catalog.json'))fail(`${file}: release catalog dependency missing`);
  if(!/<main\b/i.test(html))warn(`${file}: no main landmark found; verify accessibility intent`);
  let inlineIndex=0;
  if(shellSource) continue;
@@ -56,7 +56,7 @@ if(!exists('site-shell.css'))fail('site-shell.css missing');
 if(!exists('assets/mov/LS_BG_STARS.webm'))fail('assets/mov/LS_BG_STARS.webm missing');
 if(!exists('assets/images/icons/LS_LOGO.png'))fail('LS_LOGO.png missing');
 if(!exists('assets/images/icons/LS_HEADPHONES.png'))fail('LS_HEADPHONES.png missing');
-for(const required of ['archive.html','release.html','gallery.html','universe.html','latest-releases.js','music-random.js','site-polish.js'])if(!exists(required))fail(`${required} missing`);
+for(const required of ['release.html','gallery.html','universe.html','latest-releases.js','music-random.js','site-polish.js'])if(!exists(required))fail(`${required} missing`);
 if(exists('site-global.js'))fail('site-global.js must remain removed; canonical shell is site-shell.js');
 if(exists('site-global.css'))fail('site-global.css must remain removed; canonical shell is site-shell.css');
 if(exists('latest-releases.js')){const l=fs.readFileSync('latest-releases.js','utf8');for(const platform of ['SPOTIFY','APPLE MUSIC','YOUTUBE'])if(!l.includes(`stream('${platform}'`))fail(`latest-releases.js: ${platform} CTA missing`);}
