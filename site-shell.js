@@ -118,6 +118,8 @@ function removeLegacyShell(){
     '.ls-canonical-topbar',
     '.ls-canonical-footer',
     '#ls-mobile-menu',
+    '#ls-template-menu',
+    '.ls-template-menu',
     '#menuPanel',
     '.topbar',
     '.nav-stack',
@@ -201,7 +203,9 @@ async function injectTemplate(){
     addTemplateStyles(doc);
     removeLegacyShell();
 
-    const content=document.createElement('main');
+    // Pages that already ship a <main> keep it as their single landmark; only
+    // bare pages get wrapped so every route exposes exactly one main region.
+    const content=document.createElement(document.querySelector('main')?'div':'main');
     content.id='template-content';
     content.dataset.lsTemplateContent='1';
 

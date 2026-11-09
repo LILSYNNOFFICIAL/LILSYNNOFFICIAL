@@ -44,6 +44,9 @@ assert.match(css, /body\.ls-canonical-page\{[^}]*background:transparent!importan
 
 // Homepage / artist UI contract.
 assert.match(index, /homepage-final-fix\.js/);
+assert.doesNotMatch(index, /id=["']ls-template-menu["']/, 'homepage must not ship its own copy of the canonical menu');
+assert.doesNotMatch(index, /data-ls-global-(?:header|footer)/, 'homepage must not ship its own copy of the canonical header/footer');
+assert.match(shell, /document\.createElement\(document\.querySelector\('main'\)\?'div':'main'\)/, 'shell must not nest a second <main> around a page that already has one');
 assert.match(index, /LS_BG_STARS\.webm/);
 assert.match(index, /id=["']playerDock["']/i);
 assert.match(index, /id=["']playerClose["']/i);

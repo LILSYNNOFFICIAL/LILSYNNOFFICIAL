@@ -1,5 +1,6 @@
 {
   "order": [
+    "Echoes of Us",
     "Heavy (Acoustic Version)",
     "Memory of You",
     "Never Known",
@@ -136,6 +137,22 @@
       "tracks": [
         "Heavy (Acoustic Version)"
       ]
+    },
+    "Echoes of Us": {
+      "type": "ALBUM",
+      "tracks": [
+        "Keep it Going",
+        "Out of the Blue",
+        "Eight Like Infinity",
+        "Where I Belong",
+        "Finding You",
+        "Stars Align",
+        "Echoes of Us",
+        "As The Years Pass By",
+        "Your Name",
+        "In Another Time"
+      ],
+      "origin": "https://www.youtube.com/playlist?list=OLAK5uy_kb4u2aXV7biMk83i3KNPQXsGPh6zSG7vs"
     }
   },
   "spotify": {
