@@ -75,6 +75,7 @@ if (!window.__lsSiteMotionLoaded) {
       .replace(/[^a-z0-9]+/g, '');
 
     const singleArt = {
+      echoesofus: 'Echoes of Us.webp',
       neverknown: 'Never Known_album_cover.webp',
       homeacousticversion: 'home_acoustic_version.webp',
       ididitagain: 'I DID IT AGAIN.webp',

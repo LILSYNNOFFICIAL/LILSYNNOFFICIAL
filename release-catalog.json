@@ -156,7 +156,10 @@
         "Your Name",
         "In Another Time"
       ],
-      "origin": "https://www.youtube.com/playlist?list=OLAK5uy_kb4u2aXV7biMk83i3KNPQXsGPh6zSG7vs"
+      "origin": "https://www.youtube.com/playlist?list=OLAK5uy_kb4u2aXV7biMk83i3KNPQXsGPh6zSG7vs",
+      "spotify": "https://open.spotify.com/album/7HPi70MuuXFvSm8bSZ6oOk",
+      "apple": "https://music.apple.com/us/album/echoes-of-us/6830461499",
+      "youtube": "https://www.youtube.com/watch?v=cPlMLCBGZTE&list=OLAK5uy_kb4u2aXV7biMk83i3KNPQXsGPh6zSG7vs"
     }
   },
   "spotify": {
@@ -322,6 +325,7 @@
   },
   "indexLimit": 6,
   "artwork": {
+    "echoesofus": "Echoes of Us.webp",
     "neverknown": "Never Known_album_cover.webp",
     "homeacousticversion": "home_acoustic_version.webp",
     "ididitagain": "I DID IT AGAIN.webp",
