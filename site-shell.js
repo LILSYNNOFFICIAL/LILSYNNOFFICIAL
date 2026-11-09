@@ -239,6 +239,18 @@ async function injectTemplate(){
 
     wireMenu(document.body);
     normalize();
+    // Activate the hidden Metricool footer widget after the canonical footer is mounted.
+    // Recreate its script node because scripts cloned from the fetched template do not execute.
+    const metricoolWidget=document.querySelector('[data-metricool-tracker]');
+    if(metricoolWidget&&!window.__lsMetricoolTrackerLoaded){
+      const widgetScript=metricoolWidget.querySelector('script');
+      if(widgetScript){
+        window.__lsMetricoolTrackerLoaded=true;
+        const liveScript=document.createElement('script');
+        liveScript.textContent=widgetScript.textContent;
+        document.body.appendChild(liveScript);
+      }
+    }
     document.dispatchEvent(new CustomEvent('ls-template-applied'));
   }catch(err){
     console.error('[LIL SYNN] Universal template injection failed:',err);
