@@ -139,7 +139,7 @@ function wireMenu(root){
 
   // Drawer geometry is set inline so no legacy stylesheet rule can pin it back
   // to the old full-width card. Inline !important outranks every sheet.
-  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'2147483641','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
+  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','box-sizing':'border-box','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'2147483641','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
   const setMenu=v=>{
     if(v)Object.entries(MENU_PROPS).forEach(([k,val])=>menu.style.setProperty(k,val,'important'));
     else Object.keys(MENU_PROPS).forEach(k=>menu.style.removeProperty(k));
