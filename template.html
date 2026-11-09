@@ -154,7 +154,7 @@ main#template-content{display:block!important;position:relative!important;flex:n
   .ls-template-menu.open{transform:translateX(0)!important}
 }
 @media(max-width:900px){#ls-template-menu{display:none!important;inset:0 0 0 auto!important;width:min(360px,88vw)!important;height:100dvh!important;max-height:100dvh!important;border-radius:18px 0 0 18px!important;padding:18px!important;box-sizing:border-box!important;transform:none!important}#ls-template-menu.open{display:block!important;transform:none!important}}
-</style><style id="ls-nav-priority">#ls-template-menu-open{display:inline-flex!important}@media(max-width:900px){.ls-desktop-nav{display:none!important}}</style></head>
+</style><style id="ls-nav-small">@media(max-width:900px){header.ls-canonical-topbar .ls-desktop-nav{display:none!important}}</style></head>
 <body class="ls-canonical-page">
 <div id="ls-bg-layer" aria-hidden="true"><video autoplay muted loop playsinline preload="auto"><source src="/assets/mov/LS_BG_STARS.webm" type="video/webm"></video></div>
 <div class="ls-particles" aria-hidden="true"></div>
@@ -278,6 +278,6 @@ main#template-content{display:block!important;position:relative!important;flex:n
  document.addEventListener('click',e=>{if(!e.target.closest('.ls-template-cat'))document.querySelectorAll('.ls-template-cat.open').forEach(cat=>{cat.classList.remove('open');cat.querySelector(':scope > button')?.setAttribute('aria-expanded','false')})});
 };if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()})();
 </script>
-</body>
+<style id="ls-nav-priority">#ls-template-menu-open{display:inline-flex!important}@media(max-width:900px){header.ls-canonical-topbar .ls-desktop-nav{display:none!important}.ls-nav-inner{gap:10px!important}}</style></body>
 </html>
 
