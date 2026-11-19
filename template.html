@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/site-shell.css?v=20260919">
+<link rel="stylesheet" href="/site-shell.css?v=20261118-menu-layer">
 <style>
 :root{--ls-pink:#ff008f;--ls-glow:#ff4fd8;--ls-panel:rgba(7,7,11,.96);--ls-line:rgba(255,255,255,.11)}
 html,body{margin:0!important;padding:0!important;min-height:0!important;height:auto!important}
@@ -36,7 +36,7 @@ main#template-content{display:block!important;position:relative!important;flex:n
 .ls-template-cta{display:inline-flex;align-items:center;justify-content:center;padding:8px 11px;border:1px solid var(--ls-pink);border-radius:7px;background:var(--ls-pink);color:#050507!important;text-decoration:none;font:800 9px Rajdhani;letter-spacing:.12em;white-space:nowrap;box-shadow:0 0 18px rgba(255,0,143,.13)}
 .ls-template-cta:hover,.ls-template-cta:focus-visible{background:var(--ls-glow);border-color:var(--ls-glow);transform:translateY(-1px);outline:none}
 .ls-template-hamburger{width:40px;height:40px;display:grid;place-content:center;gap:4px;flex:0 0 auto;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.28);cursor:pointer}
-.ls-template-hamburger span{display:block;width:18px;height:2px;background:#ff008f;box-shadow:0 0 7px rgba(255,0,143,.75);transition:transform .2s ease,opacity .2s ease}
+.ls-template-hamburger img{display:block;width:25px;height:25px;object-fit:contain;transform:rotate(180deg);transition:transform .2s ease}.ls-template-hamburger:hover img{transform:rotate(180deg) scale(1.08)}
 .ls-template-hamburger:hover{border-color:rgba(255,0,143,.55);background:rgba(255,0,143,.06)}
  .ls-template-menu{position:fixed;inset:0 0 0 auto;box-sizing:border-box;display:none;width:min(360px,88vw);height:100dvh;max-height:100dvh;z-index:2147483641;background:linear-gradient(145deg,rgba(255,0,143,.22),rgba(42,5,36,.78) 42%,rgba(8,8,13,.88));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,0,143,.28);border-radius:18px 0 0 18px;box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 50px rgba(255,0,143,.08);padding:18px;transform:none;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s ease;overflow:auto}
 .ls-template-menu.open{display:block;transform:none;opacity:1;visibility:visible;pointer-events:auto}
@@ -172,7 +172,7 @@ main#template-content{display:block!important;position:relative!important;flex:n
       <span class="ls-template-cat"><button type="button" aria-expanded="false" aria-controls="ls-menu-listen">LISTEN ▾</button><div class="ls-template-cat-menu ls-menu-streams" id="ls-menu-listen" role="menu"><div class="ls-menu-section"><div class="ls-menu-label">STREAM</div><a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer" role="menuitem">SPOTIFY <span>↗</span></a><a href="https://music.apple.com/us/artist/lil-synn/1850720041" target="_blank" rel="noopener noreferrer" role="menuitem">APPLE MUSIC <span>↗</span></a><a href="https://music.youtube.com/@LILSYNNOFFICIAL" target="_blank" rel="noopener noreferrer" role="menuitem">YOUTUBE MUSIC <span>↗</span></a><a href="https://tidal.com/artist/69300200" target="_blank" rel="noopener noreferrer" role="menuitem">TIDAL <span>↗</span></a><a href="https://music.amazon.com/artists/B0FZB8RWV8/lil-synn" target="_blank" rel="noopener noreferrer" role="menuitem">AMAZON MUSIC <span>↗</span></a><a href="https://soundcloud.com/lilsynnofficial" target="_blank" rel="noopener noreferrer" role="menuitem">SOUNDCLOUD <span>↗</span></a></div></div></span>
     </nav>
 
-    <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><span></span><span></span><span></span></button>
+    <button class="ls-template-hamburger" id="ls-template-menu-open" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ls-template-menu"><img src="/assets/images/icons/UP_ARROWS.png" alt="" aria-hidden="true"></button>
   </div>
   <div class="ls-template-actionbar" aria-label="Primary calls to action"><a href="https://hyperfollow.com/lilsynnofficial" target="_blank" rel="noopener noreferrer">PRE-SAVE</a></div>
 </header>
