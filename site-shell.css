@@ -156,3 +156,27 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
   margin:0 auto!important;
 }
 @media(max-width:560px){.ls-siqa-badge img{width:210px!important}}
+
+
+/* 2026-11-18 navigation dropdown stacking repair.
+   The dropdown is inside the fixed header, so its z-index cannot escape
+   the header's stacking context. Raise the header itself above page layers. */
+@media (min-width:901px){
+  body.ls-canonical-page .ls-canonical-topbar{
+    z-index:2147483647!important;
+    overflow:visible!important;
+  }
+  body.ls-canonical-page .ls-canonical-topbar .ls-template-cat-menu{
+    position:absolute!important;
+    z-index:2147483647!important;
+    isolation:isolate!important;
+  }
+  body.ls-canonical-page .ls-canonical-topbar .ls-template-cat.open{
+    z-index:2147483647!important;
+  }
+}
+/* Keep the mobile drawer above its header, where the desktop dropdowns are hidden. */
+@media (max-width:900px){
+  body.ls-canonical-page .ls-canonical-topbar{z-index:2147483000!important}
+  body.ls-canonical-page #ls-template-menu{z-index:2147483647!important}
+}
