@@ -184,7 +184,7 @@ body.ls-canonical-page>.ls-canonical-footer{margin-top:0!important;min-height:0!
 
 /* 2026-11-18 final navigation layer + arrow-button repair. */
 body.ls-canonical-page .ls-canonical-topbar{position:fixed!important;z-index:2147483647!important;isolation:isolate!important;overflow:visible!important;}
-body.ls-canonical-page .ls-canonical-topbar .ls-nav-inner{position:relative!important;z-index:1!important;overflow:visible!important;}
+body.ls-canonical-page .ls-canonical-topbar .ls-nav-inner{position:relative!important;z-index:2147483646!important;overflow:visible!important;}
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat{position:relative!important;z-index:1!important;}
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat.open{z-index:2147483647!important;}
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat-menu{position:absolute!important;z-index:2147483647!important;isolation:isolate!important;}
