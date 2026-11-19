@@ -52,7 +52,7 @@ function addTemplateStyles(doc){
   if(!document.querySelector('link[data-ls-template-shell]')){
     const l=document.createElement('link');
     l.rel='stylesheet';
-    l.href=ROOT('/site-shell.css')+'?v=20261112';
+    l.href=ROOT('/site-shell.css')+'?v=20261118-menu-layer';
     l.dataset.lsTemplateShell='1';
     document.head.appendChild(l);
   }
@@ -63,7 +63,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483000!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483641!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:100!important}body.ls-canonical-page #template-content{
+body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483647!important;overflow:visible!important;isolation:isolate!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483641!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:100!important}body.ls-canonical-page #template-content{
   display:block!important;
   position:relative!important;
   width:100%!important;
