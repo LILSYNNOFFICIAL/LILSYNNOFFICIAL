@@ -6,7 +6,7 @@ const excluded=new Set(['/suno','/backup','/template','/template_bu']);
 if(excluded.has(route)||route.startsWith('/suno/'))return;
 
 const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const LS_BG_STARS='/assets/mov/LS_BG_STARS.webm';
-const TEMPLATE_URL=ROOT('/template.html')+'?template=20261112';
+const TEMPLATE_URL=ROOT('/template.html')+'?template=20261120-phase1';
 
 function rewriteTemplateUrls(root){
   root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{
@@ -52,7 +52,7 @@ function addTemplateStyles(doc){
   if(!document.querySelector('link[data-ls-template-shell]')){
     const l=document.createElement('link');
     l.rel='stylesheet';
-    l.href=ROOT('/site-shell.css')+'?v=20261118-menu-layer';
+    l.href=ROOT('/site-shell.css')+'?v=20261120-phase1';
     l.dataset.lsTemplateShell='1';
     document.head.appendChild(l);
   }
@@ -63,7 +63,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483647!important;overflow:visible!important;isolation:isolate!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483641!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:100!important}body.ls-canonical-page #template-content{
+body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483647!important;overflow:visible!important;isolation:isolate!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483647!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:100!important}body.ls-canonical-page #template-content{
   display:block!important;
   position:relative!important;
   width:100%!important;
@@ -139,7 +139,7 @@ function wireMenu(root){
 
   // Drawer geometry is set inline so no legacy stylesheet rule can pin it back
   // to the old full-width card. Inline !important outranks every sheet.
-  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','box-sizing':'border-box','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'2147483641','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
+  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','box-sizing':'border-box','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'2147483647','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
   const setMenu=v=>{
     if(v)Object.entries(MENU_PROPS).forEach(([k,val])=>menu.style.setProperty(k,val,'important'));
     else Object.keys(MENU_PROPS).forEach(k=>menu.style.removeProperty(k));
@@ -148,6 +148,10 @@ function wireMenu(root){
     open.setAttribute('aria-expanded',String(v));
     open.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');
     document.body.style.overflow=v?'hidden':'';
+    // Drawer and header share the top z-index; the drawer is mounted after the
+    // header, so it paints on top. Move focus into the drawer and back out.
+    if(v)close?.focus({preventScroll:true});
+    else if(menu.contains(document.activeElement))open.focus({preventScroll:true});
   };
 
   open.addEventListener('click',e=>{
@@ -190,6 +194,54 @@ function wireMenu(root){
   });
 }
 
+// Shared <head> tags (icons, manifest, theme-color, social/canonical defaults)
+// live in template.html marked data-ls-head. They are copied into the page head
+// only where the page has no tag of its own, so page-specific SEO always wins.
+// Never copies or creates robots/noindex.
+const SITE_ORIGIN='https://lilsynn.com';
+function headKey(el){
+  if(el.tagName==='LINK')return 'link|'+(el.getAttribute('rel')||'').toLowerCase()+'|'+(el.getAttribute('sizes')||'')+'|'+(el.getAttribute('type')||'');
+  const n=el.getAttribute('name')||el.getAttribute('property')||'';
+  return 'meta|'+n.toLowerCase();
+}
+function pageHasHeadTag(el){
+  return [...document.head.querySelectorAll('link,meta')].some(x=>!x.hasAttribute('data-ls-head-copied')&&headKey(x)===headKey(el));
+}
+function canonicalUrl(){
+  let p=location.pathname;
+  if(SITE_BASE&&p.startsWith(SITE_BASE))p=p.slice(SITE_BASE.length)||'/';
+  p=p.replace(/\/index\.html$/i,'/').replace(/\.html$/i,'');
+  if(p.length>1)p=p.replace(/\/$/,'');
+  const q=/^\/release$/i.test(p)?location.search:'';
+  return SITE_ORIGIN+p+q;
+}
+function addTemplateHeadTags(doc){
+  const robots=document.head.querySelector('meta[name="robots"]')?.getAttribute('content')||'';
+  const noCanonical=/noindex/i.test(robots)||/\b404\b/.test(document.title||'');
+  const title=(document.title||'').trim();
+  const desc=document.head.querySelector('meta[name="description"]')?.getAttribute('content')||'';
+  doc.head.querySelectorAll('[data-ls-head]').forEach(src=>{
+    if(/robots/i.test(src.getAttribute('name')||''))return;
+    if(pageHasHeadTag(src))return;
+    const role=src.getAttribute('data-ls-head');
+    const el=src.cloneNode(true);
+    el.removeAttribute('data-ls-head');
+    el.setAttribute('data-ls-head-copied',role||'1');
+    if(role==='canonical'||role==='url'){
+      if(noCanonical)return;
+      el.setAttribute(el.tagName==='LINK'?'href':'content',canonicalUrl());
+    }else if(role==='title'){
+      if(!title)return;el.setAttribute('content',title);
+    }else if(role==='description'){
+      if(!desc)return;el.setAttribute('content',desc);
+    }else if(el.tagName==='LINK'){
+      const h=el.getAttribute('href');
+      if(h&&h.startsWith('/')&&!h.startsWith('//'))el.setAttribute('href',ROOT(h));
+    }
+    document.head.appendChild(el);
+  });
+}
+
 async function injectTemplate(){
   if(document.documentElement.dataset.lsTemplateApplied==='1')return;
 
@@ -206,6 +258,7 @@ async function injectTemplate(){
     if(!header||!menu||!footer)throw new Error('template shell incomplete');
 
     addTemplateStyles(doc);
+    addTemplateHeadTags(doc);
     removeLegacyShell();
 
     // Pages that already ship a <main> keep it as their single landmark; only
@@ -244,6 +297,7 @@ async function injectTemplate(){
     h.dataset.lsTemplateApplied='1';
     document.body.replaceChildren(...visuals,h,m,content,f);document.body.style.overflow='';document.documentElement.style.overflowX='hidden';
     document.body.classList.add('ls-canonical-page');
+    { let r=route; if(SITE_BASE&&r.startsWith(SITE_BASE.toLowerCase()))r=r.slice(SITE_BASE.length)||'/'; if(r==='/index')r='/'; document.documentElement.dataset.lsRoute=r; }
     document.documentElement.dataset.lsTemplateApplied='1';
 
     wireMenu(document.body);

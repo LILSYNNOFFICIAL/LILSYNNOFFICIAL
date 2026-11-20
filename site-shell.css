@@ -188,3 +188,6 @@ body.ls-canonical-page .ls-canonical-topbar .ls-nav-inner{position:relative!impo
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat{position:relative!important;z-index:1!important;}
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat.open{z-index:2147483647!important;}
 body.ls-canonical-page .ls-canonical-topbar .ls-template-cat-menu{position:absolute!important;z-index:2147483647!important;isolation:isolate!important;}
+/* Phase 1: the template-owned #ls-bg-layer is the only background video. The homepage used to stack a second copy
+   (opacity .62, brightness .72) over it; one layer at .78 x brightness(.72) keeps the same overall brightness. */
+html[data-ls-route="/"] #ls-bg-layer video{opacity:.78!important;filter:brightness(.72) contrast(1.12)!important}

@@ -22,10 +22,33 @@ jobs:
           node-version: 22
 
       - name: Run Site Doctor
-        run: node tools/site-doctor.mjs
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/site-doctor.mjs 2>&1 | tee /tmp/site-doctor.log
 
       - name: Run canonical site shell regression
-        run: node scripts/test-site-shell.mjs
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/test-site-shell.mjs 2>&1 | tee /tmp/site-shell.log
+          node tools/site-doctor.test.mjs 2>&1 | tee -a /tmp/site-shell.log
+
+      - name: Write summary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## Site Doctor · ${{ job.status == 'success' && '🟢 PASS' || '🔴 FAIL' }}"
+            echo ""
+            echo '```'
+            tail -n 40 /tmp/site-doctor.log 2>/dev/null || echo "no log"
+            echo '```'
+            echo "### Shell regression"
+            echo '```'
+            cat /tmp/site-shell.log 2>/dev/null || echo "not run"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # Deployment trigger touch: keep Git-integrated Vercel deployment moving.
       # WebM optimization workflow is now present on main as well.

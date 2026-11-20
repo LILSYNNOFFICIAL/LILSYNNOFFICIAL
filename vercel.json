@@ -46,6 +46,16 @@
       "permanent": false
     },
     {
+      "source": "/merch",
+      "destination": "https://lilsynnofficial.threadless.com/",
+      "permanent": false
+    },
+    {
+      "source": "/merch/",
+      "destination": "https://lilsynnofficial.threadless.com/",
+      "permanent": false
+    },
+    {
       "source": "/forum",
       "destination": "https://lilsynn-suno.base44.app",
       "permanent": false

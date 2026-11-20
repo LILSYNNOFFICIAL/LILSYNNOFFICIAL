@@ -104,6 +104,38 @@ jobs:
             echo "suno=$suno_status"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Write QA summary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          icon() { [ "$1" = "PASS" ] && echo "🟢 PASS" || echo "🔴 FAIL"; }
+          {
+            echo "## Main Surface QA: $(icon '${{ steps.status.outputs.overall }}')"
+            echo ""
+            echo "Commit \`${{ github.sha }}\` · run [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo ""
+            echo "| Surface | Status |"
+            echo "|---|---|"
+            echo "| Main | $(icon '${{ steps.status.outputs.main }}') |"
+            echo "| Command | $(icon '${{ steps.status.outputs.command }}') |"
+            echo "| Admin | $(icon '${{ steps.status.outputs.admin }}') |"
+            echo "| Suno | $(icon '${{ steps.status.outputs.suno }}') |"
+            echo ""
+            echo "<details><summary>Site Doctor</summary>"
+            echo ""
+            echo '```'
+            tail -n 40 /tmp/site-doctor.log 2>/dev/null || echo "no log"
+            echo '```'
+            echo "</details>"
+            echo ""
+            echo "<details><summary>Browser QA (incl. menu-above-header, single background video, catalog flows)</summary>"
+            echo ""
+            echo '```'
+            grep -E '^(PASS|FAIL) \||^  |^QA_' /tmp/main-surface-qa.log 2>/dev/null || echo "no log"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload QA artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
