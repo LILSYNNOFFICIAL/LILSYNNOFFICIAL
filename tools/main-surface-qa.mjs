@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
+import { runMainInteractionQa } from './main-interaction-qa.mjs';
 
 const sourceChecks = [
   ['command/index.html', fs.existsSync('command/index.html')],
@@ -39,6 +40,7 @@ const routes = [
 const ignoredLocalRequests = new Set(['/favicon.ico']);
 const browser = await chromium.launch({ headless: true });
 const results = [];
+let mainInteraction = { pass: false, results: [] };
 try {
   for (const route of routes) {
     const page = await browser.newPage();
@@ -85,6 +87,8 @@ try {
     results.push({ ...route, pass: !failure, status, bodyLength, errors, failures, httpErrors, failure });
     await page.close();
   }
+  // Main-site interactions (drawer above header, single background video, catalog flows) at 1440 and 390.
+  mainInteraction = await runMainInteractionQa(browser, baseUrl);
 } finally {
   await browser.close();
 }
@@ -95,12 +99,13 @@ for (const result of results) {
 }
 
 const grouped = {
-  MAIN: results.find(r => r.name === 'MAIN')?.pass ?? false,
+  MAIN: (results.find(r => r.name === 'MAIN')?.pass ?? false) && mainInteraction.pass,
   COMMAND: results.find(r => r.name === 'COMMAND')?.pass ?? false,
   ADMIN: results.find(r => r.name === 'ADMIN')?.pass ?? false,
   SUNO: results.filter(r => r.name.startsWith('SUNO')).every(r => r.pass)
 };
 
+console.log(`QA_MAIN_INTERACTION=${mainInteraction.pass ? 'PASS' : 'FAIL'}`);
 console.log(`QA_MAIN=${grouped.MAIN ? 'PASS' : 'FAIL'}`);
 console.log(`QA_COMMAND=${grouped.COMMAND ? 'PASS' : 'FAIL'}`);
 console.log(`QA_ADMIN=${grouped.ADMIN ? 'PASS' : 'FAIL'}`);

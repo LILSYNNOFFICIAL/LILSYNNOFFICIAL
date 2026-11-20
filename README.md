@@ -9,20 +9,10 @@
 <!-- MAIN-SURFACE-QA:START -->
 ## 🩺 MAIN SURFACE QA
 
-**🟡 QA: NOT CURRENTLY VERIFIED**
+[![Main Surface QA](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/main-surface-qa.yml/badge.svg?branch=main)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/main-surface-qa.yml)
+[![Site Doctor](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/site-doctor.yml/badge.svg?branch=main)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/site-doctor.yml)
 
-| Surface | Status | Latest verified evidence |
-|---|---|---|
-| Main | 🟡 **NOT VERIFIED** | No current Main Surface QA run is available for the latest main commit |
-| Command | 🟢 **PASS** | Command Center regression run 218 |
-| Admin | 🟡 **NOT VERIFIED** | No current standalone Admin QA result is available |
-| Suno | 🟢 **PASS** | Suno Browser QA run 47 |
-
-**Current main commit:** `e9e1929fcae0d8206da3be7674e6ed40476d1c13`  
-**Checked:** 2026-09-19 (not re-verified after the universal-template migration)  
-**Vercel:** 🟢 **SUCCESS** for the current commit
-
-> This block reports only verification that is actually available. A missing current workflow result is shown as **NOT VERIFIED**, not as a failure or pass. README-only commits are excluded from Main Surface QA, so this status update does not recursively trigger another QA run.
+The badges are the live status for `main`. Each run writes its Main / Command / Admin / Suno table, the Site Doctor output and the browser QA lines (including the menu-above-header, single-background-video and release-catalog checks) to the run's **Summary** page. Click a badge, open the latest run, and read the summary. Nothing writes QA results back into this README; Main Surface QA is read-only (`contents: read`).
 
 <!-- MAIN-SURFACE-QA:END -->
 
@@ -153,7 +143,10 @@ site-shell.js
 - The canonical PRE-SAVE destination is https://hyperfollow.com/lilsynnofficial.
 - The hamburger button (`#ls-template-menu-open`) is mounted at **every** viewport width; only the horizontal category navigation hides at ≤900px. On desktop the drawer opens as the same right-hand panel as on mobile.
 - Rules that must survive injection belong in `template.html`'s `<head>`: `site-shell.js` copies only `<head><style>` nodes, so a rule placed at the end of `<body>` is silently dropped on every page that uses the shell.
-- Shell styles, the template, and each page's `site-shell.js?v=` key move together. Current key: `20261112` (`template=20261112`, `site-shell.css?v=20261112`). Bump all three in one change or browsers keep serving the previous shell.
+- Shell styles, the template, and each page's `site-shell.js?v=` key move together. Current shell keys: `template=20261120-phase1` and `site-shell.css?v=20261120-phase1` (both set inside `site-shell.js`). Pages still carry their older `site-shell.js?v=` keys; root `.js` is served with `max-age=3600, must-revalidate`, so a changed `site-shell.js` reaches every page within an hour.
+- Shared `<head>` tags (favicon, apple-touch-icon, manifest, theme-color, canonical, og/twitter defaults) live in `template.html`, marked `data-ls-head`. `site-shell.js` copies each one into a page's head only when the page has none of its own, so page-specific SEO always wins. The template never adds robots/noindex.
+- The template's `#ls-bg-layer` is the single background video on every page. Pages must not add their own `<video>` backgrounds.
+- MERCH links in the header, drawer and footer all point at `/merch`, a `vercel.json` redirect. That redirect is the one place the store URL lives.
 
 ### Protected surfaces
 
@@ -472,7 +465,7 @@ Code-only edit
        QA
 ```
 
-The Action writes its QA result back to `README.md`, but that README-only commit is excluded from the same push workflow.
+The Action no longer writes to `README.md` (that step was removed in `9323958`). QA status lives in the workflow badges at the top of this README and in each run's step summary. README-only edits stay excluded from the push workflow.
 
 ### Why this matters
 
