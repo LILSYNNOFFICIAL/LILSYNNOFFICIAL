@@ -138,6 +138,10 @@ for (const name of workflowNames) {
   if (writesMain && grantsWrite) assert.ok(intentionalMutators.has(name), `${name} is an unclassified main-mutating workflow`);
 }
 
+// Retired root files live in legacy/ and are never deployed.
+assert.match(read('.vercelignore'), /^legacy\/$/m, 'legacy/ is excluded from the Vercel upload');
+assert.ok(fs.existsSync(new URL('index2-final-fix.js', root)), 'index2-final-fix.js stays at root (suno tooling references it)');
+
 const catalog = JSON.parse(read('release-catalog.json'));
 assert.equal(new Set(catalog.order || []).size, (catalog.order || []).length, 'release catalog contains duplicates');
 

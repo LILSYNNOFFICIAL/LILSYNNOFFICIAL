@@ -9,7 +9,7 @@ const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-sh
 // One version key for the shared shell. Bump it (and every page's site-shell.js?v=) whenever
 // template.html, site-shell.css or this file changes. The template is fetched with the normal
 // HTTP cache; the key makes each release a new URL.
-const SHELL_VERSION='20261120-p3';
+const SHELL_VERSION='20261120-p4';
 const TEMPLATE_URL=ROOT('/template.html')+'?template='+SHELL_VERSION;
 const SHELL_CSS_URL=ROOT('/site-shell.css')+'?v='+SHELL_VERSION;
 

@@ -5,6 +5,21 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/SITE-HEALTH.md",
+      "destination": "/docs/SITE-HEALTH.md",
+      "permanent": false
+    },
+    {
+      "source": "/template_bu",
+      "destination": "/template",
+      "permanent": false
+    },
+    {
+      "source": "/template_bu.html",
+      "destination": "/template",
+      "permanent": false
+    },
+    {
       "source": "/archive",
       "destination": "/releases",
       "permanent": true
@@ -107,6 +122,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/assets/images/icons/new_art/:file*",
+      "destination": "/assets/art/visuals/:file*"
+    },
+    {
+      "source": "/assets/images/icons/siqa-verified.webp",
+      "destination": "/assets/icons/ui/siqa-verified.webp"
+    },
     {
       "source": "/suno",
       "destination": "/Suno/home/"
