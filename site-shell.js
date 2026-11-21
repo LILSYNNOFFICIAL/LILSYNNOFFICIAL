@@ -9,7 +9,7 @@ const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-sh
 // One version key for the shared shell. Bump it (and every page's site-shell.js?v=) whenever
 // template.html, site-shell.css or this file changes. The template is fetched with the normal
 // HTTP cache; the key makes each release a new URL.
-const SHELL_VERSION='20261120-p2';
+const SHELL_VERSION='20261120-p3';
 const TEMPLATE_URL=ROOT('/template.html')+'?template='+SHELL_VERSION;
 const SHELL_CSS_URL=ROOT('/site-shell.css')+'?v='+SHELL_VERSION;
 
@@ -242,6 +242,13 @@ function addTemplateHeadTags(doc){
   const desc=document.head.querySelector('meta[name="description"]')?.getAttribute('content')||'';
   doc.head.querySelectorAll('[data-ls-head]').forEach(src=>{
     if(/robots/i.test(src.getAttribute('name')||''))return;
+    // Shared web fonts (Orbitron brand / Rajdhani UI): added only where the page loads none.
+    // Special Access keeps its own rendering untouched.
+    if(src.getAttribute('data-ls-head')==='fonts'){
+      if(route.endsWith('/special_access')||document.head.querySelector('link[href*="fonts.googleapis.com/css"]'))return;
+      const f=src.cloneNode(true);f.removeAttribute('data-ls-head');f.setAttribute('data-ls-head-copied','fonts');
+      document.head.appendChild(f);return;
+    }
     if(pageHasHeadTag(src))return;
     const role=src.getAttribute('data-ls-head');
     const el=src.cloneNode(true);
@@ -260,6 +267,19 @@ function addTemplateHeadTags(doc){
     }
     document.head.appendChild(el);
   });
+}
+
+// prefers-reduced-motion: hold the background video on a still frame instead of looping it.
+function respectReducedMotion(){
+  const mq=window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const video=document.querySelector('#ls-bg-layer video');
+  if(!mq||!video)return;
+  const apply=()=>{
+    if(mq.matches){video.removeAttribute('autoplay');video.pause();}
+    else if(video.paused){video.play()?.catch(()=>{});}
+  };
+  apply();
+  mq.addEventListener?.('change',apply);
 }
 
 async function injectTemplate(){
@@ -321,6 +341,7 @@ async function injectTemplate(){
     document.documentElement.dataset.lsTemplateApplied='1';
 
     wireMenu(document.body);
+    respectReducedMotion();
     // Activate the hidden Metricool footer widget after the canonical footer is mounted.
     // Recreate its script node because scripts cloned from the fetched template do not execute.
     const metricoolWidget=document.querySelector('[data-metricool-tracker]');

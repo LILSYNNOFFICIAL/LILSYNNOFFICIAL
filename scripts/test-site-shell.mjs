@@ -50,6 +50,13 @@ assert.doesNotMatch(css, /#ls-more-menu|\.ls-mobile-|\.ls-orb-galaxy/, 'dead men
 assert.doesNotMatch(template, /\\n\.ls-siqa-badge/, 'no literal \\n inside template CSS');
 assert.doesNotMatch(template.slice(template.indexOf('</footer>')), /<style|<script/, 'template body tail carries no styles or scripts (they never reach pages)');
 assert.match(css, /prefers-reduced-motion/);
+// Design tokens and cascade layers (Phase 3).
+assert.match(template, /@layer reset, tokens, shell, page, overrides;/);
+assert.match(css, /@layer reset, tokens, shell, page, overrides;/);
+for (const token of ['--ls-gold:#d4af6a', '--ls-chrome:', '--ls-line-gold:', '--ls-s-1:', '--ls-r-1:4px', '--ls-r-2:10px', '--ls-r-3:18px', '--ls-shadow-1:', '--ls-shadow-2:', '--ls-ease-out:cubic-bezier(.2,.7,.2,1)']) assert.ok(template.includes(token), `template token ${token} missing`);
+assert.match(shell, /prefers-reduced-motion: reduce/, 'shell holds the background video still under reduced motion');
+assert.match(template, /data-ls-head="fonts"/, 'template shares the web-font stylesheet');
+assert.match(shell, /special_access/, 'Special Access keeps its own rendering (no shared font injection)');
 assert.match(css, /body\.ls-canonical-page\{background:#020204!important/);
 // site-shell.css is loaded once, by the shell, under the same version key as the template.
 assert.match(shell, /const SHELL_VERSION='[^']+'/);

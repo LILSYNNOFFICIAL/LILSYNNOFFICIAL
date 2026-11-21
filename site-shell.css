@@ -1,5 +1,7 @@
 /* LIL SYNN shared shell stylesheet. Loaded once per page by site-shell.js (versioned with the template key).
-   Layer tokens (--z-*) live in the template head :root; every value here falls back to the same number. */
+   Tokens (--z-*, --ls-*) live in the template head :root (@layer tokens); every value used here has a literal fallback.
+   Layer order is declared once and matches the template head. */
+@layer reset, tokens, shell, page, overrides;
 
 /* ---- Background and decor layers: one template-owned background video (#ls-bg-layer). ---- */
 #ls-bg-layer{position:fixed!important;inset:0!important;z-index:var(--z-bg,0)!important;overflow:hidden!important;pointer-events:none!important;background:#020204!important}
@@ -23,7 +25,7 @@ body.ls-canonical-page>main{min-height:0!important;height:auto!important;max-hei
 
 /* ---- Header ---- */
 :root{--ls-header-height:68px}
-.ls-canonical-topbar{position:fixed!important;z-index:var(--z-header,1000)!important;top:0;left:0;right:0;min-height:68px;background:rgba(3,3,6,.9);border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.ls-canonical-topbar{position:fixed!important;z-index:var(--z-header,1000)!important;top:0;left:0;right:0;min-height:68px;background:rgba(3,3,6,.9);border-bottom:1px solid rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 /* The header is its own stacking context; its dropdowns stack inside it (--z-dropdown) and never need a global value. */
 body.ls-canonical-page .ls-canonical-topbar{position:fixed!important;z-index:var(--z-header,1000)!important;isolation:isolate!important;overflow:visible!important}
 body.ls-canonical-page .ls-canonical-topbar .ls-nav-inner{position:relative!important;z-index:var(--z-header-nav,2)!important;overflow:visible!important}
@@ -34,8 +36,8 @@ body.ls-canonical-page .ls-canonical-topbar .ls-template-cat-menu{position:absol
 .ls-brand{font:800 16px Orbitron,sans-serif;letter-spacing:.15em;white-space:nowrap;color:#fff}
 .ls-brand b{color:#ff008f}
 .ls-desktop-nav{display:flex;align-items:center;justify-content:center;gap:16px;flex:1;min-width:0}
-.ls-desktop-nav>a{font:800 10px Rajdhani,Arial,sans-serif;letter-spacing:.15em;color:#c7c7ce;text-decoration:none}
-.ls-desktop-nav>a:hover{color:#fff}
+.ls-desktop-nav>a{font:800 10.5px var(--ls-font-ui,Rajdhani,Arial,sans-serif);letter-spacing:var(--ls-label-track,.14em);color:#c7c7ce;text-decoration:none;transition:color .2s var(--ls-ease-out,ease)}
+.ls-desktop-nav>a:hover,.ls-desktop-nav>a:focus-visible{color:#fff}
 #ls-template-menu{z-index:var(--z-drawer,1100)!important}
 
 /* ---- Page wrappers start directly below the fixed header and size to their real content. ---- */
@@ -59,20 +61,20 @@ body.ls-canonical-page>main:has(.vote-page),
 body.ls-canonical-page>main:has(.legal-page){min-height:0!important;height:auto!important}
 
 /* ---- Footer ---- */
-.ls-canonical-footer{position:relative;z-index:var(--z-footer,3);padding:50px 5vw 30px;border-top:1px solid rgba(255,255,255,.1);background:rgba(2,2,4,.76);text-align:center}
+.ls-canonical-footer{position:relative;z-index:var(--z-footer,3);padding:50px 5vw 30px;border-top:1px solid var(--ls-line-gold,rgba(212,175,106,.24));background:rgba(2,2,4,.76);text-align:center}
 body.ls-canonical-page .ls-canonical-footer{margin-top:0!important}
 body.ls-canonical-page>.ls-canonical-footer{min-height:0!important;height:auto!important}
 .ls-footer-brand{font:800 19px Orbitron}
 .ls-footer-brand b{color:#ff008f}
-.ls-footer-tag{margin:10px 0 22px;color:#777;font-size:11px;letter-spacing:.16em}
-.ls-footer-links,.ls-footer-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
-.ls-footer-links a,.ls-footer-legal a{font:700 9px Rajdhani;color:#aaa;letter-spacing:.14em}
-.ls-footer-links a:hover,.ls-footer-legal a:hover{color:#ff008f}
+.ls-footer-tag{margin:10px 0 22px;color:#8a8a94;font-size:11px;letter-spacing:.16em}
+.ls-footer-links,.ls-footer-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 16px}
+.ls-footer-links a,.ls-footer-legal a{font:700 10.5px var(--ls-font-ui,Rajdhani,Arial,sans-serif);color:#aaa;letter-spacing:var(--ls-label-track,.14em);transition:color .2s var(--ls-ease-out,ease)}
+.ls-footer-links a:hover,.ls-footer-legal a:hover,.ls-footer-links a:focus-visible,.ls-footer-legal a:focus-visible{color:#ff008f}
 .ls-footer-social-icons{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;margin:26px 0}
-.ls-footer-social-icons a{display:flex;width:44px;height:44px;align-items:center;justify-content:center;transition:transform .2s ease,opacity .2s ease}
-.ls-footer-social-icons a:hover{transform:scale(1.1);opacity:1}
-.ls-footer-social-icons img{width:36px;height:36px;display:block;object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,0,143,.18))}
-.ls-footer-copy{margin-top:22px;color:#555;font-size:9px}
+.ls-footer-social-icons a{display:flex;width:44px;height:44px;align-items:center;justify-content:center;transition:transform .2s var(--ls-ease-out,ease),opacity .2s ease}
+.ls-footer-social-icons a:hover,.ls-footer-social-icons a:focus-visible{transform:translateY(-2px);opacity:1}
+.ls-footer-social-icons img{width:36px;height:36px;display:block;object-fit:contain;filter:drop-shadow(0 0 6px rgba(255,0,143,.11))}
+.ls-footer-copy{margin-top:22px;color:#6a6a74;font-size:10px;letter-spacing:.08em}
 
 /* SIQA verification badge: the artwork itself, large, with no button chrome. */
 .ls-siqa-badge{width:auto!important;max-width:92vw!important;height:auto!important;max-height:none!important;min-width:0!important;min-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:16px auto 10px!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important}
@@ -93,5 +95,6 @@ body.ls-canonical-page>.ls-canonical-footer{min-height:0!important;height:auto!i
   .ls-siqa-badge img{width:210px!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .ls-footer-social-icons a{transition:none}
+  .ls-footer-social-icons a,.ls-footer-links a,.ls-footer-legal a,.ls-desktop-nav>a{transition:none}
+  .ls-footer-social-icons a:hover,.ls-footer-social-icons a:focus-visible{transform:none}
 }
