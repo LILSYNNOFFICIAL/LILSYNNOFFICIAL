@@ -37,13 +37,37 @@ for (const route of ['/suno','/backup','/template','/template_bu']) {
 }
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
-assert.match(css, /#ls-more-menu\{position:fixed/);
-assert.match(css, /z-index:2147483000/);
+const template = read('template.html');
+// Layering uses the z-scale tokens declared once in the template head; no 2^31 escalation anywhere in the shell.
+assert.match(template, /--z-bg:0;--z-decor:1;--z-content:2;--z-footer:3;/, 'template head declares the z-scale');
+assert.match(template, /--z-header:1000;--z-drawer-scrim:1090;--z-drawer:1100;/, 'drawer sits above the scrim, the scrim above the header');
+for (const [name, text] of [['site-shell.css', css], ['site-shell.js', shell], ['template.html', template], ['index.html', index]]) {
+  assert.doesNotMatch(text, /z-index:\s*21474836\d\d/, `${name} must use the z-scale tokens, not 2^31 values`);
+}
+assert.match(shell, /'z-index':'var\(--z-drawer,1100\)'/, 'open drawer uses the drawer token');
+assert.match(shell, /ls-menu-scrim/, 'drawer has a click-to-close scrim');
+assert.doesNotMatch(css, /#ls-more-menu|\.ls-mobile-|\.ls-orb-galaxy/, 'dead menu/orb systems stay out of site-shell.css');
+assert.doesNotMatch(template, /\\n\.ls-siqa-badge/, 'no literal \\n inside template CSS');
+assert.doesNotMatch(template.slice(template.indexOf('</footer>')), /<style|<script/, 'template body tail carries no styles or scripts (they never reach pages)');
 assert.match(css, /prefers-reduced-motion/);
-assert.match(css, /body\.ls-canonical-page\{[^}]*background:transparent!important/);
+// Design tokens and cascade layers (Phase 3).
+assert.match(template, /@layer reset, tokens, shell, page, overrides;/);
+assert.match(css, /@layer reset, tokens, shell, page, overrides;/);
+for (const token of ['--ls-gold:#d4af6a', '--ls-chrome:', '--ls-line-gold:', '--ls-s-1:', '--ls-r-1:4px', '--ls-r-2:10px', '--ls-r-3:18px', '--ls-shadow-1:', '--ls-shadow-2:', '--ls-ease-out:cubic-bezier(.2,.7,.2,1)']) assert.ok(template.includes(token), `template token ${token} missing`);
+assert.match(shell, /prefers-reduced-motion: reduce/, 'shell holds the background video still under reduced motion');
+assert.match(template, /data-ls-head="fonts"/, 'template shares the web-font stylesheet');
+assert.match(shell, /special_access/, 'Special Access keeps its own rendering (no shared font injection)');
+assert.match(css, /body\.ls-canonical-page\{background:#020204!important/);
+// site-shell.css is loaded once, by the shell, under the same version key as the template.
+assert.match(shell, /const SHELL_VERSION='[^']+'/);
+assert.match(shell, /TEMPLATE_URL=ROOT\('\/template\.html'\)\+'\?template='\+SHELL_VERSION/);
+assert.match(shell, /SHELL_CSS_URL=ROOT\('\/site-shell\.css'\)\+'\?v='\+SHELL_VERSION/);
+assert.doesNotMatch(shell, /cache:'no-store'/, 'template fetch uses the HTTP cache plus the version key');
 
 // Homepage / artist UI contract.
-assert.match(index, /homepage-final-fix\.js/);
+assert.match(index, /<script src="\.\/homepage-final-fix\.js[^"]*" defer><\/script>/, 'homepage-final-fix.js is deferred');
+assert.doesNotMatch(index, /site-shell\.css/, 'homepage does not load its own copy of site-shell.css');
+assert.match(index, /OFFICIAL TRANSMISSION \/ 369/, 'transmission number lives in the HTML');
 assert.doesNotMatch(index, /id=["']ls-template-menu["']/, 'homepage must not ship its own copy of the canonical menu');
 assert.doesNotMatch(index, /data-ls-global-(?:header|footer)/, 'homepage must not ship its own copy of the canonical header/footer');
 assert.match(shell, /document\.createElement\(document\.querySelector\('main'\)\?'div':'main'\)/, 'shell must not nest a second <main> around a page that already has one');
@@ -51,9 +75,7 @@ assert.doesNotMatch(index, /<video\b/, 'homepage must not ship its own backgroun
 assert.doesNotMatch(read('404.html'), /<video\b/, '404 must not ship a second background video');
 assert.doesNotMatch(read('homepage-final-fix.js'), /site-stars-bg/, 'homepage-final-fix.js must not create a second stars video');
 assert.doesNotMatch(shell, /'z-index':'2147483641'|#ls-template-menu\{position:fixed!important;z-index:2147483641/, 'menu must not sit below the header (2147483641 < 2147483647)');
-assert.match(index, /id=["']playerDock["']/i);
-assert.match(index, /id=["']playerClose["']/i);
-assert.match(index, /id=["']spotifyFrame["']/i);
+assert.doesNotMatch(index, /id=["']playerDock["']|utilityDropdown/i, 'dead homepage player dock / utility dropdown stay removed');
 assert.match(index, /open\.spotify\.com\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i, 'homepage must retain the canonical Spotify artist destination');
 assert.match(index, /06 \/ ARTIST \+ WORLD/, 'homepage retains its current artist/world section');
 assert.match(index, /id=["']releaseFeed["']/);
@@ -71,6 +93,7 @@ assert.match(releases, /repeat\(2/);
 for (const page of pages) {
   const html = read(page);
   assert.match(html, /<script[^>]+src=["']\/site-shell\.js/i, `${page} must load the canonical shell`);
+  if (page !== 'special_access.html') assert.doesNotMatch(html, /<link[^>]+site-shell\.css/i, `${page} must not load its own copy of site-shell.css`);
   assert.doesNotMatch(html, /<script[^>]+src=["']\/site-global\.js/i, `${page} still references legacy runtime`);
   assert.doesNotMatch(html, /href=["']\/index\.html\/contact/i, `${page} has malformed contact routing`);
 }
@@ -107,7 +130,7 @@ assert.doesNotMatch(rerun, /^\s+push:/m, 'RERUN ALL JOBS must be manual-only');
 assert.match(rerun, /actions:\s*write/);
 assert.match(rerun, /contents:\s*read/);
 
-const intentionalMutators = new Set(['admin-git.yml','github-pages-preview.yml','sync-suno-guide.yml','update-latest-videos.yml','optimize-index2-webm.yml']);
+const intentionalMutators = new Set(['admin-git.yml','build-site-data.yml','github-pages-preview.yml','sync-suno-guide.yml','update-latest-videos.yml','optimize-index2-webm.yml']);
 for (const name of workflowNames) {
   const text = fs.readFileSync(new URL(name, workflowDir), 'utf8');
   const writesMain = /git\s+push(?:\s+origin)?\s+(?:HEAD:)?main|git\s+push\s*$/m.test(text);
@@ -115,7 +138,22 @@ for (const name of workflowNames) {
   if (writesMain && grantsWrite) assert.ok(intentionalMutators.has(name), `${name} is an unclassified main-mutating workflow`);
 }
 
+// Retired root files live in legacy/ and are never deployed.
+assert.match(read('.vercelignore'), /^legacy\/$/m, 'legacy/ is excluded from the Vercel upload');
+assert.ok(fs.existsSync(new URL('index2-final-fix.js', root)), 'index2-final-fix.js stays at root (suno tooling references it)');
+
 const catalog = JSON.parse(read('release-catalog.json'));
+// Release data hygiene and generated site data (scripts/build-site-data.mjs).
+assert.doesNotMatch(read('release-catalog.json'), /REACH OUT TO DISTRIBUTOR/, 'no private notes in the public catalog');
+assert.equal(catalog.groups?.["Don't Say It"]?.type, 'SINGLE', "Don't Say It is a single");
+assert.doesNotMatch(index, /Canonical catalog position/, 'no developer text on the homepage');
+{
+  const { execFileSync } = await import('node:child_process');
+  execFileSync(process.execPath, [new URL('scripts/build-site-data.mjs', root).pathname, '--check'], { stdio: 'inherit' });
+  const latestVideos = read('.github/workflows/update-latest-videos.yml');
+  assert.doesNotMatch(latestVideos, /len\(selected\) != 9/, 'update-latest-videos tolerates fewer than 9 matches');
+  assert.match(latestVideos, /::warning::/);
+}
 assert.equal(new Set(catalog.order || []).size, (catalog.order || []).length, 'release catalog contains duplicates');
 
 console.log('site-shell architecture + auth + workflow audit: PASS');

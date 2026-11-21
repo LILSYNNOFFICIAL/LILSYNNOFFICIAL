@@ -84,7 +84,7 @@
       "origin": "https://www.youtube.com/playlist?list=OLAK5uy_nuRnXyvmiV01x20rb5ZugVdRab6rWBRDw"
     },
     "Don't Say It": {
-      "type": "ALBUM",
+      "type": "SINGLE",
       "tracks": [
         "Don't Say It (Acoustic)"
       ],
@@ -319,9 +319,9 @@
     "Heavy (Acoustic Version)": "https://music.apple.com/us/song/heavy-acoustic/6813942522"
   },
   "appleMissing": {
-    "Burn It Down": "* I WILL REACH OUT TO DISTRIBUTOR",
-    "Hindsight": "* I WILL REACH OUT TO DISTRIBUTOR",
-    "Stay Here": "* I WILL REACH OUT TO DISTRIBUTOR"
+    "Burn It Down": "",
+    "Hindsight": "",
+    "Stay Here": ""
   },
   "indexLimit": 6,
   "artwork": {

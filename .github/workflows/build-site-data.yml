@@ -1,0 +1,40 @@
+name: Build Site Data
+# Regenerates sitemap.xml and the static release/<slug>.html pages from release-catalog.json
+# (scripts/build-site-data.mjs) and commits the result, the same way "Refresh Latest Videos"
+# commits latest-videos.json. It is not part of the Vercel build.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'release-catalog.json'
+      - 'release.html'
+      - 'scripts/build-site-data.mjs'
+      - '.github/workflows/build-site-data.yml'
+permissions:
+  contents: write
+concurrency:
+  group: build-site-data-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate sitemap.xml and release pages
+        run: node scripts/build-site-data.mjs
+      - name: Commit generated site data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sitemap.xml release/
+          git diff --cached --quiet && { echo 'Site data already up to date.'; exit 0; }
+          git commit -m 'Build site data from release catalog [skip ci]'
+          # Another workflow (Refresh Latest Videos) may push for the same catalog change; rebase and retry.
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+            sleep 5
+          done
+          exit 1

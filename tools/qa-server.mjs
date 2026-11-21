@@ -21,9 +21,35 @@ const rewrites = new Map([
   ['/suno/', '/Suno/home/']
 ]);
 
+// Mirror vercel.json for local QA: its rewrites apply only when no file matches (filesystem first),
+// and cleanUrls serves /page from /page.html.
+let vercelRewrites = [];
+try {
+  const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
+  vercelRewrites = (vercel.rewrites || []).filter(r => !/^https?:/.test(r.destination)).map(r => {
+    const names = [];
+    const re = new RegExp('^' + r.source.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/:([A-Za-z_]+)\*/g, (_, n) => { names.push(n); return '(.*)'; }).replace(/:([A-Za-z_]+)/g, (_, n) => { names.push(n); return '([^/]+)'; }) + '$');
+    return { re, names, destination: r.destination };
+  });
+} catch {}
+const fileAt = p => { const c = path.resolve(root, p.replace(/^\/+/, '')); return fs.existsSync(c) && fs.statSync(c).isFile(); };
+function vercelFallback(pathname) {
+  if (fileAt(pathname)) return pathname;
+  if (!path.extname(pathname) && fileAt(pathname + '.html')) return pathname + '.html';
+  for (const r of vercelRewrites) {
+    const m = pathname.match(r.re);
+    if (!m) continue;
+    let dest = r.destination;
+    r.names.forEach((n, i) => { dest = dest.replace(new RegExp(':' + n + '\\*?', 'g'), m[i + 1]); });
+    if (fileAt(dest) || fs.existsSync(path.resolve(root, dest.replace(/^\/+/, '')))) return dest;
+  }
+  return pathname;
+}
+
 function safePath(urlPath) {
   let pathname = decodeURIComponent(urlPath.split('?')[0]);
   if (rewrites.has(pathname)) pathname = rewrites.get(pathname);
+  else pathname = vercelFallback(pathname);
   if (pathname === '/') pathname = '/index.html';
 
   const clean = pathname.replace(/^\/+/, '');
@@ -77,6 +103,9 @@ const mime = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webm': 'video/webm',
+  '.webp': 'image/webp',
+  '.xml': 'application/xml; charset=utf-8',
+  '.ico': 'image/x-icon',
   '.mp4': 'video/mp4',
   '.txt': 'text/plain; charset=utf-8'
 };

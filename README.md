@@ -16,7 +16,7 @@ The badges are the live status for `main`. Each run writes its Main / Command / 
 
 <!-- MAIN-SURFACE-QA:END -->
 
-> **Current source-of-truth note:** `main` is the production source tree. The current root homepage is `index.html`, which is the former `index2.html` design. The previous homepage is preserved as `index3.html`. `index2.html` is no longer present.
+> **Current source-of-truth note:** `main` is the production source tree. The current root homepage is `index.html`, which is the former `index2.html` design. The previous homepage is preserved only as `backup/index3.html` (protected; there is no root `index3.html`). `index2.html` is no longer present.
 
 ---
 
@@ -28,10 +28,10 @@ It contains:
 
 - The public LIL SYNN artist website
 - The current production homepage
-- Releases and Archive systems
+- The Releases system (old `/archive` URLs redirect to `/releases`)
 - Visual Gallery and LIL SYNN Universe systems
 - Signal/transmission behavior
-- THE CALM ambient layer
+- THE CALM ambient audio file (kept in the repo; not currently wired to any page)
 - Shared global navigation and shell
 - Command and Admin surfaces
 - Vercel routing and deployment configuration
@@ -51,20 +51,15 @@ The project is intentionally browser-native and primarily static: HTML + CSS + J
 ```text
 /              → index.html
 /index.html    → current NEW homepage design
-/index3.html   → preserved previous homepage design
+/index3.html   → not at root; the previous homepage is kept as backup/index3.html (protected)
 /index2.html   → removed
 ```
 
 The new design formerly stored as `index2.html` has been promoted to the production root. Do not describe `index2.html` as an existing production file; it is not.
 
-The current homepage includes the established LIL SYNN identity, cinematic hero treatment, background media, navigation, Buttondown signup, PRE-SAVE destination, VOTE 4 LIL SYNN, coming-soon messaging, and mobile-responsive behavior.
+The current homepage includes the established LIL SYNN identity, cinematic hero treatment, the shared background video, navigation, Buttondown signup, the PRE-SAVE destination and mobile-responsive behavior.
 
-Primary homepage media includes:
-
-```text
-/assets/mov/HERO_BG_WEBM.webm
-/assets/mov/LS_BG_STARS.webm
-```
+The only background video is the template's `#ls-bg-layer` (`/assets/mov/LS_BG_STARS.webm`), on every page. `HERO_BG_WEBM.webm` is no longer played; the file stays because a legacy `vercel.json` rewrite points at it.
 
 ---
 
@@ -78,19 +73,25 @@ CANONICAL DATA
         │
         ▼
 GLOBAL SHELL / BEHAVIOR
-├── site-shell.js
-├── site-shell.css
-├── script.js
-├── music-random.js
-├── latest-releases.js
-├── latest-videos.js
-└── signal-engine.js
+├── template.html          (header, menus, footer, background layer, shared head tags, tokens)
+├── site-shell.js          (injects the template on every normal page; owns the cache key)
+├── site-shell.css         (shared shell styling, loaded once by site-shell.js)
+├── latest-videos.js       (homepage video grid)
+├── index-enhancements.js  (homepage releases/about/orb)
+└── homepage-final-fix.js  (homepage geometry layer and section order; deferred)
+
+GENERATED FROM THE CATALOG (scripts/build-site-data.mjs)
+├── release/<slug>.html    (static release pages with real social/SEO metadata)
+└── sitemap.xml
+
+Not loaded by any page (kept at root only because backup/ or suno tooling references them):
+script.js, style.css, music-random.js, latest-releases.js, signal-engine.js, site-polish.js,
+index2-refinement.js, index-under-construction-v2.js, index2-final-fix.js
         │
         ▼
 EXPERIENCES
 ├── Releases
-├── Archive
-├── Release Detail
+├── Release Detail (/release?id= and /release/<slug>)
 ├── Gallery
 ├── Universe
 ├── Videos
@@ -121,11 +122,12 @@ NORMAL HTML PAGE
       ▼
 site-shell.js
       │
-      ├── fetches /template.html
-      ├── injects template styles
+      ├── loads /site-shell.css once (before DOMContentLoaded)
+      ├── fetches /template.html?template=<SHELL_VERSION> (normal HTTP cache)
+      ├── injects template styles (before site-shell.css, so the cascade order is fixed)
       ├── injects global header + navigation
       ├── injects hamburger menu
-      ├── injects PRE-SAVE / VOTE / UPCOMING CTAs
+      ├── injects the PRE-SAVE action bar and the click-to-close menu scrim
       ├── creates #template-content
       ├── places the page's existing content inside #template-content
       └── injects the canonical footer
@@ -139,11 +141,12 @@ site-shell.js
 - The template owns the global header, desktop category navigation, hamburger navigation, action buttons, shell styling, and footer.
 - Existing legacy global headers/menus are removed when the universal shell is applied so duplicate navigation systems do not stack.
 - The shell must not manufacture giant empty document height; #template-content is a normal content-flow container.
-- The current hamburger category links for **MUSIC, VISUALS, UNIVERSE, and RECORDS** are centered, with their navigation arrows independently aligned.
+- Current labels. Header: MUSIC (dropdown), WATCH (dropdown), EXPLORE (dropdown), PRESS / EPK, MERCH, LISTEN (dropdown), plus the PRE-SAVE action bar. Hamburger drawer: PRE-SAVE and ALL RELEASES buttons, then RELEASES, VIDEOS, GALLERY, UNIVERSE, LORE, MERCH and a MORE section, the platform icons and PRIVACY / TERMS.
 - The canonical PRE-SAVE destination is https://hyperfollow.com/lilsynnofficial.
 - The hamburger button (`#ls-template-menu-open`) is mounted at **every** viewport width; only the horizontal category navigation hides at ≤900px. On desktop the drawer opens as the same right-hand panel as on mobile.
 - Rules that must survive injection belong in `template.html`'s `<head>`: `site-shell.js` copies only `<head><style>` nodes, so a rule placed at the end of `<body>` is silently dropped on every page that uses the shell.
-- Shell styles, the template, and each page's `site-shell.js?v=` key move together. Current shell keys: `template=20261120-phase1` and `site-shell.css?v=20261120-phase1` (both set inside `site-shell.js`). Pages still carry their older `site-shell.js?v=` keys; root `.js` is served with `max-age=3600, must-revalidate`, so a changed `site-shell.js` reaches every page within an hour.
+- One cache key: `SHELL_VERSION` in `site-shell.js` versions both `template.html?template=` and `site-shell.css?v=`. When the template, `site-shell.css` or `site-shell.js` changes, bump `SHELL_VERSION`, the `site-shell.css?v=` link inside `template.html` (raw `/template` view only) and every page's `site-shell.js?v=` together. Root `.js`/`.css` are served with `max-age=3600, must-revalidate`, so a page whose own key was not bumped (for example `special_access.html`) still gets the new shell within an hour.
+- Pages do not link `site-shell.css` themselves; the shell adds it once.
 - Shared `<head>` tags (favicon, apple-touch-icon, manifest, theme-color, canonical, og/twitter defaults) live in `template.html`, marked `data-ls-head`. `site-shell.js` copies each one into a page's head only when the page has none of its own, so page-specific SEO always wins. The template never adds robots/noindex.
 - The template's `#ls-bg-layer` is the single background video on every page. Pages must not add their own `<video>` backgrounds.
 - MERCH links in the header, drawer and footer all point at `/merch`, a `vercel.json` redirect. That redirect is the one place the store URL lives.
@@ -154,10 +157,10 @@ site-shell.js
 /suno/*        → COMPLETELY EXCLUDED
 /backup/*      → COMPLETELY EXCLUDED
 /template      → SHELL SOURCE ONLY; NO SELF-INJECTION
-/template_bu   → SHELL BACKUP; NO INJECTION
+/template_bu   → redirects to /template (the old copy now lives in legacy/template_bu.html, not deployed)
 ```
 
-**Do not modify /suno as part of universal-shell work.** The same protection applies to /backup. `template_bu.html` is a point-in-time backup of the canonical template and is also excluded from universal injection.
+**Do not modify /suno as part of universal-shell work.** The same protection applies to /backup. The shell still excludes `/template_bu` in case an old link reaches it.
 
 ### Page ownership
 
@@ -174,14 +177,13 @@ template.html
       #template-content
             │
             ├── Releases
-            ├── Archive
             ├── Release Detail
             ├── Gallery
             ├── Videos
             ├── Universe
             ├── Lore
+            ├── Press / EPK
             ├── Special Access
-            ├── Vote
             └── other normal site-page content
 ```
 
@@ -190,6 +192,39 @@ site-shell.js is responsible for applying this contract. Do not build another gl
 ### Legacy shell migration rule
 
 If a normal page contains an older page-specific global header, navigation panel, or footer, migrate/remove that duplicate rather than layering it beneath the universal template. Page-specific content inside the main content area should be preserved.
+
+### Single background
+
+The template owns the one background video: `#ls-bg-layer` in `template.html`, styled in `site-shell.css`. Pages must not add their own `<video>` backgrounds (the homepage and 404 used to stack a second copy). Under `prefers-reduced-motion: reduce` the shell holds the video on a still frame. `scripts/test-site-shell.mjs` and the browser QA both fail if a page ships its own background video.
+
+### Layering: z-scale tokens
+
+Stacking uses the tokens in the template head `:root`, never 2147483xxx values:
+
+```text
+--z-bg 0            #ls-bg-layer
+--z-decor 1         decorative layers
+--z-content 2       page content (#template-content / main is one stacking context)
+--z-footer 3        footer
+--z-header 1000     fixed header (its own stacking context)
+--z-drawer-scrim 1090  click-to-close scrim behind the open drawer
+--z-drawer 1100     hamburger drawer (always above the header)
+inside the header:  --z-header-actionbar 1, --z-header-nav 2, --z-dropdown 3
+```
+
+If something is hidden behind a layer, find which stacking context it is in; do not raise a z-index to fix it. The tests reject any 2147483xxx value in the shell or the homepage.
+
+### Design tokens and type
+
+The same `:root` (in `@layer tokens`) carries the shared design tokens: `--ls-pink #ff008f` (the site accent), `--ls-pink-glow`, `--ls-gold #d4af6a` (hairlines, numbers and kickers only), `--ls-chrome`, `--ls-muted`, `--ls-line-gold`, spacing `--ls-s-1` to `--ls-s-8`, radius `--ls-r-1/2/3` (4 / 10 / 18 px), two shadows and `--ls-ease-out`. Names carry the `--ls-` prefix so page variables cannot collide.
+
+Cascade layers are declared once as `@layer reset, tokens, shell, page, overrides;`. Tokens and base defaults (focus outlines) are layered; the existing shell rules stay unlayered on purpose, because layering them would let any page stylesheet outrank the shell. New page or override CSS should use the named layers.
+
+Type roles: Orbitron is the brand mark and display face; Rajdhani is the label/UI face (labels 10-13 px, about .14em tracking). The shell adds the template's web-font stylesheet to pages that load none; Special Access is exempt so it renders exactly as it was built. No framework or component kit is used.
+
+### Merch
+
+MERCH links in the header, drawer and footer all point at `/merch`. The `/merch` and `/merch/` redirects in `vercel.json` are the one place the store URL lives; change it there only.
 
 # 💿 Canonical Release Architecture
 
@@ -211,25 +246,35 @@ Track URLs should resolve to their canonical parent release where applicable.
 
 ---
 
-# 📚 Releases vs Archive
-
-### Releases
+# Releases
 
 ```text
-/releases.html
+/releases.html            catalog grid with search (titles and tracks), type filters and sorting
+/release.html?id=<title>  release detail, rendered from the catalog at runtime
+/release/<slug>           static copy of the same page with real social/SEO metadata (generated)
 ```
 
-Curated presentation of releases, artwork, release type, track context, filtering, and direct release experiences.
+`/archive.html` no longer exists; `vercel.json` sends `/archive*` to `/releases`.
 
-### Archive
+## Adding or changing a release
 
-```text
-/archive.html
-```
+`release-catalog.json` is the only file to edit:
 
-Discovery-oriented catalog layer with release search, track search, release-type filters, platform filters, sorting, A-Z/Z-A sorting, release-set artwork, parent-release context, and shareable query state.
+1. Add the title at the top of `order` (position 0 is the newest release).
+2. Add `spotify[title]` and `apple[title]`, or a `groups[title]` entry (`type` ALBUM / EP / SINGLE, `tracks`, links) for an album or EP.
+3. Add `artwork[norm(title)]` (lowercase letters and digits of the title) and put the art file in `assets/images/icons/album_art/` (webp, new filename for new art).
+4. Optionally add `stories[title]`, `trackSpotify` and `trackSoundcloud` entries.
 
-**Rule:** Releases are presentation. Archive is exploration.
+What then updates on its own:
+
+- Homepage: "New Releases" shows the first 3 entries of `order`, "Releases" the first 6, and the video grid up to 9 releases that have a YouTube video.
+- `/releases`, `/release?id=` and `/universe` read the catalog directly.
+- **Build Site Data** (`.github/workflows/build-site-data.yml`) runs `node scripts/build-site-data.mjs` and commits `release/<slug>.html` plus `sitemap.xml`. Existing sitemap entries are kept and the `/special_access` entry is never changed. Run it locally the same way; `node scripts/build-site-data.mjs --check` fails when the committed output is stale (the site tests run it).
+- **Refresh Latest Videos** (`.github/workflows/update-latest-videos.yml`) rewrites `latest-videos.json`. If fewer than 9 releases have a matching video it publishes what matched and shows a warning instead of failing.
+
+Not automatic: the artwork on `press.html`, `coming_soon.html` and the gallery.
+
+Keep private notes out of `release-catalog.json`; it is public.
 
 ---
 
@@ -241,7 +286,7 @@ The gallery intentionally excludes navigation icons, platform/social icons, util
 
 - Character/model photography and character studies from `/assets/2/`
 - Release and single artwork from `/assets/images/icons/album_art/`
-- New visual studies from `/assets/images/icons/new_art/`
+- New visual studies from `/assets/art/visuals/` (moved from `/assets/images/icons/new_art/`, which still resolves through a `vercel.json` rewrite)
 - Selected artwork-bearing key art from `/assets/img/`
 - Lightbox viewing with keyboard and touch navigation
 - Artwork filters for Characters, Release Art, New Art, and World/Key Art
@@ -259,8 +304,8 @@ Known core assets include:
 /assets/img/LS.png
 /assets/images/icons/album_art/
 /assets/mov/LS_BG_STARS.webm
-/assets/mov/HERO_BG_WEBM.webm
-/assets/other/sound/Background.mp3
+/assets/icons/ui/siqa-verified.webp
+/assets/other/sound/Background.mp3   (THE CALM; not wired to any page)
 ```
 
 The repository already contains established release artwork and LIL SYNN visual assets. Audit the repository before requesting or generating a replacement.
@@ -309,7 +354,7 @@ THE CALM is intentionally separate from foreground music discovery.
 
 # 🎬 Global Motion
 
-`script.js` owns global background-video behavior.
+The template's `#ls-bg-layer` owns global background-video behavior (markup in `template.html`, styling in `site-shell.css`, reduced-motion handling in `site-shell.js`). `script.js` is not loaded by any page.
 
 Primary background asset:
 
@@ -327,15 +372,15 @@ Overlay
 Global Shell / Page Content
 ```
 
-Reduced-motion and low-power behavior should reduce visual intensity instead of creating duplicate rendering systems.
+Reduced-motion and low-power behavior should reduce visual intensity instead of creating duplicate rendering systems. Today, reduced motion holds the background video still and turns off shell transitions.
 
 ---
 
 # 🌙 THE CALM
 
-THE CALM is a globally owned ambient/environment layer and remains separate from foreground music discovery.
+**Status:** not currently wired. No page or script plays the file below; it is kept for when THE CALM returns. THE CALM is meant as an ambient layer separate from foreground music discovery.
 
-Primary source:
+Source file:
 
 ```text
 /assets/other/sound/Background.mp3
@@ -1033,22 +1078,16 @@ Important `vercel.json` responsibilities include:
 
 # 🧬 Cache & Versioning
 
-Shared shell assets currently use the intentional cache-busting value:
+There is one shared-shell key: `SHELL_VERSION` in `site-shell.js`.
 
-```html
-<script src="/site-shell.js?v=20260919"></script>
-<link id="site-global-css" rel="stylesheet" href="/site-shell.css?v=20260919">
+```js
+const SHELL_VERSION='20261120-p4';   // example; read the file for the current value
+// template.html?template=SHELL_VERSION and site-shell.css?v=SHELL_VERSION
 ```
 
-`20260919` is a cache-busting identifier currently present in source, not a roadmap date.
+Every page loads the shell as `<script src="/site-shell.js?v=<same key>">`. Bump all of them in the same commit when the template, `site-shell.css` or `site-shell.js` changes.
 
-The Gallery page uses its own query value on its page-local script reference:
-
-```html
-<script src="/site-shell.js?v=20260919-gallery"></script>
-```
-
-Any future shared-shell version change must be synchronized across consumers.
+Assets under `/assets/` are served `max-age=31536000, immutable`. A changed image must ship under a **new filename**, or returning visitors keep the old bytes for a year.
 
 ---
 
@@ -1089,16 +1128,16 @@ README-only changes must remain excluded from Main Surface QA unless the workflo
 ### Main site
 
 - Homepage root resolves to `index.html`
-- `index3.html` remains the preserved previous homepage
+- The previous homepage is preserved as `backup/index3.html` (not at root)
 - `index2.html` is absent
 - Shared main shell is present on applicable main pages
 - `/Suno/` remains outside the main shell
-- MORE popup opens beneath the control and repositions with viewport changes
-- VOTE 4 LIL SYNN is centered beneath the top horizontal menu and links to `/vote`
+- Desktop dropdowns open above the action bar and page content; the drawer opens above the header and closes with CLOSE, Escape and a click on the scrim
+- There is no VOTE link or `/vote` route at present (`vote.html` is not in the repo)
 - Homepage section links use `/#section` form when the section exists on the homepage
 - Footer platform icons and destinations are present
 - Releases on the homepage derive from `release-catalog.json`
-- Homepage Releases presentation uses the first nine catalog entries
+- Homepage "New Releases" uses the first 3 catalog entries, "Releases" the first 6, and the video grid up to 9
 - Coming Soon contains the requested upcoming artwork in catalog-card sizing
 - Follow The Signal uses the Buttondown subscription form
 - Sacred geometry and particles animate smoothly
@@ -1211,29 +1250,52 @@ Existing artwork remains authoritative unless a specific new visual has been req
 ```text
 /
 ├── index.html                     # CURRENT homepage
-├── index3.html                    # preserved previous homepage
-├── template.html                  # canonical standalone main-site shell
-├── site-shell.js                  # shared main-site shell/runtime
-├── site-shell.css                 # shared main-site shell styling
+├── template.html                  # canonical main-site shell (header, menus, footer, tokens)
+├── site-shell.js                  # injects the shell; owns SHELL_VERSION (stays at root: SITE_BASE is derived from its path)
+├── site-shell.css                 # shared shell styling, loaded once by site-shell.js
 ├── index-enhancements.js          # homepage releases/about/orb enhancements
-├── homepage-final-fix.js          # homepage navigation/visual repairs
-├── release-catalog.json            # canonical release order/data
+├── homepage-final-fix.js          # homepage geometry layer and section order (deferred)
+├── latest-videos.js               # homepage video grid
+├── index2-final-fix.js            # no-op on /; stays at root because suno tooling references it
+├── release-catalog.json           # canonical release order/data
+├── latest-videos.json             # written by Refresh Latest Videos
+├── transmissions.json
 ├── releases.html
-├── archive.html
-├── release.html
-├── gallery.html                    # artwork-first visual archive; inherits template shell
-├── universe.html
-├── videos.html
-├── coming_soon.html
-├── lore.html
+├── release.html                   # release detail (also the body of every release/<slug>.html)
+├── release/                       # GENERATED by scripts/build-site-data.mjs; do not edit by hand
+├── sitemap.xml                    # existing entries + a generated release-page block
+├── gallery.html                   # artwork-first visual archive; inherits template shell
+├── universe.html, lore.html, press.html, videos.html, coming_soon.html
 ├── special_access.html
-├── command/
-├── Suno/                           # separate, do not modify for main-site shell work
+├── privacy.html, terms.html, 404.html, site-health.html
+├── syntient_records/, SynovaMedia/
+├── command/                       # Command Center and Admin
+├── api/                           # Vercel functions
 ├── assets/
-├── tools/
+│   ├── art/visuals/               # visual studies (was assets/images/icons/new_art/)
+│   ├── icons/ui/                  # UI art (siqa-verified.webp)
+│   ├── images/icons/              # album_art/, favicon/, social SVGs, LS_* UI art
+│   ├── 2/  img/  mov/  other/     # character art, key art, background video, Special Access audio
+├── docs/                          # DEPLOYMENT-REVISION.md, SITE-HEALTH.md, research and plans
+├── legacy/                        # retired root files, excluded from deploy by .vercelignore
+├── scripts/                       # build-site-data.mjs, tests
+├── tools/                         # Site Doctor, QA server, browser QA
+├── Suno/  suno/                   # separate, do not modify for main-site shell work
+├── backup/                        # protected
 ├── .github/workflows/
 └── vercel.json
 ```
+
+Files that look dead but stay where they are because `backup/` or suno tooling references them: `script.js`, `style.css`, `signal-engine.js`, `music-random.js`, `latest-releases.js`, `site-polish.js`, `index2-refinement.js`, `index-under-construction-v2.js`, and the asset folders `album_art/`, `assets/2/`, `assets/img/`, `assets/mov/`. Moving them needs the owner of those areas.
+
+## Asset rules
+
+- Prefer webp. Keep masters out of page references; pages use the `-web.webp` derivatives.
+- Budget about 400 KB per page image.
+- `/assets/` is cached for a year (`immutable`): a changed file gets a new filename.
+- File names for new assets: lowercase, hyphens, no spaces or parentheses.
+- Moving an asset: update every reference (HTML, CSS, JS, JSON, workflows, `vercel.json`, tools) and add a `vercel.json` rewrite from the old path so hotlinks keep working.
+
 # 📜 Project Status / History
 
 The original five major site architecture phases are complete at the architecture level:
@@ -1254,13 +1316,15 @@ The Suno knowledge base is a parallel living documentation/creator system rather
 
 # 🧾 Important Recent Repository State
 
-**2026-11 homepage / release pass.** The hero block and the section heads (NEW RELEASES, WATCH, RELEASES, VISUAL ARCHIVE) are centered. The SIQA verification badge — a wide `SIQA VERIFIED ARTIST` lockup at `assets/images/icons/siqa-verified.webp` — renders as artwork at 260px wide (210px at ≤560px) with no button chrome. `Echoes of Us` is in the canonical catalog with its own artwork (`assets/images/icons/album_art/Echoes of Us.webp`) plus Spotify, Apple Music and YouTube destinations; release cards and `release.html` fall back to the channel when a release has no video of its own. The hamburger was restored at every width after a leftover `min-width:901px` rule kept hiding it, and every root page now shares the shell cache key `20261112`.
+**2026-11-20 shell clean-up (phases 2-6).** The z-index stack is replaced by z-scale tokens, dead shell CSS/JS is gone, `site-shell.css` loads once under one cache key, the template fetch uses the HTTP cache, the drawer has a click-to-close scrim, shell labels are larger and hairlines gold, retired root files moved to `legacy/`, and `scripts/build-site-data.mjs` generates the sitemap release block and `release/<slug>.html`.
+
+**2026-11 homepage / release pass.** The hero block and the section heads (NEW RELEASES, WATCH, RELEASES, VISUAL ARCHIVE) are centered. The SIQA verification badge — a wide `SIQA VERIFIED ARTIST` lockup, now at `assets/icons/ui/siqa-verified.webp` — renders as artwork at 260px wide (210px at ≤560px) with no button chrome. `Echoes of Us` is in the canonical catalog with its own artwork (`assets/images/icons/album_art/Echoes of Us.webp`) plus Spotify, Apple Music and YouTube destinations; release cards and `release.html` fall back to the channel when a release has no video of its own. The hamburger was restored at every width after a leftover `min-width:901px` rule kept hiding it.
 
 The Main Surface QA system was added and its detached-HEAD push behavior was corrected before the homepage promotion.
 
-The current homepage promotion was completed on `main` by moving the former `index2.html` design into `index.html` and preserving the old homepage as `index3.html`.
+The current homepage promotion was completed on `main` by moving the former `index2.html` design into `index.html`; the old homepage is kept as `backup/index3.html`.
 
-The QA workflow has already produced an automated README result in an earlier run. The README block above preserves the last generated result until the next qualifying QA execution updates it.
+QA status is not written into this README. The badges at the top show it, and each run's Summary page has the details.
 
 ---
 
@@ -1363,15 +1427,16 @@ Do not create competing global headers, duplicated navigation systems, duplicate
 
 ### Horizontal navigation
 
-The main header must contain functional category navigation, organized approximately around:
+The main header must contain functional category navigation. Its current labels are:
 
-- MUSIC
-- VISUALS
-- UNIVERSE
-- RECORDS
-- MORE
+- MUSIC (dropdown)
+- WATCH (dropdown)
+- EXPLORE (dropdown)
+- PRESS / EPK
+- MERCH
+- LISTEN (dropdown)
 
-Exact labels and destinations must follow the repository architecture.
+Exact labels and destinations must follow the repository architecture (`template.html`).
 
 Intended dropdown categories must actually open and close and must work appropriately with mouse, keyboard, and touch.
 

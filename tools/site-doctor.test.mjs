@@ -31,13 +31,13 @@ assert.doesNotMatch(index, /<video\b/, 'index.html must not ship its own backgro
 assert.doesNotMatch(read('404.html'), /<video\b/, '404.html must not ship its own background video');
 assert.doesNotMatch(read('homepage-final-fix.js'), /site-stars-bg/, 'homepage-final-fix.js must not create a second stars video');
 
-// Drawer stacks above the header: the menu z-index must equal the header's (the menu is mounted later, so it paints on top).
-const headerZ = shell.match(/\.ls-canonical-topbar\{[^}]*?z-index:(\d+)/)?.[1];
-const menuZInjected = shell.match(/#ls-template-menu\{position:fixed!important;z-index:(\d+)/)?.[1];
-const menuZInline = shell.match(/'z-index':'(\d+)'/)?.[1];
-assert.ok(headerZ && menuZInjected && menuZInline, 'shell declares header and menu z-index');
-assert.equal(menuZInjected, headerZ, 'injected menu z-index must match header');
-assert.equal(menuZInline, headerZ, 'inline (setMenu) menu z-index must match header');
+// Layering uses the z-scale tokens from the template head: drawer > scrim > header.
+const tokens = Object.fromEntries([...template.matchAll(/--(z-[a-z-]+):(\d+)/g)].map(m => [m[1], Number(m[2])]));
+assert.ok(tokens['z-header'] && tokens['z-drawer'] && tokens['z-drawer-scrim'], 'template declares the z-scale');
+assert.ok(tokens['z-drawer'] > tokens['z-drawer-scrim'] && tokens['z-drawer-scrim'] > tokens['z-header'], 'drawer above scrim above header');
+assert.match(shell, /\.ls-canonical-topbar\{[^}]*?z-index:var\(--z-header,1000\)/, 'header uses the header token');
+assert.match(shell, /#ls-template-menu\{position:fixed!important;z-index:var\(--z-drawer,1100\)/, 'injected menu rule uses the drawer token');
+assert.match(shell, /'z-index':'var\(--z-drawer,1100\)'/, 'inline (setMenu) menu z-index uses the drawer token');
 assert.match(shell, /replaceChildren\(\.\.\.visuals,h,m,content,f\)/, 'menu must be mounted after the header');
 
 // Shared head tags come from the template only; never noindex.

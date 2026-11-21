@@ -12,6 +12,7 @@ export const interactionRoutes = [
   { name: 'HOME', path: '/', menu: true, catalog: 'home' },
   { name: 'RELEASES', path: '/releases.html', menu: true, catalog: 'releases' },
   { name: 'RELEASE', path: '/release.html?id=Echoes%20of%20Us', menu: true, catalog: 'release' },
+  { name: 'RELEASE PAGE', path: '/release/echoes-of-us', menu: true, catalog: 'release' },
   { name: 'GALLERY', path: '/gallery.html', menu: true },
   { name: 'PRESS', path: '/press.html', menu: true }
 ];
@@ -106,6 +107,26 @@ export async function runMainInteractionQa(browser, baseUrl, log = console.log) 
             await page.keyboard.press('Escape');
             await page.waitForTimeout(200);
             if ((await page.evaluate(probe)).open) fails.push('Escape did not close the menu');
+            // The scrim behind the drawer closes it on click (left edge, outside the drawer).
+            await page.click('#ls-template-menu-open');
+            await page.waitForTimeout(300);
+            await page.mouse.click(4, Math.round(vp.height / 2));
+            await page.waitForTimeout(300);
+            if ((await page.evaluate(probe)).open) fails.push('clicking the scrim did not close the menu');
+          }
+          if (vp.width > 900) {
+            // Desktop dropdowns open above the action bar and page content.
+            await page.click('.ls-desktop-nav .ls-template-cat button');
+            await page.waitForTimeout(200);
+            const dd = await page.evaluate(() => {
+              const m = document.querySelector('.ls-template-cat.open .ls-template-cat-menu');
+              if (!m) return { ok: false, hit: 'no open dropdown' };
+              const a = m.querySelector('a'); const r = a.getBoundingClientRect();
+              const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+              return { ok: !!hit && (hit === a || a.contains(hit)), hit: hit ? hit.tagName + '.' + (hit.className || '') : null };
+            });
+            if (!dd.ok) fails.push(`desktop dropdown item is covered by ${dd.hit}`);
+            await page.keyboard.press('Escape');
           }
         }
       } catch (error) {
@@ -114,7 +135,7 @@ export async function runMainInteractionQa(browser, baseUrl, log = console.log) 
       fails.push(...errors);
       const pass = fails.length === 0;
       results.push({ route: route.name, path: route.path, viewport: vp.label, pass, fails });
-      log(`${pass ? 'PASS' : 'FAIL'} | MAIN INTERACTION | ${route.name} ${route.path} @${vp.width} | menu-on-top, one-bg-video${route.catalog ? ', catalog' : ''}`);
+      log(`${pass ? 'PASS' : 'FAIL'} | MAIN INTERACTION | ${route.name} ${route.path} @${vp.width} | menu-on-top, scrim, dropdown, one-bg-video${route.catalog ? ', catalog' : ''}`);
       for (const f of fails) log(`  ${f}`);
       await context.close();
     }

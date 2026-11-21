@@ -6,7 +6,28 @@ const excluded=new Set(['/suno','/backup','/template','/template_bu']);
 if(excluded.has(route)||route.startsWith('/suno/'))return;
 
 const SHELL_SCRIPT=new URL(document.currentScript?.getAttribute('src')||'site-shell.js',location.href);const SITE_BASE=SHELL_SCRIPT.pathname.replace(/\/site-shell\.js.*$/,'');const ROOT=p=>SITE_BASE+(p.startsWith('/')?p:'/'+p);const LS_BG_STARS='/assets/mov/LS_BG_STARS.webm';
-const TEMPLATE_URL=ROOT('/template.html')+'?template=20261120-favicon';
+// One version key for the shared shell. Bump it (and every page's site-shell.js?v=) whenever
+// template.html, site-shell.css or this file changes. The template is fetched with the normal
+// HTTP cache; the key makes each release a new URL.
+const SHELL_VERSION='20261120-p4';
+const TEMPLATE_URL=ROOT('/template.html')+'?template='+SHELL_VERSION;
+const SHELL_CSS_URL=ROOT('/site-shell.css')+'?v='+SHELL_VERSION;
+
+// site-shell.css is loaded exactly once, as early as possible (this script runs before
+// DOMContentLoaded). Any older page-level copy is dropped once the current one has loaded.
+function ensureShellCss(){
+  let link=document.querySelector('link[data-ls-template-shell]');
+  if(link)return link;
+  const stale=[...document.querySelectorAll('link[rel="stylesheet"]')].filter(l=>/\/site-shell\.css(?:\?|$)/.test(l.getAttribute('href')||''));
+  link=document.createElement('link');
+  link.rel='stylesheet';
+  link.href=SHELL_CSS_URL;
+  link.dataset.lsTemplateShell='1';
+  if(stale.length)link.addEventListener('load',()=>stale.forEach(l=>l.remove()),{once:true});
+  document.head.appendChild(link);
+  return link;
+}
+const SHELL_CSS_LINK=ensureShellCss();
 
 function rewriteTemplateUrls(root){
   root.querySelectorAll('a[href],img[src],video[src],source[src],script[src],link[href]').forEach(el=>{
@@ -36,26 +57,15 @@ function rewritePageUrls(root){
   });
 }
 
-function normalize(){
-  document.querySelectorAll('a[href]').forEach(a=>{
-    const h=a.getAttribute('href');
-  });
-}
-
 function addTemplateStyles(doc){
+  // Cascade order is fixed: page styles < template head styles < site-shell.css.
+  const shellCss=ensureShellCss();
   [...doc.head.querySelectorAll('style')].forEach(s=>{
     const x=document.createElement('style');
     if(s.id)x.id='ls-injected-'+s.id;
     x.textContent=s.textContent.replace(/url\((['"]?)\//g,`url($1${SITE_BASE}/`);
-    document.head.appendChild(x);
+    document.head.insertBefore(x,shellCss);
   });
-  if(!document.querySelector('link[data-ls-template-shell]')){
-    const l=document.createElement('link');
-    l.rel='stylesheet';
-    l.href=ROOT('/site-shell.css')+'?v=20261120-favicon';
-    l.dataset.lsTemplateShell='1';
-    document.head.appendChild(l);
-  }
 
   const repair=document.createElement('style');
   repair.id='ls-universal-template-layout';
@@ -63,7 +73,7 @@ function addTemplateStyles(doc){
 /* UNIVERSAL TEMPLATE LAYOUT */
 html,body{height:auto!important;min-height:0!important;scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*{scrollbar-color:#ff008f rgba(255,255,255,.08)!important;scrollbar-width:thin!important}*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}*::-webkit-scrollbar-thumb{background:#ff008f;border:2px solid #08080b;border-radius:999px}*::-webkit-scrollbar-thumb:hover{background:#ff4fd8}
 body.ls-canonical-page{padding:0!important;margin:0!important;overflow-x:hidden!important;overflow-y:visible!important}
-body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483647!important;overflow:visible!important;isolation:isolate!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:2147483647!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:100!important}body.ls-canonical-page #template-content{
+body.ls-canonical-page .ls-canonical-topbar{display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:var(--z-header,1000)!important;overflow:visible!important;isolation:isolate!important}body.ls-canonical-page #ls-template-menu{position:fixed!important;z-index:var(--z-drawer,1100)!important}body.ls-canonical-page .ls-canonical-footer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:var(--z-footer,3)!important}body.ls-canonical-page #template-content{
   display:block!important;
   position:relative!important;
   width:100%!important;
@@ -139,8 +149,17 @@ function wireMenu(root){
 
   // Drawer geometry is set inline so no legacy stylesheet rule can pin it back
   // to the old full-width card. Inline !important outranks every sheet.
-  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','box-sizing':'border-box','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'2147483647','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
+  const MENU_PROPS={'position':'fixed','inset':'0 0 0 auto','width':'min(360px,88vw)','box-sizing':'border-box','height':'100dvh','max-height':'100dvh','border-radius':'18px 0 0 18px','padding':'18px','overflow':'auto','z-index':'var(--z-drawer,1100)','transform':'none','visibility':'visible','opacity':'1','pointer-events':'auto','display':'block'};
+  // Click-to-close scrim between the header and the drawer (--z-drawer-scrim).
+  let scrim=document.getElementById('ls-menu-scrim');
+  if(!scrim){
+    scrim=document.createElement('div');
+    scrim.id='ls-menu-scrim';
+    scrim.setAttribute('aria-hidden','true');
+    menu.before(scrim);
+  }
   const setMenu=v=>{
+    scrim.classList.toggle('open',v);
     if(v)Object.entries(MENU_PROPS).forEach(([k,val])=>menu.style.setProperty(k,val,'important'));
     else Object.keys(MENU_PROPS).forEach(k=>menu.style.removeProperty(k));
     menu.classList.toggle('open',v);
@@ -148,8 +167,8 @@ function wireMenu(root){
     open.setAttribute('aria-expanded',String(v));
     open.setAttribute('aria-label',v?'Close navigation menu':'Open navigation menu');
     document.body.style.overflow=v?'hidden':'';
-    // Drawer and header share the top z-index; the drawer is mounted after the
-    // header, so it paints on top. Move focus into the drawer and back out.
+    // The drawer (--z-drawer) sits above the header (--z-header) and the scrim.
+    // Move focus into the drawer and back out.
     if(v)close?.focus({preventScroll:true});
     else if(menu.contains(document.activeElement))open.focus({preventScroll:true});
   };
@@ -160,6 +179,7 @@ function wireMenu(root){
     setMenu(!menu.classList.contains('open'));
   });
   if(close)close.addEventListener('click',()=>setMenu(false));
+  scrim.addEventListener('click',()=>setMenu(false));
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
 
   const cats=[...root.querySelectorAll('.ls-template-cat')];
@@ -222,6 +242,13 @@ function addTemplateHeadTags(doc){
   const desc=document.head.querySelector('meta[name="description"]')?.getAttribute('content')||'';
   doc.head.querySelectorAll('[data-ls-head]').forEach(src=>{
     if(/robots/i.test(src.getAttribute('name')||''))return;
+    // Shared web fonts (Orbitron brand / Rajdhani UI): added only where the page loads none.
+    // Special Access keeps its own rendering untouched.
+    if(src.getAttribute('data-ls-head')==='fonts'){
+      if(route.endsWith('/special_access')||document.head.querySelector('link[href*="fonts.googleapis.com/css"]'))return;
+      const f=src.cloneNode(true);f.removeAttribute('data-ls-head');f.setAttribute('data-ls-head-copied','fonts');
+      document.head.appendChild(f);return;
+    }
     if(pageHasHeadTag(src))return;
     const role=src.getAttribute('data-ls-head');
     const el=src.cloneNode(true);
@@ -242,11 +269,24 @@ function addTemplateHeadTags(doc){
   });
 }
 
+// prefers-reduced-motion: hold the background video on a still frame instead of looping it.
+function respectReducedMotion(){
+  const mq=window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const video=document.querySelector('#ls-bg-layer video');
+  if(!mq||!video)return;
+  const apply=()=>{
+    if(mq.matches){video.removeAttribute('autoplay');video.pause();}
+    else if(video.paused){video.play()?.catch(()=>{});}
+  };
+  apply();
+  mq.addEventListener?.('change',apply);
+}
+
 async function injectTemplate(){
   if(document.documentElement.dataset.lsTemplateApplied==='1')return;
 
   try{
-    const res=await fetch(TEMPLATE_URL,{cache:'no-store'});
+    const res=await fetch(TEMPLATE_URL);
     if(!res.ok)throw new Error('template fetch '+res.status);
 
     const html=await res.text();
@@ -301,7 +341,7 @@ async function injectTemplate(){
     document.documentElement.dataset.lsTemplateApplied='1';
 
     wireMenu(document.body);
-    normalize();
+    respectReducedMotion();
     // Activate the hidden Metricool footer widget after the canonical footer is mounted.
     // Recreate its script node because scripts cloned from the fetched template do not execute.
     const metricoolWidget=document.querySelector('[data-metricool-tracker]');
