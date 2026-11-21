@@ -37,13 +37,30 @@ for (const route of ['/suno','/backup','/template','/template_bu']) {
 }
 
 assert.match(css, /#ls-bg-layer\{position:fixed/);
-assert.match(css, /#ls-more-menu\{position:fixed/);
-assert.match(css, /z-index:2147483000/);
+const template = read('template.html');
+// Layering uses the z-scale tokens declared once in the template head; no 2^31 escalation anywhere in the shell.
+assert.match(template, /--z-bg:0;--z-decor:1;--z-content:2;--z-footer:3;/, 'template head declares the z-scale');
+assert.match(template, /--z-header:1000;--z-drawer-scrim:1090;--z-drawer:1100;/, 'drawer sits above the scrim, the scrim above the header');
+for (const [name, text] of [['site-shell.css', css], ['site-shell.js', shell], ['template.html', template], ['index.html', index]]) {
+  assert.doesNotMatch(text, /z-index:\s*21474836\d\d/, `${name} must use the z-scale tokens, not 2^31 values`);
+}
+assert.match(shell, /'z-index':'var\(--z-drawer,1100\)'/, 'open drawer uses the drawer token');
+assert.match(shell, /ls-menu-scrim/, 'drawer has a click-to-close scrim');
+assert.doesNotMatch(css, /#ls-more-menu|\.ls-mobile-|\.ls-orb-galaxy/, 'dead menu/orb systems stay out of site-shell.css');
+assert.doesNotMatch(template, /\\n\.ls-siqa-badge/, 'no literal \\n inside template CSS');
+assert.doesNotMatch(template.slice(template.indexOf('</footer>')), /<style|<script/, 'template body tail carries no styles or scripts (they never reach pages)');
 assert.match(css, /prefers-reduced-motion/);
-assert.match(css, /body\.ls-canonical-page\{[^}]*background:transparent!important/);
+assert.match(css, /body\.ls-canonical-page\{background:#020204!important/);
+// site-shell.css is loaded once, by the shell, under the same version key as the template.
+assert.match(shell, /const SHELL_VERSION='[^']+'/);
+assert.match(shell, /TEMPLATE_URL=ROOT\('\/template\.html'\)\+'\?template='\+SHELL_VERSION/);
+assert.match(shell, /SHELL_CSS_URL=ROOT\('\/site-shell\.css'\)\+'\?v='\+SHELL_VERSION/);
+assert.doesNotMatch(shell, /cache:'no-store'/, 'template fetch uses the HTTP cache plus the version key');
 
 // Homepage / artist UI contract.
-assert.match(index, /homepage-final-fix\.js/);
+assert.match(index, /<script src="\.\/homepage-final-fix\.js[^"]*" defer><\/script>/, 'homepage-final-fix.js is deferred');
+assert.doesNotMatch(index, /site-shell\.css/, 'homepage does not load its own copy of site-shell.css');
+assert.match(index, /OFFICIAL TRANSMISSION \/ 369/, 'transmission number lives in the HTML');
 assert.doesNotMatch(index, /id=["']ls-template-menu["']/, 'homepage must not ship its own copy of the canonical menu');
 assert.doesNotMatch(index, /data-ls-global-(?:header|footer)/, 'homepage must not ship its own copy of the canonical header/footer');
 assert.match(shell, /document\.createElement\(document\.querySelector\('main'\)\?'div':'main'\)/, 'shell must not nest a second <main> around a page that already has one');
@@ -51,9 +68,7 @@ assert.doesNotMatch(index, /<video\b/, 'homepage must not ship its own backgroun
 assert.doesNotMatch(read('404.html'), /<video\b/, '404 must not ship a second background video');
 assert.doesNotMatch(read('homepage-final-fix.js'), /site-stars-bg/, 'homepage-final-fix.js must not create a second stars video');
 assert.doesNotMatch(shell, /'z-index':'2147483641'|#ls-template-menu\{position:fixed!important;z-index:2147483641/, 'menu must not sit below the header (2147483641 < 2147483647)');
-assert.match(index, /id=["']playerDock["']/i);
-assert.match(index, /id=["']playerClose["']/i);
-assert.match(index, /id=["']spotifyFrame["']/i);
+assert.doesNotMatch(index, /id=["']playerDock["']|utilityDropdown/i, 'dead homepage player dock / utility dropdown stay removed');
 assert.match(index, /open\.spotify\.com\/artist\/6ozcOAnRAUPn3z5c0GR5kU/i, 'homepage must retain the canonical Spotify artist destination');
 assert.match(index, /06 \/ ARTIST \+ WORLD/, 'homepage retains its current artist/world section');
 assert.match(index, /id=["']releaseFeed["']/);
@@ -71,6 +86,7 @@ assert.match(releases, /repeat\(2/);
 for (const page of pages) {
   const html = read(page);
   assert.match(html, /<script[^>]+src=["']\/site-shell\.js/i, `${page} must load the canonical shell`);
+  if (page !== 'special_access.html') assert.doesNotMatch(html, /<link[^>]+site-shell\.css/i, `${page} must not load its own copy of site-shell.css`);
   assert.doesNotMatch(html, /<script[^>]+src=["']\/site-global\.js/i, `${page} still references legacy runtime`);
   assert.doesNotMatch(html, /href=["']\/index\.html\/contact/i, `${page} has malformed contact routing`);
 }
