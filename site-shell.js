@@ -338,6 +338,7 @@ async function injectTemplate(){
     document.body.replaceChildren(...visuals,h,m,content,f);document.body.style.overflow='';document.documentElement.style.overflowX='hidden';
     document.body.classList.add('ls-canonical-page');
     { let r=route; if(SITE_BASE&&r.startsWith(SITE_BASE.toLowerCase()))r=r.slice(SITE_BASE.length)||'/'; if(r==='/index')r='/'; document.documentElement.dataset.lsRoute=r; }
+    if(document.documentElement.dataset.lsRoute==='/'){ const bgv=document.querySelector('#ls-bg-layer video'); if(bgv&&!bgv.dataset.lsHomeBg){ bgv.dataset.lsHomeBg='1'; bgv.innerHTML='<source src="'+ROOT('/assets/mov/LS_BG_HOME.webm')+'" type="video/webm">'; bgv.load(); bgv.play()?.catch(()=>{}); } }
     document.documentElement.dataset.lsTemplateApplied='1';
 
     wireMenu(document.body);
