@@ -12,6 +12,7 @@ export const interactionRoutes = [
   { name: 'HOME', path: '/', menu: true, catalog: 'home' },
   { name: 'RELEASES', path: '/releases.html', menu: true, catalog: 'releases' },
   { name: 'RELEASE', path: '/release.html?id=Echoes%20of%20Us', menu: true, catalog: 'release' },
+  { name: 'RELEASE PAGE', path: '/release/echoes-of-us', menu: true, catalog: 'release' },
   { name: 'GALLERY', path: '/gallery.html', menu: true },
   { name: 'PRESS', path: '/press.html', menu: true }
 ];

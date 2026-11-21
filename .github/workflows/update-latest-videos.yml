@@ -112,8 +112,12 @@ jobs:
               used.add(chosen['id'])
               selected.append({'id':chosen['id'],'title':chosen['title'],'publishedAt':chosen['publishedAt'],'release':release})
 
-          if len(selected) != 9:
-              raise SystemExit(f'Could not resolve 9 canonical releases to YouTube Releases videos; resolved {len(selected)}')
+          if not selected:
+              print('::warning::No canonical release matched a YouTube Releases video; latest-videos.json left unchanged.')
+              raise SystemExit(0)
+          if len(selected) < 9:
+              # A new release without a video yet must not break the job: publish what matched and warn.
+              print(f'::warning::Only {len(selected)} of 9 canonical releases resolved to YouTube Releases videos; publishing {len(selected)}.')
 
           out={
               'generatedAt':datetime.now(timezone.utc).isoformat(),

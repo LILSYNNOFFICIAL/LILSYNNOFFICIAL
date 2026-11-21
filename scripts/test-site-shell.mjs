@@ -130,7 +130,7 @@ assert.doesNotMatch(rerun, /^\s+push:/m, 'RERUN ALL JOBS must be manual-only');
 assert.match(rerun, /actions:\s*write/);
 assert.match(rerun, /contents:\s*read/);
 
-const intentionalMutators = new Set(['admin-git.yml','github-pages-preview.yml','sync-suno-guide.yml','update-latest-videos.yml','optimize-index2-webm.yml']);
+const intentionalMutators = new Set(['admin-git.yml','build-site-data.yml','github-pages-preview.yml','sync-suno-guide.yml','update-latest-videos.yml','optimize-index2-webm.yml']);
 for (const name of workflowNames) {
   const text = fs.readFileSync(new URL(name, workflowDir), 'utf8');
   const writesMain = /git\s+push(?:\s+origin)?\s+(?:HEAD:)?main|git\s+push\s*$/m.test(text);
@@ -143,6 +143,17 @@ assert.match(read('.vercelignore'), /^legacy\/$/m, 'legacy/ is excluded from the
 assert.ok(fs.existsSync(new URL('index2-final-fix.js', root)), 'index2-final-fix.js stays at root (suno tooling references it)');
 
 const catalog = JSON.parse(read('release-catalog.json'));
+// Release data hygiene and generated site data (scripts/build-site-data.mjs).
+assert.doesNotMatch(read('release-catalog.json'), /REACH OUT TO DISTRIBUTOR/, 'no private notes in the public catalog');
+assert.equal(catalog.groups?.["Don't Say It"]?.type, 'SINGLE', "Don't Say It is a single");
+assert.doesNotMatch(index, /Canonical catalog position/, 'no developer text on the homepage');
+{
+  const { execFileSync } = await import('node:child_process');
+  execFileSync(process.execPath, [new URL('scripts/build-site-data.mjs', root).pathname, '--check'], { stdio: 'inherit' });
+  const latestVideos = read('.github/workflows/update-latest-videos.yml');
+  assert.doesNotMatch(latestVideos, /len\(selected\) != 9/, 'update-latest-videos tolerates fewer than 9 matches');
+  assert.match(latestVideos, /::warning::/);
+}
 assert.equal(new Set(catalog.order || []).size, (catalog.order || []).length, 'release catalog contains duplicates');
 
 console.log('site-shell architecture + auth + workflow audit: PASS');
