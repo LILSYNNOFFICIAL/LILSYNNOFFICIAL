@@ -28,6 +28,8 @@ body{background:transparent;color:#fff}
 .album{display:grid;grid-template-columns:.72fr 1.28fr;gap:34px;align-items:center}.album img{width:100%;aspect-ratio:1;object-fit:cover;border:1px solid var(--line)}.album-copy h3{font:800 clamp(34px,5vw,62px)/.9 Orbitron;margin:8px 0 14px}.album-copy p{color:#aaa;font:500 16px/1.6 Rajdhani}.tracks{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:20px 0}.track{padding:9px 11px;border:1px solid rgba(255,255,255,.08);color:#aaa;font:700 10px Rajdhani;letter-spacing:.08em}.track b{color:var(--glow);margin-right:8px}
 .links{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.links a{padding:13px;border:1px solid rgba(255,255,255,.12);background:rgba(7,7,11,.72);color:#fff;text-decoration:none;text-align:center;font:800 9px Rajdhani;letter-spacing:.12em}.links a:hover{border-color:var(--pink);background:rgba(255,0,143,.08)}
 .note{margin-top:55px;text-align:center;color:#666;font:700 9px Rajdhani;letter-spacing:.18em}
+.press-list{display:grid;gap:14px}.press-card{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;align-items:center;padding:18px;border:1px solid var(--line);background:var(--panel);transition:border-color .2s}.press-card:hover{border-color:rgba(255,0,143,.5)}.press-card img{display:block;width:200px;height:200px;object-fit:cover;border:1px solid rgba(255,0,143,.35)}.press-card h3{font:700 clamp(18px,2.4vw,26px)/1.15 Orbitron;margin:8px 0 10px}.press-card blockquote{margin:0 0 14px;padding-left:12px;border-left:2px solid var(--pink);color:#bbb;font:500 15px/1.55 Rajdhani;font-style:italic}.press-card .buttons{margin-top:0}
+@media(max-width:620px){.press-card{grid-template-columns:1fr;text-align:left}.press-card img{width:150px;height:150px}}
 @media(max-width:850px){.hero,.album{grid-template-columns:1fr}.cover{width:min(560px,100%);margin:auto}.hero-copy{text-align:center}.lead{margin-left:auto;margin-right:auto}.buttons{justify-content:center}.facts{grid-template-columns:1fr 1fr}.links{grid-template-columns:1fr 1fr}.head{display:block}.head p{margin-top:12px}}
 @media(max-width:520px){.epk{width:92vw;padding-top:92px}.section{margin-top:65px}.facts,.links,.tracks{grid-template-columns:1fr}.award{text-align:left}.hero h1{font-size:clamp(44px,14vw,70px)}}
 </style>
@@ -48,6 +50,7 @@ body{background:transparent;color:#fff}
     </div>
     <div class="buttons">
       <a class="btn" href="/releases.html">EXPLORE MUSIC ↗</a>
+      <a class="btn alt" href="#press">PRESS ↗</a>
       <a class="btn alt" href="/gallery.html">VIEW VISUALS ↗</a>
       <a class="btn alt" href="https://open.spotify.com/album/1cwzhlX5MIxBRdCiZawmQx?si=elV5OdZcTY6l1q-bP09ANg" target="_blank" rel="noopener noreferrer">LISTEN ↗</a>
       <a class="btn alt" href="https://registry.thesiqa.com/artists/lil-synn" target="_blank" rel="noopener noreferrer">SIQA ARTIST PROFILE ↗</a>
@@ -55,8 +58,32 @@ body{background:transparent;color:#fff}
   </div>
 </section>
 
+<section class="section" id="press">
+  <div class="head"><div><div class="ey">01 / IN THE PRESS</div><h2>FEATURED <span>STORIES.</span></h2></div><p>Interviews and features on LIL SYNN, the music and the human story behind the mask.</p></div>
+  <div class="press-list">
+    <article class="press-card">
+      <img src="/assets/images/press/static-behind-the-mask.webp" alt="LIL SYNN in a radio studio, hood up, pink cosmic sunglasses" width="200" height="200" loading="lazy">
+      <div>
+        <div class="ey">STATIC MAGAZINE · STATIC STUDIOS RADIO · NOV 27, 2026</div>
+        <h3>Behind the Mask: The Human Side of LIL SYNN</h3>
+        <blockquote>&ldquo;AI is an instrument for me, not a replacement for the creativity.&rdquo;</blockquote>
+        <div class="buttons"><a class="btn" href="https://staticradio.xyz/magazine/behind-the-mask-lil-synn" target="_blank" rel="noopener noreferrer">READ THE FEATURE ↗</a></div>
+      </div>
+    </article>
+    <article class="press-card">
+      <img src="/assets/images/press/jackrighteous-no-face-all-feeling.webp" alt="LIL SYNN against a graffiti brick wall at twilight" width="200" height="200" loading="lazy">
+      <div>
+        <div class="ey">JACK RIGHTEOUS · CREATOR SPOTLIGHT · NOV 23, 2026</div>
+        <h3>LIL SYNN: No Face. All Feeling. &mdash; The Human Story Behind Hello Goodbye</h3>
+        <blockquote>A creator spotlight on the faceless artist, the HELLO GOODBYE album and the listeners who connect with it.</blockquote>
+        <div class="buttons"><a class="btn" href="https://jackrighteous.com/en-us/blogs/creator-spotlight/lil-synn-no-face-all-feeling-hello-goodbye-creator-spotlight" target="_blank" rel="noopener noreferrer">READ THE SPOTLIGHT ↗</a></div>
+      </div>
+    </article>
+  </div>
+</section>
+
 <section class="section">
-  <div class="head"><div><div class="ey">01 / ARTIST</div><h2>THE <span>ARTIST.</span></h2></div><p>A concise industry-facing overview of the LIL SYNN project.</p></div>
+  <div class="head"><div><div class="ey">02 / ARTIST</div><h2>THE <span>ARTIST.</span></h2></div><p>A concise industry-facing overview of the LIL SYNN project.</p></div>
   <div class="bio">
     <p>LIL SYNN is a faceless artist persona where music, visual art, technology and storytelling intersect. The project uses artificial intelligence as part of a broader creative workflow while keeping the artist identity, emotional direction and world-building at the center.</p>
     <p>The result is a deliberately unconventional music project built around dark electronic pop, raw emotion, visual identity and an evolving digital universe.</p>
@@ -64,7 +91,7 @@ body{background:transparent;color:#fff}
 </section>
 
 <section class="section">
-  <div class="head"><div><div class="ey">02 / QUICK FACTS</div><h2>THE <span>FILE.</span></h2></div></div>
+  <div class="head"><div><div class="ey">03 / QUICK FACTS</div><h2>THE <span>FILE.</span></h2></div></div>
   <div class="facts">
     <div class="fact"><b>ARTIST</b><strong>LIL SYNN</strong></div>
     <div class="fact"><b>PROJECT</b><strong>AI-ASSISTED MUSIC + VISUAL ART</strong></div>
@@ -74,7 +101,7 @@ body{background:transparent;color:#fff}
 </section>
 
 <section class="section">
-  <div class="head"><div><div class="ey">03 / FEATURED RELEASE</div><h2>HELLO <span>GOODBYE.</span></h2></div><p>A ten-track album about relationships, endings, memory, attachment, and the complicated space between saying hello and letting go.</p></div>
+  <div class="head"><div><div class="ey">04 / FEATURED RELEASE</div><h2>HELLO <span>GOODBYE.</span></h2></div><p>A ten-track album about relationships, endings, memory, attachment, and the complicated space between saying hello and letting go.</p></div>
   <div class="album">
     <img src="/assets/images/icons/album_art/11_lil_synn_hello_goodbye.webp" alt="Hello Goodbye album cover">
     <div class="album-copy">
@@ -94,7 +121,7 @@ body{background:transparent;color:#fff}
 </section>
 
 <section class="section">
-  <div class="head"><div><div class="ey">04 / OFFICIAL LINKS</div><h2>FOLLOW THE <span>SIGNAL.</span></h2></div><p>Official artist destinations and listening platforms.</p></div>
+  <div class="head"><div><div class="ey">05 / OFFICIAL LINKS</div><h2>FOLLOW THE <span>SIGNAL.</span></h2></div><p>Official artist destinations and listening platforms.</p></div>
   <div class="links">
     <a href="https://lilsynn.com/" target="_blank" rel="noopener noreferrer">WEBSITE</a>
     <a href="https://open.spotify.com/artist/6ozcOAnRAUPn3z5c0GR5kU" target="_blank" rel="noopener noreferrer">SPOTIFY</a>
