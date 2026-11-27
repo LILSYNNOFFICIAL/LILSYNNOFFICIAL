@@ -56,16 +56,91 @@
 @media(max-width:420px){.gallery-grid{grid-template-columns:1fr}.gallery-card:nth-child(n){grid-column:span 1}.gallery-card h3{font-size:13px}.gallery-section-heading{display:block}.gallery-section-heading p{margin-top:5px}}
 @media(prefers-reduced-motion:reduce){.gallery-page:before,.gallery-core,.gallery-core:after{animation:none}.gallery-card,.gallery-art,.gallery-filter{transition:none}}
 </style>
+<style>
+/* Phase 1 redesign: cosmic hero, scenes, download kit */
+.gx-hero{min-height:min(78vh,640px);overflow:hidden;border-radius:0 0 34px 34px}
+#gx-stars{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.gx-layer{position:absolute;pointer-events:none;will-change:transform}
+.gx-neb{inset:-6%;background:url(/assets/art/scenes/nebula-walk-thumb.webp) center/cover;opacity:.32;mix-blend-mode:screen;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);z-index:-1}
+.gx-float{width:clamp(56px,8vw,110px);filter:drop-shadow(0 0 18px rgba(255,79,216,.45));animation:gxFloat 7s ease-in-out infinite;z-index:1;opacity:.92}
+.gx-f1{left:6%;top:18%}.gx-f2{right:7%;top:22%;animation-delay:-2s}.gx-f3{left:12%;bottom:10%;animation-delay:-4s;width:clamp(48px,6vw,84px)}.gx-f4{right:12%;bottom:8%;animation-delay:-1s}
+@keyframes gxFloat{0%,100%{translate:0 0;rotate:-4deg}50%{translate:0 -16px;rotate:4deg}}
+.gx-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
+.gx-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border:1px solid #ff008f;background:#ff008f;color:#050507;text-decoration:none;font:900 10px Rajdhani,sans-serif;letter-spacing:.16em;border-radius:999px;transition:box-shadow .25s,transform .25s,background .25s}
+.gx-btn.alt{background:rgba(255,255,255,.03);color:#fff;border-color:rgba(255,255,255,.22)}
+.gx-btn:hover,.gx-btn:focus-visible{box-shadow:0 0 26px rgba(255,79,216,.55);transform:translateY(-2px);outline:none}
+.gx-section{margin:70px 0}
+.gx-sub{max-width:640px;margin:0 0 22px;color:#9a9aa6;font:500 15px/1.6 Rajdhani,sans-serif}
+.gx-scenes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.gx-card{position:relative;padding:0;border:1px solid rgba(255,255,255,.11);border-radius:20px;overflow:hidden;background:#07070d;cursor:pointer;color:#fff;text-align:left;transform-style:preserve-3d;transition:transform .25s ease-out,box-shadow .3s,border-color .3s}
+.gx-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .6s,filter .6s}
+.gx-card:hover,.gx-card:focus-visible{border-color:rgba(255,0,143,.7);box-shadow:0 20px 50px rgba(0,0,0,.55),0 0 40px rgba(255,79,216,.25);outline:none}
+.gx-card:hover img{transform:scale(1.05);filter:saturate(1.15)}
+.gx-card .gx-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 12px;background:linear-gradient(transparent,rgba(3,3,8,.92));font:700 12px Orbitron,sans-serif;letter-spacing:.06em}
+.gx-card .gx-cap small{display:block;margin-top:3px;color:#ff74c9;font:700 9px Rajdhani,sans-serif;letter-spacing:.2em}
+.gx-kit{display:grid;gap:18px}
+.gx-panel{padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(7,7,11,.82)}
+.gx-panel h3{margin:0 0 6px;font:700 16px Orbitron,sans-serif;letter-spacing:.06em}.gx-panel>p{margin:0 0 16px;color:#8a8a96;font:500 13px/1.5 Rajdhani,sans-serif}
+.gx-wps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gx-wp{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:#05050a}.gx-wp img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.gx-wp div{display:flex;flex-wrap:wrap;gap:6px;padding:10px}.gx-wp .gx-btn{padding:8px 10px;font-size:9px}
+.gx-stickers{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.gx-sticker{display:grid;place-items:center;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:radial-gradient(circle,rgba(255,0,143,.08),transparent 70%);transition:transform .25s,border-color .25s}
+.gx-sticker:hover,.gx-sticker:focus-visible{transform:translateY(-4px) rotate(-3deg);border-color:rgba(255,0,143,.6);outline:none}
+.gx-sticker img{width:100%;max-width:120px;aspect-ratio:1;object-fit:contain}
+.gx-gifs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.gx-gifs a{display:grid;place-items:center;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:14px}.gx-gifs img{width:100%;max-width:150px;aspect-ratio:1}
+.gx-packs{display:flex;flex-wrap:wrap;gap:8px}
+.gx-note{margin-top:14px;color:#666;font:700 9px Rajdhani,sans-serif;letter-spacing:.16em}
+.gx-reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}.gx-reveal.in{opacity:1;transform:none}
+.gx-trail{position:fixed;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#ff4fd8;box-shadow:0 0 12px #ff4fd8,0 0 24px #ff008f;pointer-events:none;z-index:4000;opacity:.8;transition:opacity .5s,transform .5s}
+@media(max-width:900px){.gx-scenes,.gx-wps{grid-template-columns:repeat(2,minmax(0,1fr))}.gx-stickers{grid-template-columns:repeat(4,minmax(0,1fr))}.gx-gifs{grid-template-columns:repeat(2,minmax(0,1fr))}.gx-f3,.gx-f4{display:none}}
+@media(max-width:560px){.gx-scenes,.gx-wps{grid-template-columns:1fr}.gx-stickers{grid-template-columns:repeat(3,minmax(0,1fr))}.gx-float{animation:none}.gx-hero{min-height:420px}}
+@media(prefers-reduced-motion:reduce){.gx-float{animation:none}.gx-reveal{opacity:1;transform:none;transition:none}.gx-card,.gx-card img,.gx-btn,.gx-sticker{transition:none}}
+</style>
 <meta property="og:site_name" content="LIL SYNN"><meta property="og:image" content="https://lilsynn.com/assets/img/og-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="LIL SYNN - The Signal"><meta name="twitter:image" content="https://lilsynn.com/assets/img/og-default.jpg"></head>
 <body>
 <main class="gallery-page">
-<section class="gallery-hero" aria-labelledby="gallery-title">
+<section class="gallery-hero gx-hero" aria-labelledby="gallery-title">
+<canvas id="gx-stars" aria-hidden="true"></canvas>
+<div class="gx-layer gx-neb" data-depth="0.15" aria-hidden="true"></div>
 <div class="gallery-core" aria-hidden="true"></div>
+<img class="gx-layer gx-float gx-f1" data-depth="0.5" src="/assets/downloads/stickers/lilsynn-shades-preview.webp" alt="" aria-hidden="true">
+<img class="gx-layer gx-float gx-f2" data-depth="0.8" src="/assets/downloads/stickers/lilsynn-crown-preview.webp" alt="" aria-hidden="true">
+<img class="gx-layer gx-float gx-f3" data-depth="0.35" src="/assets/downloads/stickers/lilsynn-broken-heart-preview.webp" alt="" aria-hidden="true">
+<img class="gx-layer gx-float gx-f4" data-depth="0.65" src="/assets/downloads/stickers/lilsynn-cat-preview.webp" alt="" aria-hidden="true">
 <div class="gallery-hero-content">
 <span class="gallery-kicker">LIL SYNN · VISUAL ARCHIVE</span>
 <h1 class="gallery-title" id="gallery-title">VISUALS</h1>
 <p class="gallery-subtitle">A living archive of the faces, characters, worlds, release artwork, and visual identities that make up the LIL SYNN universe.</p>
 <div class="gallery-rule" aria-hidden="true"></div>
+<div class="gx-cta"><a class="gx-btn" href="#new-transmissions">NEW TRANSMISSIONS ↓</a><a class="gx-btn alt" href="#download-kit">DOWNLOAD KIT ↓</a><a class="gx-btn alt" href="#archive-heading">THE ARCHIVE ↓</a></div>
+</div>
+</section>
+<section class="gx-section" id="new-transmissions" aria-labelledby="nt-heading">
+<div class="gallery-section-heading"><h2 id="nt-heading">NEW TRANSMISSIONS / SCENES</h2><p>12 NEW SCENES</p></div>
+<p class="gx-sub">Fresh signals from the LIL SYNN universe: neon nights, sunrise rooftops, deep space, the Girl in the Yellow Dress, the cat, and Shadow Man.</p>
+<div class="gx-scenes" id="gx-scenes">
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/neon-playground.webp" data-title="Neon Playground" data-meta="NEW TRANSMISSION · NIGHT" aria-label="Open Neon Playground"><img src="/assets/art/scenes/neon-playground-thumb.webp" alt="LIL SYNN scene: Neon Playground" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Neon Playground<small>NIGHT</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/sunrise-rooftop.webp" data-title="Sunrise Rooftop" data-meta="NEW TRANSMISSION · SUNRISE" aria-label="Open Sunrise Rooftop"><img src="/assets/art/scenes/sunrise-rooftop-thumb.webp" alt="LIL SYNN scene: Sunrise Rooftop" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Sunrise Rooftop<small>SUNRISE</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/sunset-overpass.webp" data-title="Sunset Overpass" data-meta="NEW TRANSMISSION · SUNSET" aria-label="Open Sunset Overpass"><img src="/assets/art/scenes/sunset-overpass-thumb.webp" alt="LIL SYNN scene: Sunset Overpass" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Sunset Overpass<small>SUNSET</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/twilight-alley.webp" data-title="Twilight Alley" data-meta="NEW TRANSMISSION · TWILIGHT" aria-label="Open Twilight Alley"><img src="/assets/art/scenes/twilight-alley-thumb.webp" alt="LIL SYNN scene: Twilight Alley" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Twilight Alley<small>TWILIGHT</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/nebula-walk.webp" data-title="Nebula Walk" data-meta="NEW TRANSMISSION · DEEP SPACE" aria-label="Open Nebula Walk"><img src="/assets/art/scenes/nebula-walk-thumb.webp" alt="LIL SYNN scene: Nebula Walk" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Nebula Walk<small>DEEP SPACE</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/golden-hour-with-her.webp" data-title="Golden Hour With Her" data-meta="NEW TRANSMISSION · LIL SYNN + THE GIRL" aria-label="Open Golden Hour With Her"><img src="/assets/art/scenes/golden-hour-with-her-thumb.webp" alt="LIL SYNN scene: Golden Hour With Her" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Golden Hour With Her<small>LIL SYNN + THE GIRL</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/stoop-with-the-cat.webp" data-title="Stoop With the Cat" data-meta="NEW TRANSMISSION · LIL SYNN + THE CAT" aria-label="Open Stoop With the Cat"><img src="/assets/art/scenes/stoop-with-the-cat-thumb.webp" alt="LIL SYNN scene: Stoop With the Cat" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Stoop With the Cat<small>LIL SYNN + THE CAT</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/shadow-man-emerges.webp" data-title="Shadow Man Emerges" data-meta="NEW TRANSMISSION · SHADOW MAN" aria-label="Open Shadow Man Emerges"><img src="/assets/art/scenes/shadow-man-emerges-thumb.webp" alt="LIL SYNN scene: Shadow Man Emerges" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Shadow Man Emerges<small>SHADOW MAN</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/cat-on-the-ledge.webp" data-title="Cat on the Ledge" data-meta="NEW TRANSMISSION · THE CAT" aria-label="Open Cat on the Ledge"><img src="/assets/art/scenes/cat-on-the-ledge-thumb.webp" alt="LIL SYNN scene: Cat on the Ledge" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Cat on the Ledge<small>THE CAT</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/girl-in-neon.webp" data-title="Girl in Neon" data-meta="NEW TRANSMISSION · THE GIRL IN THE YELLOW DRESS" aria-label="Open Girl in Neon"><img src="/assets/art/scenes/girl-in-neon-thumb.webp" alt="LIL SYNN scene: Girl in Neon" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Girl in Neon<small>THE GIRL IN THE YELLOW DRESS</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/the-whole-crew.webp" data-title="The Whole Crew" data-meta="NEW TRANSMISSION · GROUP" aria-label="Open The Whole Crew"><img src="/assets/art/scenes/the-whole-crew-thumb.webp" alt="LIL SYNN scene: The Whole Crew" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">The Whole Crew<small>GROUP</small></span></button>
+<button class="gx-card gx-reveal" type="button" data-full="/assets/art/scenes/fishing-for-stars.webp" data-title="Fishing for Stars" data-meta="NEW TRANSMISSION · SURPRISE" aria-label="Open Fishing for Stars"><img src="/assets/art/scenes/fishing-for-stars-thumb.webp" alt="LIL SYNN scene: Fishing for Stars" loading="lazy" decoding="async" width="720" height="402"><span class="gx-cap">Fishing for Stars<small>SURPRISE</small></span></button>
+</div>
+</section>
+<section class="gx-section" id="download-kit" aria-labelledby="dk-heading">
+<div class="gallery-section-heading"><h2 id="dk-heading">DOWNLOAD KIT</h2><p>FREE FOR FANS</p></div>
+<div class="gx-kit">
+<div class="gx-panel gx-reveal"><h3>WALLPAPERS</h3><p>Desktop 2560×1440, iPhone 1290×2796 and Android 1440×3200.</p><div class="gx-wps"><div class="gx-wp gx-reveal"><img src="/assets/art/scenes/neon-playground-thumb.webp" alt="Neon Playground wallpaper preview" loading="lazy" width="720" height="402"><div><a class="gx-btn" href="/assets/downloads/wallpapers/lilsynn-playground-desktop-2560x1440.jpg" download>DESKTOP 2560×1440</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-playground-iphone-1290x2796.jpg" download>IPHONE</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-playground-android-1440x3200.jpg" download>ANDROID</a></div></div><div class="gx-wp gx-reveal"><img src="/assets/art/scenes/nebula-walk-thumb.webp" alt="Nebula Walk wallpaper preview" loading="lazy" width="720" height="402"><div><a class="gx-btn" href="/assets/downloads/wallpapers/lilsynn-nebula-desktop-2560x1440.jpg" download>DESKTOP 2560×1440</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-nebula-iphone-1290x2796.jpg" download>IPHONE</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-nebula-android-1440x3200.jpg" download>ANDROID</a></div></div><div class="gx-wp gx-reveal"><img src="/assets/art/scenes/twilight-alley-thumb.webp" alt="Twilight Alley wallpaper preview" loading="lazy" width="720" height="402"><div><a class="gx-btn" href="/assets/downloads/wallpapers/lilsynn-alley-desktop-2560x1440.jpg" download>DESKTOP 2560×1440</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-alley-iphone-1290x2796.jpg" download>IPHONE</a><a class="gx-btn alt" href="/assets/downloads/wallpapers/lilsynn-alley-android-1440x3200.jpg" download>ANDROID</a></div></div></div></div>
+<div class="gx-panel gx-reveal"><h3>STICKERS</h3><p>12 transparent PNG stickers. Tap one to download it.</p><div class="gx-stickers"><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-peace.png" download title="Download peace sticker"><img src="/assets/downloads/stickers/lilsynn-peace-preview.webp" alt="LIL SYNN sticker: peace" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-wave.png" download title="Download wave sticker"><img src="/assets/downloads/stickers/lilsynn-wave-preview.webp" alt="LIL SYNN sticker: wave" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-heart.png" download title="Download heart sticker"><img src="/assets/downloads/stickers/lilsynn-heart-preview.webp" alt="LIL SYNN sticker: heart" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-sitting.png" download title="Download sitting sticker"><img src="/assets/downloads/stickers/lilsynn-sitting-preview.webp" alt="LIL SYNN sticker: sitting" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-crown-pose.png" download title="Download crown pose sticker"><img src="/assets/downloads/stickers/lilsynn-crown-pose-preview.webp" alt="LIL SYNN sticker: crown pose" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-vibes.png" download title="Download vibes sticker"><img src="/assets/downloads/stickers/lilsynn-vibes-preview.webp" alt="LIL SYNN sticker: vibes" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-shades.png" download title="Download shades sticker"><img src="/assets/downloads/stickers/lilsynn-shades-preview.webp" alt="LIL SYNN sticker: shades" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-crown.png" download title="Download crown sticker"><img src="/assets/downloads/stickers/lilsynn-crown-preview.webp" alt="LIL SYNN sticker: crown" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-cat.png" download title="Download cat sticker"><img src="/assets/downloads/stickers/lilsynn-cat-preview.webp" alt="LIL SYNN sticker: cat" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-broken-heart.png" download title="Download broken heart sticker"><img src="/assets/downloads/stickers/lilsynn-broken-heart-preview.webp" alt="LIL SYNN sticker: broken heart" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-girl.png" download title="Download girl sticker"><img src="/assets/downloads/stickers/lilsynn-girl-preview.webp" alt="LIL SYNN sticker: girl" loading="lazy" width="256" height="256"></a><a class="gx-sticker" href="/assets/downloads/stickers/lilsynn-shadow-grin.png" download title="Download shadow grin sticker"><img src="/assets/downloads/stickers/lilsynn-shadow-grin-preview.webp" alt="LIL SYNN sticker: shadow grin" loading="lazy" width="256" height="256"></a></div></div>
+<div class="gx-panel gx-reveal"><h3>ANIMATED</h3><p>Sticker-style GIFs. 128px versions are in the Discord pack as animated emoji.</p><div class="gx-gifs"><a href="/assets/downloads/gifs/lilsynn-wave.gif" download title="Download wave GIF"><img src="/assets/downloads/gifs/lilsynn-wave.gif" alt="Animated LIL SYNN sticker: wave" loading="lazy" width="320" height="320"></a><a href="/assets/downloads/gifs/lilsynn-head-bob.gif" download title="Download head bob GIF"><img src="/assets/downloads/gifs/lilsynn-head-bob.gif" alt="Animated LIL SYNN sticker: head bob" loading="lazy" width="320" height="320"></a><a href="/assets/downloads/gifs/lilsynn-shades-sparkle.gif" download title="Download shades sparkle GIF"><img src="/assets/downloads/gifs/lilsynn-shades-sparkle.gif" alt="Animated LIL SYNN sticker: shades sparkle" loading="lazy" width="320" height="320"></a><a href="/assets/downloads/gifs/lilsynn-cat-bounce.gif" download title="Download cat bounce GIF"><img src="/assets/downloads/gifs/lilsynn-cat-bounce.gif" alt="Animated LIL SYNN sticker: cat bounce" loading="lazy" width="320" height="320"></a></div></div>
+<div class="gx-panel gx-reveal"><h3>EMOJI &amp; STICKER PACKS</h3><p>Discord &amp; Slack 128×128 PNG, Telegram 512×512 PNG, WhatsApp 512×512 WebP (with tray icon). Each zip has a how-to README.</p><div class="gx-packs"><a class="gx-btn" href="/assets/downloads/packs/lilsynn-stickers-pack.zip" download>ALL 12 STICKERS (PNG)</a><a class="gx-btn alt" href="/assets/downloads/packs/lilsynn-discord-pack.zip" download>DISCORD EMOJI + ANIMATED</a><a class="gx-btn alt" href="/assets/downloads/packs/lilsynn-slack-pack.zip" download>SLACK EMOJI</a><a class="gx-btn alt" href="/assets/downloads/packs/lilsynn-telegram-pack.zip" download>TELEGRAM STICKERS</a><a class="gx-btn alt" href="/assets/downloads/packs/lilsynn-whatsapp-pack.zip" download>WHATSAPP STICKERS</a><a class="gx-btn alt" href="/assets/downloads/packs/lilsynn-gifs-pack.zip" download>ANIMATED GIFS</a></div><p class="gx-note">FREE FOR PERSONAL USE · PLEASE DON'T SELL OR USE COMMERCIALLY</p></div>
 </div>
 </section>
 <div class="gallery-toolbar" aria-label="Visual archive filters">
@@ -125,6 +200,40 @@ document.querySelectorAll(".gallery-filter").forEach(b=>b.addEventListener("clic
 document.getElementById("gallery-close").onclick=close;document.getElementById("gallery-prev").onclick=()=>step(-1);document.getElementById("gallery-next").onclick=()=>step(1);box.addEventListener("click",e=>{if(e.target===box)close()});
 document.addEventListener("keydown",e=>{if(!box.classList.contains("open"))return;if(e.key==="Escape")close();if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1)});
 let sx=0;box.addEventListener("touchstart",e=>sx=e.changedTouches[0].clientX,{passive:true});box.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)step(dx<0?1:-1)},{passive:true});render();
+})();
+</script>
+<script>
+(()=>{const rm=matchMedia('(prefers-reduced-motion: reduce)').matches,fine=matchMedia('(hover:hover) and (pointer:fine)').matches,small=innerWidth<720;
+/* scenes lightbox: reuses the archive viewer */
+const box=document.getElementById('gallery-lightbox'),img=document.getElementById('gallery-lightbox-image'),lt=document.getElementById('gallery-lightbox-title'),lm=document.getElementById('gallery-lightbox-meta');
+const cards=[...document.querySelectorAll('#gx-scenes .gx-card')];let cur=-1;
+function show(i){cur=(i+cards.length)%cards.length;const c=cards[cur];img.src=c.dataset.full;img.alt=c.dataset.title;lt.textContent=c.dataset.title;lm.textContent=c.dataset.meta;box.classList.add('open');document.body.style.overflow='hidden'}
+cards.forEach((c,i)=>c.addEventListener('click',()=>show(i)));
+const stop=e=>{if(cur<0)return;e.stopImmediatePropagation();};
+document.getElementById('gallery-prev').addEventListener('click',e=>{if(cur>=0){stop(e);show(cur-1)}},true);
+document.getElementById('gallery-next').addEventListener('click',e=>{if(cur>=0){stop(e);show(cur+1)}},true);
+document.addEventListener('keydown',e=>{if(cur<0||!box.classList.contains('open'))return;if(e.key==='ArrowLeft'){stop(e);show(cur-1)}if(e.key==='ArrowRight'){stop(e);show(cur+1)}},true);
+new MutationObserver(()=>{if(!box.classList.contains('open'))cur=-1}).observe(box,{attributes:true,attributeFilter:['class']});
+document.getElementById('gallery-grid').addEventListener('click',()=>{cur=-1},true);
+/* reveal on scroll */
+const rv=document.querySelectorAll('.gx-reveal');
+if(rm||!('IntersectionObserver'in window))rv.forEach(e=>e.classList.add('in'));else{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});rv.forEach(e=>io.observe(e))}
+/* starfield */
+const cv=document.getElementById('gx-stars'),hero=cv&&cv.parentElement;
+if(cv&&cv.getContext){const x=cv.getContext('2d');let w,h,st=[];const N=small?70:160,dpr=Math.min(devicePixelRatio||1,small?1:2);
+function size(){w=hero.clientWidth;h=hero.clientHeight;cv.width=w*dpr;cv.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);st=Array.from({length:N},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,s:Math.random()*.25+.05,t:Math.random()*6.28,c:Math.random()<.18?'255,79,216':Math.random()<.2?'72,217,255':'255,255,255'}))}
+function draw(m){x.clearRect(0,0,w,h);for(const p of st){if(m){p.y-=p.s;p.t+=.03;if(p.y<0){p.y=h;p.x=Math.random()*w}}const a=.35+.45*Math.abs(Math.sin(p.t));x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fillStyle='rgba('+p.c+','+a+')';x.fill()}}
+size();addEventListener('resize',size,{passive:true});
+if(rm)draw(false);else{let vis=true;new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(hero);(function loop(){if(vis&&!document.hidden)draw(true);requestAnimationFrame(loop)})()}}
+/* parallax layers + tilt + cursor trail: desktop only, motion allowed */
+if(!rm&&fine&&!small){const L=[...document.querySelectorAll('.gx-layer[data-depth]')];
+hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect(),dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;L.forEach(l=>{const d=+l.dataset.depth*30;l.style.transform='translate('+(-dx*d)+'px,'+(-dy*d)+'px)'})});
+addEventListener('scroll',()=>{const y=scrollY;if(y<900)L.forEach(l=>l.style.marginTop=(y*+l.dataset.depth*.25)+'px')},{passive:true});
+
+const tilt=c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(800px) rotateX('+(-py*8)+'deg) rotateY('+(px*10)+'deg) translateY(-6px)'});c.addEventListener('pointerleave',()=>{c.style.transform=''})};
+cards.forEach(tilt);document.querySelectorAll('.gx-wp').forEach(tilt);
+const dots=Array.from({length:10},()=>{const d=document.createElement('div');d.className='gx-trail';d.style.opacity=0;document.body.appendChild(d);return d});let k=0,last=0;
+addEventListener('pointermove',e=>{const n=performance.now();if(n-last<28)return;last=n;const d=dots[k++%dots.length];d.style.transition='none';d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';d.style.opacity=.8;d.style.transform='scale(1)';requestAnimationFrame(()=>{d.style.transition='opacity .6s,transform .6s';d.style.opacity=0;d.style.transform='scale(.2)'})},{passive:true})}
 })();
 </script>
 <script src="/site-shell.js?v=20261120-p4"></script>
