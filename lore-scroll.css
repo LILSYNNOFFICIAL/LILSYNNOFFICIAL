@@ -1,0 +1,100 @@
+/* LIL SYNN — Lore scroll journey (lore.html only) */
+body.lore-journey{background:#020204}
+.lore-journey .lore-page{width:100%;max-width:none;margin:0;padding:0}
+
+/* ---------- particles canvas ---------- */
+#lore-particles{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.7}
+
+/* ---------- hero ---------- */
+.lore-journey .lore-hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:110px 6vw 90px;border-bottom:0;overflow:hidden;isolation:isolate}
+.lore-hero .hero-cosmos{position:absolute;inset:-8%;z-index:-2;background:#05010a url("/assets/2/ws_4.webp") center/cover no-repeat;animation:loreDrift 60s ease-in-out infinite alternate;will-change:transform}
+.lore-hero .hero-nebula{position:absolute;inset:0;z-index:-1;background:
+ radial-gradient(60% 50% at 50% 45%,rgba(255,0,143,.22),transparent 70%),
+ radial-gradient(40% 40% at 20% 80%,rgba(80,60,255,.18),transparent 70%),
+ linear-gradient(180deg,rgba(2,2,4,.35),rgba(2,2,4,.55) 60%,#020204)}
+.lore-hero .hero-ring{position:absolute;left:50%;top:46%;width:min(78vw,720px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;border:1px solid rgba(255,79,216,.35);box-shadow:0 0 60px rgba(255,0,143,.35),inset 0 0 80px rgba(255,0,143,.18);animation:lorePulse 6s ease-in-out infinite}
+.lore-hero .hero-ring::after{content:"";position:absolute;inset:9%;border-radius:50%;border:1px dashed rgba(255,255,255,.14);animation:loreSpin 80s linear infinite}
+.lore-journey .lore-hero h1{text-shadow:0 0 28px rgba(255,0,143,.55),0 0 2px #fff}
+.lore-journey .lore-hero .subtitle{color:#d6d6de;text-shadow:0 1px 10px #000}
+.lore-journey .lineage span{padding:6px 9px;border:1px solid rgba(255,255,255,.14);background:rgba(4,2,10,.55)}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font:700 9px Orbitron,sans-serif;letter-spacing:.3em;color:#ff4fd8;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-cue::after{content:"";width:1px;height:42px;background:linear-gradient(#ff4fd8,transparent);animation:loreCue 2.2s ease-in-out infinite}
+
+/* ---------- chapter scenes ---------- */
+.lore-journey .lore-section.scene,.lore-journey .essence.scene{position:relative;min-height:100vh;min-height:100svh;padding:14vh 6vw 14vh calc(6vw + 54px);display:flex;align-items:center;border-bottom:0;overflow:hidden;isolation:isolate;text-align:left}
+.scene-bg{position:absolute;inset:0;z-index:-2;overflow:hidden;background:#07040d}
+.scene-bg img{position:absolute;left:0;top:-10%;width:100%;height:120%;object-fit:cover;object-position:70% 50%;opacity:0;transition:opacity 1.2s ease;will-change:transform}
+.scene-bg img.loaded{opacity:1}
+.scene-veil{position:absolute;inset:0;z-index:-1;background:
+ linear-gradient(90deg,rgba(2,2,4,.92) 0%,rgba(2,2,4,.72) 34%,rgba(2,2,4,.18) 62%,rgba(2,2,4,.05) 100%),
+ linear-gradient(180deg,#020204 0%,rgba(2,2,4,0) 16%,rgba(2,2,4,0) 84%,#020204 100%)}
+.scene .panel{position:relative;width:min(620px,100%);padding:34px 34px 30px;background:rgba(6,3,14,.74);border:1px solid rgba(255,79,216,.22);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 20px 60px rgba(0,0,0,.55),0 0 40px rgba(255,0,143,.08);border-radius:4px}
+.scene .panel::before{content:"";position:absolute;left:-1px;top:18px;bottom:18px;width:2px;background:linear-gradient(#ff008f,#ff4fd8 60%,transparent);box-shadow:0 0 14px #ff008f}
+.scene .panel .section-number{text-shadow:0 0 10px rgba(255,79,216,.6)}
+.lore-journey .lore-section.scene p,.lore-journey .lore-section.scene li{color:#d3d3db}
+.lore-journey .scene .quote{background:rgba(255,0,143,.09)}
+.lore-journey .scene .archive-link{background:rgba(255,255,255,.04)}
+.lore-journey .essence.scene{justify-content:center;text-align:center;padding-left:6vw}
+.lore-journey .essence.scene .panel{text-align:center}
+.lore-journey .essence.scene .panel::before{display:none}
+.lore-journey .essence.scene .scene-veil{background:radial-gradient(70% 70% at 50% 50%,rgba(2,2,4,.55),rgba(2,2,4,.85)),linear-gradient(180deg,#020204 0%,transparent 18%,transparent 82%,#020204)}
+.lore-journey .scene.wide .panel{width:min(860px,100%)}
+
+/* reveal */
+.reveal{opacity:0;transform:translate3d(-28px,24px,0);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.panel .reveal-child{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.panel.in .reveal-child{opacity:1;transform:none}
+
+/* ---------- Shadow Man chapter breaks ---------- */
+.sm-break{position:relative;height:0;z-index:5;pointer-events:none}
+.sm-break img{position:absolute;bottom:-2px;width:clamp(120px,16vw,220px);height:auto;filter:drop-shadow(0 0 18px rgba(120,40,255,.45));opacity:0;transition:opacity 1s ease,transform 1.2s cubic-bezier(.2,.7,.2,1);-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.sm-break.right img{right:4vw;transform:translateY(40%)}
+.sm-break.left img{left:calc(4vw + 54px);transform:translateY(40%) scaleX(-1)}
+.sm-break.crouch img{width:clamp(110px,12vw,170px);-webkit-mask-image:none;mask-image:none;bottom:-40px}
+.sm-break.in img{opacity:.92;transform:translateY(0)}
+.sm-break.left.in img{transform:translateY(0) scaleX(-1)}
+
+/* ---------- timeline rail ---------- */
+.lore-rail{position:fixed;left:22px;top:12vh;bottom:12vh;width:24px;z-index:40;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.lore-rail::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:rgba(255,255,255,.12)}
+.lore-rail .rail-fill{position:absolute;left:50%;top:0;width:2px;height:100%;transform:translateX(-50%) scaleY(var(--p,0));transform-origin:top;background:linear-gradient(#ff008f,#ff4fd8);box-shadow:0 0 12px #ff008f,0 0 24px rgba(255,79,216,.6)}
+.lore-rail a{position:relative;width:11px;height:11px;border-radius:50%;background:#0b0710;border:1px solid rgba(255,255,255,.35);transition:.3s;display:block}
+.lore-rail a.passed{background:#ff008f;border-color:#ff4fd8;box-shadow:0 0 8px #ff008f}
+.lore-rail a.active{transform:scale(1.5);background:#fff;border-color:#ff4fd8;box-shadow:0 0 12px #ff4fd8,0 0 22px #ff008f}
+.lore-rail a span{position:absolute;left:20px;top:50%;transform:translateY(-50%);white-space:nowrap;font:700 9px Orbitron,sans-serif;letter-spacing:.14em;color:#fff;background:rgba(6,3,14,.85);border:1px solid rgba(255,79,216,.35);padding:4px 7px;opacity:0;pointer-events:none;transition:opacity .2s}
+.lore-rail a:hover span,.lore-rail a:focus-visible span,.lore-rail a.active span{opacity:1}
+.lore-rail a:focus-visible{outline:2px solid #ff4fd8;outline-offset:3px}
+
+/* ---------- desktop extras ---------- */
+@media (min-width:900px) and (hover:hover){
+ .scene .panel{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);background:rgba(6,3,14,.62)}
+}
+
+/* ---------- phones ---------- */
+@media (max-width:700px){
+ .lore-journey .lore-section.scene,.lore-journey .essence.scene{padding:16vh 5vw 16vh 34px;min-height:auto;align-items:flex-end}
+ .scene .panel{padding:24px 20px;background:rgba(6,3,14,.86)}
+ .scene-veil{background:linear-gradient(180deg,#020204 0%,rgba(2,2,4,.25) 14%,rgba(2,2,4,.55) 45%,rgba(2,2,4,.9) 100%)}
+ .scene-bg img{object-position:72% 30%;height:110%;top:-5%}
+ .lore-rail{left:9px;width:14px}
+ .lore-rail a{width:7px;height:7px}
+ .lore-rail a span{display:none}
+ .sm-break img{width:96px}
+ .sm-break.left img{left:30px}
+ .lore-hero .hero-ring{width:92vw}
+ #lore-particles{opacity:.5}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+ .lore-hero .hero-cosmos,.lore-hero .hero-ring,.lore-hero .hero-ring::after,.scroll-cue::after{animation:none}
+ .reveal,.panel .reveal-child,.sm-break img,.scene-bg img{transition:none;opacity:1;transform:none}
+ .sm-break.left img{transform:scaleX(-1)}
+ #lore-particles{display:none}
+}
+
+@keyframes loreDrift{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.08) translate3d(-1.5%,1%,0)}}
+@keyframes lorePulse{0%,100%{opacity:.65;box-shadow:0 0 50px rgba(255,0,143,.3),inset 0 0 70px rgba(255,0,143,.15)}50%{opacity:1;box-shadow:0 0 90px rgba(255,0,143,.5),inset 0 0 110px rgba(255,0,143,.25)}}
+@keyframes loreSpin{to{transform:rotate(360deg)}}
+@keyframes loreCue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
