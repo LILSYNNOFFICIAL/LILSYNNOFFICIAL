@@ -1,0 +1,155 @@
+{
+  "_readme": "Edit freely. worlds[i].lessons are shown on the card between levels of that world (cycled in order). preBoss/postBoss frame the world boss (levels 41, 82, ... 369). The tone of Shadow Man goes from cryptic/menacing (world 1) to openly kind (world 9). 'reveal' plays after the final boss.",
+  "title": "LIL SYNN: Broken Hearts",
+  "prologue": [
+    "The neon playground was quiet tonight. Too quiet.",
+    "Shadow Man has taken the Girl in the Yellow Dress.",
+    "Gather the broken hearts. Follow the cat. Bring her home."
+  ],
+  "level1Encounter": {
+    "before": "So you followed me. Most people turn back at the gate.",
+    "after": "Not bad. Not enough. If you want her back, you will have to become someone who doesn't flinch. 368 more steps, LIL SYNN."
+  },
+  "worlds": [
+    {
+      "name": "Neon Playground", "theme": "playground", "bossName": "SHADOW MAN · The First Lesson",
+      "intro": "The swings creak on their own. Something is watching from the slide.",
+      "lessons": [
+        "You hesitate before every jump. I can hear it.",
+        "The ground you fear is the same ground you stand on.",
+        "Every heart you gather was broken by somebody. Remember that.",
+        "Fall. Get up. That's the whole trick.",
+        "You keep looking back at the cat. Look forward."
+      ],
+      "preBoss": "Show me what you do when you're afraid.",
+      "postBoss": "You flinched less than yesterday. Keep the girl in your mind. I'll keep her safe until you're ready."
+    },
+    {
+      "name": "Graffiti Alley", "theme": "alley", "bossName": "SHADOW MAN · The Wall",
+      "intro": "Twilight. Every wall here has someone's name on it. None of them are yours yet.",
+      "lessons": [
+        "They wrote their names so they wouldn't be forgotten. What are you leaving?",
+        "Walls are only walls until you climb them.",
+        "The crowd's opinion is paint. It washes off in the rain.",
+        "You don't need a face to be seen. You need a voice.",
+        "Stop asking the walls for permission."
+      ],
+      "preBoss": "I'm the wall. Climb me.",
+      "postBoss": "You stopped waiting for permission. Good. She asked about you today."
+    },
+    {
+      "name": "Sunrise Rooftops", "theme": "rooftops", "bossName": "SHADOW MAN · The Edge",
+      "intro": "Morning on the rooftops. The gaps between buildings look wider in daylight.",
+      "lessons": [
+        "The sun comes up whether you're ready or not. Be ready.",
+        "Looking down is a choice.",
+        "A long jump is just a short jump you committed to.",
+        "Confidence isn't loud. It's steady.",
+        "You're higher than you've ever been. Notice that."
+      ],
+      "preBoss": "At the edge, everyone finds out who they are.",
+      "postBoss": "You didn't look down once. I noticed. So did she."
+    },
+    {
+      "name": "Sunset City", "theme": "sunset", "bossName": "SHADOW MAN · The Crowd",
+      "intro": "The city glows gold and every window is a stranger.",
+      "lessons": [
+        "Nobody is thinking about you as much as you are.",
+        "You don't have to be the loudest. You have to be the truest.",
+        "A city is just a lot of people who were scared once.",
+        "You keep the hood up. Good. Let them hear you first.",
+        "The day ends. You don't."
+      ],
+      "preBoss": "A thousand eyes. Do you shrink, or do you shine?",
+      "postBoss": "You shined. Don't make that face; I'm allowed to be proud."
+    },
+    {
+      "name": "Rainy Neon Street", "theme": "rain", "bossName": "SHADOW MAN · The Storm",
+      "intro": "Rain on neon. The reflections make it look like two cities, one upside down.",
+      "lessons": [
+        "Rain doesn't stop the music. It just changes the beat.",
+        "Your reflection isn't weaker than you. It's just quieter.",
+        "Heartbreak is weather. It passes. You stay.",
+        "Wet ground is slippery. So is self-doubt. Both: keep moving.",
+        "Some storms you wait out. Some you walk through. Learn the difference."
+      ],
+      "preBoss": "Let's see you dance in it.",
+      "postBoss": "You walked through it. Most people wait under the awning forever."
+    },
+    {
+      "name": "Underground Relics", "theme": "underground", "bossName": "SHADOW MAN · The Past",
+      "intro": "Below the city: old tunnels, older stories. Some of them are about you.",
+      "lessons": [
+        "Everything you buried is still down here. That's fine. It's yours.",
+        "Old mistakes make good stepping stones.",
+        "You're not who you were. Prove it gently.",
+        "Relics remind us. They don't define us.",
+        "The dark isn't empty. It's full of things you haven't named yet."
+      ],
+      "preBoss": "I am every time you gave up. Fight me kindly.",
+      "postBoss": "You forgave yourself in there. That's the hardest hit you'll ever land."
+    },
+    {
+      "name": "Archive Vault", "theme": "archive", "bossName": "SHADOW MAN · The Record",
+      "intro": "Rows and rows of saved moments. Every song you never finished is filed here.",
+      "lessons": [
+        "Unfinished isn't failed. It's paused.",
+        "You've been keeping score of your losses. Start keeping score of your returns.",
+        "Every track you make is a letter to someone you haven't met.",
+        "The archive remembers. You get to choose what's next.",
+        "Ship it. Then make the next one better."
+      ],
+      "preBoss": "Let's open the file you're most afraid of.",
+      "postBoss": "You read it out loud. You're braver than the person who wrote it."
+    },
+    {
+      "name": "Nebula Path", "theme": "nebula", "bossName": "SHADOW MAN · The Void",
+      "intro": "No more ground. Just light, and the space between the light.",
+      "lessons": [
+        "When there's nothing beneath you, trust what's inside you.",
+        "Stars are just old light that kept going.",
+        "Being small in a big universe is not the same as being nothing.",
+        "You don't need to see the whole path. Just the next step.",
+        "I was never trying to stop you. Think about that."
+      ],
+      "preBoss": "The void is honest. Are you?",
+      "postBoss": "One more door. She's on the other side. So is the truth."
+    },
+    {
+      "name": "Cosmic Portal", "theme": "portal", "bossName": "SHADOW MAN · The Mirror",
+      "intro": "The portal hums the first song you ever made.",
+      "lessons": [
+        "You already know how this ends. You just have to walk there.",
+        "Strong. Unafraid. Confident. Say it until it's boring.",
+        "Everything you learned, you already had. I only turned the lights off.",
+        "The girl is fine. She's been waiting to see who you'd become.",
+        "Last steps. Make them loud."
+      ],
+      "preBoss": "Last lesson. Hit me with everything I taught you.",
+      "postBoss": "That's it. That's who you are."
+    }
+  ],
+  "reveal": [
+    "The shadows fall away. The fedora drops. Underneath there is no monster, only light shaped like a man.",
+    "\"I was never your enemy, LIL SYNN. I was the part of you that wouldn't let you stay small.\"",
+    "\"Every lesson was yours. I just held the dark so you could learn to shine in it.\"",
+    "The Girl in the Yellow Dress steps out of the portal, unharmed, smiling. \"He kept me safe,\" she says. \"He said you'd come when you were ready.\"",
+    "\"Be strong. Be unafraid. Be confident. And when someone else is lost in the dark... be their Shadow Man.\"",
+    "TO BE CONTINUED…"
+  ],
+  "catMissions": {
+    "kittens": "Help the cat find {n} lost kittens",
+    "notes": "Help the cat collect {n} floating music notes",
+    "crowns": "The cat smells {n} hidden gold crowns"
+  },
+  "rewards": [
+    { "tokens": 3, "id": "heart6", "label": "+1 max heart (6)" },
+    { "tokens": 8, "id": "trailCyan", "label": "Cyan dash trail" },
+    { "tokens": 15, "id": "heart7", "label": "+1 max heart (7)" },
+    { "tokens": 25, "id": "trailGold", "label": "Gold crown dash trail" },
+    { "tokens": 40, "id": "heart8", "label": "+1 max heart (8)" },
+    { "tokens": 60, "id": "catDash", "label": "Cat Dash: dashing also stuns nearby wisps" },
+    { "tokens": 100, "id": "heart9", "label": "+1 max heart (9)" },
+    { "tokens": 150, "id": "trailRainbow", "label": "Nebula dash trail" }
+  ]
+}

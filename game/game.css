@@ -52,3 +52,41 @@ body.touch #credits { display:none; }
 #loadMsg { min-height:1em; }
 body.touch .deskOnly { display:none; }
 .controls { font-size:12px; }
+/* level tag, mission, keys */
+#lvlTag { position:absolute; bottom:calc(22px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); font-weight:900; letter-spacing:.15em; font-size:13px; color:var(--cyan); text-shadow:0 0 8px var(--cyan); white-space:nowrap; }
+#mission { position:absolute; top:calc(max(14px, env(safe-area-inset-top)) + 62px); left:14px; font-size:12px; color:#dfe; opacity:.9; text-shadow:0 0 6px #000; max-width:70cqw; }
+#keys { position:absolute; top:calc(max(14px, env(safe-area-inset-top)) + 82px); left:14px; font-size:13px; color:var(--yellow); text-shadow:0 0 6px #000; }
+#catHint { top:calc(max(14px, env(safe-area-inset-top)) + 42px) !important; font-size:12px !important; }
+/* cracking HUD hearts */
+#health { display:flex; gap:2px; flex-wrap:wrap; max-width:58cqw; }
+.hh { position:relative; width:26px; height:26px; display:inline-block; }
+.hh img, .hh svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.hh .e { opacity:0; } .hh .crack { opacity:0; transition:opacity .15s; }
+.hh .sl, .hh .sr { opacity:0; }
+.hh.cracked .crack { opacity:1; }
+.hh.cracked { animation:hhShake .35s; }
+.hh.broken .f { opacity:0; } .hh.broken .e { opacity:1; }
+.hh.shatter .sl { animation:shL .7s ease-out forwards; } .hh.shatter .sr { animation:shR .7s ease-out forwards; }
+.hh.mend { animation:hhMend .5s; }
+.hh .sl { clip-path:polygon(0 0,52% 0,40% 30%,58% 50%,42% 72%,50% 100%,0 100%); }
+.hh .sr { clip-path:polygon(52% 0,100% 0,100% 100%,50% 100%,42% 72%,58% 50%,40% 30%); }
+@keyframes hhShake { 0%,100%{transform:none} 25%{transform:translateX(-3px) rotate(-8deg)} 50%{transform:translateX(3px) rotate(6deg)} 75%{transform:translateX(-2px)} }
+@keyframes shL { 0%{opacity:1;transform:none} 100%{opacity:0;transform:translate(-14px,18px) rotate(-50deg)} }
+@keyframes shR { 0%{opacity:1;transform:none} 100%{opacity:0;transform:translate(14px,22px) rotate(55deg)} }
+@keyframes hhMend { 0%{transform:scale(1)} 40%{transform:scale(1.45); filter:drop-shadow(0 0 10px #2aff8a)} 100%{transform:scale(1)} }
+/* level select */
+.cardInner.wide { width:min(560px, 94cqw); }
+#worldTabs { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; }
+#worldTabs button { padding:.25em .55em; font-size:13px; border-radius:8px; border-color:#6a4a8a; box-shadow:none; }
+#worldTabs button.on { border-color:var(--cyan); background:rgba(41,224,255,.18); }
+#worldTabs button.locked { opacity:.35; }
+#levelGrid { display:grid; grid-template-columns:repeat(6, 1fr); gap:5px; width:100%; }
+#levelGrid button { padding:.35em 0; font-size:13px; border-radius:8px; box-shadow:none; border-color:#5a3a7a; position:relative; }
+#levelGrid button.done { border-color:var(--pink); }
+#levelGrid button.boss { border-color:var(--yellow); color:var(--yellow); font-weight:900; }
+#levelGrid button:disabled { opacity:.25; cursor:default; }
+#levelGrid button .m { position:absolute; right:2px; top:0; font-size:9px; }
+.shadowLine { background:rgba(0,0,0,.45); border-left:3px solid var(--purple); padding:10px 14px; border-radius:6px; text-align:left; max-width:88cqw; }
+.shadowLine .who { font-size:11px; letter-spacing:.3em; color:var(--purple); font-weight:900; }
+.shadowLine p { margin:.3em 0 0; font-style:italic; font-size:clamp(.9rem, 4.2cqw, 1.1rem); line-height:1.5; }
+#rewardList { line-height:1.6; }
