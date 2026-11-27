@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>LIL SYNN: Broken Hearts — Play</title>
+<meta name="description" content="LIL SYNN: Broken Hearts. A neon 3D browser game: save the Girl in the Yellow Dress from Shadow Man.">
+<meta property="og:title" content="LIL SYNN: Broken Hearts">
+<meta property="og:description" content="Run the Neon Playground, collect broken hearts, and face Shadow Man.">
+<meta name="theme-color" content="#0a0612">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/game/game.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="stage">
+<div id="app"></div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="health" aria-label="Health"></div>
+  <div id="hearts"><span class="bh">💔</span> <span id="heartCount">0</span>/<span id="heartTotal">20</span></div>
+  <div id="catHint"></div>
+  <div id="boss" class="hidden"><div class="bossName">SHADOW MAN</div><div class="bossBar"><div id="bossFill"></div></div><div id="bossPhase"></div></div>
+  <div id="toast"></div>
+  <div class="topBtns">
+    <button id="btnFill" class="deskOnly" title="Fill the whole window" aria-label="Fill screen">↔</button>
+    <button id="btnFs" title="Fullscreen (F)" aria-label="Fullscreen">⛶</button>
+    <button id="btnMute" title="Mute (M)" aria-label="Mute">🔊</button>
+    <button id="btnPause" title="Pause (Esc / P)" aria-label="Pause">⏸</button>
+  </div>
+</div>
+
+<!-- Touch controls -->
+<div id="touch" class="hidden">
+  <div id="stickBase"><div id="stickKnob"></div></div>
+  <button id="tJump" class="tbtn">JUMP</button>
+  <button id="tDash" class="tbtn">DASH</button>
+</div>
+
+<!-- Cards -->
+<div id="intro" class="card show">
+  <div class="cardInner">
+    <div class="kicker">LIL SYNN presents</div>
+    <h1>BROKEN HEARTS</h1>
+    <p class="story">The neon playground was quiet tonight. Too quiet.<br><b>Shadow Man has taken the Girl in the Yellow Dress.</b><br>Gather the broken hearts. Follow the cat. Bring her home.</p>
+    <button id="btnPlay" class="big">PLAY</button>
+    <div id="loadMsg" class="small">Loading the playground…</div>
+    <div class="controls desk">
+      <span><kbd>WASD</kbd>/<kbd>←↑↓→</kbd> move</span><span><kbd>Space</kbd> jump (×2)</span><span><kbd>Shift</kbd> dash</span><span>drag mouse: camera</span><span><kbd>Esc</kbd> pause · <kbd>M</kbd> mute · <kbd>F</kbd> fullscreen</span>
+    </div>
+    <div class="controls mob">Left thumb: move · Right side: drag to look · JUMP / DASH buttons</div>
+    <div class="small dim">Tip: dash or jump-stomp the wisps. Grab the monkey bars by jumping into them.</div>
+  </div>
+</div>
+
+<div id="pause" class="card">
+  <div class="cardInner">
+    <h2>PAUSED</h2>
+    <button id="btnResume" class="big">RESUME</button>
+    <button id="btnMute2">MUTE MUSIC</button>
+    <button id="btnRestart">RESTART</button>
+    <a class="small dim" href="/">← back to lilsynn.com</a>
+  </div>
+</div>
+
+<div id="bossCard" class="card">
+  <div class="cardInner">
+    <div class="kicker">BOSS</div>
+    <h1 class="boss">SHADOW MAN</h1>
+    <p class="story">He feeds on broken hearts.<br>Dodge his shadow orbs. Jump his peacock feathers.<br><b>When he staggers, DASH into him.</b></p>
+  </div>
+</div>
+
+<div id="dead" class="card">
+  <div class="cardInner">
+    <h2>YOU FADED…</h2>
+    <p class="story">The neon still burns. Get back up.</p>
+    <button id="btnRetry" class="big">TRY AGAIN</button>
+  </div>
+</div>
+
+<div id="end" class="card">
+  <div class="cardInner">
+    <div class="kicker">LEVEL 1 COMPLETE</div>
+    <h1>TO BE CONTINUED…</h1>
+    <p class="story">She's free. But Shadow Man was never just one shadow.</p>
+    <p id="stats" class="small"></p>
+    <button id="btnAgain" class="big">PLAY AGAIN</button>
+    <a class="small dim" href="/">← back to lilsynn.com</a>
+  </div>
+</div>
+
+<div id="credits" class="small dim">LIL SYNN: Broken Hearts · prototype · built with three.js</div>
+</div>
+<noscript><p style="color:#fff;padding:2em">This game needs JavaScript and WebGL.</p></noscript>
+<script type="module" src="/game/main.js"></script>
+</body>
+</html>
