@@ -98,3 +98,14 @@ body.lore-journey{background:#020204}
 @keyframes lorePulse{0%,100%{opacity:.65;box-shadow:0 0 50px rgba(255,0,143,.3),inset 0 0 70px rgba(255,0,143,.15)}50%{opacity:1;box-shadow:0 0 90px rgba(255,0,143,.5),inset 0 0 110px rgba(255,0,143,.25)}}
 @keyframes loreSpin{to{transform:rotate(360deg)}}
 @keyframes loreCue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- per-scene framing ---------- */
+.scene.pos-center .scene-bg img{object-position:58% 40%}
+/* portrait artwork: dark full-bleed backdrop + framed poster on the right */
+.scene.portrait .scene-bg img{filter:brightness(.32) saturate(1.15);object-position:50% 30%}
+.scene-poster{position:absolute;right:6vw;top:50%;width:min(30vw,440px);aspect-ratio:1122/1402;transform:translateY(-50%);z-index:-1;border:1px solid rgba(255,79,216,.35);box-shadow:0 0 50px rgba(255,0,143,.28),0 30px 80px rgba(0,0,0,.6);overflow:hidden;border-radius:4px}
+.scene-poster.reveal{transform:translate3d(30px,-50%,0)}
+.scene-poster.reveal.in{transform:translate3d(0,-50%,0)}
+.scene-poster img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:1200px){.scene-poster{display:none}.scene.portrait .scene-bg img{filter:none}}
+@media (prefers-reduced-motion:reduce){.scene-poster.reveal{transform:translateY(-50%)}}

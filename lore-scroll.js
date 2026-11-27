@@ -18,7 +18,7 @@
     img.src = img.dataset.src;
     if(img.complete && img.naturalWidth) img.classList.add('loaded');
   }
-  var imgs = Array.prototype.slice.call(document.querySelectorAll('.scene-bg img[data-src]'));
+  var imgs = Array.prototype.slice.call(document.querySelectorAll('.scene-bg img[data-src], .scene-poster img[data-src]'));
   if(hasIO){
     var lazy = new IntersectionObserver(function(es){
       es.forEach(function(e){ if(e.isIntersecting){ load(e.target); lazy.unobserve(e.target); } });
