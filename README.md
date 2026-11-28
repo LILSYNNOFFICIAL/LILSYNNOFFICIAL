@@ -6,6 +6,19 @@
 
 🎮 **Game: LIL SYNN - ROAD TO HER** — play at [lilsynn.com/game](https://lilsynn.com/game/) · [game README, controls and work list →](game/README.md)
 
+## 🎵 Sync music now
+
+[![Sync music](https://img.shields.io/github/actions/workflow/status/LILSYNNOFFICIAL/LILSYNNOFFICIAL/sync-music.yml?label=Sync%20music&logo=googledrive&style=for-the-badge)](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/sync-music.yml)
+
+Pulls new or changed songs from the Google Drive music folder (ACOUSTIC / SINGLES / ALBUMS) into the game (96 kbps, loudness-normalized) and updates `game/audio/tracks.json`. It also runs by itself every night at midnight Pacific.
+
+1. Open **[Actions → Sync music](https://github.com/LILSYNNOFFICIAL/LILSYNNOFFICIAL/actions/workflows/sync-music.yml)** (you must be signed in to GitHub with write access).
+2. Click **Run workflow**.
+3. Enter the **passcode**.
+4. Click **Run**. A wrong passcode stops the run immediately; if nothing changed on Drive, nothing is committed.
+
+Setup and schema: [game/README.md → Music sync](game/README.md#music-sync-google-drive--game).
+
 ---
 
 <!-- MAIN-SURFACE-QA:START -->

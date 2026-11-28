@@ -244,6 +244,9 @@ function poseHumanoid(R, t, dt, st) {
   if (gait === 'reach') { T.arm = [-1.5, -0.2]; T.armZ = [0.1, 0.2]; T.el = [-0.1, -0.3]; T.lean = 0.25; T.th = [-0.4, 0.3]; T.kn = [0.3, 0.2]; }
   if (gait === 'sit') { T.hipY = -0.52; T.th = [-1.5, -1.5]; T.kn = [1.6, 1.6]; T.arm = [-0.3, -0.3]; T.el = [-0.6, -0.6]; }
   if (gait === 'float') { T.th = [0.1, 0.25]; T.kn = [0.3, 0.5]; T.arm = [-0.2, -0.4]; T.armZ = [0.5, 0.5]; T.el = [-0.5, -0.4]; T.lean = 0.05; }
+  if (gait === 'roll') { T.hipY = -0.45; T.th = [-1.9, -1.9]; T.kn = [2.2, 2.2]; T.arm = [-1.2, -1.2]; T.el = [-1.6, -1.6]; T.lean = 1.1; }
+  if (gait === 'swim' || gait === 'dive') { const w = Math.sin(t * 5); T.lean = gait === 'dive' ? 1.2 : 0.7; T.arm = [-2.4 + w * 0.9, -2.4 - w * 0.9]; T.armZ = [0.5, 0.5]; T.el = [-0.3, -0.3]; T.th = [w * 0.35, -w * 0.35]; T.kn = [0.3, 0.3]; }
+  if (gait === 'climb') { const w = Math.sin(t * 6) * (st.speed > 0.1 ? 1 : 0.15); T.arm = [-2.6 + w * 0.5, -2.6 - w * 0.5]; T.armZ = [0.25, 0.25]; T.el = [-0.6, -0.6]; T.th = [-0.9 - w * 0.4, -0.9 + w * 0.4]; T.kn = [1.2, 1.2]; T.lean = -0.05; }
   // upper-body overlays (legs keep their locomotion)
   const up = st.upper;
   if (up === 'attack') { const k = st.upperT; T.arm[1] = -1.45 - Math.sin(k * Math.PI) * 0.15; T.armZ[1] = -0.05; T.el[1] = -0.08; T.twist = -0.3; }
@@ -251,6 +254,7 @@ function poseHumanoid(R, t, dt, st) {
   if (up === 'cello') { T.arm = [-0.9, -1.0]; T.armZ = [-0.3, 0.6]; T.el = [-1.4, -1.0]; T.lean = 0.1; }
   if (up === 'absorb') { T.arm[1] = -2.0; T.el[1] = -0.9; T.arm[0] = -0.6; T.armZ[0] = 0.9; T.el[0] = -0.4; T.lean = -0.1; T.head = 0; }
   if (up === 'switch') { const k = Math.sin(st.upperT * Math.PI); T.arm[1] = 0.3 * k; T.el[1] = -0.3 - 1.0 * k; }
+  if (up === 'melee') { const k = st.upperT; T.arm[1] = lerp(-2.2, -0.4, Math.min(1, k * 1.6)); T.armZ[1] = 0.6 - k; T.el[1] = -0.3; T.twist = lerp(0.5, -0.6, Math.min(1, k * 1.6)); }
   if (up === 'interact') { T.arm[1] = -1.1; T.el[1] = -0.3; T.lean = 0.25; }
   const k = gait === 'land' || up === 'attack' ? 26 : 14;
   P.hipY = damp(P.hipY || 0, T.hipY, k, dt); R.hips.position.y = 0.98 + P.hipY;
@@ -265,7 +269,7 @@ function poseHumanoid(R, t, dt, st) {
 
 // ---------- GLB rigs ----------
 const CLIPS = {
-  lil: { idle: ['idle', 'Idle_Loop'], walk: ['walk', 'Walk_Loop'], run: ['run', 'Jog_Fwd_Loop'], sprint: ['sprint', 'Sprint_Loop'], jump: ['jump_start', 'Jump_Start'], fall: ['jump', 'Jump_Loop'], land: ['land', 'Jump_Land'], hurt: ['hit', 'Hit_Chest'], cheer: ['dance', 'Dance_Loop'], reach: ['cast', 'Spell_Simple_Idle_Loop'], interact: ['interact', 'Interact'], attack: ['cast', 'Spell_Simple_Shoot', 'punch'], absorb: ['cast', 'Spell_Simple_Idle_Loop'], cello: ['cast'], wand: ['attack', 'Sword_Attack'], switch: ['interact'], sit: ['sit', 'Sitting_Idle_Loop'], float: ['jump', 'Jump_Loop'] },
+  lil: { idle: ['idle', 'Idle_Loop'], walk: ['walk', 'Walk_Loop'], run: ['run', 'Jog_Fwd_Loop'], sprint: ['sprint', 'Sprint_Loop'], jump: ['jump_start', 'Jump_Start'], fall: ['jump', 'Jump_Loop'], land: ['land', 'Jump_Land'], hurt: ['hit', 'Hit_Chest'], cheer: ['dance', 'Dance_Loop'], reach: ['cast', 'Spell_Simple_Idle_Loop'], interact: ['interact', 'Interact'], attack: ['cast', 'Spell_Simple_Shoot', 'punch'], absorb: ['cast', 'Spell_Simple_Idle_Loop'], cello: ['cast'], wand: ['attack', 'Sword_Attack'], switch: ['interact'], sit: ['sit', 'Sitting_Idle_Loop'], float: ['jump', 'Jump_Loop'], melee: ['punch', 'punch2', 'Punch_Cross'], roll: ['roll', 'Roll'], swim: ['swim', 'Swim'], dive: ['swim', 'Swim'], climb: ['climb', 'push', 'crouch'] },
   cat: { idle: ['idle'], idle2: ['idle_alt'], walk: ['walk'], run: ['run'], jump: ['jump'], sit: ['sit'], sleep: ['sleep'], play: ['play', 'attack'], meow: ['meow', 'call'], hiss: ['hit'], eat: ['eat'] },
 };
 function findClip(clips, names) { for (const n of names) { const c = clips.find(c => c.name === n) || clips.find(c => c.name.toLowerCase() === n.toLowerCase()) || clips.find(c => c.name.toLowerCase().includes(n.toLowerCase())); if (c) return c; } return null; }
@@ -323,7 +327,7 @@ export class Character {
     this.root.add(model); this.glb = model; this.proc = null;
     this.mixer = new THREE.AnimationMixer(model); this.clips = g.animations || [];
     const map = CLIPS[this.kind === 'cat' ? 'cat' : 'lil'];
-    for (const [st, names] of Object.entries(map)) { const c = findClip(this.clips, names); if (c) { const a = this.mixer.clipAction(c); if (['jump', 'land', 'hurt', 'attack', 'wand', 'interact', 'switch', 'hiss', 'meow', 'play'].includes(st)) { a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; } this.actions[st] = a; } }
+    for (const [st, names] of Object.entries(map)) { const c = findClip(this.clips, names); if (c) { const a = this.mixer.clipAction(c); if (['jump', 'land', 'hurt', 'attack', 'wand', 'interact', 'switch', 'hiss', 'meow', 'play', 'melee', 'roll'].includes(st)) { a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; } this.actions[st] = a; } }
     const bone = (re) => { let f = null; model.traverse(o => { if (!f && o.isBone && re.test(o.name)) f = o; }); return f; };
     this.hand = bone(/^hand_r$/i) || bone(/hand.?r/i) || this.root; this.leftHand = bone(/^hand_l$/i) || this.hand; this.headBone = bone(/^head$/i) || bone(/head/i);
     if (this.held) this.hold(this.held);

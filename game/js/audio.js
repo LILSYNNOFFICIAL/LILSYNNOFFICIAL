@@ -7,7 +7,7 @@ export class AudioSystem {
     this.s = settings; this.ctx = null; this.tracks = []; this.history = [];
     this.mood = 'explore'; this.curTrack = null; this.el = null; this.src = null;
     this.suspended = false; this.fails = 0; this.started = false; this.lastMoodChange = 0;
-    this.onTrack = null;
+    this.onTrack = null; this.onState = null; this.dimmed = false;
   }
   async loadManifest(url) {
     try { const r = await fetch(url); const j = await r.json(); this.tracks = j.tracks || []; } catch (e) { this.tracks = []; }
@@ -40,9 +40,12 @@ export class AudioSystem {
     // Music OFF: stop downloading/playing entirely; ON: resume the playlist.
     if (!s.musicOn) { if (this.el && !this.el.paused) this.el.pause(); }
     else if (this.started && !this.suspended && this.el && this.el.paused) this.resume();
+    this._st2();
   }
-  pick(mood) {
-    let pool = this.tracks.filter(t => t.mood === mood); if (!pool.length) pool = this.tracks;
+  pick(mood, any) {
+    const rot = this.tracks.filter(t => t.rotation !== false); // rotation:false = selector-only songs
+    let pool = any ? rot : rot.filter(t => t.mood === mood); if (!pool.length) pool = rot.length ? rot : this.tracks;
+    if (pool.length > 1 && this.curTrack) pool = pool.filter(t => t.file !== this.curTrack.file); // never the same song twice in a row
     if (!pool.length) return null;
     const recent = this.history.slice(-Math.min(3, pool.length - 1));
     const fresh = pool.filter(t => !recent.includes(t.file));
@@ -50,19 +53,29 @@ export class AudioSystem {
     return (list.length ? list : pool)[Math.floor(Math.random() * (list.length || pool.length))];
   }
   start(mood = 'explore') { this.started = true; this.mood = mood; if (!this.curTrack) this.next(); else this.resume(); }
-  next() {
+  next(any) {
     if (!this.el || !this.started) return;
-    const t = this.pick(this.mood); if (!t) return;
+    const t = this.repeat || this.pick(this.mood, any); if (!t) return; this.el.loop = !!this.repeat;
     this.curTrack = t; this.history.push(t.file); if (this.history.length > 20) this.history.shift();
     this.el.src = t.file; // lazy: the file is only fetched when it is about to play
     if (this.s.musicOn && !this.suspended) { this.fadeIn(); this.el.play().catch(() => {}); }
-    this.onTrack && this.onTrack(t);
+    this.onTrack && this.onTrack(t); this._st2();
   }
+  _st2() { this.onState && this.onState(); }
+  playing() { return !!(this.el && this.started && this.s.musicOn && !this.el.paused); }
+  // ---- player controls (HUD, pause menu, N / M / B keys) ----
+  skip() { if (!this.el) return; this.started = true; this.s.musicOn = true; this.next(true); this.apply(); this._st2(); } // next random song, no immediate repeat
+  togglePlay() { this.s.musicOn = !this.s.musicOn; if (this.s.musicOn) this.started = true; this.apply(); this._st2(); return this.s.musicOn; } // pause keeps the position; play resumes it (persisted as Music on/off)
+  replay() { if (!this.el || !this.curTrack) { this.skip(); return; } this.s.musicOn = true; try { this.el.currentTime = 0; } catch (e) {} this.apply(); if (this.el.paused && !this.suspended) { this.fadeIn(); this.el.play().catch(() => {}); } this._st2(); }
+  // Song Selector (JUNE23): one chosen song loops and overrides the random rotation until MESS clears it.
+  setRepeat(t) { this.repeat = t || null; if (!this.el) return; this.el.loop = !!t; if (t) { this.started = true; this.s.musicOn = true; this.curTrack = t; this.history.push(t.file); this.el.src = t.file; if (!this.suspended) { this.fadeIn(); this.el.play().catch(() => {}); } this.onTrack && this.onTrack(t); this.apply(); } this._st2(); }
+  // pause menu: keep the music audible (quieter) so the player can use the music controls there
+  dim(on) { this.dimmed = on; if (!this.ctx) return; const g = this.duck.gain, t = this.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(Math.max(0.0001, g.value), t); g.linearRampToValueAtTime(on ? 0.3 : 1, t + 0.4); }
   resume() { if (!this.el || !this.s.musicOn || this.suspended) return; if (!this.el.getAttribute('src')) { this.next(); return; } this.fadeIn(); this.el.play().catch(() => {}); }
-  fadeIn() { if (!this.ctx) return; const g = this.duck.gain, t = this.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(0.0001, t); g.linearRampToValueAtTime(1, t + 1.5); }
+  fadeIn() { if (!this.ctx) return; const g = this.duck.gain, t = this.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(0.0001, t); g.linearRampToValueAtTime(this.dimmed ? 0.3 : 1, t + 1.5); }
   // Context-sensitive: crossfade to a track of the new mood (held at least 20 s to avoid ping-pong).
   setMood(m) {
-    if (m === this.mood) return; const now = performance.now();
+    if (m === this.mood || this.repeat) return; const now = performance.now();
     if (now - this.lastMoodChange < 20000 && this.curTrack) return;
     this.mood = m; this.lastMoodChange = now;
     if (!this.started || !this.el || !this.curTrack || this.curTrack.mood === m) return;
@@ -132,6 +145,15 @@ export class AudioSystem {
       case 'whoosh': this._noise(1.2, 0.12, 0, 300, 'bandpass', 1.2, 5000); break;
       case 'code': [784, 1046, 1318, 1568, 2093].forEach((f, i) => this._tone('triangle', f, f, 0.35, 0.07, i * 0.07)); break;
       case 'nope': this._tone('triangle', 440, 330, 0.18, 0.08); this._tone('triangle', 330, 262, 0.22, 0.08, 0.15); break;
+      case 'swing': this._noise(0.16, 0.09, 0, 900, 'bandpass', 1.4, 3200); this._tone('triangle', 660, 990, 0.1, 0.05); break;
+      case 'drum': this._tone('sine', 150, 70, 0.3, 0.25); this._noise(0.12, 0.08, 0, 1800, 'bandpass', 1); this._tone('triangle', 784, 784, 0.25, 0.04, 0.02); break;
+      case 'roll': this._noise(0.35, 0.07, 0, 500, 'bandpass', 1, 1600); break;
+      case 'splash': this._noise(0.5, 0.14, 0, 1200, 'bandpass', 0.8, 400); this._noise(0.3, 0.05, 0.05, 5000, 'highpass'); break;
+      case 'bubble': this._tone('sine', 400 + Math.random() * 300, 900, 0.08, 0.04); break;
+      case 'pearl': [880, 1108.7, 1318.5, 1760].forEach((f, i) => this._tone('sine', f, f, 0.6, 0.07, i * 0.08)); break;
+      case 'grab': this._noise(0.1, 0.06, 0, 2500, 'bandpass', 2); this._tone('sine', 300, 420, 0.08, 0.05); break;
+      case 'gasp': this._noise(0.25, 0.07, 0, 2200, 'bandpass', 1, 900); break;
+      case 'seal': this._tone('sine', 880, 55, 2.2, 0.12, 0, { attack: 0.05 }); this._noise(1.4, 0.12, 0, 4000, 'lowpass', 1, 200); [440, 330, 220].forEach((f, i) => this._tone('triangle', f, f * 0.98, 0.9, 0.06, 0.6 + i * 0.3)); break;
       case 'bump': this._tone('sine', 300, 180, 0.12, 0.08); break;
     }
   }

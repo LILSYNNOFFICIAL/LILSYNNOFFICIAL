@@ -38,6 +38,8 @@
     <div id="packs" title="Health packs (press H)">✚ <span id="packN">0</span> <span class="kbd desk">H</span></div>
     <div id="prompt"></div>
     <div id="toast"></div>
+    <div id="music" class="musicChip" aria-label="Music player"><span id="mTitle">♫ LIL SYNN music</span><button id="mReplay" title="Replay song (B)" aria-label="Replay song">↺</button><button id="mPlay" title="Pause / play music (M)" aria-label="Pause or play music">❚❚</button><button id="mNext" title="Next random song (N)" aria-label="Next random song">»</button></div>
+    <div id="breath" class="hidden" aria-label="Air"><span>AIR</span><div id="breathBar"><div id="breathFill"></div></div></div>
     <div class="topBtns">
       <button id="btnFill" class="deskOnly" title="Fill the whole window" aria-label="Fill window">↔</button>
       <button id="btnFs" title="Fullscreen" aria-label="Fullscreen">⛶</button>
@@ -59,6 +61,8 @@
     <button id="tUse" class="tbtn sm">USE</button>
     <button id="tHeal" class="tbtn sm">✚</button>
     <button id="tPause" class="tbtn sm">II</button>
+    <button id="tMelee" class="tbtn sm">HIT</button>
+    <button id="tAct" class="tbtn sm">ROLL</button>
   </div>
 
   <!-- Main menu -->
@@ -77,6 +81,7 @@
         <button data-act="achievements">ACHIEVEMENTS</button>
         <button data-act="gallery">CUTSCENE GALLERY</button>
         <button data-act="settings">SETTINGS</button>
+        <button data-act="songs" class="hidden" id="btnSongs">🎵 SONGS</button>
         <button data-act="credits">CREDITS</button>
         <button data-act="codes" class="touchOnly" id="btnCodes">🔑 SECRET CODE</button>
       </nav>
@@ -92,10 +97,13 @@
         <button data-act="resume" class="big">RESUME</button>
         <button data-act="inventory">INVENTORY</button>
         <button data-act="settings">SETTINGS</button>
+        <button data-act="songs" class="hidden" id="btnPSongs">🎵 SONGS</button>
         <button data-act="save">SAVE GAME</button>
         <button data-act="load">LOAD GAME</button>
+        <button id="btnPCode">🔑 CODE</button>
         <button data-act="mainmenu">RETURN TO MAIN MENU</button>
       </nav>
+      <div id="pMusic" class="musicRow"><div class="kicker">NOW PLAYING</div><div id="pmTitle">♫</div><div class="row"><button id="pmReplay">↺ REPLAY</button><button id="pmPlay">❚❚ PAUSE</button><button id="pmNext">» NEXT</button></div><div id="pmRepeat" class="small dim"></div></div>
     </div>
   </div>
 
@@ -132,6 +140,7 @@
       <div class="kicker">THE ADVENTURE BEGINS</div>
       <h1 class="gold">TO BE CONTINUED</h1>
       <p class="story big">Level 1: <b>Whispering Woods</b></p>
+      <p class="story">Shadow Man sealed the girl in another dimension. Your cat is ready when you are.</p>
       <p class="small dim">Your progress is saved. The next realm arrives in a coming update.</p>
       <div class="row"><button data-act="mainmenu" class="big">MAIN MENU</button><button data-act="replay">REPLAY TUTORIAL</button></div>
     </div>

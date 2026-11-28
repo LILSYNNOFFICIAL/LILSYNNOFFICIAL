@@ -12,11 +12,15 @@ export const pathX = (z) => 5 * Math.sin(z * 0.03) + 2 * Math.sin(z * 0.071);
 export const streamZ = (x) => -46 + 3.5 * Math.sin(x * 0.045);
 export const WATER_Y = -0.55;
 export const PORTAL = new V3(pathX(-142), 0, -142);
+const POND_PX = pathX(-46);
+export const POND = { x: POND_PX - 15.5, z: streamZ(POND_PX - 15.5), r: 6 }; // deep pool center
 export function height(x, z) {
   let h = 1.3 * Math.sin(x * 0.045 + 1.3) * Math.cos(z * 0.038) + 0.8 * Math.sin(x * 0.09 + z * 0.07) + 0.35 * Math.sin(x * 0.21 - z * 0.17) + 0.6;
   const dp = Math.abs(x - pathX(z)); h *= 0.15 + 0.85 * sstep(2.5, 12, dp);
   h += sstep(32, 75, Math.abs(x)) * 16 + sstep(18, 60, z) * 12 + sstep(-160, -215, z) * 18;
   const ds = Math.abs(z - streamZ(x)); if (ds < 5.5) h = Math.min(h, h - 1.6 * Math.pow(1 - ds / 5.5, 1.6) * (1 + 0.0 * x)) ;
+  // deep swimming pool in the stream, left of the path crossing (tutorial: swim + dive)
+  if (ds < 5.2) { const PX = POND_PX; const k = sstep(5.2, 2.0, ds) * sstep(PX - 5, PX - 9, x) * sstep(PX - 27, PX - 22, x); if (k > 0) h = h + (Math.min(h, WATER_Y - 2.9) - h) * k; }
   if (x > 34) h += sstep(34, 40, x) * 9 * (1 - sstep(3, 7, ds) * 0) ; // cliff behind the waterfall
   const dpo = Math.hypot(x - PORTAL.x, z - PORTAL.z); if (dpo < 16) h = h * sstep(8, 16, dpo) + 0.3 * (1 - sstep(8, 16, dpo));
   return h;
@@ -329,7 +333,7 @@ export async function buildMeadow(scene, Q, base) {
 
   // ---------- tutorial spots ----------
   const S = (z, dx = 0) => { const x = pathX(z) + dx; return new V3(x, height(x, z), z); };
-  Object.assign(W.spots, { start: S(10), girlStart: S(7, -2.2), catStart: S(8.5, 1.6), ringMove: S(-6), ringRun: S(-24), afterLog: S(-36), stones: S(-46), camera: S(-54), targets: S(-66), chest: S(-80, 3.5), arena: S(-100), pack: S(-90, -5), wave2: S(-118), portalApproach: S(-130) });
+  Object.assign(W.spots, { start: S(10), girlStart: S(7, -2.2), catStart: S(8.5, 1.6), ringMove: S(-6), ringRun: S(-24), afterLog: S(-36), stones: S(-46), camera: S(-54), targets: S(-66), chest: S(-80, 3.5), arena: S(-100), pack: S(-90, -5), wave2: S(-118), portalApproach: S(-130), ledge: S(-35, -7), cliff: S(-39, 7.5), drums: S(-58), pondBank: new V3(POND.x + 1, height(POND.x + 1, POND.z + 6), POND.z + 6), pondFar: new V3(POND.x + 2, height(POND.x + 2, POND.z - 6.5), POND.z - 6.5) });
   W.hedgeZ = hedgeZ;
   W.update = (t, dt) => { for (const f of W.updates) f(t, dt); };
   return W;

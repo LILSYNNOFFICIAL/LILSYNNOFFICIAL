@@ -31,6 +31,8 @@ const REQUIRED = {
     u.flags.pinkQuest = 'active';
     return ['QUEST STARTED: THE LOST MICROPHONE', 'Something precious is missing… find the cat. It knows where to look.'];
   },
+  'JUNE23': (u) => { u.flags.songSelector = true; return ['SONG SELECTOR UNLOCKED', 'Pick any LIL SYNN song under SONGS (main menu or pause menu). It plays on repeat until you enter MESS with the code button in the pause menu.']; },
+  'JUNE 23': (u) => REQUIRED['JUNE23'](u),
   'JARRED': (u) => {
     for (const c of COSTUMES) if (!u.costumes.includes(c.id)) u.costumes.push(c.id);
     return ['CREATOR COSTUMES', 'Five exclusive LIL SYNN costumes are unlocked. Find them under Wardrobe on the main menu.'];
@@ -76,6 +78,7 @@ export function applyCode(input, save) {
   if (!code) return { ok: false, title: 'TYPE A CODE', msg: 'Type a secret code, then press Enter.' };
   const u = save.unlocks;
   let title, msg;
+  if (code === 'MESS') return { ok: false, title: 'PAUSE MENU CODE', msg: 'MESS is entered from the pause menu during a game (code button or CTRL there).' };
   if (REQUIRED[code]) {
     [title, msg] = REQUIRED[code](u);
   } else if (OPTIONAL[code]) {
@@ -89,6 +92,17 @@ export function applyCode(input, save) {
   }
   if (!u.codes.includes(code)) u.codes.push(code);
   return { ok: true, code, title, msg };
+}
+
+// The one code the PAUSE menu accepts. MESS turns off Song Selector repeat (random rotation again).
+// It does nothing unless JUNE23 has been unlocked.
+export function applyPauseCode(input, save) {
+  const code = normalizeCode(input);
+  if (!code) return { ok: false, title: 'TYPE A CODE', msg: 'Type the code, then press Enter.' };
+  if (code !== 'MESS') return { ok: false, title: 'MAIN MENU ONLY', msg: 'Secret codes are entered on the main menu. The pause menu only takes one special code.' };
+  if (!save.unlocks.flags.songSelector) return { ok: false, title: 'NOTHING HAPPENS', msg: 'The meadow shrugs. (That code needs something else unlocked first.)' };
+  save.unlocks.repeatTrack = null; if (!save.unlocks.codes.includes('MESS')) save.unlocks.codes.push('MESS');
+  return { ok: true, code, title: 'BACK ON SHUFFLE', msg: 'Song repeat is off. Random LIL SYNN songs play again.' };
 }
 
 export const celloDamage = (enemyMaxHp) => 0.75 * enemyMaxHp; // spec 10: cello deals 75% damage

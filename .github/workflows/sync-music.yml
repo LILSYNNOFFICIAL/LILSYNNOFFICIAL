@@ -1,0 +1,76 @@
+# Sync LIL SYNN songs from Google Drive into the game (game/audio/music + game/audio/tracks.json).
+# Runs daily at midnight Pacific, or on demand from the Actions tab with the sync passcode.
+name: Sync music
+
+on:
+  schedule:
+    # Midnight America/Los_Angeles: 08:00 UTC in standard time (PST), 07:00 UTC in daylight time (PDT).
+    # Both fire; the guard step below only lets the one that lands on 00:xx Pacific continue.
+    - cron: '0 7 * * *'
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      passcode:
+        description: 'Sync passcode'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-music
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check passcode (manual runs)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GIVEN: ${{ inputs.passcode }}
+          EXPECTED: ${{ secrets.SYNC_PASSCODE }}
+        run: |
+          echo "::add-mask::$GIVEN"
+          if [ -z "$EXPECTED" ]; then echo "::error::SYNC_PASSCODE secret is not set"; exit 1; fi
+          if [ "$GIVEN" != "$EXPECTED" ]; then echo "::error::Wrong passcode"; exit 1; fi
+          echo "Passcode OK"
+
+      - name: Midnight Pacific guard (scheduled runs)
+        id: guard
+        if: github.event_name == 'schedule'
+        run: |
+          H=$(TZ=America/Los_Angeles date +%H)
+          echo "Pacific hour: $H"
+          if [ "$H" = "00" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; else echo "go=false" >> "$GITHUB_OUTPUT"; echo "Not midnight Pacific (other DST cron); skipping."; fi
+
+      - uses: actions/checkout@v4
+        if: github.event_name != 'schedule' || steps.guard.outputs.go == 'true'
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Install ffmpeg + Python deps
+        if: github.event_name != 'schedule' || steps.guard.outputs.go == 'true'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          python3 -m pip install --quiet google-auth requests
+
+      - name: Sync from Google Drive
+        if: github.event_name != 'schedule' || steps.guard.outputs.go == 'true'
+        env:
+          GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+          FALLBACK_FOLDER_ID: 1qoviagtzcS9naG0HqsAoBPx_zgoaUtKo
+        run: python3 .github/scripts/sync_music.py
+
+      - name: Commit and push (only if changed)
+        if: github.event_name != 'schedule' || steps.guard.outputs.go == 'true'
+        run: |
+          git add game/audio/music game/audio/tracks.json
+          if git diff --cached --quiet; then echo "No music changes."; exit 0; fi
+          git -c user.name="LIL SYNN" -c user.email="contact@lilsynn.com" commit -m "Music sync: update songs from Google Drive"
+          git pull --rebase origin main
+          git push origin HEAD:main

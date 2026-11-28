@@ -144,3 +144,23 @@ body.touch .topBtns #btnPause { display:none; }
 #health, #manaWrap, #pouch { left:calc(12px + env(safe-area-inset-left)); }
 #packs { left:calc(90px + env(safe-area-inset-left)); }
 @media (orientation: landscape) { body.touch #subs { left:40%; max-width:46cqw; bottom:calc(52px + env(safe-area-inset-bottom)); } body.touch #tHeal { right:calc(5% + env(safe-area-inset-right) + clamp(196px, 50cqmin, 250px)); bottom:calc(6% + env(safe-area-inset-bottom)); } body.touch #interactHint { top:auto; bottom:42%; } }
+
+/* stage 2: Shadow Man dialog box, music player, breath meter, new touch buttons */
+#prompt .spk { display:block; font-size:.7em; letter-spacing:.32em; font-weight:900; color:#c8a0ff; text-shadow:0 0 8px rgba(154,107,255,.8); margin-bottom:2px; }
+.musicChip { position:absolute; top:calc(max(10px, env(safe-area-inset-top)) + 46px); right:calc(10px + env(safe-area-inset-right)); display:flex; align-items:center; gap:4px; pointer-events:auto; padding:3px 4px 3px 10px; border-radius:14px; background:rgba(40,14,58,.55); border:1px solid rgba(255,211,107,.4); max-width:min(260px, 60cqw); z-index:6; }
+.musicChip #mTitle { font-size:11px; font-weight:800; letter-spacing:.06em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1; text-shadow:0 1px 3px #000; }
+.musicChip button { padding:0; width:32px; height:32px; min-width:32px; border-radius:10px; font-size:14px; line-height:1; }
+body.touch .musicChip button { width:40px; height:40px; min-width:40px; font-size:16px; }
+.musicRow { width:100%; display:flex; flex-direction:column; gap:6px; align-items:center; padding:10px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,211,107,.3); }
+.musicRow #pmTitle { font-weight:800; letter-spacing:.06em; text-align:center; }
+.musicRow button { min-height:44px; }
+#breath { position:absolute; left:50%; transform:translateX(-50%); bottom:calc(52px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:8px; font-size:11px; font-weight:900; letter-spacing:.2em; color:#bff3ff; text-shadow:0 1px 3px #000; }
+#breathBar { width:min(160px, 40cqw); height:10px; border-radius:6px; background:rgba(10,30,50,.6); border:1px solid rgba(190,243,255,.7); overflow:hidden; }
+#breathFill { height:100%; width:100%; background:linear-gradient(90deg, #5ec8ff, #c8f6ff); transition:width .15s; }
+#breath.low #breathFill { background:linear-gradient(90deg, #ff4f7a, #ffb3c6); } #breath.low { animation:hhShake .6s infinite; }
+#tPause { top:max(10px, env(safe-area-inset-top)); right:calc(56px + env(safe-area-inset-right)); }
+body.touch #tHeal { right:calc(10px + env(safe-area-inset-right)); top:calc(max(10px, env(safe-area-inset-top)) + 96px); bottom:auto; }
+#tMelee { right:calc(5% + env(safe-area-inset-right) + clamp(160px, 42cqmin, 200px)); bottom:calc(7% + env(safe-area-inset-bottom)); }
+#tAct { right:calc(5% + env(safe-area-inset-right) + clamp(128px, 33cqmin, 160px)); bottom:calc(10% + clamp(128px, 33cqmin, 160px) + env(safe-area-inset-bottom)); }
+@media (orientation: landscape) { body.touch #tHeal { right:calc(10px + env(safe-area-inset-right)); bottom:auto; } body.touch #tMelee { right:calc(5% + env(safe-area-inset-right) + clamp(196px, 50cqmin, 250px)); bottom:calc(6% + env(safe-area-inset-bottom)); } }
+#pause nav { grid-template-columns:1fr 1fr; } #pause nav .big { grid-column:1 / -1; } #pause .menuInner { gap:8px; }
