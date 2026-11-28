@@ -4,6 +4,8 @@
 
 [Open the GitHub Pages preview →](https://lilsynnofficial.github.io/LILSYNNOFFICIAL/)
 
+🎮 **Game: LIL SYNN - ROAD TO HER** — play at [lilsynn.com/game](https://lilsynn.com/game/) · [game README, controls and work list →](game/README.md)
+
 ---
 
 <!-- MAIN-SURFACE-QA:START -->
