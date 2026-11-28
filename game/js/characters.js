@@ -265,10 +265,10 @@ function poseHumanoid(R, t, dt, st) {
 
 // ---------- GLB rigs ----------
 const CLIPS = {
-  lil: { idle: ['Idle_Loop', 'idle'], walk: ['Walk_Loop', 'walk'], run: ['Jog_Fwd_Loop', 'run', 'jog'], sprint: ['Sprint_Loop', 'sprint'], jump: ['Jump_Start', 'Jump_Loop'], fall: ['Jump_Loop'], land: ['Jump_Land'], hurt: ['Hit_Chest', 'hit'], cheer: ['Dance_Loop'], reach: ['Spell_Simple_Idle_Loop', 'Interact'], interact: ['Interact', 'PickUp_Table'], attack: ['Spell_Simple_Shoot', 'Punch_Jab'], absorb: ['Spell_Simple_Idle_Loop'], cello: ['Spell_Simple_Idle_Loop'], wand: ['Sword_Attack', 'Spell_Simple_Shoot'], switch: ['Interact'], sit: ['Sitting_Idle_Loop'], float: ['Jump_Loop'] },
-  cat: { idle: ['idle'], idle2: ['idle_alt'], walk: ['walk'], run: ['run'], jump: ['jump'], sit: ['sit'], sleep: ['sleep'], play: ['attack'], meow: ['call'], hiss: ['hit'], eat: ['eat'] },
+  lil: { idle: ['idle', 'Idle_Loop'], walk: ['walk', 'Walk_Loop'], run: ['run', 'Jog_Fwd_Loop'], sprint: ['sprint', 'Sprint_Loop'], jump: ['jump_start', 'Jump_Start'], fall: ['jump', 'Jump_Loop'], land: ['land', 'Jump_Land'], hurt: ['hit', 'Hit_Chest'], cheer: ['dance', 'Dance_Loop'], reach: ['cast', 'Spell_Simple_Idle_Loop'], interact: ['interact', 'Interact'], attack: ['cast', 'Spell_Simple_Shoot', 'punch'], absorb: ['cast', 'Spell_Simple_Idle_Loop'], cello: ['cast'], wand: ['attack', 'Sword_Attack'], switch: ['interact'], sit: ['sit', 'Sitting_Idle_Loop'], float: ['jump', 'Jump_Loop'] },
+  cat: { idle: ['idle'], idle2: ['idle_alt'], walk: ['walk'], run: ['run'], jump: ['jump'], sit: ['sit'], sleep: ['sleep'], play: ['play', 'attack'], meow: ['meow', 'call'], hiss: ['hit'], eat: ['eat'] },
 };
-function findClip(clips, names) { for (const n of names) { const c = clips.find(c => c.name === n) || clips.find(c => c.name.toLowerCase().includes(n.toLowerCase())); if (c) return c; } return null; }
+function findClip(clips, names) { for (const n of names) { const c = clips.find(c => c.name === n) || clips.find(c => c.name.toLowerCase() === n.toLowerCase()) || clips.find(c => c.name.toLowerCase().includes(n.toLowerCase())); if (c) return c; } return null; }
 
 const loaderP = (async () => {
   const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
@@ -279,7 +279,30 @@ export async function loadGLB(url) {
   try { const r = await fetch(url, { method: 'HEAD' }); if (!r.ok) return null; const l = await loaderP; return await l.loadAsync(url); } catch (e) { console.warn('GLB load failed', url, e); return null; }
 }
 
-// Character wrapper: uniform API whether the body is a GLB or procedural.
+// Sprite/billboard adapter (illustrated characters): cfg = { height, fps, states: { idle: [urls], walk: [...] ... } }.
+// Unknown states fall back to idle. Always faces the camera around Y (cylindrical billboard).
+export async function spriteBody(cfg, base) {
+  const TL = new THREE.TextureLoader(); const tex = {};
+  for (const [st, urls] of Object.entries(cfg.states || {})) tex[st] = await Promise.all(urls.map(u => TL.loadAsync(base + u).then(t => { t.colorSpace = THREE.SRGBColorSpace; return t; }).catch(() => null)));
+  if (!tex.idle || !tex.idle[0]) return null;
+  const img = tex.idle[0].image, aspect = img.width / img.height, h = cfg.height || 1.8;
+  const mat = new THREE.MeshStandardMaterial({ map: tex.idle[0], transparent: true, alphaTest: 0.4, side: THREE.DoubleSide, roughness: 1 });
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(h * aspect, h), mat); plane.position.y = h / 2; plane.castShadow = true;
+  const group = new THREE.Group(); group.add(plane);
+  return { group, hand: group, update(state, t, camera) { const fr = (tex[state] && tex[state].filter(Boolean).length ? tex[state] : tex.idle).filter(Boolean); const f = fr[Math.floor(t * (cfg.fps || 8)) % fr.length]; if (mat.map !== f) { mat.map = f; mat.needsUpdate = true; } if (camera) { const wp = group.getWorldPosition(new V3()); const yaw = Math.atan2(camera.position.x - wp.x, camera.position.z - wp.z); plane.rotation.y = yaw - (group.parent ? group.parent.rotation.y : 0); } } };
+}
+// Loads a character from characters.json sources in order; returns the type that won ('glb' | 'sprite' | 'procedural').
+export async function loadBody(ch, sources, base) {
+  for (const src of sources || []) {
+    try {
+      if (src.type === 'glb' && await ch.tryGLB(base + src.url, src.height || 0)) return 'glb';
+      if (src.type === 'sprite') { const sb = await spriteBody(src, base); if (sb) { ch.useSprite(sb); return 'sprite'; } }
+    } catch (e) { console.warn('character source failed', src, e); }
+  }
+  return 'procedural';
+}
+
+// Character wrapper: uniform API whether the body is a GLB, a sprite billboard or procedural.
 export class Character {
   constructor(kind, opts = {}) {
     this.kind = kind; this.root = new THREE.Group(); this.state = 'idle'; this.upper = null; this.upperT = 0; this.opts = opts;
@@ -288,13 +311,13 @@ export class Character {
     this.mixer = null; this.actions = {}; this.cur = null;
   }
   setCostume(c) { if (this.glb) { this.applyCostumeGLB(c); return; } if (!this.proc || this.kind !== 'lil') return; const held = this.held; this.root.remove(this.proc.root); this.proc = buildLilSynnProcedural(c); this.root.add(this.proc.root); this.hand = this.proc.arms[1].hand; this.headBone = this.proc.head; if (held) this.hold(held); this.costume = c; }
-  applyCostumeGLB(c) { if (!this.glb || !c) return; this.glb.traverse(o => { if (o.isMesh && o.material && o.material.userData && o.material.userData.costume === 'jacket') o.material.color.set(c.jacket); }); }
+  applyCostumeGLB(c) { if (!this.glb || !c) return; this.costume = c; this.glb.traverse(o => { if (!o.isMesh || !o.material) return; const n = o.material.name || ''; if (n === 'hoodie_fabric') { o.material.color.set(c.jacket); if (o.material.sheenColor) o.material.sheenColor.set(c.trim); } if (n === 'gold' || n === 'pink_frame') { if (c.chrome && n === 'gold') o.material.color.set(0xd8dde6); } if (n === 'denim' && c.id === 'legend') o.material.color.set(0x2a2a5a); }); }
   async tryGLB(url, height) {
     const g = await loadGLB(url); if (!g) return false;
     const model = (g.scene.children.length === 1 ? g.scene : g.scene); // keep hierarchy
     model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; if (/LOD1/i.test(o.name)) o.visible = false; } });
     const box = new THREE.Box3().setFromObject(model), size = box.getSize(new V3());
-    if (height && size.y > 0.01) { const s = height / size.y; model.scale.multiplyScalar(s); box.setFromObject(model); }
+    if (height && size.y > 0.01) { const s = height / size.y; if (Math.abs(s - 1) > 0.15) { model.scale.multiplyScalar(s); box.setFromObject(model); } }
     model.position.y -= box.min.y;
     if (this.proc) this.root.remove(this.proc.root);
     this.root.add(model); this.glb = model; this.proc = null;
@@ -304,6 +327,7 @@ export class Character {
     const bone = (re) => { let f = null; model.traverse(o => { if (!f && o.isBone && re.test(o.name)) f = o; }); return f; };
     this.hand = bone(/^hand_r$/i) || bone(/hand.?r/i) || this.root; this.leftHand = bone(/^hand_l$/i) || this.hand; this.headBone = bone(/^head$/i) || bone(/head/i);
     if (this.held) this.hold(this.held);
+    if (this.opts.costume) this.applyCostumeGLB(this.opts.costume);
     this.play('idle', 0);
     return true;
   }
@@ -314,11 +338,13 @@ export class Character {
   hold(obj) { // weapon in the right hand
     if (this.held && this.held.parent) this.held.parent.remove(this.held); this.held = obj; if (!obj) return;
     (this.hand || this.root).add(obj);
-    if (this.glb) { obj.position.set(0, 0.08, 0.02); obj.rotation.set(0, 0, Math.PI); obj.scale.setScalar(1 / Math.max(0.001, this.glb.scale.x)); }
+    if (this.glb) { this.root.updateMatrixWorld(true); const ws = new V3(); (this.hand || this.root).getWorldScale(ws); const rs = new V3(); this.root.getWorldScale(rs); obj.position.set(0, 0.06 / (ws.x / rs.x), 0); obj.rotation.set(0, 0, Math.PI); obj.scale.setScalar(rs.x / Math.max(0.0001, ws.x)); }
     else { obj.position.set(0, -0.08, 0.03); obj.rotation.set(Math.PI, 0, 0); obj.scale.setScalar(1); }
   }
+  useSprite(sb) { if (this.proc) this.root.remove(this.proc.root); if (this.glb) this.root.remove(this.glb); this.proc = null; this.glb = null; this.mixer = null; this.sprite = sb; this.root.add(sb.group); this.hand = sb.hand; if (this.held) this.hold(this.held); }
   update(t, dt, st) {
     this.state = st.state; this.upper = st.upper || null;
+    if (this.sprite) { this.sprite.update(st.upper || st.state, t, Character.camera); return; }
     if (this.mixer) {
       const want = st.upper && this.actions[st.upper] ? st.upper : st.state;
       this.play(want, want === 'land' ? 0.08 : 0.22);
@@ -373,10 +399,10 @@ export function buildCatProcedural(q = 'high') {
 // Cat wrapper with spontaneous behaviours: follow, sit, groom, play, sleep, look, hiss, meow.
 export class Cat {
   constructor(q) { this.root = new THREE.Group(); this.p = buildCatProcedural(q); this.root.add(this.p.root); this.state = 'idle'; this.t = 0; this.mixer = null; this.actions = {}; this.look = 0; this.mood = 'follow'; this.moodT = 0; this.vel = new V3(); this.face = 0; }
-  async tryGLB(url, height = 0.62) {
+  async tryGLB(url, height = 0) {
     const g = await loadGLB(url); if (!g) return false;
-    const model = g.scene; model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; if (/LOD1/i.test(o.name)) o.visible = false; } });
-    const box = new THREE.Box3().setFromObject(model), size = box.getSize(new V3()); model.scale.multiplyScalar(height / Math.max(0.01, size.y)); box.setFromObject(model); model.position.y -= box.min.y;
+    const model = g.scene; model.traverse(o => { if (o.isMesh) { o.castShadow = !/shell|card|whisker/i.test(o.material?.name || ''); o.receiveShadow = true; o.frustumCulled = false; if (/LOD1/i.test(o.name)) o.visible = false; } });
+    const box = new THREE.Box3().setFromObject(model); if (height) { const size = box.getSize(new V3()); model.scale.multiplyScalar(height / Math.max(0.01, size.y)); box.setFromObject(model); } model.position.y -= box.min.y;
     this.root.remove(this.p.root); this.root.add(model); this.glb = model; this.mixer = new THREE.AnimationMixer(model);
     for (const [st, names] of Object.entries(CLIPS.cat)) { const c = findClip(g.animations || [], names); if (c) { const a = this.mixer.clipAction(c); if (['jump', 'hiss', 'meow', 'play'].includes(st)) { a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; } this.actions[st] = a; } }
     let hb = null; model.traverse(o => { if (!hb && o.isBone && /head/i.test(o.name)) hb = o; }); this.headBone = hb;
@@ -398,8 +424,10 @@ export class Cat {
     P.tail.forEach((s, i) => { const up = hiss ? -0.5 : sleep ? 0.25 : -0.32; s.rotation.x = damp(s.rotation.x, up + Math.sin(t * (hiss ? 9 : 2.6) + i * 0.6) * (hiss ? 0.05 : 0.09), 8, dt); s.rotation.y = damp(s.rotation.y, sleep ? 0.38 : Math.sin(t * 1.9 + i * 0.5) * 0.16, 6, dt); });
     P.ears.forEach((e, i) => { const tw = Math.sin(t * 0.7 + i * 2) > 0.97 ? 0.35 : 0; e.rotation.x = damp(e.rotation.x, (hiss ? 0.8 : 0) + tw, 20, dt); });
   }
+  useSprite(sb) { this.root.remove(this.p.root); if (this.glb) this.root.remove(this.glb); this.glb = null; this.mixer = null; this.sprite = sb; this.root.add(sb.group); }
   update(t, dt, st, speed) {
     this.state = st;
+    if (this.sprite) { this.sprite.update(st, t, Character.camera); return; }
     if (this.mixer) { const map = { idle: 'idle', walk: 'walk', run: 'run', sit: 'sit', groom: 'eat', sleep: 'sleep', play: 'play', hiss: 'hiss', meow: 'meow', jump: 'jump', look: 'idle2' }; this.anim(map[st] || 'idle'); this.mixer.timeScale = st === 'walk' || st === 'run' ? THREE.MathUtils.clamp(speed / (st === 'run' ? 4 : 1.6), 0.7, 1.5) : 1; this.mixer.update(dt); if (this.headBone && this.look) this.headBone.rotation.y += this.look * 0.6; }
     else this.pose(t, dt, st, speed);
   }

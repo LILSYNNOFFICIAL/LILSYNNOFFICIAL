@@ -8,7 +8,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import * as SAVE from './save.js';
 import { AudioSystem } from './audio.js';
 import { applyCode, COSTUMES, celloDamage } from './cheats.js';
-import { Character, Cat, makeMic, makeWand, makeCello } from './characters.js';
+import { Character, Cat, makeMic, makeWand, makeCello, loadBody } from './characters.js';
 import { buildMeadow, height, groundAt, pathX, streamZ, WATER_Y, PORTAL, U, sprites } from './world.js';
 import { glowTexture } from './textures.js';
 
@@ -24,13 +24,20 @@ const persist = () => SAVE.write(SV);
 const flags = () => SV.unlocks.flags;
 
 // ---------------- quality ----------------
-const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+let isTouch = matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window && !matchMedia('(pointer: fine)').matches);
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (isTouch && Math.min(screen.width, screen.height) < 900);
 function qualityTier() { const q = params.get('q') || S.quality; if (q === 'low' || q === 'med' || q === 'high') return q; return isMobile ? 'low' : 'high'; }
 const tier = qualityTier();
-const Q = { tier, low: tier === 'low', med: tier === 'med', high: tier === 'high', shadows: tier !== 'low', pr: Math.min(devicePixelRatio || 1, tier === 'high' ? 2 : tier === 'med' ? 1.5 : 1.15) };
+// Quality presets: one place to tune every tier (grass density etc. read Q.low / Q.med / Q.high in world.js).
+export const QUALITY_PRESETS = {
+  low: { shadows: false, shadowMap: 0, pr: 1.15, msaa: 0, bloom: 0.25, ao: false },
+  med: { shadows: true, shadowMap: 1024, pr: 1.5, msaa: 4, bloom: 0.3, ao: false },
+  high: { shadows: true, shadowMap: 2048, pr: 2, msaa: 4, bloom: 0.32, ao: true },
+};
+const QP = QUALITY_PRESETS[tier];
+const Q = { tier, preset: QP, low: tier === 'low', med: tier === 'med', high: tier === 'high', shadows: QP.shadows, pr: Math.min(devicePixelRatio || 1, QP.pr) };
 if (isTouch) document.body.classList.add('touch');
-if (S.fill && !isTouch) document.body.classList.add('fill');
+if ((S.fill && !isTouch) || isTouch) document.body.classList.add('fill'); // touch: always use the whole screen (portrait or landscape)
 
 // ---------------- renderer + post ----------------
 const stage = $('stage'); const SW = () => Math.max(1, stage.clientWidth), SH = () => Math.max(1, stage.clientHeight);
@@ -41,20 +48,24 @@ renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.shadowMap.enabled = Q
 $('app').appendChild(renderer.domElement);
 const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0xe9c8d6, 0.0019); scene.background = new THREE.Color(0xe9c8d6);
 const camera = new THREE.PerspectiveCamera(58, SW() / SH(), 0.1, 1400);
-const rt = new THREE.WebGLRenderTarget(SW() * Q.pr, SH() * Q.pr, { type: THREE.HalfFloatType, samples: Q.low ? 0 : 4 });
+const rt = new THREE.WebGLRenderTarget(SW() * Q.pr, SH() * Q.pr, { type: THREE.HalfFloatType, samples: QP.msaa });
 const composer = new EffectComposer(renderer, rt); composer.setPixelRatio(Q.pr);
 composer.addPass(new RenderPass(scene, camera));
 let aoPass = null;
-const bloom = new UnrealBloomPass(new THREE.Vector2(SW() * 0.5, SH() * 0.5), 0.32, 0.45, 0.9); // subtle: only magic emissives cross the threshold
+const bloom = new UnrealBloomPass(new THREE.Vector2(SW() * 0.5, SH() * 0.5), QP.bloom, 0.45, 0.9); // subtle: only magic emissives cross the threshold
 composer.addPass(bloom); composer.addPass(new OutputPass());
-if (Q.high && !params.has('noao')) import('three/addons/postprocessing/GTAOPass.js').then(({ GTAOPass }) => { try { aoPass = new GTAOPass(scene, camera, SW(), SH()); aoPass.output = GTAOPass.OUTPUT.Default; aoPass.blendIntensity = 0.8; aoPass.updateGtaoMaterial({ radius: 0.6, distanceExponent: 1.5, thickness: 1.2, scale: 1 }); composer.insertPass(aoPass, 1); } catch (e) { console.warn('GTAO unavailable', e); aoPass = null; } }).catch(() => {});
+if (QP.ao && !params.has('noao')) import('three/addons/postprocessing/GTAOPass.js').then(({ GTAOPass }) => { try { aoPass = new GTAOPass(scene, camera, SW(), SH()); aoPass.output = GTAOPass.OUTPUT.Default; aoPass.blendIntensity = 0.8; aoPass.updateGtaoMaterial({ radius: 0.6, distanceExponent: 1.5, thickness: 1.2, scale: 1 }); composer.insertPass(aoPass, 1); } catch (e) { console.warn('GTAO unavailable', e); aoPass = null; } }).catch(() => {});
 const hemi = new THREE.HemisphereLight(0xdfe6ff, 0x4a6a32, 0.35); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffd9a8, 3.6); sun.castShadow = Q.shadows;
-sun.shadow.mapSize.set(Q.high ? 2048 : 1024, Q.high ? 2048 : 1024); Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 26, bottom: -26, near: 1, far: 160 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
+sun.shadow.mapSize.set(QP.shadowMap || 512, QP.shadowMap || 512); Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 26, bottom: -26, near: 1, far: 160 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
 scene.add(sun, sun.target);
 const pmrem = new THREE.PMREMGenerator(renderer);
 new RGBELoader().load(BASE + 'assets/hdri/qwantani_sunset_puresky_1k.hdr', (t) => { t.mapping = THREE.EquirectangularReflectionMapping; scene.environment = pmrem.fromEquirectangular(t).texture; t.dispose(); scene.traverse(o => { if (o.isMesh && o.material && 'envMapIntensity' in o.material) if (o.material.envMapIntensity === 1) o.material.envMapIntensity = 0.75; }); }, undefined, () => { /* procedural sky lights the scene anyway */ });
-function onResize() { const w = SW(), h = SH(); renderer.setSize(w, h); composer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); if (aoPass) aoPass.setSize(w, h); }
+// Post-processing hook: an optional ./pipeline.js may export createPipeline({ renderer, scene, camera, Q, preset, sun, size })
+// returning { render(dt), setSize(w, h), dispose?() }. If it is missing or throws, the built-in composer above is used.
+let PIPE = null;
+import('./pipeline.js').then(async (m) => { if (!m.createPipeline) return; const p = await m.createPipeline({ renderer, scene, camera, Q, preset: QP, sun, size: [SW(), SH()] }); if (p && p.render) { PIPE = p; console.info('custom render pipeline active'); } }).catch(() => {});
+function onResize() { const w = SW(), h = SH(); renderer.setSize(w, h); composer.setSize(w, h); if (PIPE) PIPE.setSize?.(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); if (aoPass) aoPass.setSize(w, h); }
 addEventListener('resize', onResize); new ResizeObserver(onResize).observe(stage);
 
 // ---------------- audio ----------------
@@ -70,8 +81,13 @@ const shadow = new Character('shadow'); scene.add(shadow.root); shadow.root.visi
 const cat = new Cat(tier); scene.add(cat.root);
 const W8 = { sonic: makeMic(), wand: makeWand(), cello: makeCello() };
 const celloProp = makeCello(); celloProp.visible = false; scene.add(celloProp);
-lil.tryGLB(BASE + 'assets/models/lil-synn.glb', 1.8).then(ok => { if (ok) { lil.hold(W8[P.weapon] || W8.sonic); } });
-cat.tryGLB(BASE + 'assets/models/cat.glb', 0.62);
+Character.camera = camera;
+const BODY = {}; // which body each character ended up with (glb | sprite | procedural)
+fetch(BASE + 'characters.json').then(r => r.json()).catch(() => ({})).then(async (cfg) => {
+  BODY.lil = await loadBody(lil, cfg.lil?.sources, BASE); lil.hold(W8[P.weapon] || W8.sonic);
+  BODY.cat = await loadBody(cat, cfg.cat?.sources, BASE); if (BODY.cat !== 'procedural') cat.setCrown = () => {};
+  BODY.girl = await loadBody(girl, cfg.girl?.sources, BASE); BODY.shadow = await loadBody(shadow, cfg.shadow?.sources, BASE);
+});
 lil.hold(W8.sonic);
 
 // ---------------- world ----------------
@@ -109,6 +125,13 @@ function drawWeapon() { const w = WEAPONS[P.weapon]; $('wIcon').textContent = w.
 let toastT = 0; function toast(m, d = 2.2) { $('toast').textContent = m; $('toast').classList.add('on'); toastT = d; }
 const KEYS = { move: ['<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>', 'the left stick'], run: ['hold <kbd>SHIFT</kbd>', 'push the stick all the way'], jump: ['<kbd>SPACE</kbd>', '<kbd>JUMP</kbd>'], fire: ['<kbd>E</kbd> or click', '<kbd>♪</kbd>'], use: ['<kbd>F</kbd>', '<kbd>USE</kbd>'], swap: ['<kbd>Q</kbd> / mouse wheel', '<kbd>⇄</kbd>'], mic: ['<kbd>R</kbd>', '<kbd>MIC</kbd>'], heal: ['<kbd>H</kbd>', '<kbd>✚</kbd>'], look: ['the mouse (click the game to lock it)', 'a finger on the right side'] };
 const K = (k) => KEYS[k][isTouch ? 1 : 0];
+function setInputMode(touch) {
+  if (touch === isTouch) return; isTouch = touch; document.body.classList.toggle('touch', touch); if (touch) document.body.classList.add('fill'); else document.body.classList.toggle('fill', !!S.fill);
+  $('touch').classList.toggle('hidden', !(touch && (G.state === 'play'))); if (G.state === 'play' && STEPS[G.step]) prompt(STEPS[G.step].p());
+}
+addEventListener('pointerdown', (e) => setInputMode(e.pointerType === 'touch' || e.pointerType === 'pen'), { capture: true });
+addEventListener('keydown', () => setInputMode(false), { capture: true });
+document.addEventListener('gesturestart', (e) => e.preventDefault()); document.addEventListener('dblclick', (e) => e.preventDefault());
 function prompt(html) { const p = $('prompt'); p.innerHTML = html || ''; }
 function promptDone() { const p = $('prompt'); p.classList.remove('done'); void p.offsetWidth; p.classList.add('done'); sfx('cue'); }
 let subQ = [], subT = 0;
@@ -176,7 +199,7 @@ document.addEventListener('pointerlockchange', () => { const was = mouse.locked;
 cv.addEventListener('wheel', (e) => { if (inGame()) cycleWeapon(e.deltaY > 0 ? 1 : -1); }, { passive: true });
 cv.addEventListener('contextmenu', (e) => e.preventDefault());
 const tb = (id, fn, up) => { const el = $(id); el.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); fn(); }); if (up) el.addEventListener('pointerup', (e) => { e.preventDefault(); up(); }); };
-tb('tJump', () => inp.jump = 0.15); tb('tFire', () => { inp.fire = true; inp.fireTap = 0.12; }, () => inp.fire = false); tb('tSwap', () => cycleWeapon(1)); tb('tMic', () => startAbsorb()); tb('tUse', () => interact()); tb('tHeal', () => useHealthPack());
+tb('tJump', () => inp.jump = 0.15); tb('tFire', () => { inp.fire = true; inp.fireTap = 0.12; }, () => inp.fire = false); tb('tSwap', () => cycleWeapon(1)); tb('tMic', () => startAbsorb()); tb('tUse', () => interact()); tb('tHeal', () => useHealthPack()); tb('tPause', () => pauseGame(true));
 
 function toggleFullscreen() {
   const el = document.documentElement, fsEl = document.fullscreenElement || document.webkitFullscreenElement, req = el.requestFullscreen || el.webkitRequestFullscreen;
@@ -632,7 +655,7 @@ refreshMenu();
 const menuAct = {
   new: () => { if (SV.current && !confirm('Start a new game? Your autosave will be replaced (manual save slots are kept).')) return; AU.unlock(); startGame(SAVE.blankGame()); sfx('code'); },
   continue: () => { if (!SV.current) return; AU.unlock(); startGame(SAVE.snapshotGame(SV.current)); },
-  load: () => openLoad(), settings: () => openSettings(), credits: () => openCredits(), inventory: () => openInventory(), gallery: () => openGallery(), wardrobe: () => openWardrobe(),
+  codes: () => openCodes(), load: () => openLoad(), settings: () => openSettings(), credits: () => openCredits(), inventory: () => openInventory(), gallery: () => openGallery(), wardrobe: () => openWardrobe(),
   chars: () => openInfo('CHARACTERS', `<div class="info"><p><b>LIL SYNN</b> — playable.</p><p><b>The Girl in the Yellow Dress</b> — ${flags().girlPlayable ? 'unlocked as a playable character. Her own story mode arrives in a later update; your unlock is saved.' : 'locked.'}</p><p><b>The Cat</b> — your companion, always.</p><p class="small dim"><span class="soon">COMING SOON</span> Character selection opens when the girl's alternate story is built.</p></div>`),
   upgrades: () => openInfo('UPGRADES', `<div class="info"><p>Magic sword level: <b>${SV.unlocks.swordLevel}</b> / 369 (saved)</p><p class="small dim"><span class="soon">COMING SOON</span> Weapon forging and the 369-level magic sword arrive with Level 1.</p></div>`),
   achievements: () => openInfo('ACHIEVEMENTS', `<div class="info"><p class="small dim"><span class="soon">COMING SOON</span> Achievements arrive with the next stage.</p><p>Tutorial: ${SV.current?.tutorialDone ? '✓ complete' : 'in progress'}</p></div>`),
@@ -734,9 +757,9 @@ function frame(fixedDt, noRender) {
   drawSubs(dt);
   // shadows follow the player
   const fc = G.state === 'menu' ? W?.spots.start || P.pos : P.pos; if (W) { sun.position.set(fc.x + W.sunDir.x * 80, fc.y + W.sunDir.y * 80 + 20, fc.z + W.sunDir.z * 80); sun.target.position.copy(fc); }
-  if (!noRender) composer.render();
+  if (!noRender) { if (PIPE) { try { PIPE.render(dt); } catch (e) { console.warn('pipeline failed, using built-in', e); PIPE = null; composer.render(); } } else composer.render(); }
 }
 requestAnimationFrame(() => frame());
 
 // test hooks (only with ?test)
-if (TEST) window.__LSMR = { advance: (sec, fps = 20) => { const n = Math.max(1, Math.round(sec * fps)); for (let i = 0; i < n; i++) frame(1 / fps, i < n - 1); }, keys, inp, mouse, cam, G, P, SV: () => SV, S, AU, startGame, enterStep, STEPS, W: () => W, worldReady, flags, teleport: (x, z) => { P.pos.set(x, height(x, z), z); }, celloDamage, enemies, fire, setWeapon, spawnWave, startEndingCutscene };
+if (TEST) window.__LSMR = { BODY, setInputMode, isTouch: () => isTouch, advance: (sec, fps = 20) => { const n = Math.max(1, Math.round(sec * fps)); for (let i = 0; i < n; i++) frame(1 / fps, i < n - 1); }, keys, inp, mouse, cam, G, P, SV: () => SV, S, AU, startGame, enterStep, STEPS, W: () => W, worldReady, flags, teleport: (x, z) => { P.pos.set(x, height(x, z), z); }, celloDamage, enemies, fire, setWeapon, spawnWave, startEndingCutscene };

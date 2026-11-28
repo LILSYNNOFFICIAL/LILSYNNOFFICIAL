@@ -1,6 +1,6 @@
 :root { --pink:#ff5fbf; --hot:#ff2fa8; --gold:#ffd36b; --gold2:#f6b93b; --violet:#9a6bff; --blue:#5ec8ff; --ink:#2a1238; --glass:rgba(40,16,58,.55); }
 * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { margin:0; height:100%; overflow:hidden; background:#1a0f28; color:#fff; font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif; touch-action:none; user-select:none; -webkit-user-select:none; }
+html, body { overscroll-behavior:none; margin:0; height:100%; overflow:hidden; background:#1a0f28; color:#fff; font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif; touch-action:none; user-select:none; -webkit-user-select:none; }
 body { background:radial-gradient(ellipse at 50% 30%, #6a3a7a 0%, #2a1640 55%, #120a1c 100%); }
 #stage { position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(100vw, calc(100vh * 9 / 16)); height:min(100vh, calc(100vw * 16 / 9)); overflow:hidden; container-type:size; background:#2a1640; box-shadow:0 0 70px rgba(255,95,191,.35), 0 0 0 1px rgba(255,211,107,.35); }
 @supports (height:100dvh) { #stage { width:min(100vw, calc(100dvh * 9 / 16)); height:min(100dvh, calc(100vw * 16 / 9)); } }
@@ -126,3 +126,21 @@ body.cine #letterbox .lb { height:10cqh; }
 #tUse { right:calc(6% + 134px); bottom:calc(10% + 76px + env(safe-area-inset-bottom)); }
 #tHeal { right:calc(6% + 170px); bottom:calc(7% + 10px + env(safe-area-inset-bottom)); }
 body.cine #subs { bottom:calc(10cqh + 10px); }
+
+.touchOnly { display:none; } body.touch .touchOnly { display:inline-block; }
+/* touch controls: thumb-sized, safe-area aware, portrait or landscape */
+body.touch .tbtn { width:clamp(64px, 17cqmin, 86px); height:clamp(64px, 17cqmin, 86px); }
+body.touch .tbtn.sm { width:clamp(50px, 13cqmin, 64px); height:clamp(50px, 13cqmin, 64px); }
+#stickBase { left:calc(6% + env(safe-area-inset-left)); }
+#tJump { right:calc(5% + env(safe-area-inset-right)); }
+#tFire { right:calc(5% + env(safe-area-inset-right) + clamp(74px, 20cqmin, 96px)); }
+#tSwap { right:calc(5% + env(safe-area-inset-right) + 6px); bottom:calc(10% + clamp(76px, 20cqmin, 100px) + env(safe-area-inset-bottom)); }
+#tMic { right:calc(5% + env(safe-area-inset-right) + clamp(66px, 17cqmin, 84px)); bottom:calc(10% + clamp(86px, 22cqmin, 112px) + env(safe-area-inset-bottom)); }
+#tUse { right:calc(5% + env(safe-area-inset-right) + clamp(128px, 33cqmin, 160px)); bottom:calc(10% + clamp(60px, 16cqmin, 80px) + env(safe-area-inset-bottom)); }
+#tHeal { right:calc(5% + env(safe-area-inset-right) + clamp(160px, 42cqmin, 200px)); }
+#tPause { top:calc(max(10px, env(safe-area-inset-top)) + 46px); right:calc(10px + env(safe-area-inset-right)); bottom:auto; }
+body.touch .topBtns #btnPause { display:none; }
+@media (orientation: landscape) { body.touch #tMic { bottom:calc(8% + 96px + env(safe-area-inset-bottom)); } body.touch #health { max-width:40cqw; } body.touch #prompt { top:calc(max(8px, env(safe-area-inset-top)) + 6px); max-width:56cqw; } }
+#health, #manaWrap, #pouch { left:calc(12px + env(safe-area-inset-left)); }
+#packs { left:calc(90px + env(safe-area-inset-left)); }
+@media (orientation: landscape) { body.touch #subs { left:40%; max-width:46cqw; bottom:calc(52px + env(safe-area-inset-bottom)); } body.touch #tHeal { right:calc(5% + env(safe-area-inset-right) + clamp(196px, 50cqmin, 250px)); bottom:calc(6% + env(safe-area-inset-bottom)); } body.touch #interactHint { top:auto; bottom:42%; } }

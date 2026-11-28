@@ -7,15 +7,19 @@
 <meta name="description" content="LIL SYNN - ROAD TO HER. A magical 3D fantasy adventure powered by music across the Musical Realms. Begin in the Enchanted Meadow.">
 <meta property="og:title" content="LIL SYNN - ROAD TO HER">
 <meta property="og:description" content="Music is magic. Collect hearts, power your microphone, and follow the song through the portal.">
-<meta property="og:image" content="https://lilsynn.com/game/classic/assets/teaser.webp">
+<meta property="og:image" content="https://lilsynn.com/game/icons/icon-512.png">
 <meta name="theme-color" content="#2a1840">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/game/game.css">
+<script>if (/\/game$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);</script>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./game.css">
 <script type="importmap">
 { "imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  "three": "./vendor/three/build/three.module.js",
+  "three/addons/": "./vendor/three/examples/jsm/"
 } }
 </script>
 </head>
@@ -54,6 +58,7 @@
     <button id="tMic" class="tbtn sm">MIC</button>
     <button id="tUse" class="tbtn sm">USE</button>
     <button id="tHeal" class="tbtn sm">✚</button>
+    <button id="tPause" class="tbtn sm">II</button>
   </div>
 
   <!-- Main menu -->
@@ -73,6 +78,7 @@
         <button data-act="gallery">CUTSCENE GALLERY</button>
         <button data-act="settings">SETTINGS</button>
         <button data-act="credits">CREDITS</button>
+        <button data-act="codes" class="touchOnly" id="btnCodes">🔑 SECRET CODE</button>
       </nav>
       <div class="foot"><a href="/">← lilsynn.com</a> · <a href="/game/classic/">play the classic Broken Hearts</a></div>
     </div>
@@ -132,6 +138,7 @@
   </div>
 </div>
 <noscript><p style="color:#fff;padding:2em">This game needs JavaScript and WebGL.</p></noscript>
-<script type="module" src="/game/js/main.js"></script>
+<script type="module" src="./js/main.js"></script>
+<script>if ('serviceWorker' in navigator && location.protocol !== 'file:' && !/[?&]test/.test(location.search)) addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));</script>
 </body>
 </html>

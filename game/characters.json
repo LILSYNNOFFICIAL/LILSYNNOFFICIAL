@@ -1,0 +1,40 @@
+{
+ "_doc": "Swappable character layer. type: glb (rigged GLB + AnimationMixer; clips mapped in js/characters.js CLIPS), procedural (built-in fallback), sprite (billboard; states map to image frames). The first source that loads wins; procedural is always the final fallback.",
+ "lil": {
+  "sources": [
+   {
+    "type": "glb",
+    "url": "assets/models/lil-synn.glb",
+    "height": 1.88
+   }
+  ]
+ },
+ "cat": {
+  "sources": [
+   {
+    "type": "glb",
+    "url": "assets/models/cat.glb"
+   }
+  ]
+ },
+ "girl": {
+  "sources": []
+ },
+ "shadow": {
+  "sources": []
+ },
+ "_spriteExample": {
+  "type": "sprite",
+  "height": 1.8,
+  "fps": 8,
+  "states": {
+   "idle": [
+    "assets/sprites/lil/idle_0.webp"
+   ],
+   "walk": [
+    "assets/sprites/lil/walk_0.webp",
+    "assets/sprites/lil/walk_1.webp"
+   ]
+  }
+ }
+}
