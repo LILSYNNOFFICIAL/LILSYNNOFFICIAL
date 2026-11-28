@@ -12,7 +12,7 @@ import * as SAVE from './progress.js';
 
 const V3 = THREE.Vector3;
 const $ = (id) => document.getElementById(id);
-const BASE = '/game/assets/';
+const BASE = '/game/classic/assets/';
 const params = new URLSearchParams(location.search);
 
 // ---------------- quality ----------------
@@ -59,7 +59,7 @@ let STORY = null;
 const assetsReady = Promise.all([
   ...[['sky', 'sky/sky_nebula_equirect_2048x1024.webp'], ['lens', 'textures/tex_galaxy_lens_512.webp'], ['asphalt', 'textures/tex_wet_asphalt_neon_1024.webp'], ['rubber', 'textures/tex_rubber_playground_1024.webp'], ['metal', 'textures/tex_painted_neon_metal_1024.webp'], ['brick', 'textures/tex_graffiti_brick_1024.webp'], ['wisp', 'sprites/sprite_static_wisp_512.png'], ['orb', 'sprites/sprite_shadow_orb_512.png']]
     .map(([k, p]) => loadTex(p).then(t => { if (t) TEX[k] = t; })),
-  fetch('/game/story.json').then(r => r.ok ? r.json() : null).then(j => { STORY = j; }).catch(() => {}),
+  fetch('/game/classic/story.json').then(r => r.ok ? r.json() : null).then(j => { STORY = j; }).catch(() => {}),
 ]).then(() => { if (TEX.lens) setLensTexture(TEX.lens); $('loadMsg').textContent = ''; });
 const story = () => STORY || { worlds: Array.from({ length: 9 }, (_, i) => ({ name: THEMES[WORLD_THEMES[i]].name, lessons: ['…'], preBoss: '…', postBoss: '…', intro: '' })), reveal: ['TO BE CONTINUED…'], rewards: [], catMissions: { kittens: 'Find {n} lost kittens', notes: 'Collect {n} music notes', crowns: 'Find {n} hidden crowns' }, level1Encounter: { before: '…', after: '…' } };
 

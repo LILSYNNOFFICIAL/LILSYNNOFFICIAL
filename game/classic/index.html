@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>LIL SYNN: Broken Hearts — Play</title>
+<meta name="description" content="LIL SYNN: Broken Hearts. A neon 3D browser game: 369 levels, 9 worlds, save the Girl in the Yellow Dress from Shadow Man.">
+<meta property="og:title" content="LIL SYNN: Broken Hearts">
+<meta property="og:description" content="Run the Neon Playground, collect broken hearts, and face Shadow Man.">
+<meta property="og:image" content="https://lilsynn.com/game/classic/assets/teaser.webp">
+<meta name="theme-color" content="#0a0612">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/game/classic/game.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="stage">
+<div id="app"></div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="health" aria-label="Health"></div>
+  <div id="lvlTag"></div>
+  <div id="hearts"><span class="bh">💔</span> <span id="heartCount">0</span>/<span id="heartTotal">20</span></div>
+  <div id="mission"></div>
+  <div id="keys"></div>
+  <div id="catHint"></div>
+  <div id="boss" class="hidden"><div class="bossName" id="bossName">SHADOW MAN</div><div class="bossBar"><div id="bossFill"></div></div><div id="bossPhase"></div></div>
+  <div id="toast"></div>
+  <div class="topBtns">
+    <button id="btnFill" class="deskOnly" title="Fill the whole window" aria-label="Fill screen">↔</button>
+    <button id="btnFs" title="Fullscreen (F)" aria-label="Fullscreen">⛶</button>
+    <button id="btnMute" title="Mute (M)" aria-label="Mute">♪</button>
+    <button id="btnPause" title="Pause (Esc / P)" aria-label="Pause">II</button>
+  </div>
+</div>
+
+<!-- Touch controls -->
+<div id="touch" class="hidden">
+  <div id="stickBase"><div id="stickKnob"></div></div>
+  <button id="tJump" class="tbtn">JUMP</button>
+  <button id="tDash" class="tbtn">DASH</button>
+</div>
+
+<!-- Title -->
+<div id="intro" class="card show">
+  <div class="cardInner">
+    <div class="kicker">LIL SYNN presents</div>
+    <h1>BROKEN HEARTS</h1>
+    <p class="story" id="prologue">The neon playground was quiet tonight. Too quiet.<br><b>Shadow Man has taken the Girl in the Yellow Dress.</b><br>Gather the broken hearts. Follow the cat. Bring her home.</p>
+    <button id="btnPlay" class="big">PLAY</button>
+    <button id="btnSelect">LEVEL SELECT</button>
+    <div id="loadMsg" class="small">Loading the playground…</div>
+    <div class="controls desk">
+      <span><kbd>WASD</kbd>/<kbd>arrows</kbd> move</span><span><kbd>Space</kbd> jump ×2</span><span><kbd>Shift</kbd> dash</span><span>drag: camera</span><span><kbd>Esc</kbd> pause · <kbd>M</kbd> mute · <kbd>F</kbd> fullscreen</span>
+    </div>
+    <div class="controls mob">Left thumb: move · right side: drag to look · JUMP / DASH buttons</div>
+    <div class="small dim">Dash or stomp the wisps. Jump into monkey bars to grab them. Jump at a ledge to climb it.</div>
+  </div>
+</div>
+
+<!-- Level select -->
+<div id="select" class="card">
+  <div class="cardInner wide">
+    <h2>LEVELS</h2>
+    <div id="worldTabs"></div>
+    <div id="worldName" class="kicker"></div>
+    <div id="levelGrid"></div>
+    <div id="tokens" class="small"></div>
+    <div id="rewardList" class="small dim"></div>
+    <button id="btnSelBack">BACK</button>
+  </div>
+</div>
+
+<!-- Before each level -->
+<div id="levelCard" class="card">
+  <div class="cardInner">
+    <div class="kicker" id="lcWorld"></div>
+    <h2 id="lcTitle"></h2>
+    <div class="shadowLine"><span class="who">SHADOW MAN</span><p id="lcLine"></p></div>
+    <p class="small" id="lcMission"></p>
+    <button id="btnGo" class="big">START</button>
+  </div>
+</div>
+
+<!-- Generic story card (pre-boss, post-boss, reveal) -->
+<div id="storyCard" class="card">
+  <div class="cardInner">
+    <div class="kicker" id="scKicker"></div>
+    <h1 class="boss" id="scTitle"></h1>
+    <div class="shadowLine"><span class="who" id="scWho">SHADOW MAN</span><p id="scLine"></p></div>
+    <button id="btnStory" class="big">CONTINUE</button>
+  </div>
+</div>
+
+<div id="pause" class="card">
+  <div class="cardInner">
+    <h2>PAUSED</h2>
+    <button id="btnResume" class="big">RESUME</button>
+    <button id="btnMute2">MUTE MUSIC</button>
+    <button id="btnRestart">RESTART LEVEL</button>
+    <button id="btnToSelect">LEVEL SELECT</button>
+    <a class="small dim" href="/">← back to lilsynn.com</a>
+  </div>
+</div>
+
+<div id="dead" class="card">
+  <div class="cardInner">
+    <h2>YOU FADED…</h2>
+    <p class="story" id="deadLine">The neon still burns. Get back up.</p>
+    <button id="btnRetry" class="big">TRY AGAIN</button>
+  </div>
+</div>
+
+<div id="complete" class="card">
+  <div class="cardInner">
+    <div class="kicker" id="cpKicker">LEVEL COMPLETE</div>
+    <h2 id="cpTitle"></h2>
+    <p id="stats" class="story"></p>
+    <p id="cpRewards" class="small"></p>
+    <button id="btnNext" class="big">NEXT LEVEL</button>
+    <button id="btnCpSelect">LEVEL SELECT</button>
+  </div>
+</div>
+
+<div id="end" class="card">
+  <div class="cardInner">
+    <div class="kicker">THE END OF THE BEGINNING</div>
+    <h1>TO BE CONTINUED…</h1>
+    <p id="endStats" class="small"></p>
+    <button id="btnAgain" class="big">LEVEL SELECT</button>
+    <a class="small dim" href="/">← back to lilsynn.com</a>
+  </div>
+</div>
+
+<div id="credits" class="small dim">LIL SYNN: Broken Hearts · prototype</div>
+</div>
+<noscript><p style="color:#fff;padding:2em">This game needs JavaScript and WebGL.</p></noscript>
+<script type="module" src="/game/classic/main.js"></script>
+</body>
+</html>

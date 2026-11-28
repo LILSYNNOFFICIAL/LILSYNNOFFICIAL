@@ -1,0 +1,125 @@
+{
+ "note": "Random gameplay music. Finale track (Rescue You - Acoustic Version) is intentionally not listed.",
+ "tracks": [
+  {
+   "title": "Fly",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/fly.mp3",
+   "driveId": "1V1EbvWtSK7fvqHPAtpWQdw5BCbD-sMhj",
+   "drivePath": "ALBUMS/HELLO GOODBYE/Fly.mp3"
+  },
+  {
+   "title": "Light",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/light.mp3",
+   "driveId": "1te7fucg6sWDsX6aAO2Tvb6ztUZRlQSX7",
+   "drivePath": "SINGLES/Light.mp3"
+  },
+  {
+   "title": "My Light",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/my-light.mp3",
+   "driveId": "1kRH9uXR-7sc_mMkViRyh_ljHld3N9kxR",
+   "drivePath": "SINGLES/My Light.mp3"
+  },
+  {
+   "title": "Home",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/home.mp3",
+   "driveId": "18UhFkOKZCBjXCEwivCMiUy8EFDSFlvY3",
+   "drivePath": "SINGLES/Home.mp3"
+  },
+  {
+   "title": "Heal",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/heal.mp3",
+   "driveId": "1qGRKQxj_gxl73qTJDnlt6ZzSr5KNl3pY",
+   "drivePath": "ALBUMS/HEAL/Heal.mp3"
+  },
+  {
+   "title": "Faith",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/faith.mp3",
+   "driveId": "15UGQ8ClbndyY9a5UmQYj_Ghh_KF3j_4V",
+   "drivePath": "SINGLES/Faith.mp3"
+  },
+  {
+   "title": "Every Heartbeat",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/every-heartbeat.mp3",
+   "driveId": "1Fmc2WQD9f9pQLmNgZrZlmQIk47yod-hK",
+   "drivePath": "ALBUMS/ENOUGH/Every Heartbeat.mp3"
+  },
+  {
+   "title": "Hello Goodbye",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/hello-goodbye.mp3",
+   "driveId": "1RbtyGw4qcyp91urYD7f7hxNZGbknx-59",
+   "drivePath": "ALBUMS/HELLO GOODBYE/Hello Goodbye.mp3"
+  },
+  {
+   "title": "It's You",
+   "artist": "LIL SYNN",
+   "mood": "explore",
+   "file": "audio/music/its-you.mp3",
+   "driveId": "1FR2IZXCRr9ptickQ91X21-MJ6rrCtdvv",
+   "drivePath": "ALBUMS/HELLO GOODBYE/It's You.mp3"
+  },
+  {
+   "title": "Through the Flames",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/through-the-flames.mp3",
+   "driveId": "1YoRPl29iF-fTiZjgXhzV4Zm9gCsAbl0i",
+   "drivePath": "SINGLES/Through the Flames.mp3"
+  },
+  {
+   "title": "Burn It Down",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/burn-it-down.mp3",
+   "driveId": "1YMfaPGZ2Resm_44mlyahQztk-fax48US",
+   "drivePath": "SINGLES/Burn It Down.mp3"
+  },
+  {
+   "title": "Back From The Blackout",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/back-from-the-blackout.mp3",
+   "driveId": "1iECmoNBqBQEI1coilT5qi8auIKtCLgb4",
+   "drivePath": "SINGLES/Back From The Blackout.mp3"
+  },
+  {
+   "title": "Already Famous",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/already-famous.mp3",
+   "driveId": "1Zu-GFwdPFSnJaNA2U2qjR9a5LaXRC4s_",
+   "drivePath": "SINGLES/Already Famous.mp3"
+  },
+  {
+   "title": "Static On My Tongue",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/static-on-my-tongue.mp3",
+   "driveId": "11ynfseHrk3io8W3bTDm2OoYopI-ditem",
+   "drivePath": "SINGLES/Static On My Tongue.mp3"
+  },
+  {
+   "title": "Manic Side",
+   "artist": "LIL SYNN",
+   "mood": "combat",
+   "file": "audio/music/manic-side.mp3",
+   "driveId": "1ORq_MmTexDh87yAjh4AbE8CFN8uYlPoC",
+   "drivePath": "SINGLES/Manic Side.mp3"
+  }
+ ]
+}

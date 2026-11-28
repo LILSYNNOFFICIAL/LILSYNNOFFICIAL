@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>LIL SYNN: Broken Hearts — Play</title>
-<meta name="description" content="LIL SYNN: Broken Hearts. A neon 3D browser game: 369 levels, 9 worlds, save the Girl in the Yellow Dress from Shadow Man.">
-<meta property="og:title" content="LIL SYNN: Broken Hearts">
-<meta property="og:description" content="Run the Neon Playground, collect broken hearts, and face Shadow Man.">
-<meta property="og:image" content="https://lilsynn.com/game/assets/teaser.webp">
-<meta name="theme-color" content="#0a0612">
+<title>LIL SYNN - ROAD TO HER — Play</title>
+<meta name="description" content="LIL SYNN - ROAD TO HER. A magical 3D fantasy adventure powered by music across the Musical Realms. Begin in the Enchanted Meadow.">
+<meta property="og:title" content="LIL SYNN - ROAD TO HER">
+<meta property="og:description" content="Music is magic. Collect hearts, power your microphone, and follow the song through the portal.">
+<meta property="og:image" content="https://lilsynn.com/game/classic/assets/teaser.webp">
+<meta name="theme-color" content="#2a1840">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/game/game.css">
+<link rel="stylesheet" href="./game.css">
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -21,127 +21,117 @@
 </head>
 <body>
 <div id="stage">
-<div id="app"></div>
+  <div id="app"></div>
+  <div id="letterbox"><div class="lb top"></div><div class="lb bot"></div></div>
+  <div id="fade"></div>
 
-<!-- HUD -->
-<div id="hud" class="hidden">
-  <div id="health" aria-label="Health"></div>
-  <div id="lvlTag"></div>
-  <div id="hearts"><span class="bh">💔</span> <span id="heartCount">0</span>/<span id="heartTotal">20</span></div>
-  <div id="mission"></div>
-  <div id="keys"></div>
-  <div id="catHint"></div>
-  <div id="boss" class="hidden"><div class="bossName" id="bossName">SHADOW MAN</div><div class="bossBar"><div id="bossFill"></div></div><div id="bossPhase"></div></div>
-  <div id="toast"></div>
-  <div class="topBtns">
-    <button id="btnFill" class="deskOnly" title="Fill the whole window" aria-label="Fill screen">↔</button>
-    <button id="btnFs" title="Fullscreen (F)" aria-label="Fullscreen">⛶</button>
-    <button id="btnMute" title="Mute (M)" aria-label="Mute">♪</button>
-    <button id="btnPause" title="Pause (Esc / P)" aria-label="Pause">II</button>
-  </div>
-</div>
-
-<!-- Touch controls -->
-<div id="touch" class="hidden">
-  <div id="stickBase"><div id="stickKnob"></div></div>
-  <button id="tJump" class="tbtn">JUMP</button>
-  <button id="tDash" class="tbtn">DASH</button>
-</div>
-
-<!-- Title -->
-<div id="intro" class="card show">
-  <div class="cardInner">
-    <div class="kicker">LIL SYNN presents</div>
-    <h1>BROKEN HEARTS</h1>
-    <p class="story" id="prologue">The neon playground was quiet tonight. Too quiet.<br><b>Shadow Man has taken the Girl in the Yellow Dress.</b><br>Gather the broken hearts. Follow the cat. Bring her home.</p>
-    <button id="btnPlay" class="big">PLAY</button>
-    <button id="btnSelect">LEVEL SELECT</button>
-    <div id="loadMsg" class="small">Loading the playground…</div>
-    <div class="controls desk">
-      <span><kbd>WASD</kbd>/<kbd>arrows</kbd> move</span><span><kbd>Space</kbd> jump ×2</span><span><kbd>Shift</kbd> dash</span><span>drag: camera</span><span><kbd>Esc</kbd> pause · <kbd>M</kbd> mute · <kbd>F</kbd> fullscreen</span>
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="health" aria-label="Health"></div>
+    <div id="manaWrap" aria-label="Mana"><div id="manaBar"><div id="manaFill"></div><div id="manaGhost"></div></div><span id="manaTxt">MANA 0</span></div>
+    <div id="pouch" title="Hearts collected (press R to absorb)"><span class="hIcon">❤</span><span id="pouchN">0</span><span class="kbd desk">R</span></div>
+    <div id="weapon"><span id="wIcon">♪</span><span id="wName">SONIC BLAST</span><span id="wCost"></span><span class="kbd desk">Q</span></div>
+    <div id="packs" title="Health packs (press H)">✚ <span id="packN">0</span> <span class="kbd desk">H</span></div>
+    <div id="prompt"></div>
+    <div id="toast"></div>
+    <div class="topBtns">
+      <button id="btnFill" class="deskOnly" title="Fill the whole window" aria-label="Fill window">↔</button>
+      <button id="btnFs" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+      <button id="btnPause" title="Pause (Esc / P)" aria-label="Pause">II</button>
     </div>
-    <div class="controls mob">Left thumb: move · right side: drag to look · JUMP / DASH buttons</div>
-    <div class="small dim">Dash or stomp the wisps. Jump into monkey bars to grab them. Jump at a ledge to climb it.</div>
   </div>
-</div>
+  <div id="crosshair" aria-hidden="true"><i></i></div>
+  <div id="subs" aria-live="polite"></div>
+  <button id="skipCine" class="hidden">SKIP ▸▸</button>
+  <div id="interactHint" class="hidden"></div>
 
-<!-- Level select -->
-<div id="select" class="card">
-  <div class="cardInner wide">
-    <h2>LEVELS</h2>
-    <div id="worldTabs"></div>
-    <div id="worldName" class="kicker"></div>
-    <div id="levelGrid"></div>
-    <div id="tokens" class="small"></div>
-    <div id="rewardList" class="small dim"></div>
-    <button id="btnSelBack">BACK</button>
+  <!-- Touch controls -->
+  <div id="touch" class="hidden">
+    <div id="stickBase"><div id="stickKnob"></div></div>
+    <button id="tJump" class="tbtn">JUMP</button>
+    <button id="tFire" class="tbtn">♪</button>
+    <button id="tSwap" class="tbtn sm">⇄</button>
+    <button id="tMic" class="tbtn sm">MIC</button>
+    <button id="tUse" class="tbtn sm">USE</button>
+    <button id="tHeal" class="tbtn sm">✚</button>
   </div>
-</div>
 
-<!-- Before each level -->
-<div id="levelCard" class="card">
-  <div class="cardInner">
-    <div class="kicker" id="lcWorld"></div>
-    <h2 id="lcTitle"></h2>
-    <div class="shadowLine"><span class="who">SHADOW MAN</span><p id="lcLine"></p></div>
-    <p class="small" id="lcMission"></p>
-    <button id="btnGo" class="big">START</button>
+  <!-- Main menu -->
+  <div id="menu" class="screen show">
+    <div class="menuInner">
+      <div id="titleLogo" title="LIL SYNN - ROAD TO HER"><div class="kicker">LIL SYNN</div><h1>ROAD<br>TO HER</h1></div>
+      <div id="loadBar"><div id="loadFill"></div><span id="loadTxt">Growing the meadow…</span></div>
+      <nav id="menuBtns">
+        <button data-act="new" class="big">NEW GAME</button>
+        <button data-act="continue">CONTINUE</button>
+        <button data-act="load">LOAD GAME</button>
+        <button data-act="chars">CHARACTERS</button>
+        <button data-act="wardrobe" class="hidden" id="btnWardrobe">WARDROBE</button>
+        <button data-act="inventory">INVENTORY</button>
+        <button data-act="upgrades">UPGRADES</button>
+        <button data-act="achievements">ACHIEVEMENTS</button>
+        <button data-act="gallery">CUTSCENE GALLERY</button>
+        <button data-act="settings">SETTINGS</button>
+        <button data-act="credits">CREDITS</button>
+      </nav>
+      <div class="foot"><a href="/">← lilsynn.com</a> · <a href="/game/classic/">play the classic Broken Hearts</a></div>
+    </div>
   </div>
-</div>
 
-<!-- Generic story card (pre-boss, post-boss, reveal) -->
-<div id="storyCard" class="card">
-  <div class="cardInner">
-    <div class="kicker" id="scKicker"></div>
-    <h1 class="boss" id="scTitle"></h1>
-    <div class="shadowLine"><span class="who" id="scWho">SHADOW MAN</span><p id="scLine"></p></div>
-    <button id="btnStory" class="big">CONTINUE</button>
+  <!-- Pause menu (no cheat entry here by design) -->
+  <div id="pause" class="screen">
+    <div class="menuInner">
+      <h2>PAUSED</h2>
+      <nav>
+        <button data-act="resume" class="big">RESUME</button>
+        <button data-act="inventory">INVENTORY</button>
+        <button data-act="settings">SETTINGS</button>
+        <button data-act="save">SAVE GAME</button>
+        <button data-act="load">LOAD GAME</button>
+        <button data-act="mainmenu">RETURN TO MAIN MENU</button>
+      </nav>
+    </div>
   </div>
-</div>
 
-<div id="pause" class="card">
-  <div class="cardInner">
-    <h2>PAUSED</h2>
-    <button id="btnResume" class="big">RESUME</button>
-    <button id="btnMute2">MUTE MUSIC</button>
-    <button id="btnRestart">RESTART LEVEL</button>
-    <button id="btnToSelect">LEVEL SELECT</button>
-    <a class="small dim" href="/">← back to lilsynn.com</a>
+  <!-- Shared sheet (settings, load/save, credits, info) -->
+  <div id="sheet" class="screen">
+    <div class="sheetInner">
+      <h2 id="sheetTitle"></h2>
+      <div id="sheetBody"></div>
+      <button id="sheetBack" class="big">BACK</button>
+    </div>
   </div>
-</div>
 
-<div id="dead" class="card">
-  <div class="cardInner">
-    <h2>YOU FADED…</h2>
-    <p class="story" id="deadLine">The neon still burns. Get back up.</p>
-    <button id="btnRetry" class="big">TRY AGAIN</button>
+  <!-- Secret codes (main menu only, opened with CTRL or a long-press on the title) -->
+  <div id="codes" class="screen" role="dialog" aria-label="Secret code">
+    <div class="sheetInner small">
+      <div class="kicker">SECRET CODE</div>
+      <input id="codeIn" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TYPE A CODE">
+      <div id="codeMsg"><b></b><p></p></div>
+      <div class="row"><button id="codeOk" class="big">ENTER</button><button id="codeClose">CLOSE</button></div>
+    </div>
   </div>
-</div>
 
-<div id="complete" class="card">
-  <div class="cardInner">
-    <div class="kicker" id="cpKicker">LEVEL COMPLETE</div>
-    <h2 id="cpTitle"></h2>
-    <p id="stats" class="story"></p>
-    <p id="cpRewards" class="small"></p>
-    <button id="btnNext" class="big">NEXT LEVEL</button>
-    <button id="btnCpSelect">LEVEL SELECT</button>
+  <!-- Cat interaction -->
+  <div id="catMenu" class="screen">
+    <div class="sheetInner small"><div class="kicker">THE CAT</div><div id="catBody"></div><div id="catBtns" class="col"></div></div>
   </div>
-</div>
 
-<div id="end" class="card">
-  <div class="cardInner">
-    <div class="kicker">THE END OF THE BEGINNING</div>
-    <h1>TO BE CONTINUED…</h1>
-    <p id="endStats" class="small"></p>
-    <button id="btnAgain" class="big">LEVEL SELECT</button>
-    <a class="small dim" href="/">← back to lilsynn.com</a>
+  <div id="dead" class="screen">
+    <div class="sheetInner small"><h2>YOU FADED…</h2><p class="story">The meadow catches you softly. Try again?</p><button id="btnRetry" class="big">GET BACK UP</button></div>
   </div>
-</div>
 
-<div id="credits" class="small dim">LIL SYNN: Broken Hearts · prototype</div>
+  <div id="tbc" class="screen">
+    <div class="sheetInner">
+      <div class="kicker">THE ADVENTURE BEGINS</div>
+      <h1 class="gold">TO BE CONTINUED</h1>
+      <p class="story big">Level 1: <b>Whispering Woods</b></p>
+      <p class="small dim">Your progress is saved. The next realm arrives in a coming update.</p>
+      <div class="row"><button data-act="mainmenu" class="big">MAIN MENU</button><button data-act="replay">REPLAY TUTORIAL</button></div>
+    </div>
+  </div>
 </div>
 <noscript><p style="color:#fff;padding:2em">This game needs JavaScript and WebGL.</p></noscript>
-<script type="module" src="/game/main.js"></script>
+<script type="module" src="./js/main.js"></script>
 </body>
 </html>
